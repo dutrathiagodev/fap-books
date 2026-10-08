@@ -1,0 +1,21 @@
+[
+  {
+    "titulo": "Configuração de ambiente",
+    "descricao": "Deixar o notebook de cada pessoa pronto para trabalhar no FAP Books. Guia completo e passo a passo: docs/onboarding.md (https://github.com/dutrathiagodev/fap-books/blob/develop/docs/onboarding.md).\n\nO QUE BAIXAR\n- Node.js 22 (LTS): https://nodejs.org\n- Git: https://git-scm.com/downloads\n- VS Code: https://code.visualstudio.com (extensões: ESLint e Tailwind CSS IntelliSense)\n- Opcional: GitHub CLI (gh): https://cli.github.com\n\nCONTAS E ACESSOS (aceite todos os convites)\n- GitHub: repositório dutrathiagodev/fap-books\n- Trello: quadro FAP Books\n- Figma: arquivo FAP BOOKS - Gestão para Biblioteca (com edição)\n- Supabase: organização FAP Books\n\nARQUIVO .env.local (nunca vai para o Git)\nCopie o .env.example para .env.local e preencha só estas duas linhas:\nNEXT_PUBLIC_SUPABASE_URL=https://znqkjvpvkbcpsrhtflgp.supabase.co\nNEXT_PUBLIC_SUPABASE_ANON_KEY=sb_publishable_E8MA13dRWAtXinDJKqqv1g__LI60V39\n\nEssa é a chave PÚBLICA (Publishable key): pode ficar neste card, que é privado da equipe. Não copie esta chave em mensagem, print ou arquivo versionado fora daqui.\nNUNCA peça nem use a chave secreta (sb_secret_...). Se alguma chave, senha ou token aparecer por engano no Git ou no grupo, avise o time na hora.\n\nCada pessoa marca seu nome no checklist \"Quem já terminou\" quando o npm run dev abrir em http://localhost:3000.",
+    "etiquetas": "CONFIG, docs, P0",
+    "checklist": [
+      "Node.js 22, Git e VS Code instalados (node -v, npm -v e git --version funcionam)",
+      "Extensões ESLint e Tailwind CSS IntelliSense instaladas",
+      "Convite do GitHub aceito (repositório fap-books)",
+      "Convite do Trello aceito (quadro FAP Books)",
+      "Convite do Figma aceito (com edição)",
+      "Convite do Supabase aceito (organização FAP Books)",
+      "git config feito com nome e e-mail",
+      "Projeto clonado: git clone, git switch develop e npm install",
+      "Arquivo .env.local criado a partir do .env.example e preenchido",
+      "npm run dev abre em http://localhost:3000",
+      "npm run lint, typecheck e build sem erro"
+    ],
+    "membros": "6515cff8159cb78d54ad4074,68ca9fb753f35f1a0a8f2e7e,67195d0c150f447a3be11937,63fb58a30bbf172e395d48ca,68d138655f90a29c7c2a8900,6a5e8ced6137038c8b598826"
+  }
+]
