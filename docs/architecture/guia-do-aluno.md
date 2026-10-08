@@ -31,15 +31,14 @@ Arquitetura é a forma de organizar o código para cada uma dessas coisas ficar 
 
 | Termo | O que é, em uma frase | Exemplo no FAP Books |
 | -- | -- | -- |
-| **Camada** | Um grupo de arquivos com um único tipo de responsabilidade | `domain`, `data`, `infra`… |
-| **Entidade** | O "molde" de uma coisa do negócio | Um `Book` com título e autor |
-| **Caso de uso** | Uma ação que o usuário faz | "Listar livros", "Registrar empréstimo" |
-| **Repositório** | O "contrato" de como buscar e salvar uma entidade | `BooksRepository` |
-| **Adaptador** | O código que fala de verdade com o mundo de fora | Falar com o Supabase |
-| **Mapper** | Converte o formato do banco para o formato do sistema | `due_date` → `dueDate` |
-| **Page** | O componente que decide o que mostrar na tela | Carregando, erro, vazio ou lista |
-| **View** | O componente que só desenha o caso de sucesso | A lista de livros |
-| **Server Action** | Uma função que o site executa no servidor | Salvar um empréstimo |
+| **Rota** | Um endereço do site, feito por uma pasta em `src/app` | `/books` |
+| **Componente** | Um pedaço de tela reutilizável, um arquivo em `src/components` | `Button`, `BooksList` |
+| **Props** | Os dados que um componente recebe de fora | `items={books}` |
+| **Service** | Um arquivo de funções que busca e salva dados | `listBooks()` |
+| **Type** | A descrição do formato de um dado | `Book` com `id` e `name` |
+| **Server Component** | Componente que roda no servidor e já chega pronto | A página `/books` |
+| **`"use client"`** | Marca um componente que roda no navegador (tem `useState`, clique ou formulário) | O formulário de login |
+| **Regra do negócio** | Uma regra que vem do regulamento da biblioteca | Máximo de 5 livros |
 | **Banco de dados** | Onde os dados ficam guardados, em tabelas | Tabela `books` |
 | **Tabela / linha / coluna** | Uma planilha: cada linha é um registro | Uma linha por livro |
 | **Migration** | Um arquivo que descreve uma mudança no banco | "Criar a tabela `books`" |
@@ -47,48 +46,49 @@ Arquitetura é a forma de organizar o código para cada uma dessas coisas ficar 
 | **Policy** | Uma regra específica de RLS | "Só a bibliotecária cria livro" |
 | **Chave (key)** | Uma senha que o sistema usa para falar com o Supabase | Nunca vai para o Git |
 
-## 4. As camadas, uma por uma
+## 4. A estrutura do projeto
 
-Cada feature (livros, usuários, empréstimos…) tem as mesmas pastas. Quem aprende uma, aprende todas.
+É a **mesma estrutura do projeto do professor** (`app` e `components`), com mais três pastas pequenas.
 
-**`domain` — o regulamento.** Aqui moram as entidades, os contratos e os casos de uso. É código TypeScript simples, que não sabe que React, Next ou Supabase existem. Exemplo: "um usuário não pode ter mais de 5 livros".
+```text
+src/
+  app/          as rotas: uma pasta por endereço do site
+  components/   os pedaços de tela, um arquivo por componente
+  services/     as funções que buscam e salvam dados
+  types/        a descrição do formato dos dados
+  lib/supabase/ a ligação com o Supabase
+```
 
-**`data` — quem busca e salva.** Cumpre o contrato do domain. Recebe o adaptador, pede os dados e usa o mapper para entregar entidades prontas.
+**`app` — as rotas.** Cada pasta é um endereço. `src/app/books/page.tsx` é a tela de `/books`. Ao lado dela ficam o `loading.tsx` (carregando) e o `error.tsx` (deu erro).
 
-**`infra` — os fios para fora.** O cliente do Supabase e os adaptadores. Só aqui o código sabe qual banco existe de verdade.
+**`components` — o que se vê.** Um arquivo por componente, com as props descritas em uma `interface`, e todos reexportados no `index.tsx`. Componente só desenha: **não busca dados**.
 
-**`presenter` — o estado da tela.** Hooks e Server Actions que chamam os casos de uso e devolvem o resultado para a tela.
+**`services` — quem busca e salva.** Funções como `listBooks()`. É o único lugar que conversa com o Supabase.
 
-**`modules` — o que aparece.** A **page** decide o cenário, e a **view** desenha o sucesso. Também ficam aqui os **widgets**, pequenos pedaços de tela reutilizáveis.
+**`types` — os formatos.** `Book`, `Loan`, `User`. O TypeScript avisa quando você erra um nome de campo.
 
-**`main/di` — a montagem.** Uma função como `makeListBooks()` junta as peças de uma feature. É o único lugar que conhece todo mundo.
-
-**`app` — as rotas.** São os endereços do site. Cada arquivo é curto e só chama a page do módulo.
+**`lib/supabase` — a ligação.** Cria o cliente do Supabase para o navegador e para o servidor.
 
 ### A regra que protege você
 
-> Quem está mais perto da tela pode usar quem está mais perto do banco, **nunca o contrário**.
+> A tela pede dados ao **service**, e **só o service** fala com o Supabase.
 
-```text
-app → modules → presenter → domain
-data → domain
-infra → data
-```
+Se você escreveu `supabase.from(...)` dentro de um componente ou de uma página, está no lugar errado. Mova para um service.
 
-Se você precisar importar algo "para trás", é sinal de que o código está na camada errada. Pare e pergunte antes de seguir.
+### Quando aparecer uma regra do negócio
+
+Regras como "máximo de 5 livros" ou "multa de R$ 1,00 por dia" vão para funções simples em `src/domain/<feature>/`, com teste. É o **Nível 2** da arquitetura ([frontend.spec.md](frontend.spec.md)). Só crie essa pasta quando a primeira regra aparecer. E se um dia o time quiser mais camadas, existe o caminho descrito em [futuro/camadas-completas.md](futuro/camadas-completas.md).
 
 ## 5. O caminho de uma tela: "lista de livros"
 
-1. A pessoa abre `/livros`.
-2. `src/app/livros/page.tsx` (curto) chama `BooksPage`.
-3. `BooksPage` mostra o carregando enquanto busca os dados.
-4. Ela chama `makeListBooks()` (em `main/di`), que monta o caso de uso.
-5. O caso de uso `ListBooksUseCase` pede ao **contrato** `BooksRepository` a lista.
-6. `BooksRepositoryImpl` (em `data`) cumpre o contrato e usa o **adaptador**.
-7. O adaptador (em `infra`) pergunta ao **Supabase**.
-8. O Supabase aplica o **RLS** (só devolve o que a pessoa pode ver) e responde.
-9. O mapper converte as linhas em entidades `Book`.
-10. A page escolhe: lista vazia → `BooksEmptyView`; sucesso → `BooksView`. Se deu erro, o Next mostra `error.tsx`.
+1. A pessoa abre `/books`.
+2. O Next.js mostra o `loading.tsx` enquanto prepara a página.
+3. `src/app/books/page.tsx` roda no servidor e chama `listBooks()`.
+4. `listBooks()` (em `services`) pede os livros ao **Supabase**.
+5. O Supabase aplica o **RLS** (só devolve o que a pessoa pode ver) e responde.
+6. A página decide: lista vazia → "Nada por aqui ainda."; com livros → `BooksList`.
+7. `BooksList` desenha a lista recebendo `items` por props.
+8. Se algo deu errado em qualquer passo, o Next.js mostra o `error.tsx`.
 
 Cada passo é um arquivo pequeno com uma tarefa só. É assim que o sistema cresce sem virar bagunça.
 
@@ -106,10 +106,10 @@ Vamos supor a feature "categorias".
 
 1. **Card.** Pegue o card no Trello e mova para In Progress. Isso marca você como responsável.
 2. **Branch.** `git switch develop`, `git pull` e `git switch -c FAP/<número-do-card>`.
-3. **Gerar a base.** `scripts/arch/create-feature-web.sh categories` cria todas as pastas e arquivos de exemplo.
-4. **Trocar os exemplos** pelos nomes reais, começando pelo `domain`.
+3. **Gerar a base.** `scripts/arch/create-feature-web.sh categories Category` cria o tipo, o service, o componente e a rota.
+4. **Trocar os exemplos** pelos nomes reais, começando por `src/types`.
 5. **Banco.** `scripts/arch/create-migration.sh create_categories_table`, escrever o SQL com RLS e conferir.
-6. **Testar.** Escreva o teste da regra e rode `npm run lint`, `npm run typecheck`, `npm run test` e `npm run build`.
+6. **Verificar.** `npm run lint`, `npm run typecheck` e `npm run build`. Se houver regra do negócio, escreva o teste dela.
 7. **Commit** no padrão: `feat: adiciona categorias`.
 8. **PR** para a `develop`, com descrição clara. O card vai sozinho para Awaiting PR.
 
@@ -119,9 +119,9 @@ Vamos supor a feature "categorias".
 | -- | -- | -- |
 | A lista volta vazia mesmo com dados | RLS sem policy de leitura, ou sem `grant` | Confira a migration: `grant select` e a policy de `select` |
 | "permission denied for table" | Faltou `grant` na migration | Adicione `grant ... to authenticated` em uma migration nova |
-| Erro de import circular | Importou uma camada "para trás" | Reveja a regra da seção 4 e mova o código |
-| `Module not found: @/...` | Caminho ou alias errado | Confira se o arquivo existe em `src/` |
-| Texto aparece só depois de piscar | Busca de dados dentro do componente do navegador | Busque no servidor, na page |
+| Erro de import circular | Dois arquivos se importam | Mova o que é comum para um terceiro arquivo (por exemplo, em `types`) |
+| `Module not found: @/...` | Caminho errado. `@/` aponta para `src/` | Confira se o arquivo existe em `src/` (`@/components` é `src/components`) |
+| Texto aparece só depois de piscar | Busca de dados dentro de um componente com `"use client"` | Busque no servidor, na página, e passe por props |
 | A chave apareceu no Git | `.env` commitado | Avise o time na hora: a chave precisa ser trocada |
 
 ## 9. Como pedir ajuda
@@ -132,7 +132,7 @@ Vamos supor a feature "categorias".
 
 ## 10. Combinados do time
 
-- **Perguntar antes** de criar um repositório novo ou adotar uma tecnologia nova.
+- **Perguntar antes** de criar um repositório, uma pasta nova ou uma tecnologia nova.
 - **Passo pequeno.** Prefira um PR pequeno e entendido por todos a um PR grande.
 - **Qualidade primeiro:** consulte [qualidade.md](qualidade.md).
 - **Segredo nunca no Git.** Chaves ficam no `.env.local` e nos secrets.

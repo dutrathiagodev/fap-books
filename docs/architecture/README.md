@@ -8,6 +8,7 @@
 | -- | -- |
 | Está começando | [Guia do aluno](guia-do-aluno.md) |
 | Vai criar uma feature | [Frontend skills](frontend.skills.md) e [Template de feature](feature.template.md) |
+| Quer entender os níveis | [Frontend spec](frontend.spec.md) |
 | Vai mexer no banco | [Supabase spec](supabase.spec.md) |
 | Vai abrir um PR | [Guia de qualidade](qualidade.md) |
 | Quer as regras completas | [Frontend spec](frontend.spec.md) |
@@ -18,18 +19,18 @@
 | -- | -- | -- |
 | O projeto começa **só com Next.js + Supabase** | O time nunca teve aula de backend e banco; menos peças para aprender de uma vez. Prioridade é o front | 2026-10-08 |
 | **NestJS adiado** | Só entra por decisão do time. Antes de criar qualquer repositório ou tecnologia nova, **perguntar** ao responsável | 2026-10-08 |
-| Camadas **completas** (domain, data, infra, presenter, modules, main/di) | O time quer o máximo de camadas para aprender, com guia para tudo | 2026-10-08 |
-| Montagem de dependências por **funções simples** (`makeXxx()`) | A forma mais fácil de entender; permite evoluir depois sem travar o projeto | 2026-10-08 |
+| A base é a **estrutura do professor** (`src/app` e `src/components`), com `services`, `types` e `lib/supabase` | O time já conhece esse formato (projeto `clube-de-livro`). Cresce em níveis, só quando precisar | 2026-10-08 |
+| **Regras do negócio** em funções puras (`src/domain`), com teste, quando aparecerem | Fica fácil de explicar e de testar. É o Nível 2 | 2026-10-08 |
+| As **6 camadas completas** ficam como caminho de evolução (`futuro/`) | Eram o desenho inicial, mas estavam muito além do que o time viu em aula | 2026-10-08 |
 | **Qualidade é prioridade** | Lint, typecheck, testes e build a cada PR, com guia explicando cada um | 2026-10-08 |
-| App na **raiz** do repositório, código em `src/` | Sem monorepo enquanto não houver segundo projeto | 2026-10-08 |
+| App na **raiz** do repositório, código em `src/`, imports com `@/` apontando para `src/` | Sem monorepo enquanto não houver segundo projeto. O alias `@/components` evita erro de caminho na compilação (no projeto do professor é `@/src/components`) | 2026-10-08 |
+| Nomes de código em **inglês**, textos da tela em **português** | É o que o projeto do professor já faz | 2026-10-08 |
 | Banco **sempre versionado** em migrations, **RLS em toda tabela** | Segurança e histórico; não há API entre o site e o banco | 2026-10-08 |
 | Supabase na região **Brasil (São Paulo)** | Usuários da FAP estão no Brasil | 2026-10-07 |
 
 ## Em aberto (a confirmar com o time)
 
-- **Idioma dos nomes no código:** proposta de **inglês** (`Book`, `Loan`) com a tela em português.
-- **Ferramenta de testes:** proposta de **Vitest** e **Testing Library**.
-- **Dois níveis de estrutura:** proposta de usar a estrutura simples (`app`, `components`, `lib`) para telas sem regra de negócio, como login, e as camadas completas só nas features com regra (empréstimo, multa, reserva). Hoje o spec pede as camadas completas em tudo.
+- **Ferramenta de testes:** proposta de **Vitest**, para as regras do Nível 2 (e Testing Library só se o time pedir).
 
 ## Régua de simplicidade
 
@@ -56,7 +57,8 @@ Se alguma resposta for "não", **pergunte ao responsável antes de seguir**.
 
 | Referência | O que aproveitamos | Cuidado |
 | -- | -- | -- |
-| [SamuelSackey/nextjs-supabase-example](https://github.com/SamuelSackey/nextjs-supabase-example) | Exemplo para iniciantes: login com Supabase, rotas protegidas e dois clientes (`browser-client` e `server-client`). Seguimos a mesma ideia em `src/infra/supabase/` | Usa **Next.js 14**. Aqui é o Next.js 16: `cookies()` é **assíncrono** (`await cookies()`) e o antigo *middleware* se chama **proxy** (`proxy.ts`). **Não copie código sem adaptar** |
+| [SamuelSackey/nextjs-supabase-example](https://github.com/SamuelSackey/nextjs-supabase-example) | Exemplo para iniciantes: login com Supabase, rotas protegidas e dois clientes (`browser-client` e `server-client`). Seguimos a mesma ideia em `src/lib/supabase/` | Usa **Next.js 14**. Aqui é o Next.js 16: `cookies()` é **assíncrono** (`await cookies()`) e o antigo *middleware* se chama **proxy** (`proxy.ts`). **Não copie código sem adaptar** |
+| Projeto do professor (`clube-de-livro`, fora deste repositório) | A estrutura-base: `src/app`, `src/components` com `index.tsx`, props com `interface` | O **design** não é copiado; só a organização do código |
 | [Vídeo (YouTube)](https://www.youtube.com/watch?v=Z2EX_opXWuA) | Apoio visual de estudo | O vídeo não foi analisado por quem escreveu estes documentos |
 | [Artigo: NestJS + Next.js + Supabase](https://shobhitb.medium.com/building-full-stack-application-with-nestjs-nextjs-and-supabase-fce78be07074) | Referência para a **fase futura**, quando e se o NestJS entrar | O artigo não foi lido por quem escreveu estes documentos |
 
@@ -64,7 +66,8 @@ Ao usar uma referência, passe pela régua de simplicidade acima.
 
 ## Documentos
 
-- [frontend.spec.md](frontend.spec.md): regras obrigatórias do frontend
+- [frontend.spec.md](frontend.spec.md): regras obrigatórias do frontend (Níveis 1 e 2)
+- [futuro/camadas-completas.md](futuro/camadas-completas.md): caminho de evolução, **não usar agora**
 - [frontend.skills.md](frontend.skills.md): guia prático
 - [supabase.spec.md](supabase.spec.md): banco, migrations, RLS e chaves
 - [feature.template.md](feature.template.md): como gerar uma feature
