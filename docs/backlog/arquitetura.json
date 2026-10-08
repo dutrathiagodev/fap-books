@@ -1,0 +1,65 @@
+[
+  {
+    "titulo": "Definir a arquitetura do software (Clean Architecture: Next.js, NestJS e Supabase)",
+    "descricao": "Definir e documentar a arquitetura do FAP Books em Clean Architecture, com camadas, regras de dependência e padrão de feature para o frontend (Next.js), o backend (NestJS) e o banco (Supabase), antes de começar a implementar as features.\n\nModelo de referência: docs de arquitetura do projeto Flutter white_label_barber (feature.skills.md, feature.spec.md e feature.template.md), adaptados para este stack.\n\nEntregáveis em docs/architecture/: um spec, um guia de skills e um template de scaffold por parte (frontend, backend e Supabase), mais o fluxo entre elas. Quando os cards filhos terminarem, este card fecha sozinho.\n\nBloqueia: [FAP - 0003] e [FAP - 0004].",
+    "etiquetas": "ARQUITETURA, docs, P0",
+    "checklist": [
+      "Specs de Next.js, NestJS e Supabase publicados em docs/architecture/",
+      "Scaffolds de feature criados e testados",
+      "Fluxo entre camadas e contratos documentado",
+      "Aprovado pelo time e mergeado na develop"
+    ],
+    "membros": "6515cff8159cb78d54ad4074"
+  },
+  {
+    "titulo": "Spec e skills da arquitetura do Next.js (frontend)",
+    "descricao": "Escrever o spec normativo e o guia de skills do frontend em Clean Architecture, no formato dos documentos Flutter (spec = regras obrigatórias; skills = guia prático).\n\nModelo de referência: docs de arquitetura do projeto Flutter white_label_barber (feature.skills.md, feature.spec.md e feature.template.md), adaptados para este stack.\n\nAdaptação sugerida do mapeamento: domain (entidades, contratos de repositório e casos de uso, sem importar React/Next), data (implementações e mapeadores de DTO), infra (clientes: Supabase, fetch/API Nest), presenter (hooks e stores de estado da tela), modules (page/view por feature: a page decide loading/erro/vazio/sucesso e a view só renderiza o sucesso) e main/di (composição das dependências por tela). Fluxo: modules → presenter → domain; data → domain; infra → data. Regras de nomenclatura, o que não é permitido e testes mínimos (React Testing Library). Definition of Done com lint, typecheck e testes.\n\nPai: [FAP - 0171]",
+    "etiquetas": "ARQUITETURA, docs, P0",
+    "checklist": [
+      "docs/architecture/frontend.spec.md",
+      "docs/architecture/frontend.skills.md",
+      "Estrutura de pastas por feature (App Router) definida",
+      "Regras da page/view e lista do que é proibido",
+      "Testes mínimos e Definition of Done"
+    ],
+    "membros": "6515cff8159cb78d54ad4074"
+  },
+  {
+    "titulo": "Spec e skills da arquitetura do NestJS (backend)",
+    "descricao": "Escrever o spec e o guia de skills do backend em Clean Architecture sobre NestJS.\n\nModelo de referência: docs de arquitetura do projeto Flutter white_label_barber (feature.skills.md, feature.spec.md e feature.template.md), adaptados para este stack.\n\nAdaptação sugerida: domain (entidades, regras e portas/interfaces, sem imports do Nest), application (casos de uso), infra (adapters: repositórios com Supabase/PostgreSQL, e-mail, WhatsApp), presentation (controllers, DTOs com validação, guards e filtros de exceção) e modules (módulo Nest por feature que monta a injeção de dependências). Fluxo: presentation → application → domain; infra → domain. Pontos obrigatórios: validação de entrada, autorização por perfil (aluno, professor, bibliotecária), auditoria, tratamento de erros e testes (unitários de caso de uso e e2e de rota). Nomenclatura, o que não é permitido e Definition of Done.\n\nPai: [FAP - 0171]",
+    "etiquetas": "ARQUITETURA, docs, P0",
+    "checklist": [
+      "docs/architecture/backend.spec.md",
+      "docs/architecture/backend.skills.md",
+      "Estrutura de módulos por feature definida",
+      "Regras de validação, autorização e auditoria",
+      "Testes mínimos e Definition of Done"
+    ],
+    "membros": "6515cff8159cb78d54ad4074"
+  },
+  {
+    "titulo": "Spec do Supabase: banco, migrations, RLS, auth e storage",
+    "descricao": "Escrever o spec do Supabase como camada de dados da arquitetura: como o banco é versionado e protegido.\n\nModelo de referência: docs de arquitetura do projeto Flutter white_label_barber (feature.skills.md, feature.spec.md e feature.template.md), adaptados para este stack.\n\nPontos: migrations versionadas em supabase/migrations como única fonte de verdade do esquema; RLS sempre ligado e permissões explícitas por perfil (o projeto fap-books foi criado com \"expor tabelas automaticamente\" desligado); convenção de nomes de tabelas, colunas, índices e funções; uso de Auth, Storage e Edge Functions; chaves (anon x service role) e quem pode usar cada uma; seeds e ambientes; como o NestJS e o Next.js falam com o banco; checklist de revisão de migration.\n\nPai: [FAP - 0171]",
+    "etiquetas": "ARQUITETURA, docs, P0",
+    "checklist": [
+      "docs/architecture/supabase.spec.md",
+      "Convenções de migrations, RLS e nomes",
+      "Regras de uso de Auth, Storage e chaves",
+      "Checklist de revisão de migration"
+    ],
+    "membros": "6515cff8159cb78d54ad4074"
+  },
+  {
+    "titulo": "Scaffold de feature e fluxo entre camadas (monorepo)",
+    "descricao": "Criar o scaffold que gera uma feature completa no padrão e documentar o fluxo entre frontend, backend e banco.\n\nModelo de referência: docs de arquitetura do projeto Flutter white_label_barber (feature.skills.md, feature.spec.md e feature.template.md), adaptados para este stack.\nNo modelo, scripts/create_feature.sh gera domain, data, infra, presenter, modules e DI. Aqui: um script (ou gerador) para o Next.js, outro para o NestJS e um modelo de migration, mais o documento template com os passos obrigatórios depois de gerar. Definir também a estrutura do repositório (apps/web, apps/api, supabase/, docs/) e como os contratos (tipos/DTOs) são compartilhados.\n\nPai: [FAP - 0171]\nDepende de: [FAP - 0172]\nDepende de: [FAP - 0173]\nDepende de: [FAP - 0174]",
+    "etiquetas": "ARQUITETURA, docs, P0",
+    "checklist": [
+      "Script de scaffold do Next.js",
+      "Script de scaffold do NestJS",
+      "Modelo de migration",
+      "docs/architecture/feature.template.md",
+      "Estrutura do repositório e contratos compartilhados documentados"
+    ],
+    "membros": "6515cff8159cb78d54ad4074"
+  }
+]
