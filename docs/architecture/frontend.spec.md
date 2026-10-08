@@ -1,122 +1,109 @@
-# Frontend Spec — Next.js + Supabase com Clean Architecture
+# Frontend Spec — Next.js + Supabase
 
-Documento normativo: define como toda feature do FAP Books é organizada. Se você está começando, leia primeiro o [Guia do aluno](guia-do-aluno.md).
+Documento normativo: define como o código do FAP Books é organizado. Se você está começando, leia primeiro o [Guia do aluno](guia-do-aluno.md).
 
-Modelo de referência: `feature.spec.md` do projeto Flutter white_label_barber, adaptado para Next.js (App Router), React, TypeScript e Supabase.
+## A ideia
 
-## Escopo
+A base é a **mesma estrutura que o professor ensinou** (`src/app` para as rotas e `src/components` para os componentes). Ela cresce em **níveis**, só quando o projeto precisar. Quem sabe o Nível 1 já consegue trabalhar em qualquer tela.
 
-Nesta fase o projeto tem **duas peças**: o site (Next.js) e o Supabase (banco, login e arquivos). Não existe API separada. O código de servidor do Next.js (Server Components e Server Actions) conversa com o Supabase. O NestJS foi adiado; se entrar no futuro, será por decisão do time (ver [README](README.md)).
+Nesta fase o projeto tem **duas peças**: o site (Next.js) e o Supabase (banco, login e arquivos). Não existe API separada. O NestJS foi adiado (ver [README](README.md)).
 
-O banco e a segurança dele estão em [supabase.spec.md](supabase.spec.md).
+## Níveis
 
-## Camadas obrigatórias
-
-Cada feature usa estas camadas, dentro de `src/`. Em palavras simples:
-
-| Camada | Pasta | Em palavras simples |
+| Nível | Quando usar | O que tem |
 | -- | -- | -- |
-| domain | `src/domain/<feature>/` | **O que o sistema é e quais são as regras.** Um livro, um empréstimo, o limite de 5 livros. Não sabe que existem React, Next ou banco |
-| data | `src/data/<feature>/` | **Como trazer e levar dados.** Implementa o que o domain pede e converte o formato do banco para o formato do sistema |
-| infra | `src/infra/` | **Os fios que ligam ao mundo de fora.** Cliente do Supabase (login, banco, arquivos) |
-| presenter | `src/presenter/<feature>/` | **O estado da tela.** Hooks e Server Actions que chamam os casos de uso |
-| modules | `src/modules/<feature>/` | **O que aparece na tela.** Page, views e widgets |
-| main | `src/main/di/` | **A montagem.** Junta as peças de cada feature |
-| app | `src/app/` | **As rotas do site.** Arquivos curtos que só chamam a page do módulo |
+| **1 — Base (o do professor)** | **Sempre**, em todas as telas | `app`, `components`, `lib`, `services`, `types` |
+| **2 — Regras do negócio** | Quando aparece uma regra: limite de 5 livros, prazo de 7 dias, multa de R$ 1,00 por dia | Nível 1 + `domain` (funções puras e testadas) |
+| **3 — Camadas completas** | Só se o time pedir, no futuro | [Camadas completas](futuro/camadas-completas.md) |
 
-## Fluxo de dependência (sempre nesta direção)
-
-```text
-app → modules → presenter → domain
-data → domain
-infra → data
-main/di → todas (somente para montagem)
-```
-
-Regra de ouro: **quem está à esquerda pode usar quem está à direita, nunca o contrário.** O `domain` não importa nada de React, Next.js, Supabase nem `fetch`. É TypeScript puro.
-
-## Estrutura obrigatória por feature
+## Nível 1 — Estrutura
 
 ```text
 src/
-  app/<rota>/page.tsx                  # curto: chama modules/<feature>/page
-  app/<rota>/loading.tsx               # tela de carregamento da rota
-  app/<rota>/error.tsx                 # tela de erro da rota
-  domain/<feature>/
-    entities/<feature>.entity.ts
-    repositories/<feature>.repository.ts   # o "contrato": o que precisa existir
-    usecases/<verbo>-<feature>.usecase.ts  # uma ação do usuário
-  data/<feature>/
-    models/<feature>.model.ts              # formato que vem do banco
-    mappers/<feature>.mapper.ts            # model → entity
-    repositories/<feature>.repository-impl.ts
-  infra/
-    supabase/browser-client.ts             # sessão no navegador
-    supabase/server-client.ts              # sessão no servidor
-    adapters/<feature>/<feature>-supabase.adapter.ts
-  presenter/<feature>/
-    <feature>.state.ts
-    use-<feature>.ts                       # hook (Client Component)
-    <feature>.actions.ts                   # Server Actions (escrita)
-  modules/<feature>/
-    page/<feature>-page.tsx                # decide qual cenário mostrar
-    page/view/<feature>-view.tsx           # cenário de sucesso
-    page/view/<feature>-loading-view.tsx
-    page/view/<feature>-error-view.tsx
-    page/view/<feature>-empty-view.tsx
-    widgets/                               # pedaços reutilizáveis
-  main/di/
-    <feature>.dependencies.ts              # funções que montam a feature
+  app/                          # as rotas (igual ao projeto do professor)
+    <rota>/page.tsx
+    <rota>/loading.tsx          # tela de carregamento da rota
+    <rota>/error.tsx            # tela de erro da rota
+  components/                   # os componentes (igual ao projeto do professor)
+    Button.tsx
+    BookCard.tsx
+    index.tsx                   # reexporta todos: export { Button, BookCard }
+  lib/
+    supabase/
+      browser-client.ts         # Supabase no navegador
+      server-client.ts          # Supabase no servidor
+  services/
+    books.service.ts            # funções que buscam e salvam dados
+  types/
+    books.ts                    # tipos do TypeScript (Book)
 ```
 
-## Regras
+### Quem faz o quê
 
-1. **A rota é curta.** `app/<rota>/page.tsx` só importa e devolve a page do módulo.
-2. **A page decide o cenário.** Carregando, erro, vazio ou sucesso. Em Server Component, ela usa `<Suspense>` para o carregando; o erro vai para `error.tsx`; lista vazia mostra a `EmptyView`.
-3. **A view só mostra o sucesso.** Recebe tudo por props. Não busca dados e não decide cenário.
-4. **`"use client"` só onde há interação.** Formulário, clique e estado local. O resto roda no servidor.
-5. **O domain define contratos.** O caso de uso depende de uma interface (`<feature>.repository.ts`), nunca de `fetch` ou do Supabase.
-6. **O data cumpre o contrato.** O `repository-impl` usa o adaptador da `infra` e o mapper para devolver entidades.
-7. **Montagem por funções simples.** `main/di/<feature>.dependencies.ts` exporta funções como `makeListBooks()`. Elas criam o adaptador, o repositório e o caso de uso e devolvem o caso de uso pronto. Sem biblioteca de injeção. Se um dia for preciso algo mais forte, só esse arquivo muda.
-8. **As regras do negócio ficam no domain.** Limite de 5 livros, prazo de 7 dias, multa de R$ 1,00 por dia. Elas rodam no servidor, dentro dos casos de uso chamados pelas Server Actions.
-9. **Segurança em duas barreiras.** (1) O servidor checa o perfil do usuário antes de executar o caso de uso. (2) O **RLS do Supabase** impede que o banco entregue dados a quem não pode. Como não há API entre o site e o banco, o RLS é obrigatório em toda tabela.
-10. **Login.** A sessão é do Supabase Auth. O `src/proxy.ts` protege rotas por perfil (nesta versão do Next.js o antigo *middleware* se chama *proxy*).
-11. **Segredos.** Só variáveis `NEXT_PUBLIC_*` vão ao navegador. A chave de serviço do Supabase nunca é usada no navegador e só aparece em código de servidor.
+| Pasta | Responsabilidade | Pode usar | Não pode |
+| -- | -- | -- | -- |
+| `app` | Montar a tela da rota | `components`, `services`, `types` | Falar com o Supabase direto |
+| `components` | Desenhar um pedaço da tela | outros `components`, `types` | Buscar dados, conhecer o Supabase |
+| `services` | Buscar e salvar dados | `lib`, `types` | Importar de `app` ou `components` |
+| `lib` | Criar os clientes do Supabase | pacotes externos | Conhecer telas |
+| `types` | Descrever os dados | nada | Ter lógica |
 
-## Convenções de arquivo
+Regra de ouro: **a tela pede dados ao `service`, e só o `service` fala com o Supabase.**
 
-- Arquivos em `kebab-case`; componentes e classes em `PascalCase`.
-- Sufixos: `.entity.ts`, `.repository.ts`, `.repository-impl.ts`, `.usecase.ts`, `.model.ts`, `.mapper.ts`, `.adapter.ts`, `.state.ts`, `.actions.ts`.
-- Componentes de view terminam em `View`: `BookListView`, `BookListLoadingView`.
-- Imports com o alias `@/` partindo de `src/`.
-- Nomes de código em **inglês** (`Book`, `Loan`); textos que o usuário vê, em português.
+### Regras do Nível 1
+
+1. **Um componente por arquivo**, nome em `PascalCase` (`BookCard.tsx`), com `interface` das props e exportado no `index.tsx`.
+2. **A rota é simples.** `page.tsx` monta a tela chamando `services` e `components`. Sem regra de negócio.
+3. **Servidor por padrão.** A `page` busca os dados no servidor (função `async`). Use `"use client"` só em quem tem `useState`, formulário ou clique.
+4. **Os 4 cenários.** Toda tela com dados trata: carregando (`loading.tsx`), erro (`error.tsx`), vazio (uma mensagem) e sucesso.
+5. **Dados só pelos `services`.** Componentes e páginas nunca chamam o Supabase nem `fetch`.
+6. **Tipos em `types`.** Nada de `any`.
+7. **Segurança em duas barreiras.** O servidor checa quem é o usuário e o **RLS** do Supabase protege o banco. Toda tabela tem RLS ([supabase.spec.md](supabase.spec.md)).
+8. **Login.** A sessão é do Supabase Auth. O `src/proxy.ts` protege as rotas (nesta versão do Next.js o antigo *middleware* se chama *proxy*).
+9. **Segredos.** Só `NEXT_PUBLIC_*` vai ao navegador. A chave de serviço do Supabase nunca.
+
+## Nível 2 — Regras do negócio
+
+Quando a feature tiver uma regra, ela vai para funções **puras** (sem React, Next ou Supabase) em `src/domain/<feature>/`, com teste:
+
+```text
+src/domain/loans/
+  loan-rules.ts            # canBorrow(), calculateFine(), calculateDueDate()
+  loan-rules.test.ts
+```
+
+O `service` chama essas funções antes de salvar. Assim a regra fica em um lugar só, é fácil de explicar e de testar. Exemplo: `calculateFine(daysLate)` devolve `daysLate * 100` (centavos).
+
+## Convenções
+
+- Componentes: `PascalCase.tsx`. Services: `kebab-case.service.ts`. Tipos e regras: `kebab-case.ts`.
+- Código em **inglês** (`Book`, `Loan`, `listBooks`) e textos da tela em **português**, como no projeto do professor.
+- Imports com o alias `@/` apontando para `src/`: `import { Button } from "@/components";`.
+- Rotas em inglês curto, como no projeto do professor (`/login`, `/books`, `/loans`).
 
 ## Não permitido
 
-- Importar `react`, `next/*` ou `@supabase/*` dentro de `src/domain/`.
-- Chamar `fetch` ou o Supabase direto de um componente.
-- Criar a tela de carregamento como componente escondido dentro da page.
-- Criar repositório ou caso de uso dentro de uma view.
+- Chamar o Supabase ou `fetch` dentro de componente ou de `page`.
 - Regra de negócio dentro de componente.
 - Tabela sem RLS.
-- Imports que dão a volta (A importa B e B importa A).
-- Lógica dentro de `src/app/`. Ali só ficam arquivos de rota.
+- `any` sem comentário explicando o motivo.
+- Chave ou senha no código.
+- Criar pasta ou camada nova sem **perguntar ao responsável**.
 
-## Critérios de aceitação (qualidade)
+## Critérios de aceitação
 
-- A feature segue a estrutura e o fluxo de dependência.
-- Page controla os cenários; view só trata sucesso.
-- Dependências montadas em `main/di/<feature>.dependencies.ts`.
-- Testes: caso de uso (regra de negócio) e fluxo principal da page.
-- Passam: `npm run lint`, `npm run typecheck`, `npm run test` e `npm run build`.
-- O PR descreve o que mudou e como testar (ver [qualidade.md](qualidade.md)).
+- A feature segue a estrutura do Nível 1 (e do Nível 2, se houver regra).
+- Tela trata carregando, erro, vazio e sucesso.
+- Regras com teste.
+- Passam: `npm run lint`, `npm run typecheck` e `npm run build` (e `npm run test`, quando o Vitest estiver instalado).
+- O PR descreve o que mudou e como testar ([qualidade.md](qualidade.md)).
 
-## Processo de evolução
+## Processo
 
-1. Gere a feature com `scripts/arch/create-feature-web.sh <feature>`.
+1. Gere a base: `scripts/arch/create-feature-web.sh <feature>`.
 2. Troque os nomes de exemplo pelo domínio real.
-3. Ligue a rota em `src/app/`.
-4. Crie a migration das tabelas (ver [supabase.spec.md](supabase.spec.md)).
-5. Escreva os testes e rode as verificações.
+3. Crie a migration do banco ([supabase.spec.md](supabase.spec.md)).
+4. Se houver regra do negócio, crie o Nível 2.
+5. Rode as verificações e abra o PR.
 
 Guia prático: [frontend.skills.md](frontend.skills.md).
