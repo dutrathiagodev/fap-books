@@ -40,7 +40,7 @@ if (cmd === 'descrever') {
   const labels = tr('labels', 'list', '--board', BOARD)
   const labelId = n => {
     let l = labels.find(x => x.name === n)
-    if (!l) { l = tr('labels', 'create', '--board', BOARD, '--name', n, '--color', ({ DESIGN: 'pink', BLOCO: 'lime', FRONT: 'sky', TELA: 'purple', CONFIG: 'orange' })[n] ?? 'black'); labels.push(l) }
+    if (!l) { l = tr('labels', 'create', '--board', BOARD, '--name', n, '--color', ({ DESIGN: 'pink', BLOCO: 'lime', FRONT: 'sky', TELA: 'purple', CONFIG: 'orange', REUNIAO: 'yellow' })[n] ?? 'black'); labels.push(l) }
     return l.id
   }
   const back = listId(args[1] ?? '📥 Backlog')
