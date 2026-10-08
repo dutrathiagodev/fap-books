@@ -1,0 +1,25 @@
+name: Trello - Pull Requests
+
+on:
+  pull_request:
+    branches: [develop, main]
+    types: [opened, reopened, ready_for_review, closed]
+
+concurrency:
+  group: trello-pr-${{ github.event.pull_request.number }}
+  cancel-in-progress: false
+
+jobs:
+  mover-card:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node scripts/trello-pr.mjs --selftest
+      - run: node scripts/trello-pr.mjs
+        env:
+          TRELLO_KEY: ${{ secrets.TRELLO_KEY }}
+          TRELLO_TOKEN: ${{ secrets.TRELLO_TOKEN }}
