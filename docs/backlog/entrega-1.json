@@ -1,0 +1,14 @@
+[
+  {
+    "titulo": "Entrega 1: base do projeto na main",
+    "descricao": "Primeira entrega da develop para a main: a base do FAP Books.\n\nEntra: estrutura src/ com components, ligação com o Supabase, esquema do banco (5 migrations, já aplicadas), CI, automações do Trello, PRD, arquitetura, guias de estudo e guias de ambiente.\n\nBranch: FAP/0184. O merge na main é feito pelo responsável, com bypass do ruleset.",
+    "etiquetas": "CONFIG, P0",
+    "checklist": [
+      "PR aberto para a main com a lista do que entra",
+      "CI verde",
+      "Merge feito pelo responsável",
+      "Workflows rodando a partir da main"
+    ],
+    "membros": "6515cff8159cb78d54ad4074"
+  }
+]

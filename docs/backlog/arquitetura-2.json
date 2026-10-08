@@ -1,0 +1,26 @@
+[
+  {
+    "titulo": "Guia do aluno: arquitetura explicada passo a passo",
+    "descricao": "Escrever, em linguagem simples, o guia que explica a arquitetura para quem está começando: glossário (camada, entidade, caso de uso, repositório, RLS, migration), o caminho de uma tela do clique ao banco, exemplos completos e erros comuns. O time ainda não teve aula de backend nem de banco de dados, então nada pode ser dado como sabido.\n\nArquivo: docs/architecture/guia-do-aluno.md\n\nPai: [FAP - 0171]",
+    "etiquetas": "ARQUITETURA, docs, P0",
+    "checklist": [
+      "Glossário com exemplos do FAP Books",
+      "Caminho de uma tela até o banco, ilustrado",
+      "Passo a passo de uma feature completa",
+      "Erros comuns e como resolver",
+      "Revisão com alguém do time que está começando"
+    ],
+    "membros": "6515cff8159cb78d54ad4074"
+  },
+  {
+    "titulo": "Índice da arquitetura e registro de decisões",
+    "descricao": "Criar docs/architecture/README.md com o índice dos documentos de arquitetura e a tabela de decisões (o que foi decidido, por quê e quem decidiu), incluindo: começar só com Next.js + Supabase, NestJS adiado, injeção de dependência por funções simples e qualidade como prioridade.\n\nPai: [FAP - 0171]",
+    "etiquetas": "ARQUITETURA, docs, P1",
+    "checklist": [
+      "Índice dos documentos",
+      "Tabela de decisões com data e motivo",
+      "Regra: perguntar antes de criar repositório ou tecnologia nova"
+    ],
+    "membros": "6515cff8159cb78d54ad4074"
+  }
+]
