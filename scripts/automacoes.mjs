@@ -7,13 +7,12 @@
 //  3. Card pai ("Pai: [FAP - N]" nos filhos) com todos os filhos em ✅ Done            -> ✅ Done (em cascata)
 //  4. 🚧 In Progress / 🚫 Blocked: marca quem arrastou o card para In Progress (fica responsável)
 //  5. 🔀 Awaiting PR : marca Thiago e quem arrastou o card para lá
-//  6. 🔍 Awaiting QA : marca o QA (Breno; se foi o Breno quem abriu o PR, Emanuel)
+//  6. 🔍 Awaiting QA : marca o Breno (QA), inclusive nos cards dele
 //  7. ❌ QA Rejected : marca Thiago e quem arrastou o card para Awaiting PR
 //  8. ✅ Done        : fica só quem arrastou o card para Awaiting PR (se houver histórico)
 const BOARD = '6ac6e9c9b825cc2a16bc7c4f'
 const THIAGO = '6515cff8159cb78d54ad4074'
 const BRENO = '68ca9fb753f35f1a0a8f2e7e'
-const EMANUEL = '67195d0c150f447a3be11937'
 const L = { backlog: '📥 Backlog', todo: '📝 To Do', progress: '🚧 In Progress', blocked: '🚫 Blocked', pr: '🔀 Awaiting PR', qa: '🔍 Awaiting QA', rejected: '❌ QA Rejected', done: '✅ Done' }
 
 const num = c => c.name.match(/^\[FAP - (\d+)\]/)?.[1]
@@ -53,7 +52,7 @@ export function planejar(cards, listas, hist) {
     let quer = atual
     if ([L.progress, L.blocked].includes(lista) && h.progress) quer = uniq([...atual, h.progress])
     else if (lista === L.pr) quer = uniq([...atual, THIAGO, ...(autor ? [autor] : [])])
-    else if (lista === L.qa) quer = uniq([...atual, autor === BRENO ? EMANUEL : BRENO])
+    else if (lista === L.qa) quer = uniq([...atual, BRENO])
     else if (lista === L.rejected) quer = uniq([...atual, THIAGO, ...(autor ? [autor] : [])])
     else if (lista === L.done && autor) quer = [autor]
     if (!mesmo(atual, quer)) acoes.push({ tipo: 'membros', c, quer, motivo: `lista ${lista}` })
@@ -83,7 +82,7 @@ function selftest() {
   a = planejar([card('0004', L.qa, '', [PR, THIAGO])], listas, () => ({ pr: PR }))
   assert(a[0].quer.includes(BRENO), 'Awaiting QA marca o Breno')
   a = planejar([card('0004', L.qa, '', [BRENO, THIAGO])], listas, () => ({ pr: BRENO }))
-  assert(a[0].quer.includes(EMANUEL) && !a[0].quer.includes(undefined), 'Awaiting QA troca o QA quando o Breno abriu o PR')
+  assert(a.length === 0, 'Awaiting QA: o Breno pode testar o próprio card')
   a = planejar([card('0004', L.rejected, '', [PR, BRENO])], listas, () => ({ pr: PR }))
   assert(a[0].quer.includes(THIAGO) && a[0].quer.includes(PR), 'QA Rejected marca Thiago e o autor do PR')
   a = planejar([card('0004', L.done, '', [PR, THIAGO, BRENO])], listas, () => ({ pr: PR }))
@@ -123,7 +122,7 @@ async function main() {
     cache[id] = { pr: quem(L.pr), progress: quem(L.progress) }
   }
   const acoes = planejar(cards, listas, c => cache[c.id])
-  const nomes = { [THIAGO]: 'Thiago', [BRENO]: 'Breno', [EMANUEL]: 'Emanuel' }
+  const nomes = { [THIAGO]: 'Thiago', [BRENO]: 'Breno' }
   for (const a of acoes) {
     if (a.tipo === 'mover') {
       console.log(`${dry ? '[dry] ' : ''}${a.c.name} -> ${a.lista} (${a.motivo})`)
