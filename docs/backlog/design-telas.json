@@ -1,0 +1,991 @@
+[
+  {
+    "titulo": "Tela: Base visual: paleta, tipografia e componentes",
+    "descricao": "Entrega da tela \"Base visual: paleta, tipografia e componentes\": design no Stitch exportado para o Figma e construção da interface, em blocos.\n\nHistórias relacionadas: [FAP - [FAP - 0013]]\nPRD v0.3.\n\nFecha automaticamente quando o design e todos os blocos estiverem em ✅ Done.",
+    "etiquetas": "TELA, P0",
+    "checklist": [
+      "Design no Stitch exportado e aprovado no Figma",
+      "Todos os blocos implementados e integrados",
+      "Revisão em desktop e mobile"
+    ],
+    "membros": "68d138655f90a29c7c2a8900"
+  },
+  {
+    "titulo": "Tela: Layout base e navegação (desktop e mobile)",
+    "descricao": "Entrega da tela \"Layout base e navegação (desktop e mobile)\": design no Stitch exportado para o Figma e construção da interface, em blocos.\n\nHistórias relacionadas: [FAP - [FAP - 0013]]\nPRD v0.3.\n\nFecha automaticamente quando o design e todos os blocos estiverem em ✅ Done.",
+    "etiquetas": "TELA, P0",
+    "checklist": [
+      "Design no Stitch exportado e aprovado no Figma",
+      "Todos os blocos implementados e integrados",
+      "Revisão em desktop e mobile"
+    ],
+    "membros": "68d138655f90a29c7c2a8900"
+  },
+  {
+    "titulo": "Tela: Tela de login",
+    "descricao": "Entrega da tela \"Tela de login\": design no Stitch exportado para o Figma e construção da interface, em blocos.\n\nHistórias relacionadas: [FAP - [FAP - 0007]]\nPRD v0.3.\n\nFecha automaticamente quando o design e todos os blocos estiverem em ✅ Done.",
+    "etiquetas": "TELA, P0",
+    "checklist": [
+      "Design no Stitch exportado e aprovado no Figma",
+      "Todos os blocos implementados e integrados",
+      "Revisão em desktop e mobile"
+    ],
+    "membros": "6a5e8ced6137038c8b598826"
+  },
+  {
+    "titulo": "Tela: Pesquisa de livros e detalhe do livro",
+    "descricao": "Entrega da tela \"Pesquisa de livros e detalhe do livro\": design no Stitch exportado para o Figma e construção da interface, em blocos.\n\nHistórias relacionadas: [FAP - [FAP - 0025]]\nPRD v0.3.\n\nFecha automaticamente quando o design e todos os blocos estiverem em ✅ Done.",
+    "etiquetas": "TELA, P0",
+    "checklist": [
+      "Design no Stitch exportado e aprovado no Figma",
+      "Todos os blocos implementados e integrados",
+      "Revisão em desktop e mobile"
+    ],
+    "membros": "67195d0c150f447a3be11937"
+  },
+  {
+    "titulo": "Tela: Listagem do acervo (bibliotecária)",
+    "descricao": "Entrega da tela \"Listagem do acervo (bibliotecária)\": design no Stitch exportado para o Figma e construção da interface, em blocos.\n\nHistórias relacionadas: [FAP - [FAP - 0018]  [FAP - 0019]  [FAP - 0020]]\nPRD v0.3.\n\nFecha automaticamente quando o design e todos os blocos estiverem em ✅ Done.",
+    "etiquetas": "TELA, P0",
+    "checklist": [
+      "Design no Stitch exportado e aprovado no Figma",
+      "Todos os blocos implementados e integrados",
+      "Revisão em desktop e mobile"
+    ],
+    "membros": "6a5e8ced6137038c8b598826"
+  },
+  {
+    "titulo": "Tela: Formulário de cadastro e edição de livro",
+    "descricao": "Entrega da tela \"Formulário de cadastro e edição de livro\": design no Stitch exportado para o Figma e construção da interface, em blocos.\n\nHistórias relacionadas: [FAP - [FAP - 0018]  [FAP - 0019]]\nPRD v0.3.\n\nFecha automaticamente quando o design e todos os blocos estiverem em ✅ Done.",
+    "etiquetas": "TELA, P0",
+    "checklist": [
+      "Design no Stitch exportado e aprovado no Figma",
+      "Todos os blocos implementados e integrados",
+      "Revisão em desktop e mobile"
+    ],
+    "membros": "68d138655f90a29c7c2a8900"
+  },
+  {
+    "titulo": "Tela: Cadastro de usuários (aluno, professor, funcionário)",
+    "descricao": "Entrega da tela \"Cadastro de usuários (aluno, professor, funcionário)\": design no Stitch exportado para o Figma e construção da interface, em blocos.\n\nHistórias relacionadas: [FAP - [FAP - 0029]  [FAP - 0030]  [FAP - 0031]]\nPRD v0.3.\n\nFecha automaticamente quando o design e todos os blocos estiverem em ✅ Done.",
+    "etiquetas": "TELA, P0",
+    "checklist": [
+      "Design no Stitch exportado e aprovado no Figma",
+      "Todos os blocos implementados e integrados",
+      "Revisão em desktop e mobile"
+    ],
+    "membros": "63fb58a30bbf172e395d48ca"
+  },
+  {
+    "titulo": "Tela: Listagem, edição e inativação de usuários",
+    "descricao": "Entrega da tela \"Listagem, edição e inativação de usuários\": design no Stitch exportado para o Figma e construção da interface, em blocos.\n\nHistórias relacionadas: [FAP - [FAP - 0033]  [FAP - 0034]]\nPRD v0.3.\n\nFecha automaticamente quando o design e todos os blocos estiverem em ✅ Done.",
+    "etiquetas": "TELA, P1",
+    "checklist": [
+      "Design no Stitch exportado e aprovado no Figma",
+      "Todos os blocos implementados e integrados",
+      "Revisão em desktop e mobile"
+    ],
+    "membros": "67195d0c150f447a3be11937"
+  },
+  {
+    "titulo": "Tela: Registro de empréstimo, devolução e renovação",
+    "descricao": "Entrega da tela \"Registro de empréstimo, devolução e renovação\": design no Stitch exportado para o Figma e construção da interface, em blocos.\n\nHistórias relacionadas: [FAP - [FAP - 0078]]\nPRD v0.3.\n\nFecha automaticamente quando o design e todos os blocos estiverem em ✅ Done.",
+    "etiquetas": "TELA, P0",
+    "checklist": [
+      "Design no Stitch exportado e aprovado no Figma",
+      "Todos os blocos implementados e integrados",
+      "Revisão em desktop e mobile"
+    ],
+    "membros": "68ca9fb753f35f1a0a8f2e7e"
+  },
+  {
+    "titulo": "Tela: Solicitar reserva pedagógica (professor)",
+    "descricao": "Entrega da tela \"Solicitar reserva pedagógica (professor)\": design no Stitch exportado para o Figma e construção da interface, em blocos.\n\nHistórias relacionadas: [FAP - [FAP - 0048]]\nPRD v0.3.\n\nFecha automaticamente quando o design e todos os blocos estiverem em ✅ Done.",
+    "etiquetas": "TELA, P1",
+    "checklist": [
+      "Design no Stitch exportado e aprovado no Figma",
+      "Todos os blocos implementados e integrados",
+      "Revisão em desktop e mobile"
+    ],
+    "membros": "63fb58a30bbf172e395d48ca"
+  },
+  {
+    "titulo": "Tela: Registrar reserva pedagógica presencial",
+    "descricao": "Entrega da tela \"Registrar reserva pedagógica presencial\": design no Stitch exportado para o Figma e construção da interface, em blocos.\n\nHistórias relacionadas: [FAP - [FAP - 0049]]\nPRD v0.3.\n\nFecha automaticamente quando o design e todos os blocos estiverem em ✅ Done.",
+    "etiquetas": "TELA, P1",
+    "checklist": [
+      "Design no Stitch exportado e aprovado no Figma",
+      "Todos os blocos implementados e integrados",
+      "Revisão em desktop e mobile"
+    ],
+    "membros": "68d138655f90a29c7c2a8900"
+  },
+  {
+    "titulo": "Tela: Fila de aprovação de reservas pedagógicas",
+    "descricao": "Entrega da tela \"Fila de aprovação de reservas pedagógicas\": design no Stitch exportado para o Figma e construção da interface, em blocos.\n\nHistórias relacionadas: [FAP - [FAP - 0080]]\nPRD v0.3.\n\nFecha automaticamente quando o design e todos os blocos estiverem em ✅ Done.",
+    "etiquetas": "TELA, P1",
+    "checklist": [
+      "Design no Stitch exportado e aprovado no Figma",
+      "Todos os blocos implementados e integrados",
+      "Revisão em desktop e mobile"
+    ],
+    "membros": "6a5e8ced6137038c8b598826"
+  },
+  {
+    "titulo": "Tela: Multas: baixa manual do pagamento",
+    "descricao": "Entrega da tela \"Multas: baixa manual do pagamento\": design no Stitch exportado para o Figma e construção da interface, em blocos.\n\nHistórias relacionadas: [FAP - [FAP - 0061]]\nPRD v0.3.\n\nFecha automaticamente quando o design e todos os blocos estiverem em ✅ Done.",
+    "etiquetas": "TELA, P1",
+    "checklist": [
+      "Design no Stitch exportado e aprovado no Figma",
+      "Todos os blocos implementados e integrados",
+      "Revisão em desktop e mobile"
+    ],
+    "membros": "68ca9fb753f35f1a0a8f2e7e"
+  },
+  {
+    "titulo": "Tela: Avisos de prazo no painel",
+    "descricao": "Entrega da tela \"Avisos de prazo no painel\": design no Stitch exportado para o Figma e construção da interface, em blocos.\n\nHistórias relacionadas: [FAP - [FAP - 0063]]\nPRD v0.3.\n\nFecha automaticamente quando o design e todos os blocos estiverem em ✅ Done.",
+    "etiquetas": "TELA, P1",
+    "checklist": [
+      "Design no Stitch exportado e aprovado no Figma",
+      "Todos os blocos implementados e integrados",
+      "Revisão em desktop e mobile"
+    ],
+    "membros": "6a5e8ced6137038c8b598826"
+  },
+  {
+    "titulo": "Tela: Histórico de empréstimos por usuário e por livro",
+    "descricao": "Entrega da tela \"Histórico de empréstimos por usuário e por livro\": design no Stitch exportado para o Figma e construção da interface, em blocos.\n\nHistórias relacionadas: [FAP - [FAP - 0068]  [FAP - 0069]]\nPRD v0.3.\n\nFecha automaticamente quando o design e todos os blocos estiverem em ✅ Done.",
+    "etiquetas": "TELA, P2",
+    "checklist": [
+      "Design no Stitch exportado e aprovado no Figma",
+      "Todos os blocos implementados e integrados",
+      "Revisão em desktop e mobile"
+    ],
+    "membros": "67195d0c150f447a3be11937"
+  },
+  {
+    "titulo": "Tela: Relatórios: atraso, acervo e reservas",
+    "descricao": "Entrega da tela \"Relatórios: atraso, acervo e reservas\": design no Stitch exportado para o Figma e construção da interface, em blocos.\n\nHistórias relacionadas: [FAP - [FAP - 0071]  [FAP - 0072]  [FAP - 0073]]\nPRD v0.3.\n\nFecha automaticamente quando o design e todos os blocos estiverem em ✅ Done.",
+    "etiquetas": "TELA, P2",
+    "checklist": [
+      "Design no Stitch exportado e aprovado no Figma",
+      "Todos os blocos implementados e integrados",
+      "Revisão em desktop e mobile"
+    ],
+    "membros": "63fb58a30bbf172e395d48ca"
+  },
+  {
+    "titulo": "Tela: Painel da bibliotecária: visão geral",
+    "descricao": "Entrega da tela \"Painel da bibliotecária: visão geral\": design no Stitch exportado para o Figma e construção da interface, em blocos.\n\nHistórias relacionadas: [FAP - [FAP - 0076]  [FAP - 0078]]\nPRD v0.3.\n\nFecha automaticamente quando o design e todos os blocos estiverem em ✅ Done.",
+    "etiquetas": "TELA, P0",
+    "checklist": [
+      "Design no Stitch exportado e aprovado no Figma",
+      "Todos os blocos implementados e integrados",
+      "Revisão em desktop e mobile"
+    ],
+    "membros": "68ca9fb753f35f1a0a8f2e7e"
+  },
+  {
+    "titulo": "Design: Base visual: paleta, tipografia e componentes (Stitch → Figma)",
+    "descricao": "Criar o design da tela \"Base visual: paleta, tipografia e componentes\" no **Stitch** e exportá-lo para o **Figma**, que é a fonte de verdade para construir a tela. Este card vem primeiro: os blocos de implementação dependem do frame final no Figma.\n\nPai: [FAP - 0081]\nPadrão visual: FAP Books (navy #032B5E / #0D3B6E, branco, cinza #8C8C8C), página 🖥️ UI web.",
+    "etiquetas": "DESIGN, P0",
+    "checklist": [
+      "Design gerado no Stitch (desktop e mobile)",
+      "Exportado para o Figma (página 🖥️ UI web)",
+      "Ajustes feitos no Figma: componentes, estados e nomes de camadas",
+      "Aprovado pelo time e link do frame no card"
+    ],
+    "membros": "68d138655f90a29c7c2a8900"
+  },
+  {
+    "titulo": "Bloco: Tokens e tema (cores, tipografia, espaçamento) (Base visual: paleta, tipografia e componentes)",
+    "descricao": "Implementar o bloco \"Tokens e tema (cores, tipografia, espaçamento)\" da tela \"Base visual: paleta, tipografia e componentes\" conforme o frame da tela no Figma (design vindo do Stitch).\n\nPai: [FAP - 0081]\nDepende de: [FAP - 0098] (frame da tela no Figma)",
+    "etiquetas": "FRONT, BLOCO, P0",
+    "checklist": [
+      "Componente isolado e reutilizável",
+      "Fiel ao frame do Figma",
+      "Responsivo (desktop e mobile)",
+      "Estados de erro e vazio tratados",
+      "PR aberto e revisado"
+    ],
+    "membros": "68d138655f90a29c7c2a8900"
+  },
+  {
+    "titulo": "Bloco: Componentes base (botão, campo, tabela, modal) (Base visual: paleta, tipografia e componentes)",
+    "descricao": "Implementar o bloco \"Componentes base (botão, campo, tabela, modal)\" da tela \"Base visual: paleta, tipografia e componentes\" conforme o frame da tela no Figma (design vindo do Stitch).\n\nPai: [FAP - 0081]\nDepende de: [FAP - 0098] (frame da tela no Figma)",
+    "etiquetas": "FRONT, BLOCO, P0",
+    "checklist": [
+      "Componente isolado e reutilizável",
+      "Fiel ao frame do Figma",
+      "Responsivo (desktop e mobile)",
+      "Estados de erro e vazio tratados",
+      "PR aberto e revisado"
+    ],
+    "membros": "68d138655f90a29c7c2a8900"
+  },
+  {
+    "titulo": "Design: Layout base e navegação (desktop e mobile) (Stitch → Figma)",
+    "descricao": "Criar o design da tela \"Layout base e navegação (desktop e mobile)\" no **Stitch** e exportá-lo para o **Figma**, que é a fonte de verdade para construir a tela. Este card vem primeiro: os blocos de implementação dependem do frame final no Figma.\n\nPai: [FAP - 0082]\nPadrão visual: FAP Books (navy #032B5E / #0D3B6E, branco, cinza #8C8C8C), página 🖥️ UI web.",
+    "etiquetas": "DESIGN, P0",
+    "checklist": [
+      "Design gerado no Stitch (desktop e mobile)",
+      "Exportado para o Figma (página 🖥️ UI web)",
+      "Ajustes feitos no Figma: componentes, estados e nomes de camadas",
+      "Aprovado pelo time e link do frame no card"
+    ],
+    "membros": "68d138655f90a29c7c2a8900"
+  },
+  {
+    "titulo": "Bloco: Cabeçalho e menu por perfil (Layout base e navegação (desktop e mobile))",
+    "descricao": "Implementar o bloco \"Cabeçalho e menu por perfil\" da tela \"Layout base e navegação (desktop e mobile)\" conforme o frame da tela no Figma (design vindo do Stitch).\n\nPai: [FAP - 0082]\nDepende de: [FAP - 0101] (frame da tela no Figma)",
+    "etiquetas": "FRONT, BLOCO, P0",
+    "checklist": [
+      "Componente isolado e reutilizável",
+      "Fiel ao frame do Figma",
+      "Responsivo (desktop e mobile)",
+      "Estados de erro e vazio tratados",
+      "PR aberto e revisado"
+    ],
+    "membros": "68d138655f90a29c7c2a8900"
+  },
+  {
+    "titulo": "Bloco: Menu mobile e responsividade (Layout base e navegação (desktop e mobile))",
+    "descricao": "Implementar o bloco \"Menu mobile e responsividade\" da tela \"Layout base e navegação (desktop e mobile)\" conforme o frame da tela no Figma (design vindo do Stitch).\n\nPai: [FAP - 0082]\nDepende de: [FAP - 0101] (frame da tela no Figma)",
+    "etiquetas": "FRONT, BLOCO, P0",
+    "checklist": [
+      "Componente isolado e reutilizável",
+      "Fiel ao frame do Figma",
+      "Responsivo (desktop e mobile)",
+      "Estados de erro e vazio tratados",
+      "PR aberto e revisado"
+    ],
+    "membros": "68d138655f90a29c7c2a8900"
+  },
+  {
+    "titulo": "Bloco: Estados vazio e carregamento (Layout base e navegação (desktop e mobile))",
+    "descricao": "Implementar o bloco \"Estados vazio e carregamento\" da tela \"Layout base e navegação (desktop e mobile)\" conforme o frame da tela no Figma (design vindo do Stitch).\n\nPai: [FAP - 0082]\nDepende de: [FAP - 0101] (frame da tela no Figma)",
+    "etiquetas": "FRONT, BLOCO, P0",
+    "checklist": [
+      "Componente isolado e reutilizável",
+      "Fiel ao frame do Figma",
+      "Responsivo (desktop e mobile)",
+      "Estados de erro e vazio tratados",
+      "PR aberto e revisado"
+    ],
+    "membros": "68d138655f90a29c7c2a8900"
+  },
+  {
+    "titulo": "Design: Tela de login (Stitch → Figma)",
+    "descricao": "Criar o design da tela \"Tela de login\" no **Stitch** e exportá-lo para o **Figma**, que é a fonte de verdade para construir a tela. Este card vem primeiro: os blocos de implementação dependem do frame final no Figma.\n\nPai: [FAP - 0083]\nPadrão visual: FAP Books (navy #032B5E / #0D3B6E, branco, cinza #8C8C8C), página 🖥️ UI web.",
+    "etiquetas": "DESIGN, P0",
+    "checklist": [
+      "Design gerado no Stitch (desktop e mobile)",
+      "Exportado para o Figma (página 🖥️ UI web)",
+      "Ajustes feitos no Figma: componentes, estados e nomes de camadas",
+      "Aprovado pelo time e link do frame no card"
+    ],
+    "membros": "6a5e8ced6137038c8b598826"
+  },
+  {
+    "titulo": "Bloco: Formulário de login e validação (Tela de login)",
+    "descricao": "Implementar o bloco \"Formulário de login e validação\" da tela \"Tela de login\" conforme o frame da tela no Figma (design vindo do Stitch).\n\nPai: [FAP - 0083]\nDepende de: [FAP - 0105] (frame da tela no Figma)",
+    "etiquetas": "FRONT, BLOCO, P0",
+    "checklist": [
+      "Componente isolado e reutilizável",
+      "Fiel ao frame do Figma",
+      "Responsivo (desktop e mobile)",
+      "Estados de erro e vazio tratados",
+      "PR aberto e revisado"
+    ],
+    "membros": "6a5e8ced6137038c8b598826"
+  },
+  {
+    "titulo": "Bloco: Integração com a autenticação (Tela de login)",
+    "descricao": "Implementar o bloco \"Integração com a autenticação\" da tela \"Tela de login\" conforme o frame da tela no Figma (design vindo do Stitch).\n\nPai: [FAP - 0083]\nDepende de: [FAP - 0105] (frame da tela no Figma)",
+    "etiquetas": "FRONT, BLOCO, P0",
+    "checklist": [
+      "Componente isolado e reutilizável",
+      "Fiel ao frame do Figma",
+      "Responsivo (desktop e mobile)",
+      "Estados de erro e vazio tratados",
+      "PR aberto e revisado"
+    ],
+    "membros": "6a5e8ced6137038c8b598826"
+  },
+  {
+    "titulo": "Design: Pesquisa de livros e detalhe do livro (Stitch → Figma)",
+    "descricao": "Criar o design da tela \"Pesquisa de livros e detalhe do livro\" no **Stitch** e exportá-lo para o **Figma**, que é a fonte de verdade para construir a tela. Este card vem primeiro: os blocos de implementação dependem do frame final no Figma.\n\nPai: [FAP - 0084]\nPadrão visual: FAP Books (navy #032B5E / #0D3B6E, branco, cinza #8C8C8C), página 🖥️ UI web.",
+    "etiquetas": "DESIGN, P0",
+    "checklist": [
+      "Design gerado no Stitch (desktop e mobile)",
+      "Exportado para o Figma (página 🖥️ UI web)",
+      "Ajustes feitos no Figma: componentes, estados e nomes de camadas",
+      "Aprovado pelo time e link do frame no card"
+    ],
+    "membros": "67195d0c150f447a3be11937"
+  },
+  {
+    "titulo": "Bloco: Barra de busca e filtros (Pesquisa de livros e detalhe do livro)",
+    "descricao": "Implementar o bloco \"Barra de busca e filtros\" da tela \"Pesquisa de livros e detalhe do livro\" conforme o frame da tela no Figma (design vindo do Stitch).\n\nPai: [FAP - 0084]\nDepende de: [FAP - 0108] (frame da tela no Figma)",
+    "etiquetas": "FRONT, BLOCO, P0",
+    "checklist": [
+      "Componente isolado e reutilizável",
+      "Fiel ao frame do Figma",
+      "Responsivo (desktop e mobile)",
+      "Estados de erro e vazio tratados",
+      "PR aberto e revisado"
+    ],
+    "membros": "67195d0c150f447a3be11937"
+  },
+  {
+    "titulo": "Bloco: Cards de resultado e paginação (Pesquisa de livros e detalhe do livro)",
+    "descricao": "Implementar o bloco \"Cards de resultado e paginação\" da tela \"Pesquisa de livros e detalhe do livro\" conforme o frame da tela no Figma (design vindo do Stitch).\n\nPai: [FAP - 0084]\nDepende de: [FAP - 0108] (frame da tela no Figma)",
+    "etiquetas": "FRONT, BLOCO, P0",
+    "checklist": [
+      "Componente isolado e reutilizável",
+      "Fiel ao frame do Figma",
+      "Responsivo (desktop e mobile)",
+      "Estados de erro e vazio tratados",
+      "PR aberto e revisado"
+    ],
+    "membros": "67195d0c150f447a3be11937"
+  },
+  {
+    "titulo": "Bloco: Página de detalhe do livro (Pesquisa de livros e detalhe do livro)",
+    "descricao": "Implementar o bloco \"Página de detalhe do livro\" da tela \"Pesquisa de livros e detalhe do livro\" conforme o frame da tela no Figma (design vindo do Stitch).\n\nPai: [FAP - 0084]\nDepende de: [FAP - 0108] (frame da tela no Figma)",
+    "etiquetas": "FRONT, BLOCO, P0",
+    "checklist": [
+      "Componente isolado e reutilizável",
+      "Fiel ao frame do Figma",
+      "Responsivo (desktop e mobile)",
+      "Estados de erro e vazio tratados",
+      "PR aberto e revisado"
+    ],
+    "membros": "67195d0c150f447a3be11937"
+  },
+  {
+    "titulo": "Bloco: Estados sem resultado e carregamento (Pesquisa de livros e detalhe do livro)",
+    "descricao": "Implementar o bloco \"Estados sem resultado e carregamento\" da tela \"Pesquisa de livros e detalhe do livro\" conforme o frame da tela no Figma (design vindo do Stitch).\n\nPai: [FAP - 0084]\nDepende de: [FAP - 0108] (frame da tela no Figma)",
+    "etiquetas": "FRONT, BLOCO, P0",
+    "checklist": [
+      "Componente isolado e reutilizável",
+      "Fiel ao frame do Figma",
+      "Responsivo (desktop e mobile)",
+      "Estados de erro e vazio tratados",
+      "PR aberto e revisado"
+    ],
+    "membros": "67195d0c150f447a3be11937"
+  },
+  {
+    "titulo": "Design: Listagem do acervo (bibliotecária) (Stitch → Figma)",
+    "descricao": "Criar o design da tela \"Listagem do acervo (bibliotecária)\" no **Stitch** e exportá-lo para o **Figma**, que é a fonte de verdade para construir a tela. Este card vem primeiro: os blocos de implementação dependem do frame final no Figma.\n\nPai: [FAP - 0085]\nPadrão visual: FAP Books (navy #032B5E / #0D3B6E, branco, cinza #8C8C8C), página 🖥️ UI web.",
+    "etiquetas": "DESIGN, P0",
+    "checklist": [
+      "Design gerado no Stitch (desktop e mobile)",
+      "Exportado para o Figma (página 🖥️ UI web)",
+      "Ajustes feitos no Figma: componentes, estados e nomes de camadas",
+      "Aprovado pelo time e link do frame no card"
+    ],
+    "membros": "6a5e8ced6137038c8b598826"
+  },
+  {
+    "titulo": "Bloco: Tabela do acervo com busca (Listagem do acervo (bibliotecária))",
+    "descricao": "Implementar o bloco \"Tabela do acervo com busca\" da tela \"Listagem do acervo (bibliotecária)\" conforme o frame da tela no Figma (design vindo do Stitch).\n\nPai: [FAP - 0085]\nDepende de: [FAP - 0113] (frame da tela no Figma)",
+    "etiquetas": "FRONT, BLOCO, P0",
+    "checklist": [
+      "Componente isolado e reutilizável",
+      "Fiel ao frame do Figma",
+      "Responsivo (desktop e mobile)",
+      "Estados de erro e vazio tratados",
+      "PR aberto e revisado"
+    ],
+    "membros": "6a5e8ced6137038c8b598826"
+  },
+  {
+    "titulo": "Bloco: Ações de editar e excluir (Listagem do acervo (bibliotecária))",
+    "descricao": "Implementar o bloco \"Ações de editar e excluir\" da tela \"Listagem do acervo (bibliotecária)\" conforme o frame da tela no Figma (design vindo do Stitch).\n\nPai: [FAP - 0085]\nDepende de: [FAP - 0113] (frame da tela no Figma)",
+    "etiquetas": "FRONT, BLOCO, P0",
+    "checklist": [
+      "Componente isolado e reutilizável",
+      "Fiel ao frame do Figma",
+      "Responsivo (desktop e mobile)",
+      "Estados de erro e vazio tratados",
+      "PR aberto e revisado"
+    ],
+    "membros": "6a5e8ced6137038c8b598826"
+  },
+  {
+    "titulo": "Bloco: Modal de exclusão de livro (Listagem do acervo (bibliotecária))",
+    "descricao": "Implementar o bloco \"Modal de exclusão de livro\" da tela \"Listagem do acervo (bibliotecária)\" conforme o frame da tela no Figma (design vindo do Stitch).\n\nPai: [FAP - 0085]\nDepende de: [FAP - 0113] (frame da tela no Figma)",
+    "etiquetas": "FRONT, BLOCO, P0",
+    "checklist": [
+      "Componente isolado e reutilizável",
+      "Fiel ao frame do Figma",
+      "Responsivo (desktop e mobile)",
+      "Estados de erro e vazio tratados",
+      "PR aberto e revisado"
+    ],
+    "membros": "6a5e8ced6137038c8b598826"
+  },
+  {
+    "titulo": "Design: Formulário de cadastro e edição de livro (Stitch → Figma)",
+    "descricao": "Criar o design da tela \"Formulário de cadastro e edição de livro\" no **Stitch** e exportá-lo para o **Figma**, que é a fonte de verdade para construir a tela. Este card vem primeiro: os blocos de implementação dependem do frame final no Figma.\n\nPai: [FAP - 0086]\nPadrão visual: FAP Books (navy #032B5E / #0D3B6E, branco, cinza #8C8C8C), página 🖥️ UI web.",
+    "etiquetas": "DESIGN, P0",
+    "checklist": [
+      "Design gerado no Stitch (desktop e mobile)",
+      "Exportado para o Figma (página 🖥️ UI web)",
+      "Ajustes feitos no Figma: componentes, estados e nomes de camadas",
+      "Aprovado pelo time e link do frame no card"
+    ],
+    "membros": "68d138655f90a29c7c2a8900"
+  },
+  {
+    "titulo": "Bloco: Campos e validações do formulário (Formulário de cadastro e edição de livro)",
+    "descricao": "Implementar o bloco \"Campos e validações do formulário\" da tela \"Formulário de cadastro e edição de livro\" conforme o frame da tela no Figma (design vindo do Stitch).\n\nPai: [FAP - 0086]\nDepende de: [FAP - 0117] (frame da tela no Figma)",
+    "etiquetas": "FRONT, BLOCO, P0",
+    "checklist": [
+      "Componente isolado e reutilizável",
+      "Fiel ao frame do Figma",
+      "Responsivo (desktop e mobile)",
+      "Estados de erro e vazio tratados",
+      "PR aberto e revisado"
+    ],
+    "membros": "68d138655f90a29c7c2a8900"
+  },
+  {
+    "titulo": "Bloco: Upload de capa e códigos (Formulário de cadastro e edição de livro)",
+    "descricao": "Implementar o bloco \"Upload de capa e códigos\" da tela \"Formulário de cadastro e edição de livro\" conforme o frame da tela no Figma (design vindo do Stitch).\n\nPai: [FAP - 0086]\nDepende de: [FAP - 0117] (frame da tela no Figma)",
+    "etiquetas": "FRONT, BLOCO, P0",
+    "checklist": [
+      "Componente isolado e reutilizável",
+      "Fiel ao frame do Figma",
+      "Responsivo (desktop e mobile)",
+      "Estados de erro e vazio tratados",
+      "PR aberto e revisado"
+    ],
+    "membros": "68d138655f90a29c7c2a8900"
+  },
+  {
+    "titulo": "Bloco: Modo edição e feedback de salvar (Formulário de cadastro e edição de livro)",
+    "descricao": "Implementar o bloco \"Modo edição e feedback de salvar\" da tela \"Formulário de cadastro e edição de livro\" conforme o frame da tela no Figma (design vindo do Stitch).\n\nPai: [FAP - 0086]\nDepende de: [FAP - 0117] (frame da tela no Figma)",
+    "etiquetas": "FRONT, BLOCO, P0",
+    "checklist": [
+      "Componente isolado e reutilizável",
+      "Fiel ao frame do Figma",
+      "Responsivo (desktop e mobile)",
+      "Estados de erro e vazio tratados",
+      "PR aberto e revisado"
+    ],
+    "membros": "68d138655f90a29c7c2a8900"
+  },
+  {
+    "titulo": "Design: Cadastro de usuários (aluno, professor, funcionário) (Stitch → Figma)",
+    "descricao": "Criar o design da tela \"Cadastro de usuários (aluno, professor, funcionário)\" no **Stitch** e exportá-lo para o **Figma**, que é a fonte de verdade para construir a tela. Este card vem primeiro: os blocos de implementação dependem do frame final no Figma.\n\nPai: [FAP - 0087]\nPadrão visual: FAP Books (navy #032B5E / #0D3B6E, branco, cinza #8C8C8C), página 🖥️ UI web.",
+    "etiquetas": "DESIGN, P0",
+    "checklist": [
+      "Design gerado no Stitch (desktop e mobile)",
+      "Exportado para o Figma (página 🖥️ UI web)",
+      "Ajustes feitos no Figma: componentes, estados e nomes de camadas",
+      "Aprovado pelo time e link do frame no card"
+    ],
+    "membros": "63fb58a30bbf172e395d48ca"
+  },
+  {
+    "titulo": "Bloco: Seletor de perfil (Cadastro de usuários (aluno, professor, funcionário))",
+    "descricao": "Implementar o bloco \"Seletor de perfil\" da tela \"Cadastro de usuários (aluno, professor, funcionário)\" conforme o frame da tela no Figma (design vindo do Stitch).\n\nPai: [FAP - 0087]\nDepende de: [FAP - 0121] (frame da tela no Figma)",
+    "etiquetas": "FRONT, BLOCO, P0",
+    "checklist": [
+      "Componente isolado e reutilizável",
+      "Fiel ao frame do Figma",
+      "Responsivo (desktop e mobile)",
+      "Estados de erro e vazio tratados",
+      "PR aberto e revisado"
+    ],
+    "membros": "63fb58a30bbf172e395d48ca"
+  },
+  {
+    "titulo": "Bloco: Formulário de aluno (Cadastro de usuários (aluno, professor, funcionário))",
+    "descricao": "Implementar o bloco \"Formulário de aluno\" da tela \"Cadastro de usuários (aluno, professor, funcionário)\" conforme o frame da tela no Figma (design vindo do Stitch).\n\nPai: [FAP - 0087]\nDepende de: [FAP - 0121] (frame da tela no Figma)",
+    "etiquetas": "FRONT, BLOCO, P0",
+    "checklist": [
+      "Componente isolado e reutilizável",
+      "Fiel ao frame do Figma",
+      "Responsivo (desktop e mobile)",
+      "Estados de erro e vazio tratados",
+      "PR aberto e revisado"
+    ],
+    "membros": "63fb58a30bbf172e395d48ca"
+  },
+  {
+    "titulo": "Bloco: Formulário de professor (Cadastro de usuários (aluno, professor, funcionário))",
+    "descricao": "Implementar o bloco \"Formulário de professor\" da tela \"Cadastro de usuários (aluno, professor, funcionário)\" conforme o frame da tela no Figma (design vindo do Stitch).\n\nPai: [FAP - 0087]\nDepende de: [FAP - 0121] (frame da tela no Figma)",
+    "etiquetas": "FRONT, BLOCO, P0",
+    "checklist": [
+      "Componente isolado e reutilizável",
+      "Fiel ao frame do Figma",
+      "Responsivo (desktop e mobile)",
+      "Estados de erro e vazio tratados",
+      "PR aberto e revisado"
+    ],
+    "membros": "63fb58a30bbf172e395d48ca"
+  },
+  {
+    "titulo": "Bloco: Formulário de funcionário e cargo (Cadastro de usuários (aluno, professor, funcionário))",
+    "descricao": "Implementar o bloco \"Formulário de funcionário e cargo\" da tela \"Cadastro de usuários (aluno, professor, funcionário)\" conforme o frame da tela no Figma (design vindo do Stitch).\n\nPai: [FAP - 0087]\nDepende de: [FAP - 0121] (frame da tela no Figma)",
+    "etiquetas": "FRONT, BLOCO, P0",
+    "checklist": [
+      "Componente isolado e reutilizável",
+      "Fiel ao frame do Figma",
+      "Responsivo (desktop e mobile)",
+      "Estados de erro e vazio tratados",
+      "PR aberto e revisado"
+    ],
+    "membros": "63fb58a30bbf172e395d48ca"
+  },
+  {
+    "titulo": "Design: Listagem, edição e inativação de usuários (Stitch → Figma)",
+    "descricao": "Criar o design da tela \"Listagem, edição e inativação de usuários\" no **Stitch** e exportá-lo para o **Figma**, que é a fonte de verdade para construir a tela. Este card vem primeiro: os blocos de implementação dependem do frame final no Figma.\n\nPai: [FAP - 0088]\nPadrão visual: FAP Books (navy #032B5E / #0D3B6E, branco, cinza #8C8C8C), página 🖥️ UI web.",
+    "etiquetas": "DESIGN, P1",
+    "checklist": [
+      "Design gerado no Stitch (desktop e mobile)",
+      "Exportado para o Figma (página 🖥️ UI web)",
+      "Ajustes feitos no Figma: componentes, estados e nomes de camadas",
+      "Aprovado pelo time e link do frame no card"
+    ],
+    "membros": "67195d0c150f447a3be11937"
+  },
+  {
+    "titulo": "Bloco: Tabela de usuários e filtros (Listagem, edição e inativação de usuários)",
+    "descricao": "Implementar o bloco \"Tabela de usuários e filtros\" da tela \"Listagem, edição e inativação de usuários\" conforme o frame da tela no Figma (design vindo do Stitch).\n\nPai: [FAP - 0088]\nDepende de: [FAP - 0126] (frame da tela no Figma)",
+    "etiquetas": "FRONT, BLOCO, P1",
+    "checklist": [
+      "Componente isolado e reutilizável",
+      "Fiel ao frame do Figma",
+      "Responsivo (desktop e mobile)",
+      "Estados de erro e vazio tratados",
+      "PR aberto e revisado"
+    ],
+    "membros": "67195d0c150f447a3be11937"
+  },
+  {
+    "titulo": "Bloco: Modais de edição e inativação (Listagem, edição e inativação de usuários)",
+    "descricao": "Implementar o bloco \"Modais de edição e inativação\" da tela \"Listagem, edição e inativação de usuários\" conforme o frame da tela no Figma (design vindo do Stitch).\n\nPai: [FAP - 0088]\nDepende de: [FAP - 0126] (frame da tela no Figma)",
+    "etiquetas": "FRONT, BLOCO, P1",
+    "checklist": [
+      "Componente isolado e reutilizável",
+      "Fiel ao frame do Figma",
+      "Responsivo (desktop e mobile)",
+      "Estados de erro e vazio tratados",
+      "PR aberto e revisado"
+    ],
+    "membros": "67195d0c150f447a3be11937"
+  },
+  {
+    "titulo": "Design: Registro de empréstimo, devolução e renovação (Stitch → Figma)",
+    "descricao": "Criar o design da tela \"Registro de empréstimo, devolução e renovação\" no **Stitch** e exportá-lo para o **Figma**, que é a fonte de verdade para construir a tela. Este card vem primeiro: os blocos de implementação dependem do frame final no Figma.\n\nPai: [FAP - 0089]\nPadrão visual: FAP Books (navy #032B5E / #0D3B6E, branco, cinza #8C8C8C), página 🖥️ UI web.",
+    "etiquetas": "DESIGN, P0",
+    "checklist": [
+      "Design gerado no Stitch (desktop e mobile)",
+      "Exportado para o Figma (página 🖥️ UI web)",
+      "Ajustes feitos no Figma: componentes, estados e nomes de camadas",
+      "Aprovado pelo time e link do frame no card"
+    ],
+    "membros": "68ca9fb753f35f1a0a8f2e7e"
+  },
+  {
+    "titulo": "Bloco: Busca de usuário e de livro (Registro de empréstimo, devolução e renovação)",
+    "descricao": "Implementar o bloco \"Busca de usuário e de livro\" da tela \"Registro de empréstimo, devolução e renovação\" conforme o frame da tela no Figma (design vindo do Stitch).\n\nPai: [FAP - 0089]\nDepende de: [FAP - 0129] (frame da tela no Figma)",
+    "etiquetas": "FRONT, BLOCO, P0",
+    "checklist": [
+      "Componente isolado e reutilizável",
+      "Fiel ao frame do Figma",
+      "Responsivo (desktop e mobile)",
+      "Estados de erro e vazio tratados",
+      "PR aberto e revisado"
+    ],
+    "membros": "68ca9fb753f35f1a0a8f2e7e"
+  },
+  {
+    "titulo": "Bloco: Resumo do empréstimo e prazo (Registro de empréstimo, devolução e renovação)",
+    "descricao": "Implementar o bloco \"Resumo do empréstimo e prazo\" da tela \"Registro de empréstimo, devolução e renovação\" conforme o frame da tela no Figma (design vindo do Stitch).\n\nPai: [FAP - 0089]\nDepende de: [FAP - 0129] (frame da tela no Figma)",
+    "etiquetas": "FRONT, BLOCO, P0",
+    "checklist": [
+      "Componente isolado e reutilizável",
+      "Fiel ao frame do Figma",
+      "Responsivo (desktop e mobile)",
+      "Estados de erro e vazio tratados",
+      "PR aberto e revisado"
+    ],
+    "membros": "68ca9fb753f35f1a0a8f2e7e"
+  },
+  {
+    "titulo": "Bloco: Devolução e renovação (Registro de empréstimo, devolução e renovação)",
+    "descricao": "Implementar o bloco \"Devolução e renovação\" da tela \"Registro de empréstimo, devolução e renovação\" conforme o frame da tela no Figma (design vindo do Stitch).\n\nPai: [FAP - 0089]\nDepende de: [FAP - 0129] (frame da tela no Figma)",
+    "etiquetas": "FRONT, BLOCO, P0",
+    "checklist": [
+      "Componente isolado e reutilizável",
+      "Fiel ao frame do Figma",
+      "Responsivo (desktop e mobile)",
+      "Estados de erro e vazio tratados",
+      "PR aberto e revisado"
+    ],
+    "membros": "68ca9fb753f35f1a0a8f2e7e"
+  },
+  {
+    "titulo": "Bloco: Alertas de limite e atraso (Registro de empréstimo, devolução e renovação)",
+    "descricao": "Implementar o bloco \"Alertas de limite e atraso\" da tela \"Registro de empréstimo, devolução e renovação\" conforme o frame da tela no Figma (design vindo do Stitch).\n\nPai: [FAP - 0089]\nDepende de: [FAP - 0129] (frame da tela no Figma)",
+    "etiquetas": "FRONT, BLOCO, P0",
+    "checklist": [
+      "Componente isolado e reutilizável",
+      "Fiel ao frame do Figma",
+      "Responsivo (desktop e mobile)",
+      "Estados de erro e vazio tratados",
+      "PR aberto e revisado"
+    ],
+    "membros": "68ca9fb753f35f1a0a8f2e7e"
+  },
+  {
+    "titulo": "Bloco: Comprovante de confirmação (Registro de empréstimo, devolução e renovação)",
+    "descricao": "Implementar o bloco \"Comprovante de confirmação\" da tela \"Registro de empréstimo, devolução e renovação\" conforme o frame da tela no Figma (design vindo do Stitch).\n\nPai: [FAP - 0089]\nDepende de: [FAP - 0129] (frame da tela no Figma)",
+    "etiquetas": "FRONT, BLOCO, P0",
+    "checklist": [
+      "Componente isolado e reutilizável",
+      "Fiel ao frame do Figma",
+      "Responsivo (desktop e mobile)",
+      "Estados de erro e vazio tratados",
+      "PR aberto e revisado"
+    ],
+    "membros": "68ca9fb753f35f1a0a8f2e7e"
+  },
+  {
+    "titulo": "Design: Solicitar reserva pedagógica (professor) (Stitch → Figma)",
+    "descricao": "Criar o design da tela \"Solicitar reserva pedagógica (professor)\" no **Stitch** e exportá-lo para o **Figma**, que é a fonte de verdade para construir a tela. Este card vem primeiro: os blocos de implementação dependem do frame final no Figma.\n\nPai: [FAP - 0090]\nPadrão visual: FAP Books (navy #032B5E / #0D3B6E, branco, cinza #8C8C8C), página 🖥️ UI web.",
+    "etiquetas": "DESIGN, P1",
+    "checklist": [
+      "Design gerado no Stitch (desktop e mobile)",
+      "Exportado para o Figma (página 🖥️ UI web)",
+      "Ajustes feitos no Figma: componentes, estados e nomes de camadas",
+      "Aprovado pelo time e link do frame no card"
+    ],
+    "membros": "63fb58a30bbf172e395d48ca"
+  },
+  {
+    "titulo": "Bloco: Seleção de livros (múltiplos) (Solicitar reserva pedagógica (professor))",
+    "descricao": "Implementar o bloco \"Seleção de livros (múltiplos)\" da tela \"Solicitar reserva pedagógica (professor)\" conforme o frame da tela no Figma (design vindo do Stitch).\n\nPai: [FAP - 0090]\nDepende de: [FAP - 0135] (frame da tela no Figma)",
+    "etiquetas": "FRONT, BLOCO, P1",
+    "checklist": [
+      "Componente isolado e reutilizável",
+      "Fiel ao frame do Figma",
+      "Responsivo (desktop e mobile)",
+      "Estados de erro e vazio tratados",
+      "PR aberto e revisado"
+    ],
+    "membros": "63fb58a30bbf172e395d48ca"
+  },
+  {
+    "titulo": "Bloco: Formulário e confirmação da solicitação (Solicitar reserva pedagógica (professor))",
+    "descricao": "Implementar o bloco \"Formulário e confirmação da solicitação\" da tela \"Solicitar reserva pedagógica (professor)\" conforme o frame da tela no Figma (design vindo do Stitch).\n\nPai: [FAP - 0090]\nDepende de: [FAP - 0135] (frame da tela no Figma)",
+    "etiquetas": "FRONT, BLOCO, P1",
+    "checklist": [
+      "Componente isolado e reutilizável",
+      "Fiel ao frame do Figma",
+      "Responsivo (desktop e mobile)",
+      "Estados de erro e vazio tratados",
+      "PR aberto e revisado"
+    ],
+    "membros": "63fb58a30bbf172e395d48ca"
+  },
+  {
+    "titulo": "Design: Registrar reserva pedagógica presencial (Stitch → Figma)",
+    "descricao": "Criar o design da tela \"Registrar reserva pedagógica presencial\" no **Stitch** e exportá-lo para o **Figma**, que é a fonte de verdade para construir a tela. Este card vem primeiro: os blocos de implementação dependem do frame final no Figma.\n\nPai: [FAP - 0091]\nPadrão visual: FAP Books (navy #032B5E / #0D3B6E, branco, cinza #8C8C8C), página 🖥️ UI web.",
+    "etiquetas": "DESIGN, P1",
+    "checklist": [
+      "Design gerado no Stitch (desktop e mobile)",
+      "Exportado para o Figma (página 🖥️ UI web)",
+      "Ajustes feitos no Figma: componentes, estados e nomes de camadas",
+      "Aprovado pelo time e link do frame no card"
+    ],
+    "membros": "68d138655f90a29c7c2a8900"
+  },
+  {
+    "titulo": "Bloco: Formulário rápido e confirmação (Registrar reserva pedagógica presencial)",
+    "descricao": "Implementar o bloco \"Formulário rápido e confirmação\" da tela \"Registrar reserva pedagógica presencial\" conforme o frame da tela no Figma (design vindo do Stitch).\n\nPai: [FAP - 0091]\nDepende de: [FAP - 0138] (frame da tela no Figma)",
+    "etiquetas": "FRONT, BLOCO, P1",
+    "checklist": [
+      "Componente isolado e reutilizável",
+      "Fiel ao frame do Figma",
+      "Responsivo (desktop e mobile)",
+      "Estados de erro e vazio tratados",
+      "PR aberto e revisado"
+    ],
+    "membros": "68d138655f90a29c7c2a8900"
+  },
+  {
+    "titulo": "Design: Fila de aprovação de reservas pedagógicas (Stitch → Figma)",
+    "descricao": "Criar o design da tela \"Fila de aprovação de reservas pedagógicas\" no **Stitch** e exportá-lo para o **Figma**, que é a fonte de verdade para construir a tela. Este card vem primeiro: os blocos de implementação dependem do frame final no Figma.\n\nPai: [FAP - 0092]\nPadrão visual: FAP Books (navy #032B5E / #0D3B6E, branco, cinza #8C8C8C), página 🖥️ UI web.",
+    "etiquetas": "DESIGN, P1",
+    "checklist": [
+      "Design gerado no Stitch (desktop e mobile)",
+      "Exportado para o Figma (página 🖥️ UI web)",
+      "Ajustes feitos no Figma: componentes, estados e nomes de camadas",
+      "Aprovado pelo time e link do frame no card"
+    ],
+    "membros": "6a5e8ced6137038c8b598826"
+  },
+  {
+    "titulo": "Bloco: Lista da fila com status (Fila de aprovação de reservas pedagógicas)",
+    "descricao": "Implementar o bloco \"Lista da fila com status\" da tela \"Fila de aprovação de reservas pedagógicas\" conforme o frame da tela no Figma (design vindo do Stitch).\n\nPai: [FAP - 0092]\nDepende de: [FAP - 0140] (frame da tela no Figma)",
+    "etiquetas": "FRONT, BLOCO, P1",
+    "checklist": [
+      "Componente isolado e reutilizável",
+      "Fiel ao frame do Figma",
+      "Responsivo (desktop e mobile)",
+      "Estados de erro e vazio tratados",
+      "PR aberto e revisado"
+    ],
+    "membros": "6a5e8ced6137038c8b598826"
+  },
+  {
+    "titulo": "Bloco: Detalhe da solicitação (Fila de aprovação de reservas pedagógicas)",
+    "descricao": "Implementar o bloco \"Detalhe da solicitação\" da tela \"Fila de aprovação de reservas pedagógicas\" conforme o frame da tela no Figma (design vindo do Stitch).\n\nPai: [FAP - 0092]\nDepende de: [FAP - 0140] (frame da tela no Figma)",
+    "etiquetas": "FRONT, BLOCO, P1",
+    "checklist": [
+      "Componente isolado e reutilizável",
+      "Fiel ao frame do Figma",
+      "Responsivo (desktop e mobile)",
+      "Estados de erro e vazio tratados",
+      "PR aberto e revisado"
+    ],
+    "membros": "6a5e8ced6137038c8b598826"
+  },
+  {
+    "titulo": "Bloco: Aprovar e recusar com justificativa (Fila de aprovação de reservas pedagógicas)",
+    "descricao": "Implementar o bloco \"Aprovar e recusar com justificativa\" da tela \"Fila de aprovação de reservas pedagógicas\" conforme o frame da tela no Figma (design vindo do Stitch).\n\nPai: [FAP - 0092]\nDepende de: [FAP - 0140] (frame da tela no Figma)",
+    "etiquetas": "FRONT, BLOCO, P1",
+    "checklist": [
+      "Componente isolado e reutilizável",
+      "Fiel ao frame do Figma",
+      "Responsivo (desktop e mobile)",
+      "Estados de erro e vazio tratados",
+      "PR aberto e revisado"
+    ],
+    "membros": "6a5e8ced6137038c8b598826"
+  },
+  {
+    "titulo": "Design: Multas: baixa manual do pagamento (Stitch → Figma)",
+    "descricao": "Criar o design da tela \"Multas: baixa manual do pagamento\" no **Stitch** e exportá-lo para o **Figma**, que é a fonte de verdade para construir a tela. Este card vem primeiro: os blocos de implementação dependem do frame final no Figma.\n\nPai: [FAP - 0093]\nPadrão visual: FAP Books (navy #032B5E / #0D3B6E, branco, cinza #8C8C8C), página 🖥️ UI web.",
+    "etiquetas": "DESIGN, P1",
+    "checklist": [
+      "Design gerado no Stitch (desktop e mobile)",
+      "Exportado para o Figma (página 🖥️ UI web)",
+      "Ajustes feitos no Figma: componentes, estados e nomes de camadas",
+      "Aprovado pelo time e link do frame no card"
+    ],
+    "membros": "68ca9fb753f35f1a0a8f2e7e"
+  },
+  {
+    "titulo": "Bloco: Lista de multas em aberto (Multas: baixa manual do pagamento)",
+    "descricao": "Implementar o bloco \"Lista de multas em aberto\" da tela \"Multas: baixa manual do pagamento\" conforme o frame da tela no Figma (design vindo do Stitch).\n\nPai: [FAP - 0093]\nDepende de: [FAP - 0144] (frame da tela no Figma)",
+    "etiquetas": "FRONT, BLOCO, P1",
+    "checklist": [
+      "Componente isolado e reutilizável",
+      "Fiel ao frame do Figma",
+      "Responsivo (desktop e mobile)",
+      "Estados de erro e vazio tratados",
+      "PR aberto e revisado"
+    ],
+    "membros": "68ca9fb753f35f1a0a8f2e7e"
+  },
+  {
+    "titulo": "Bloco: Modal de baixa manual (Multas: baixa manual do pagamento)",
+    "descricao": "Implementar o bloco \"Modal de baixa manual\" da tela \"Multas: baixa manual do pagamento\" conforme o frame da tela no Figma (design vindo do Stitch).\n\nPai: [FAP - 0093]\nDepende de: [FAP - 0144] (frame da tela no Figma)",
+    "etiquetas": "FRONT, BLOCO, P1",
+    "checklist": [
+      "Componente isolado e reutilizável",
+      "Fiel ao frame do Figma",
+      "Responsivo (desktop e mobile)",
+      "Estados de erro e vazio tratados",
+      "PR aberto e revisado"
+    ],
+    "membros": "68ca9fb753f35f1a0a8f2e7e"
+  },
+  {
+    "titulo": "Design: Avisos de prazo no painel (Stitch → Figma)",
+    "descricao": "Criar o design da tela \"Avisos de prazo no painel\" no **Stitch** e exportá-lo para o **Figma**, que é a fonte de verdade para construir a tela. Este card vem primeiro: os blocos de implementação dependem do frame final no Figma.\n\nPai: [FAP - 0094]\nPadrão visual: FAP Books (navy #032B5E / #0D3B6E, branco, cinza #8C8C8C), página 🖥️ UI web.",
+    "etiquetas": "DESIGN, P1",
+    "checklist": [
+      "Design gerado no Stitch (desktop e mobile)",
+      "Exportado para o Figma (página 🖥️ UI web)",
+      "Ajustes feitos no Figma: componentes, estados e nomes de camadas",
+      "Aprovado pelo time e link do frame no card"
+    ],
+    "membros": "6a5e8ced6137038c8b598826"
+  },
+  {
+    "titulo": "Bloco: Bloco de avisos de prazo (a vencer, hoje, atrasado) (Avisos de prazo no painel)",
+    "descricao": "Implementar o bloco \"Bloco de avisos de prazo (a vencer, hoje, atrasado)\" da tela \"Avisos de prazo no painel\" conforme o frame da tela no Figma (design vindo do Stitch).\n\nPai: [FAP - 0094]\nDepende de: [FAP - 0147] (frame da tela no Figma)",
+    "etiquetas": "FRONT, BLOCO, P1",
+    "checklist": [
+      "Componente isolado e reutilizável",
+      "Fiel ao frame do Figma",
+      "Responsivo (desktop e mobile)",
+      "Estados de erro e vazio tratados",
+      "PR aberto e revisado"
+    ],
+    "membros": "6a5e8ced6137038c8b598826"
+  },
+  {
+    "titulo": "Design: Histórico de empréstimos por usuário e por livro (Stitch → Figma)",
+    "descricao": "Criar o design da tela \"Histórico de empréstimos por usuário e por livro\" no **Stitch** e exportá-lo para o **Figma**, que é a fonte de verdade para construir a tela. Este card vem primeiro: os blocos de implementação dependem do frame final no Figma.\n\nPai: [FAP - 0095]\nPadrão visual: FAP Books (navy #032B5E / #0D3B6E, branco, cinza #8C8C8C), página 🖥️ UI web.",
+    "etiquetas": "DESIGN, P2",
+    "checklist": [
+      "Design gerado no Stitch (desktop e mobile)",
+      "Exportado para o Figma (página 🖥️ UI web)",
+      "Ajustes feitos no Figma: componentes, estados e nomes de camadas",
+      "Aprovado pelo time e link do frame no card"
+    ],
+    "membros": "67195d0c150f447a3be11937"
+  },
+  {
+    "titulo": "Bloco: Histórico por usuário (Histórico de empréstimos por usuário e por livro)",
+    "descricao": "Implementar o bloco \"Histórico por usuário\" da tela \"Histórico de empréstimos por usuário e por livro\" conforme o frame da tela no Figma (design vindo do Stitch).\n\nPai: [FAP - 0095]\nDepende de: [FAP - 0149] (frame da tela no Figma)",
+    "etiquetas": "FRONT, BLOCO, P2",
+    "checklist": [
+      "Componente isolado e reutilizável",
+      "Fiel ao frame do Figma",
+      "Responsivo (desktop e mobile)",
+      "Estados de erro e vazio tratados",
+      "PR aberto e revisado"
+    ],
+    "membros": "67195d0c150f447a3be11937"
+  },
+  {
+    "titulo": "Bloco: Histórico por livro (Histórico de empréstimos por usuário e por livro)",
+    "descricao": "Implementar o bloco \"Histórico por livro\" da tela \"Histórico de empréstimos por usuário e por livro\" conforme o frame da tela no Figma (design vindo do Stitch).\n\nPai: [FAP - 0095]\nDepende de: [FAP - 0149] (frame da tela no Figma)",
+    "etiquetas": "FRONT, BLOCO, P2",
+    "checklist": [
+      "Componente isolado e reutilizável",
+      "Fiel ao frame do Figma",
+      "Responsivo (desktop e mobile)",
+      "Estados de erro e vazio tratados",
+      "PR aberto e revisado"
+    ],
+    "membros": "67195d0c150f447a3be11937"
+  },
+  {
+    "titulo": "Bloco: Filtros por período (Histórico de empréstimos por usuário e por livro)",
+    "descricao": "Implementar o bloco \"Filtros por período\" da tela \"Histórico de empréstimos por usuário e por livro\" conforme o frame da tela no Figma (design vindo do Stitch).\n\nPai: [FAP - 0095]\nDepende de: [FAP - 0149] (frame da tela no Figma)",
+    "etiquetas": "FRONT, BLOCO, P2",
+    "checklist": [
+      "Componente isolado e reutilizável",
+      "Fiel ao frame do Figma",
+      "Responsivo (desktop e mobile)",
+      "Estados de erro e vazio tratados",
+      "PR aberto e revisado"
+    ],
+    "membros": "67195d0c150f447a3be11937"
+  },
+  {
+    "titulo": "Design: Relatórios: atraso, acervo e reservas (Stitch → Figma)",
+    "descricao": "Criar o design da tela \"Relatórios: atraso, acervo e reservas\" no **Stitch** e exportá-lo para o **Figma**, que é a fonte de verdade para construir a tela. Este card vem primeiro: os blocos de implementação dependem do frame final no Figma.\n\nPai: [FAP - 0096]\nPadrão visual: FAP Books (navy #032B5E / #0D3B6E, branco, cinza #8C8C8C), página 🖥️ UI web.",
+    "etiquetas": "DESIGN, P2",
+    "checklist": [
+      "Design gerado no Stitch (desktop e mobile)",
+      "Exportado para o Figma (página 🖥️ UI web)",
+      "Ajustes feitos no Figma: componentes, estados e nomes de camadas",
+      "Aprovado pelo time e link do frame no card"
+    ],
+    "membros": "63fb58a30bbf172e395d48ca"
+  },
+  {
+    "titulo": "Bloco: Filtros dos relatórios (Relatórios: atraso, acervo e reservas)",
+    "descricao": "Implementar o bloco \"Filtros dos relatórios\" da tela \"Relatórios: atraso, acervo e reservas\" conforme o frame da tela no Figma (design vindo do Stitch).\n\nPai: [FAP - 0096]\nDepende de: [FAP - 0153] (frame da tela no Figma)",
+    "etiquetas": "FRONT, BLOCO, P2",
+    "checklist": [
+      "Componente isolado e reutilizável",
+      "Fiel ao frame do Figma",
+      "Responsivo (desktop e mobile)",
+      "Estados de erro e vazio tratados",
+      "PR aberto e revisado"
+    ],
+    "membros": "63fb58a30bbf172e395d48ca"
+  },
+  {
+    "titulo": "Bloco: Tabela de resultados (Relatórios: atraso, acervo e reservas)",
+    "descricao": "Implementar o bloco \"Tabela de resultados\" da tela \"Relatórios: atraso, acervo e reservas\" conforme o frame da tela no Figma (design vindo do Stitch).\n\nPai: [FAP - 0096]\nDepende de: [FAP - 0153] (frame da tela no Figma)",
+    "etiquetas": "FRONT, BLOCO, P2",
+    "checklist": [
+      "Componente isolado e reutilizável",
+      "Fiel ao frame do Figma",
+      "Responsivo (desktop e mobile)",
+      "Estados de erro e vazio tratados",
+      "PR aberto e revisado"
+    ],
+    "membros": "63fb58a30bbf172e395d48ca"
+  },
+  {
+    "titulo": "Bloco: Exportação PDF/CSV (Relatórios: atraso, acervo e reservas)",
+    "descricao": "Implementar o bloco \"Exportação PDF/CSV\" da tela \"Relatórios: atraso, acervo e reservas\" conforme o frame da tela no Figma (design vindo do Stitch).\n\nPai: [FAP - 0096]\nDepende de: [FAP - 0153] (frame da tela no Figma)",
+    "etiquetas": "FRONT, BLOCO, P2",
+    "checklist": [
+      "Componente isolado e reutilizável",
+      "Fiel ao frame do Figma",
+      "Responsivo (desktop e mobile)",
+      "Estados de erro e vazio tratados",
+      "PR aberto e revisado"
+    ],
+    "membros": "63fb58a30bbf172e395d48ca"
+  },
+  {
+    "titulo": "Design: Painel da bibliotecária: visão geral (Stitch → Figma)",
+    "descricao": "Criar o design da tela \"Painel da bibliotecária: visão geral\" no **Stitch** e exportá-lo para o **Figma**, que é a fonte de verdade para construir a tela. Este card vem primeiro: os blocos de implementação dependem do frame final no Figma.\n\nPai: [FAP - 0097]\nPadrão visual: FAP Books (navy #032B5E / #0D3B6E, branco, cinza #8C8C8C), página 🖥️ UI web.",
+    "etiquetas": "DESIGN, P0",
+    "checklist": [
+      "Design gerado no Stitch (desktop e mobile)",
+      "Exportado para o Figma (página 🖥️ UI web)",
+      "Ajustes feitos no Figma: componentes, estados e nomes de camadas",
+      "Aprovado pelo time e link do frame no card"
+    ],
+    "membros": "68ca9fb753f35f1a0a8f2e7e"
+  },
+  {
+    "titulo": "Bloco: Indicadores do dia (Painel da bibliotecária: visão geral)",
+    "descricao": "Implementar o bloco \"Indicadores do dia\" da tela \"Painel da bibliotecária: visão geral\" conforme o frame da tela no Figma (design vindo do Stitch).\n\nPai: [FAP - 0097]\nDepende de: [FAP - 0157] (frame da tela no Figma)",
+    "etiquetas": "FRONT, BLOCO, P0",
+    "checklist": [
+      "Componente isolado e reutilizável",
+      "Fiel ao frame do Figma",
+      "Responsivo (desktop e mobile)",
+      "Estados de erro e vazio tratados",
+      "PR aberto e revisado"
+    ],
+    "membros": "68ca9fb753f35f1a0a8f2e7e"
+  },
+  {
+    "titulo": "Bloco: Atalhos de operação (Painel da bibliotecária: visão geral)",
+    "descricao": "Implementar o bloco \"Atalhos de operação\" da tela \"Painel da bibliotecária: visão geral\" conforme o frame da tela no Figma (design vindo do Stitch).\n\nPai: [FAP - 0097]\nDepende de: [FAP - 0157] (frame da tela no Figma)",
+    "etiquetas": "FRONT, BLOCO, P0",
+    "checklist": [
+      "Componente isolado e reutilizável",
+      "Fiel ao frame do Figma",
+      "Responsivo (desktop e mobile)",
+      "Estados de erro e vazio tratados",
+      "PR aberto e revisado"
+    ],
+    "membros": "68ca9fb753f35f1a0a8f2e7e"
+  },
+  {
+    "titulo": "Bloco: Lista de pendências (Painel da bibliotecária: visão geral)",
+    "descricao": "Implementar o bloco \"Lista de pendências\" da tela \"Painel da bibliotecária: visão geral\" conforme o frame da tela no Figma (design vindo do Stitch).\n\nPai: [FAP - 0097]\nDepende de: [FAP - 0157] (frame da tela no Figma)",
+    "etiquetas": "FRONT, BLOCO, P0",
+    "checklist": [
+      "Componente isolado e reutilizável",
+      "Fiel ao frame do Figma",
+      "Responsivo (desktop e mobile)",
+      "Estados de erro e vazio tratados",
+      "PR aberto e revisado"
+    ],
+    "membros": "68ca9fb753f35f1a0a8f2e7e"
+  }
+]
