@@ -23,6 +23,11 @@ jobs:
         env:
           TRELLO_KEY: ${{ secrets.TRELLO_KEY }}
           TRELLO_TOKEN: ${{ secrets.TRELLO_TOKEN }}
+      # Depois de mexer no card, confere o quadro todo: fecha pais, libera cards e ajusta pessoas.
+      - run: node scripts/automacoes.mjs
+        env:
+          TRELLO_KEY: ${{ secrets.TRELLO_KEY }}
+          TRELLO_TOKEN: ${{ secrets.TRELLO_TOKEN }}
 
   # Depois do merge: roda a build. Se passar, tira o card de Awaiting Build
   # (vai para Awaiting QA, ou direto para Done se for documentação ou configuração).
@@ -44,6 +49,10 @@ jobs:
       - run: npm run typecheck
       - run: npm run build
       - run: node scripts/trello-pr.mjs --apos-build
+        env:
+          TRELLO_KEY: ${{ secrets.TRELLO_KEY }}
+          TRELLO_TOKEN: ${{ secrets.TRELLO_TOKEN }}
+      - run: node scripts/automacoes.mjs
         env:
           TRELLO_KEY: ${{ secrets.TRELLO_KEY }}
           TRELLO_TOKEN: ${{ secrets.TRELLO_TOKEN }}

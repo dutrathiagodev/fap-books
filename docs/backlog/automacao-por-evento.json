@@ -1,0 +1,14 @@
+[
+  {
+    "titulo": "Automações rodarem também por evento, não só por agendamento",
+    "descricao": "O agendamento a cada 10 minutos do GitHub nunca disparou (todas as execuções até agora foram manuais), então cards pai não fechavam sozinhos (caso do FAP - 0002).\n\nCorreção: rodar scripts/automacoes.mjs também (1) a cada push na develop e na main e (2) no fim do workflow de Pull Requests. O agendamento fica como reforço.\n\nLimite conhecido: arrastar um card direto no Trello não dispara nada no GitHub; nesse caso o pai fecha no próximo PR ou push, ou ao rodar o workflow à mão.\n\nBranch: FAP/0189",
+    "etiquetas": "CONFIG, P0",
+    "checklist": [
+      "Workflow roda a cada push em develop e main",
+      "Workflow de PR roda as automações no fim",
+      "Teste: pai fecha depois de um merge",
+      "Limite de arrastar no Trello documentado"
+    ],
+    "membros": "6515cff8159cb78d54ad4074"
+  }
+]
