@@ -85,6 +85,10 @@ As automações rodam a cada 10 minutos e precisam dos secrets `TRELLO_KEY` e `T
 
 | | Documento | Conteúdo |
 | -- | -- | -- |
+| 🚀 | [`docs/onboarding.md`](docs/onboarding.md) | **Configuração de ambiente:** o que instalar e como rodar o projeto no seu notebook |
+| 📘 | [`docs/tutorial-do-grupo.md`](docs/tutorial-do-grupo.md) | Resumo para o grupo: onde está cada coisa e como trabalhar |
+| 📚 | [`docs/guias/`](docs/guias/README.md) | Guias de estudo: React, Next.js, Tailwind, Supabase e NestJS, com código explicado e dicas |
+| 📄 | [`docs/prd.md`](docs/prd.md) | **PRD: documento base do projeto.** É a ideia central, e pode mudar com o tempo; as mudanças ficam registradas no histórico dele |
 | 🗺️ | [`docs/backlog/epicos-features-historias.md`](docs/backlog/epicos-features-historias.md) | Backlog completo: 8 épicos, 25 features e 47 histórias, com critérios de aceite |
 | 🧩 | [`docs/backlog/design-telas.json`](docs/backlog/design-telas.json) | Cards de design e de construção de cada tela |
 | 🧭 | [`docs/historico-conversa.md`](docs/historico-conversa.md) | Histórico da configuração inicial do projeto |

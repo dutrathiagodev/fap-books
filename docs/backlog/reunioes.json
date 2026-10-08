@@ -1,0 +1,15 @@
+[
+  {
+    "titulo": "Reunião: aula-guia de Git e Pull Request",
+    "descricao": "Reunião do time para ensinar, ao vivo e do zero, o fluxo de trabalho do projeto. Ninguém precisa saber nada antes.\n\nPauta sugerida:\n- O que é Git, GitHub e Pull Request, com um exemplo do FAP Books\n- Clonar o projeto e rodar na própria máquina\n- Pegar um card no Trello e criar a branch FAP/<número do card>\n- Fazer commits no padrão (feat:, fix:, docs:, chore:)\n- Abrir o PR para a develop e o que acontece no Trello sozinho (marcações e listas)\n- Revisar o PR de outra pessoa\n- Erros comuns e como pedir ajuda\n\nMaterial de apoio: docs/architecture/guia-do-aluno.md e docs/architecture/qualidade.md",
+    "etiquetas": "REUNIAO, docs, P1",
+    "checklist": [
+      "Marcar data e horário com o time",
+      "Preparar um repositório de treino ou um card de exemplo",
+      "Fazer a reunião e gravar, se possível",
+      "Anotar as dúvidas e atualizar o guia do aluno",
+      "Todos conseguiram abrir um PR de teste"
+    ],
+    "membros": "6515cff8159cb78d54ad4074"
+  }
+]
