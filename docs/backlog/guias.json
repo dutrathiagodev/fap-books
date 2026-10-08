@@ -1,0 +1,18 @@
+[
+  {
+    "titulo": "Guias de estudo: React, Next.js, Tailwind, Supabase e NestJS",
+    "descricao": "Escrever guias curtos, em linguagem simples e com código básico explicado linha a linha, para o time tirar dúvidas sem depender de ninguém: React, Next.js, Tailwind CSS, Supabase e NestJS (este último é para o futuro). Inclui um guia de dicas de quem trabalha na área.\n\nPasta: docs/guias/\n\nCada guia tem: o que é (com analogia), conceitos principais, código básico explicado, erros comuns, dicas de profissional, onde aparece no FAP Books e links oficiais. A régua de simplicidade vale aqui também: nada além do que o time precisa agora.\n\nBranch: FAP/0182",
+    "etiquetas": "docs, P1",
+    "checklist": [
+      "Guia de React",
+      "Guia de Next.js",
+      "Guia de Tailwind CSS",
+      "Guia de Supabase",
+      "Guia de NestJS (futuro)",
+      "Dicas de profissional",
+      "Código dos exemplos verificado (compila)",
+      "Revisão de alguém do time que está começando"
+    ],
+    "membros": "6515cff8159cb78d54ad4074,68ca9fb753f35f1a0a8f2e7e,67195d0c150f447a3be11937,63fb58a30bbf172e395d48ca,68d138655f90a29c7c2a8900,6a5e8ced6137038c8b598826"
+  }
+]
