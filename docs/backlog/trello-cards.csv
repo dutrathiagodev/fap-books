@@ -1,0 +1,222 @@
+Lista,Titulo,Descricao,Etiquetas,Checklist
+📥 Backlog,[FAP - 0001] - Fundação e Plataforma,,"ÉPICO, EP: Fundação e Plataforma, infra",
+📥 Backlog,[FAP - 0002] - Setup do projeto,Pai: [FAP - 0001],"FEATURE, EP: Fundação e Plataforma",
+📥 Backlog,[FAP - 0003] - Configurar projeto Next.js com Supabase,"Como desenvolvedor, quero o projeto Next.js integrado ao Supabase com ambiente local configurado, para que o time trabalhe sobre a mesma base.
+
+Pai: [FAP - 0002]
+Requisito: RNF","HISTÓRIA, EP: Fundação e Plataforma, P0, infra","App sobe localmente; Variáveis em .env, nunca commitadas; README com passo a passo de setup"
+📥 Backlog,[FAP - 0004] - Criar esquema inicial do banco em migrations,"Como desenvolvedor, quero o esquema inicial do banco versionado em migrations (livros, usuários, empréstimos, reservas, multas), para evoluir o banco com segurança.
+
+Pai: [FAP - 0002]
+Requisito: RNF","HISTÓRIA, EP: Fundação e Plataforma, P0, banco",Migrations versionadas no repositório; RLS habilitado nas tabelas; Aplicação limpa a partir de banco vazio
+📥 Backlog,[FAP - 0005] - Configurar CI (lint e build) nos PRs,"Como desenvolvedor, quero um pipeline de CI (lint + build) nos PRs, para barrar código quebrado antes de ir para a develop e a main.
+
+Pai: [FAP - 0002]
+Requisito: RNF","HISTÓRIA, EP: Fundação e Plataforma, P1, infra",CI roda em todo PR; Falha de lint ou build bloqueia o merge
+📥 Backlog,[FAP - 0006] - Autenticação e controle de acesso,Pai: [FAP - 0001],"FEATURE, EP: Fundação e Plataforma",
+📥 Backlog,[FAP - 0007] - Fazer login no sistema,"Como usuário, quero entrar no sistema com minhas credenciais, para acessar minha área.
+
+Pai: [FAP - 0006]
+Requisito: RNF","HISTÓRIA, EP: Fundação e Plataforma, P0, auth",Login e logout funcionando; Sessão protegida; Mensagens de erro claras
+📥 Backlog,[FAP - 0008] - Aplicar permissões por perfil,"Como administrador, quero que aluno, professor e funcionário da biblioteca tenham permissões distintas, para que cada um acesse apenas o que lhe cabe.
+
+Pai: [FAP - 0006]
+Requisito: RNF","HISTÓRIA, EP: Fundação e Plataforma, P0, auth, api","Rotas e APIs protegidas por perfil; Funcionário possui cargo (ex.: chefe, auxiliar); Acesso indevido retorna erro de autorização"
+📥 Backlog,[FAP - 0009] - Auditoria e LGPD,Pai: [FAP - 0001],"FEATURE, EP: Fundação e Plataforma",
+📥 Backlog,[FAP - 0010] - Registrar auditoria das ações,"Como bibliotecária, quero que empréstimo, devolução, renovação, reserva e reserva pedagógica registrem quem fez e quando, para ter rastreabilidade.
+
+Pai: [FAP - 0009]
+Requisito: RNF","HISTÓRIA, EP: Fundação e Plataforma, P1, infra, banco","Log de auditoria com usuário, ação e data/hora; Log não pode ser editado pela aplicação"
+📥 Backlog,[FAP - 0011] - Proteger dados conforme a LGPD,"Como titular dos dados, quero que meus dados sejam protegidos conforme a LGPD, para garantir minha privacidade.
+
+Pai: [FAP - 0009]
+Requisito: RNF","HISTÓRIA, EP: Fundação e Plataforma, P1, infra",Acesso mínimo necessário por perfil; Sem dados pessoais em logs; Regras de RLS revisadas
+📥 Backlog,[FAP - 0012] - Interface base e identidade visual,Pai: [FAP - 0001],"FEATURE, EP: Fundação e Plataforma",
+📥 Backlog,[FAP - 0013] - Criar interface responsiva com a identidade FAP Books,"Como usuário, quero uma interface responsiva (desktop e celular) com a identidade FAP Books, para usar no balcão e no celular.
+
+Pai: [FAP - 0012]
+Requisito: RNF","HISTÓRIA, EP: Fundação e Plataforma, P1, tela",Paleta do PRD (navy #032B5E); Layout base responsivo; Telas seguem o Figma (página UI web)
+📥 Backlog,[FAP - 0014] - Operação e backup,Pai: [FAP - 0001],"FEATURE, EP: Fundação e Plataforma",
+📥 Backlog,[FAP - 0015] - Realizar backup periódico do banco,"Como responsável técnico, quero backup periódico do banco, para recuperar os dados em caso de falha.
+
+Pai: [FAP - 0014]
+Requisito: RNF","HISTÓRIA, EP: Fundação e Plataforma, P1, infra, banco",Backup automático agendado; Procedimento de restauração documentado
+📥 Backlog,[FAP - 0016] - Acervo,,"ÉPICO, EP: Acervo, acervo",
+📥 Backlog,[FAP - 0017] - Cadastro e gestão do acervo,Pai: [FAP - 0016],"FEATURE, EP: Acervo",
+📥 Backlog,[FAP - 0018] - Cadastrar um livro manualmente,"Como bibliotecária, quero cadastrar um livro manualmente (título, autor, categoria, código/ISBN, quantidade, status), para manter o estoque organizado.
+
+Pai: [FAP - 0017]
+Requisito: RF-01","HISTÓRIA, EP: Acervo, P0, acervo, tela, bibliotecaria",Campos obrigatórios validados; Livro aparece na consulta após salvar
+📥 Backlog,[FAP - 0019] - Editar os dados de um livro cadastrado,"Como bibliotecária, quero editar os dados de um livro cadastrado, para corrigir informações.
+
+Pai: [FAP - 0017]
+Requisito: RF-03","HISTÓRIA, EP: Acervo, P0, acervo, tela, bibliotecaria",Edição persiste e é auditada
+📥 Backlog,[FAP - 0020] - Excluir um livro cadastrado,"Como bibliotecária, quero excluir um livro cadastrado, para remover itens que saíram do acervo.
+
+Pai: [FAP - 0017]
+Requisito: RF-03","HISTÓRIA, EP: Acervo, P0, acervo, tela, bibliotecaria",Confirmação antes de excluir; Regra para livro com empréstimo ativo: a definir com o time
+📥 Backlog,[FAP - 0021] - Importação em lote,Pai: [FAP - 0016],"FEATURE, EP: Acervo",
+📥 Backlog,[FAP - 0022] - Importar livros em lote por planilha,"Como bibliotecária, quero importar livros em lote por planilha (Excel/CSV), para migrar o acervo inicial sem digitar um a um.
+
+Pai: [FAP - 0021]
+Requisito: RF-02","HISTÓRIA, EP: Acervo, P0, acervo, funcionalidade, bibliotecaria",Aceita .csv e .xlsx; Modelo de planilha disponível para download; Livros importados aparecem no acervo
+📥 Backlog,[FAP - 0023] - Ver quais linhas da planilha falharam e por quê,"Como bibliotecária, quero ver quais linhas da planilha falharam e por quê, para corrigir e reenviar. (derivada do RF-02)
+
+Pai: [FAP - 0021]
+Requisito: RF-02","HISTÓRIA, EP: Acervo, P1, acervo, funcionalidade",Relatório de erros por linha; Linhas válidas não são perdidas
+📥 Backlog,[FAP - 0024] - Consulta e disponibilidade,Pai: [FAP - 0016],"FEATURE, EP: Acervo",
+📥 Backlog,"[FAP - 0025] - Pesquisar livros por título, autor, categoria ou código","Como aluno ou professor, quero pesquisar livros por título, autor, categoria ou código, para encontrar o que preciso.
+
+Pai: [FAP - 0024]
+Requisito: RF-04","HISTÓRIA, EP: Acervo, P0, acervo, tela, aluno, professor",Busca por qualquer um dos 4 critérios; Resultado rápido mesmo com estoque grande
+📥 Backlog,"[FAP - 0026] - Ver se um livro está disponível, emprestado ou reservado em tempo real","Como usuário, quero ver se um livro está disponível, emprestado ou reservado em tempo real, para saber se consigo pegá-lo.
+
+Pai: [FAP - 0024]
+Requisito: RF-05","HISTÓRIA, EP: Acervo, P0, acervo, funcionalidade","Status atualiza após empréstimo, devolução e reserva"
+📥 Backlog,[FAP - 0027] - Usuários,,"ÉPICO, EP: Usuários, usuarios",
+📥 Backlog,[FAP - 0028] - Cadastro de usuários,Pai: [FAP - 0027],"FEATURE, EP: Usuários",
+📥 Backlog,[FAP - 0029] - Cadastrar alunos,"Como bibliotecária, quero cadastrar alunos, para vincular empréstimos a eles.
+
+Pai: [FAP - 0028]
+Requisito: RF-06","HISTÓRIA, EP: Usuários, P0, usuarios, tela, bibliotecaria",Aluno recebe o perfil e as regras de aluno
+📥 Backlog,[FAP - 0030] - Cadastrar professores,"Como bibliotecária, quero cadastrar professores, para aplicar a regra de reserva pedagógica.
+
+Pai: [FAP - 0028]
+Requisito: RF-07","HISTÓRIA, EP: Usuários, P0, usuarios, tela, bibliotecaria",Professor recebe o perfil e as regras de professor
+📥 Backlog,[FAP - 0031] - Cadastrar funcionários da biblioteca com cargo,"Como administrador, quero cadastrar funcionários da biblioteca com cargo, para controlar quem opera o sistema.
+
+Pai: [FAP - 0028]
+Requisito: RF-08","HISTÓRIA, EP: Usuários, P0, usuarios, tela, bibliotecaria","Campo de cargo obrigatório (ex.: chefe, auxiliar)"
+📥 Backlog,[FAP - 0032] - Gestão de cadastro,Pai: [FAP - 0027],"FEATURE, EP: Usuários",
+📥 Backlog,[FAP - 0033] - Editar o cadastro de um usuário,"Como bibliotecária, quero editar o cadastro de um usuário, para corrigir dados.
+
+Pai: [FAP - 0032]
+Requisito: RF-09","HISTÓRIA, EP: Usuários, P1, usuarios, tela, bibliotecaria",Edição persiste e é auditada
+📥 Backlog,[FAP - 0034] - Inativar um usuário,"Como bibliotecária, quero inativar um usuário, para impedir novos empréstimos sem perder o histórico.
+
+Pai: [FAP - 0032]
+Requisito: RF-09","HISTÓRIA, EP: Usuários, P1, usuarios, tela, bibliotecaria",Usuário inativo não consegue emprestar; Histórico preservado
+📥 Backlog,[FAP - 0035] - Empréstimos e Devoluções,,"ÉPICO, EP: Empréstimos e Devoluções, emprestimos",
+📥 Backlog,[FAP - 0036] - Registro de empréstimo,Pai: [FAP - 0035],"FEATURE, EP: Empréstimos e Devoluções",
+📥 Backlog,[FAP - 0037] - Registrar o empréstimo de um livro a um usuário,"Como bibliotecária, quero registrar o empréstimo de um livro a um usuário, para saber quem está com cada livro.
+
+Pai: [FAP - 0036]
+Requisito: RF-10","HISTÓRIA, EP: Empréstimos e Devoluções, P0, emprestimos, funcionalidade, bibliotecaria",Empréstimo vinculado a usuário e livro; Prazo padrão de 7 dias; Status do livro passa a emprestado
+📥 Backlog,[FAP - 0038] - Limitar empréstimos a 5 livros por usuário,"Como bibliotecária, quero que o sistema limite a 5 livros emprestados por usuário, para aplicar a regra da biblioteca.
+
+Pai: [FAP - 0036]
+Requisito: RF-14","HISTÓRIA, EP: Empréstimos e Devoluções, P0, emprestimos, funcionalidade",6º empréstimo é bloqueado com mensagem clara
+📥 Backlog,[FAP - 0039] - Bloquear novo empréstimo para usuário com atraso ou multa em aberto,"Como bibliotecária, quero bloquear novo empréstimo para usuário com atraso ou multa em aberto, para reduzir inadimplência.
+
+Pai: [FAP - 0036]
+Requisito: RF-15","HISTÓRIA, EP: Empréstimos e Devoluções, P1, emprestimos, funcionalidade",Bloqueio ativo enquanto houver pendência; Liberado após devolução e baixa da multa
+📥 Backlog,[FAP - 0040] - Devolução,Pai: [FAP - 0035],"FEATURE, EP: Empréstimos e Devoluções",
+📥 Backlog,[FAP - 0041] - Registrar a devolução de um livro,"Como bibliotecária, quero registrar a devolução de um livro, para liberá-lo e fechar o empréstimo.
+
+Pai: [FAP - 0040]
+Requisito: RF-11","HISTÓRIA, EP: Empréstimos e Devoluções, P0, emprestimos, funcionalidade, bibliotecaria",Status do livro volta a disponível; Multa calculada se houver atraso
+📥 Backlog,[FAP - 0042] - Renovação,Pai: [FAP - 0035],"FEATURE, EP: Empréstimos e Devoluções",
+📥 Backlog,[FAP - 0043] - Renovar um empréstimo,"Como aluno, quero renovar um empréstimo, para ficar mais tempo com o livro.
+
+Pai: [FAP - 0042]
+Requisito: RF-12","HISTÓRIA, EP: Empréstimos e Devoluções, P1, emprestimos, funcionalidade, aluno",Novo prazo calculado; Renovação auditada
+📥 Backlog,[FAP - 0044] - Reserva de livro indisponível,Pai: [FAP - 0035],"FEATURE, EP: Empréstimos e Devoluções",
+📥 Backlog,[FAP - 0045] - Reservar um livro indisponível,"Como aluno, quero reservar um livro indisponível, para pegá-lo quando for devolvido.
+
+Pai: [FAP - 0044]
+Requisito: RF-13","HISTÓRIA, EP: Empréstimos e Devoluções, P1, emprestimos, funcionalidade, aluno",Reserva aparece no meu painel; Status do livro mostra reservado
+📥 Backlog,[FAP - 0046] - Reserva Pedagógica,,"ÉPICO, EP: Reserva Pedagógica, reserva-pedagogica",
+📥 Backlog,[FAP - 0047] - Solicitação de reserva pedagógica,Pai: [FAP - 0046],"FEATURE, EP: Reserva Pedagógica",
+📥 Backlog,[FAP - 0048] - Solicitar online a reserva pedagógica de um ou mais livros,"Como professor, quero solicitar online a reserva pedagógica de um ou mais livros, para garantir a disponibilidade na minha disciplina.
+
+Pai: [FAP - 0047]
+Requisito: RF-16","HISTÓRIA, EP: Reserva Pedagógica, P0, reserva-pedagogica, tela, professor",Solicitação entra na fila de aprovação
+📥 Backlog,[FAP - 0049] - Registrar uma reserva pedagógica pedida presencialmente,"Como bibliotecária, quero registrar uma reserva pedagógica pedida presencialmente, para atender o professor no balcão.
+
+Pai: [FAP - 0047]
+Requisito: RF-16","HISTÓRIA, EP: Reserva Pedagógica, P0, reserva-pedagogica, tela, bibliotecaria",Mesmo fluxo de aprovação da solicitação online
+📥 Backlog,[FAP - 0050] - Definir o prazo de posse dos livros,"Como professor, quero definir o prazo de posse dos livros (máximo 30 dias), para planejar o uso em sala.
+
+Pai: [FAP - 0047]
+Requisito: RF-18","HISTÓRIA, EP: Reserva Pedagógica, P0, reserva-pedagogica, funcionalidade, professor",Prazo acima de 30 dias é rejeitado
+📥 Backlog,[FAP - 0051] - Aprovação de reserva pedagógica,Pai: [FAP - 0046],"FEATURE, EP: Reserva Pedagógica",
+📥 Backlog,[FAP - 0052] - Aprovar ou recusar uma reserva pedagógica,"Como bibliotecária ou chefe, quero aprovar ou recusar uma reserva pedagógica, para controlar o uso do acervo. (a fila fica no painel: ver Painel)
+
+Pai: [FAP - 0051]
+Requisito: RF-17","HISTÓRIA, EP: Reserva Pedagógica, P0, reserva-pedagogica, funcionalidade, bibliotecaria",Decisão registrada com autor e data; Professor é informado da decisão
+📥 Backlog,[FAP - 0053] - Devolução e renovação da reserva,Pai: [FAP - 0046],"FEATURE, EP: Reserva Pedagógica",
+📥 Backlog,[FAP - 0054] - Registrar a devolução dos livros após o período didático,"Como bibliotecária, quero registrar a devolução dos livros após o período didático, para encerrar a reserva.
+
+Pai: [FAP - 0053]
+Requisito: RF-19","HISTÓRIA, EP: Reserva Pedagógica, P0, reserva-pedagogica, funcionalidade, bibliotecaria",Livros voltam a disponível
+📥 Backlog,"[FAP - 0055] - Renovar a reserva ao final do prazo, mediante nova aprovação","Como professor, quero renovar a reserva ao final do prazo, mediante nova aprovação, para continuar usando os livros.
+
+Pai: [FAP - 0053]
+Requisito: RF-20","HISTÓRIA, EP: Reserva Pedagógica, P1, reserva-pedagogica, funcionalidade, professor",Renovação passa pela fila de aprovação
+📥 Backlog,"[FAP - 0056] - Prazos, Multas e Notificações",,"ÉPICO, EP: Prazos, Multas e Notificações, multas, notificacoes",
+📥 Backlog,[FAP - 0057] - Cálculo de prazo e multa,Pai: [FAP - 0056],"FEATURE, EP: Prazos, Multas e Notificações",
+📥 Backlog,[FAP - 0058] - Calcular prazo de devolução automaticamente,"Como bibliotecária, quero que o prazo de devolução seja calculado automaticamente (7 dias, ou o definido na reserva pedagógica), para não depender de controle manual.
+
+Pai: [FAP - 0057]
+Requisito: RF-21","HISTÓRIA, EP: Prazos, Multas e Notificações, P0, multas, funcionalidade",Prazo correto por tipo de empréstimo
+📥 Backlog,[FAP - 0059] - Calcular multa por atraso automaticamente,"Como bibliotecária, quero que a multa por atraso seja calculada automaticamente (R$ 1,00 por dia), para não depender de contas manuais.
+
+Pai: [FAP - 0057]
+Requisito: RF-22","HISTÓRIA, EP: Prazos, Multas e Notificações, P0, multas, funcionalidade","Valor = dias de atraso x R$ 1,00; Casos excepcionais (feriados, recessos) tratados ou documentados"
+📥 Backlog,[FAP - 0060] - Quitação de multas,Pai: [FAP - 0056],"FEATURE, EP: Prazos, Multas e Notificações",
+📥 Backlog,[FAP - 0061] - Registrar a baixa manual do pagamento da multa,"Como bibliotecária, quero registrar a baixa manual do pagamento da multa, para liberar o usuário.
+
+Pai: [FAP - 0060]
+Requisito: RF-23","HISTÓRIA, EP: Prazos, Multas e Notificações, P0, multas, tela, bibliotecaria",Baixa registrada com autor e data; Pagamento online fora do escopo
+📥 Backlog,[FAP - 0062] - Notificações de prazo,Pai: [FAP - 0056],"FEATURE, EP: Prazos, Multas e Notificações",
+📥 Backlog,[FAP - 0063] - Ver avisos de prazo no painel do sistema,"Como usuário, quero ver avisos de prazo no painel do sistema, para me organizar.
+
+Pai: [FAP - 0062]
+Requisito: RF-24","HISTÓRIA, EP: Prazos, Multas e Notificações, P1, notificacoes, tela",Aviso para prazo próximo e vencido
+📥 Backlog,[FAP - 0064] - Receber aviso de prazo por e-mail,"Como usuário, quero receber aviso de prazo por e-mail, para ser lembrado fora do sistema.
+
+Pai: [FAP - 0062]
+Requisito: RF-24","HISTÓRIA, EP: Prazos, Multas e Notificações, P1, notificacoes, api",Envio automático por e-mail
+📥 Backlog,[FAP - 0065] - Receber aviso de prazo por WhatsApp,"Como usuário, quero receber aviso de prazo por WhatsApp, para ser lembrado no canal que mais uso.
+
+Pai: [FAP - 0062]
+Requisito: RF-24","HISTÓRIA, EP: Prazos, Multas e Notificações, P1, notificacoes, api",BLOQUEADA: definir mecanismo (API oficial do WhatsApp Business ou outro)
+📥 Backlog,[FAP - 0066] - Histórico e Relatórios,,"ÉPICO, EP: Histórico e Relatórios, relatorios",
+📥 Backlog,[FAP - 0067] - Histórico de empréstimos,Pai: [FAP - 0066],"FEATURE, EP: Histórico e Relatórios",
+📥 Backlog,[FAP - 0068] - Consultar o histórico de empréstimos por usuário,"Como bibliotecária, quero consultar o histórico de empréstimos por usuário, para saber o que cada pessoa já pegou.
+
+Pai: [FAP - 0067]
+Requisito: RF-25","HISTÓRIA, EP: Histórico e Relatórios, P0, relatorios, tela, bibliotecaria",Lista cronológica com datas e status
+📥 Backlog,[FAP - 0069] - Consultar o histórico de empréstimos por livro,"Como bibliotecária, quero consultar o histórico de empréstimos por livro, para saber por quem ele passou.
+
+Pai: [FAP - 0067]
+Requisito: RF-26","HISTÓRIA, EP: Histórico e Relatórios, P0, relatorios, tela, bibliotecaria",Lista cronológica com datas e status
+📥 Backlog,[FAP - 0070] - Relatórios,Pai: [FAP - 0066],"FEATURE, EP: Histórico e Relatórios",
+📥 Backlog,[FAP - 0071] - Gerar relatório de livros em atraso,"Como bibliotecária, quero um relatório de livros em atraso, para cobrar as devoluções.
+
+Pai: [FAP - 0070]
+Requisito: RF-27","HISTÓRIA, EP: Histórico e Relatórios, P1, relatorios, tela, bibliotecaria",Lista de atrasados com usuário e dias de atraso
+📥 Backlog,[FAP - 0072] - Gerar relatório de acervo,"Como bibliotecária, quero um relatório de acervo (estoque e quantidade disponível por título), para acompanhar o estoque.
+
+Pai: [FAP - 0070]
+Requisito: RF-28","HISTÓRIA, EP: Histórico e Relatórios, P2, relatorios, tela, bibliotecaria",Estoque e disponível por título
+📥 Backlog,[FAP - 0073] - Gerar relatório de reservas pedagógicas,"Como bibliotecária, quero um relatório de reservas pedagógicas (solicitações, aprovações e recusas), para acompanhá-las.
+
+Pai: [FAP - 0070]
+Requisito: RF-29","HISTÓRIA, EP: Histórico e Relatórios, P1, relatorios, tela, bibliotecaria",Totais por status e período
+📥 Backlog,[FAP - 0074] - Painel da Bibliotecária,,"ÉPICO, EP: Painel da Bibliotecária, painel-admin",
+📥 Backlog,[FAP - 0075] - Visão geral,Pai: [FAP - 0074],"FEATURE, EP: Painel da Bibliotecária",
+📥 Backlog,[FAP - 0076] - Exibir visão geral da operação,"Como bibliotecária, quero uma visão geral com livros emprestados, atrasados e disponíveis, para acompanhar a operação.
+
+Pai: [FAP - 0075]
+Requisito: RF-30","HISTÓRIA, EP: Painel da Bibliotecária, P1, painel-admin, tela, bibliotecaria",Indicadores atualizados
+📥 Backlog,[FAP - 0077] - Gestão operacional,Pai: [FAP - 0074],"FEATURE, EP: Painel da Bibliotecária",
+📥 Backlog,"[FAP - 0078] - Gerenciar empréstimos, devoluções, renovações e reservas pelo painel","Como bibliotecária, quero gerenciar empréstimos, devoluções, renovações e reservas pelo painel, para agilizar o atendimento.
+
+Pai: [FAP - 0077]
+Requisito: RF-31","HISTÓRIA, EP: Painel da Bibliotecária, P0, painel-admin, tela, bibliotecaria",Fluxos acessíveis no painel; Acesso restrito a funcionários
+📥 Backlog,[FAP - 0079] - Fila de aprovação,Pai: [FAP - 0074],"FEATURE, EP: Painel da Bibliotecária",
+📥 Backlog,[FAP - 0080] - Exibir fila de aprovação de reservas pedagógicas,"Como bibliotecária ou chefe, quero uma fila de aprovação das reservas pedagógicas e renovações solicitadas, para decidir sobre elas.
+
+Pai: [FAP - 0079]
+Requisito: RF-32","HISTÓRIA, EP: Painel da Bibliotecária, P0, painel-admin, tela, bibliotecaria",Lista pendentes com aprovar/recusar
