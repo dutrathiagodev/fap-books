@@ -1,0 +1,1323 @@
+[
+ {
+  "id": "[FAP - 0001]",
+  "tipo": "epico",
+  "titulo": "Fundação e Plataforma",
+  "prioridade": "P0",
+  "tags": [
+   "ÉPICO",
+   "EP: Fundação e Plataforma",
+   "infra"
+  ],
+  "pai": null
+ },
+ {
+  "id": "[FAP - 0002]",
+  "tipo": "feature",
+  "titulo": "Setup do projeto",
+  "prioridade": "P0",
+  "tags": [
+   "FEATURE",
+   "EP: Fundação e Plataforma"
+  ],
+  "pai": "[FAP - 0001]"
+ },
+ {
+  "id": "[FAP - 0003]",
+  "tipo": "historia",
+  "rf": "RNF",
+  "titulo": "Configurar projeto Next.js com Supabase",
+  "historia": "Como desenvolvedor, quero o projeto Next.js integrado ao Supabase com ambiente local configurado, para que o time trabalhe sobre a mesma base.",
+  "prioridade": "P0",
+  "tags": [
+   "HISTÓRIA",
+   "EP: Fundação e Plataforma",
+   "P0",
+   "infra"
+  ],
+  "pai": "[FAP - 0002]",
+  "criterios": [
+   "App sobe localmente",
+   "Variáveis em .env, nunca commitadas",
+   "README com passo a passo de setup"
+  ]
+ },
+ {
+  "id": "[FAP - 0004]",
+  "tipo": "historia",
+  "rf": "RNF",
+  "titulo": "Criar esquema inicial do banco em migrations",
+  "historia": "Como desenvolvedor, quero o esquema inicial do banco versionado em migrations (livros, usuários, empréstimos, reservas, multas), para evoluir o banco com segurança.",
+  "prioridade": "P0",
+  "tags": [
+   "HISTÓRIA",
+   "EP: Fundação e Plataforma",
+   "P0",
+   "banco"
+  ],
+  "pai": "[FAP - 0002]",
+  "criterios": [
+   "Migrations versionadas no repositório",
+   "RLS habilitado nas tabelas",
+   "Aplicação limpa a partir de banco vazio"
+  ]
+ },
+ {
+  "id": "[FAP - 0005]",
+  "tipo": "historia",
+  "rf": "RNF",
+  "titulo": "Configurar CI (lint e build) nos PRs",
+  "historia": "Como desenvolvedor, quero um pipeline de CI (lint + build) nos PRs, para barrar código quebrado antes de ir para a develop e a main.",
+  "prioridade": "P1",
+  "tags": [
+   "HISTÓRIA",
+   "EP: Fundação e Plataforma",
+   "P1",
+   "infra"
+  ],
+  "pai": "[FAP - 0002]",
+  "criterios": [
+   "CI roda em todo PR",
+   "Falha de lint ou build bloqueia o merge"
+  ]
+ },
+ {
+  "id": "[FAP - 0006]",
+  "tipo": "feature",
+  "titulo": "Autenticação e controle de acesso",
+  "prioridade": "P0",
+  "tags": [
+   "FEATURE",
+   "EP: Fundação e Plataforma"
+  ],
+  "pai": "[FAP - 0001]"
+ },
+ {
+  "id": "[FAP - 0007]",
+  "tipo": "historia",
+  "rf": "RNF",
+  "titulo": "Fazer login no sistema",
+  "historia": "Como usuário, quero entrar no sistema com minhas credenciais, para acessar minha área.",
+  "prioridade": "P0",
+  "tags": [
+   "HISTÓRIA",
+   "EP: Fundação e Plataforma",
+   "P0",
+   "auth"
+  ],
+  "pai": "[FAP - 0006]",
+  "criterios": [
+   "Login e logout funcionando",
+   "Sessão protegida",
+   "Mensagens de erro claras"
+  ]
+ },
+ {
+  "id": "[FAP - 0008]",
+  "tipo": "historia",
+  "rf": "RNF",
+  "titulo": "Aplicar permissões por perfil",
+  "historia": "Como administrador, quero que aluno, professor e funcionário da biblioteca tenham permissões distintas, para que cada um acesse apenas o que lhe cabe.",
+  "prioridade": "P0",
+  "tags": [
+   "HISTÓRIA",
+   "EP: Fundação e Plataforma",
+   "P0",
+   "auth",
+   "api"
+  ],
+  "pai": "[FAP - 0006]",
+  "criterios": [
+   "Rotas e APIs protegidas por perfil",
+   "Funcionário possui cargo (ex.: chefe, auxiliar)",
+   "Acesso indevido retorna erro de autorização"
+  ]
+ },
+ {
+  "id": "[FAP - 0009]",
+  "tipo": "feature",
+  "titulo": "Auditoria e LGPD",
+  "prioridade": "P0",
+  "tags": [
+   "FEATURE",
+   "EP: Fundação e Plataforma"
+  ],
+  "pai": "[FAP - 0001]"
+ },
+ {
+  "id": "[FAP - 0010]",
+  "tipo": "historia",
+  "rf": "RNF",
+  "titulo": "Registrar auditoria das ações",
+  "historia": "Como bibliotecária, quero que empréstimo, devolução, renovação, reserva e reserva pedagógica registrem quem fez e quando, para ter rastreabilidade.",
+  "prioridade": "P1",
+  "tags": [
+   "HISTÓRIA",
+   "EP: Fundação e Plataforma",
+   "P1",
+   "infra",
+   "banco"
+  ],
+  "pai": "[FAP - 0009]",
+  "criterios": [
+   "Log de auditoria com usuário, ação e data/hora",
+   "Log não pode ser editado pela aplicação"
+  ]
+ },
+ {
+  "id": "[FAP - 0011]",
+  "tipo": "historia",
+  "rf": "RNF",
+  "titulo": "Proteger dados conforme a LGPD",
+  "historia": "Como titular dos dados, quero que meus dados sejam protegidos conforme a LGPD, para garantir minha privacidade.",
+  "prioridade": "P1",
+  "tags": [
+   "HISTÓRIA",
+   "EP: Fundação e Plataforma",
+   "P1",
+   "infra"
+  ],
+  "pai": "[FAP - 0009]",
+  "criterios": [
+   "Acesso mínimo necessário por perfil",
+   "Sem dados pessoais em logs",
+   "Regras de RLS revisadas"
+  ]
+ },
+ {
+  "id": "[FAP - 0012]",
+  "tipo": "feature",
+  "titulo": "Interface base e identidade visual",
+  "prioridade": "P0",
+  "tags": [
+   "FEATURE",
+   "EP: Fundação e Plataforma"
+  ],
+  "pai": "[FAP - 0001]"
+ },
+ {
+  "id": "[FAP - 0013]",
+  "tipo": "historia",
+  "rf": "RNF",
+  "titulo": "Criar interface responsiva com a identidade FAP Books",
+  "historia": "Como usuário, quero uma interface responsiva (desktop e celular) com a identidade FAP Books, para usar no balcão e no celular.",
+  "prioridade": "P1",
+  "tags": [
+   "HISTÓRIA",
+   "EP: Fundação e Plataforma",
+   "P1",
+   "tela"
+  ],
+  "pai": "[FAP - 0012]",
+  "criterios": [
+   "Paleta do PRD (navy #032B5E)",
+   "Layout base responsivo",
+   "Telas seguem o Figma (página UI web)"
+  ]
+ },
+ {
+  "id": "[FAP - 0014]",
+  "tipo": "feature",
+  "titulo": "Operação e backup",
+  "prioridade": "P0",
+  "tags": [
+   "FEATURE",
+   "EP: Fundação e Plataforma"
+  ],
+  "pai": "[FAP - 0001]"
+ },
+ {
+  "id": "[FAP - 0015]",
+  "tipo": "historia",
+  "rf": "RNF",
+  "titulo": "Realizar backup periódico do banco",
+  "historia": "Como responsável técnico, quero backup periódico do banco, para recuperar os dados em caso de falha.",
+  "prioridade": "P1",
+  "tags": [
+   "HISTÓRIA",
+   "EP: Fundação e Plataforma",
+   "P1",
+   "infra",
+   "banco"
+  ],
+  "pai": "[FAP - 0014]",
+  "criterios": [
+   "Backup automático agendado",
+   "Procedimento de restauração documentado"
+  ]
+ },
+ {
+  "id": "[FAP - 0016]",
+  "tipo": "epico",
+  "titulo": "Acervo",
+  "prioridade": "P0",
+  "tags": [
+   "ÉPICO",
+   "EP: Acervo",
+   "acervo"
+  ],
+  "pai": null
+ },
+ {
+  "id": "[FAP - 0017]",
+  "tipo": "feature",
+  "titulo": "Cadastro e gestão do acervo",
+  "prioridade": "P0",
+  "tags": [
+   "FEATURE",
+   "EP: Acervo"
+  ],
+  "pai": "[FAP - 0016]"
+ },
+ {
+  "id": "[FAP - 0018]",
+  "tipo": "historia",
+  "rf": "RF-01",
+  "titulo": "Cadastrar um livro manualmente",
+  "historia": "Como bibliotecária, quero cadastrar um livro manualmente (título, autor, categoria, código/ISBN, quantidade, status), para manter o estoque organizado.",
+  "prioridade": "P0",
+  "tags": [
+   "HISTÓRIA",
+   "EP: Acervo",
+   "P0",
+   "acervo",
+   "tela",
+   "bibliotecaria"
+  ],
+  "pai": "[FAP - 0017]",
+  "criterios": [
+   "Campos obrigatórios validados",
+   "Livro aparece na consulta após salvar"
+  ]
+ },
+ {
+  "id": "[FAP - 0019]",
+  "tipo": "historia",
+  "rf": "RF-03",
+  "titulo": "Editar os dados de um livro cadastrado",
+  "historia": "Como bibliotecária, quero editar os dados de um livro cadastrado, para corrigir informações.",
+  "prioridade": "P0",
+  "tags": [
+   "HISTÓRIA",
+   "EP: Acervo",
+   "P0",
+   "acervo",
+   "tela",
+   "bibliotecaria"
+  ],
+  "pai": "[FAP - 0017]",
+  "criterios": [
+   "Edição persiste e é auditada"
+  ]
+ },
+ {
+  "id": "[FAP - 0020]",
+  "tipo": "historia",
+  "rf": "RF-03",
+  "titulo": "Excluir um livro cadastrado",
+  "historia": "Como bibliotecária, quero excluir um livro cadastrado, para remover itens que saíram do acervo.",
+  "prioridade": "P0",
+  "tags": [
+   "HISTÓRIA",
+   "EP: Acervo",
+   "P0",
+   "acervo",
+   "tela",
+   "bibliotecaria"
+  ],
+  "pai": "[FAP - 0017]",
+  "criterios": [
+   "Confirmação antes de excluir",
+   "Regra para livro com empréstimo ativo: a definir com o time"
+  ]
+ },
+ {
+  "id": "[FAP - 0021]",
+  "tipo": "feature",
+  "titulo": "Importação em lote",
+  "prioridade": "P0",
+  "tags": [
+   "FEATURE",
+   "EP: Acervo"
+  ],
+  "pai": "[FAP - 0016]"
+ },
+ {
+  "id": "[FAP - 0022]",
+  "tipo": "historia",
+  "rf": "RF-02",
+  "titulo": "Importar livros em lote por planilha",
+  "historia": "Como bibliotecária, quero importar livros em lote por planilha (Excel/CSV), para migrar o acervo inicial sem digitar um a um.",
+  "prioridade": "P0",
+  "tags": [
+   "HISTÓRIA",
+   "EP: Acervo",
+   "P0",
+   "acervo",
+   "funcionalidade",
+   "bibliotecaria"
+  ],
+  "pai": "[FAP - 0021]",
+  "criterios": [
+   "Aceita .csv e .xlsx",
+   "Modelo de planilha disponível para download",
+   "Livros importados aparecem no acervo"
+  ]
+ },
+ {
+  "id": "[FAP - 0023]",
+  "tipo": "historia",
+  "rf": "RF-02",
+  "titulo": "Ver quais linhas da planilha falharam e por quê",
+  "historia": "Como bibliotecária, quero ver quais linhas da planilha falharam e por quê, para corrigir e reenviar. (derivada do RF-02)",
+  "prioridade": "P1",
+  "tags": [
+   "HISTÓRIA",
+   "EP: Acervo",
+   "P1",
+   "acervo",
+   "funcionalidade"
+  ],
+  "pai": "[FAP - 0021]",
+  "criterios": [
+   "Relatório de erros por linha",
+   "Linhas válidas não são perdidas"
+  ]
+ },
+ {
+  "id": "[FAP - 0024]",
+  "tipo": "feature",
+  "titulo": "Consulta e disponibilidade",
+  "prioridade": "P0",
+  "tags": [
+   "FEATURE",
+   "EP: Acervo"
+  ],
+  "pai": "[FAP - 0016]"
+ },
+ {
+  "id": "[FAP - 0025]",
+  "tipo": "historia",
+  "rf": "RF-04",
+  "titulo": "Pesquisar livros por título, autor, categoria ou código",
+  "historia": "Como aluno ou professor, quero pesquisar livros por título, autor, categoria ou código, para encontrar o que preciso.",
+  "prioridade": "P0",
+  "tags": [
+   "HISTÓRIA",
+   "EP: Acervo",
+   "P0",
+   "acervo",
+   "tela",
+   "aluno",
+   "professor"
+  ],
+  "pai": "[FAP - 0024]",
+  "criterios": [
+   "Busca por qualquer um dos 4 critérios",
+   "Resultado rápido mesmo com estoque grande"
+  ]
+ },
+ {
+  "id": "[FAP - 0026]",
+  "tipo": "historia",
+  "rf": "RF-05",
+  "titulo": "Ver se um livro está disponível, emprestado ou reservado em tempo real",
+  "historia": "Como usuário, quero ver se um livro está disponível, emprestado ou reservado em tempo real, para saber se consigo pegá-lo.",
+  "prioridade": "P0",
+  "tags": [
+   "HISTÓRIA",
+   "EP: Acervo",
+   "P0",
+   "acervo",
+   "funcionalidade"
+  ],
+  "pai": "[FAP - 0024]",
+  "criterios": [
+   "Status atualiza após empréstimo, devolução e reserva"
+  ]
+ },
+ {
+  "id": "[FAP - 0027]",
+  "tipo": "epico",
+  "titulo": "Usuários",
+  "prioridade": "P0",
+  "tags": [
+   "ÉPICO",
+   "EP: Usuários",
+   "usuarios"
+  ],
+  "pai": null
+ },
+ {
+  "id": "[FAP - 0028]",
+  "tipo": "feature",
+  "titulo": "Cadastro de usuários",
+  "prioridade": "P0",
+  "tags": [
+   "FEATURE",
+   "EP: Usuários"
+  ],
+  "pai": "[FAP - 0027]"
+ },
+ {
+  "id": "[FAP - 0029]",
+  "tipo": "historia",
+  "rf": "RF-06",
+  "titulo": "Cadastrar alunos",
+  "historia": "Como bibliotecária, quero cadastrar alunos, para vincular empréstimos a eles.",
+  "prioridade": "P0",
+  "tags": [
+   "HISTÓRIA",
+   "EP: Usuários",
+   "P0",
+   "usuarios",
+   "tela",
+   "bibliotecaria"
+  ],
+  "pai": "[FAP - 0028]",
+  "criterios": [
+   "Aluno recebe o perfil e as regras de aluno"
+  ]
+ },
+ {
+  "id": "[FAP - 0030]",
+  "tipo": "historia",
+  "rf": "RF-07",
+  "titulo": "Cadastrar professores",
+  "historia": "Como bibliotecária, quero cadastrar professores, para aplicar a regra de reserva pedagógica.",
+  "prioridade": "P0",
+  "tags": [
+   "HISTÓRIA",
+   "EP: Usuários",
+   "P0",
+   "usuarios",
+   "tela",
+   "bibliotecaria"
+  ],
+  "pai": "[FAP - 0028]",
+  "criterios": [
+   "Professor recebe o perfil e as regras de professor"
+  ]
+ },
+ {
+  "id": "[FAP - 0031]",
+  "tipo": "historia",
+  "rf": "RF-08",
+  "titulo": "Cadastrar funcionários da biblioteca com cargo",
+  "historia": "Como administrador, quero cadastrar funcionários da biblioteca com cargo, para controlar quem opera o sistema.",
+  "prioridade": "P0",
+  "tags": [
+   "HISTÓRIA",
+   "EP: Usuários",
+   "P0",
+   "usuarios",
+   "tela",
+   "bibliotecaria"
+  ],
+  "pai": "[FAP - 0028]",
+  "criterios": [
+   "Campo de cargo obrigatório (ex.: chefe, auxiliar)"
+  ]
+ },
+ {
+  "id": "[FAP - 0032]",
+  "tipo": "feature",
+  "titulo": "Gestão de cadastro",
+  "prioridade": "P0",
+  "tags": [
+   "FEATURE",
+   "EP: Usuários"
+  ],
+  "pai": "[FAP - 0027]"
+ },
+ {
+  "id": "[FAP - 0033]",
+  "tipo": "historia",
+  "rf": "RF-09",
+  "titulo": "Editar o cadastro de um usuário",
+  "historia": "Como bibliotecária, quero editar o cadastro de um usuário, para corrigir dados.",
+  "prioridade": "P1",
+  "tags": [
+   "HISTÓRIA",
+   "EP: Usuários",
+   "P1",
+   "usuarios",
+   "tela",
+   "bibliotecaria"
+  ],
+  "pai": "[FAP - 0032]",
+  "criterios": [
+   "Edição persiste e é auditada"
+  ]
+ },
+ {
+  "id": "[FAP - 0034]",
+  "tipo": "historia",
+  "rf": "RF-09",
+  "titulo": "Inativar um usuário",
+  "historia": "Como bibliotecária, quero inativar um usuário, para impedir novos empréstimos sem perder o histórico.",
+  "prioridade": "P1",
+  "tags": [
+   "HISTÓRIA",
+   "EP: Usuários",
+   "P1",
+   "usuarios",
+   "tela",
+   "bibliotecaria"
+  ],
+  "pai": "[FAP - 0032]",
+  "criterios": [
+   "Usuário inativo não consegue emprestar",
+   "Histórico preservado"
+  ]
+ },
+ {
+  "id": "[FAP - 0035]",
+  "tipo": "epico",
+  "titulo": "Empréstimos e Devoluções",
+  "prioridade": "P0",
+  "tags": [
+   "ÉPICO",
+   "EP: Empréstimos e Devoluções",
+   "emprestimos"
+  ],
+  "pai": null
+ },
+ {
+  "id": "[FAP - 0036]",
+  "tipo": "feature",
+  "titulo": "Registro de empréstimo",
+  "prioridade": "P0",
+  "tags": [
+   "FEATURE",
+   "EP: Empréstimos e Devoluções"
+  ],
+  "pai": "[FAP - 0035]"
+ },
+ {
+  "id": "[FAP - 0037]",
+  "tipo": "historia",
+  "rf": "RF-10",
+  "titulo": "Registrar o empréstimo de um livro a um usuário",
+  "historia": "Como bibliotecária, quero registrar o empréstimo de um livro a um usuário, para saber quem está com cada livro.",
+  "prioridade": "P0",
+  "tags": [
+   "HISTÓRIA",
+   "EP: Empréstimos e Devoluções",
+   "P0",
+   "emprestimos",
+   "funcionalidade",
+   "bibliotecaria"
+  ],
+  "pai": "[FAP - 0036]",
+  "criterios": [
+   "Empréstimo vinculado a usuário e livro",
+   "Prazo padrão de 7 dias",
+   "Status do livro passa a emprestado"
+  ]
+ },
+ {
+  "id": "[FAP - 0038]",
+  "tipo": "historia",
+  "rf": "RF-14",
+  "titulo": "Limitar empréstimos a 5 livros por usuário",
+  "historia": "Como bibliotecária, quero que o sistema limite a 5 livros emprestados por usuário, para aplicar a regra da biblioteca.",
+  "prioridade": "P0",
+  "tags": [
+   "HISTÓRIA",
+   "EP: Empréstimos e Devoluções",
+   "P0",
+   "emprestimos",
+   "funcionalidade"
+  ],
+  "pai": "[FAP - 0036]",
+  "criterios": [
+   "6º empréstimo é bloqueado com mensagem clara"
+  ]
+ },
+ {
+  "id": "[FAP - 0039]",
+  "tipo": "historia",
+  "rf": "RF-15",
+  "titulo": "Bloquear novo empréstimo para usuário com atraso ou multa em aberto",
+  "historia": "Como bibliotecária, quero bloquear novo empréstimo para usuário com atraso ou multa em aberto, para reduzir inadimplência.",
+  "prioridade": "P1",
+  "tags": [
+   "HISTÓRIA",
+   "EP: Empréstimos e Devoluções",
+   "P1",
+   "emprestimos",
+   "funcionalidade"
+  ],
+  "pai": "[FAP - 0036]",
+  "criterios": [
+   "Bloqueio ativo enquanto houver pendência",
+   "Liberado após devolução e baixa da multa"
+  ]
+ },
+ {
+  "id": "[FAP - 0040]",
+  "tipo": "feature",
+  "titulo": "Devolução",
+  "prioridade": "P0",
+  "tags": [
+   "FEATURE",
+   "EP: Empréstimos e Devoluções"
+  ],
+  "pai": "[FAP - 0035]"
+ },
+ {
+  "id": "[FAP - 0041]",
+  "tipo": "historia",
+  "rf": "RF-11",
+  "titulo": "Registrar a devolução de um livro",
+  "historia": "Como bibliotecária, quero registrar a devolução de um livro, para liberá-lo e fechar o empréstimo.",
+  "prioridade": "P0",
+  "tags": [
+   "HISTÓRIA",
+   "EP: Empréstimos e Devoluções",
+   "P0",
+   "emprestimos",
+   "funcionalidade",
+   "bibliotecaria"
+  ],
+  "pai": "[FAP - 0040]",
+  "criterios": [
+   "Status do livro volta a disponível",
+   "Multa calculada se houver atraso"
+  ]
+ },
+ {
+  "id": "[FAP - 0042]",
+  "tipo": "feature",
+  "titulo": "Renovação",
+  "prioridade": "P0",
+  "tags": [
+   "FEATURE",
+   "EP: Empréstimos e Devoluções"
+  ],
+  "pai": "[FAP - 0035]"
+ },
+ {
+  "id": "[FAP - 0043]",
+  "tipo": "historia",
+  "rf": "RF-12",
+  "titulo": "Renovar um empréstimo",
+  "historia": "Como aluno, quero renovar um empréstimo, para ficar mais tempo com o livro.",
+  "prioridade": "P1",
+  "tags": [
+   "HISTÓRIA",
+   "EP: Empréstimos e Devoluções",
+   "P1",
+   "emprestimos",
+   "funcionalidade",
+   "aluno"
+  ],
+  "pai": "[FAP - 0042]",
+  "criterios": [
+   "Novo prazo calculado",
+   "Renovação auditada"
+  ]
+ },
+ {
+  "id": "[FAP - 0044]",
+  "tipo": "feature",
+  "titulo": "Reserva de livro indisponível",
+  "prioridade": "P0",
+  "tags": [
+   "FEATURE",
+   "EP: Empréstimos e Devoluções"
+  ],
+  "pai": "[FAP - 0035]"
+ },
+ {
+  "id": "[FAP - 0045]",
+  "tipo": "historia",
+  "rf": "RF-13",
+  "titulo": "Reservar um livro indisponível",
+  "historia": "Como aluno, quero reservar um livro indisponível, para pegá-lo quando for devolvido.",
+  "prioridade": "P1",
+  "tags": [
+   "HISTÓRIA",
+   "EP: Empréstimos e Devoluções",
+   "P1",
+   "emprestimos",
+   "funcionalidade",
+   "aluno"
+  ],
+  "pai": "[FAP - 0044]",
+  "criterios": [
+   "Reserva aparece no meu painel",
+   "Status do livro mostra reservado"
+  ]
+ },
+ {
+  "id": "[FAP - 0046]",
+  "tipo": "epico",
+  "titulo": "Reserva Pedagógica",
+  "prioridade": "P0",
+  "tags": [
+   "ÉPICO",
+   "EP: Reserva Pedagógica",
+   "reserva-pedagogica"
+  ],
+  "pai": null
+ },
+ {
+  "id": "[FAP - 0047]",
+  "tipo": "feature",
+  "titulo": "Solicitação de reserva pedagógica",
+  "prioridade": "P0",
+  "tags": [
+   "FEATURE",
+   "EP: Reserva Pedagógica"
+  ],
+  "pai": "[FAP - 0046]"
+ },
+ {
+  "id": "[FAP - 0048]",
+  "tipo": "historia",
+  "rf": "RF-16",
+  "titulo": "Solicitar online a reserva pedagógica de um ou mais livros",
+  "historia": "Como professor, quero solicitar online a reserva pedagógica de um ou mais livros, para garantir a disponibilidade na minha disciplina.",
+  "prioridade": "P0",
+  "tags": [
+   "HISTÓRIA",
+   "EP: Reserva Pedagógica",
+   "P0",
+   "reserva-pedagogica",
+   "tela",
+   "professor"
+  ],
+  "pai": "[FAP - 0047]",
+  "criterios": [
+   "Solicitação entra na fila de aprovação"
+  ]
+ },
+ {
+  "id": "[FAP - 0049]",
+  "tipo": "historia",
+  "rf": "RF-16",
+  "titulo": "Registrar uma reserva pedagógica pedida presencialmente",
+  "historia": "Como bibliotecária, quero registrar uma reserva pedagógica pedida presencialmente, para atender o professor no balcão.",
+  "prioridade": "P0",
+  "tags": [
+   "HISTÓRIA",
+   "EP: Reserva Pedagógica",
+   "P0",
+   "reserva-pedagogica",
+   "tela",
+   "bibliotecaria"
+  ],
+  "pai": "[FAP - 0047]",
+  "criterios": [
+   "Mesmo fluxo de aprovação da solicitação online"
+  ]
+ },
+ {
+  "id": "[FAP - 0050]",
+  "tipo": "historia",
+  "rf": "RF-18",
+  "titulo": "Definir o prazo de posse dos livros",
+  "historia": "Como professor, quero definir o prazo de posse dos livros (máximo 30 dias), para planejar o uso em sala.",
+  "prioridade": "P0",
+  "tags": [
+   "HISTÓRIA",
+   "EP: Reserva Pedagógica",
+   "P0",
+   "reserva-pedagogica",
+   "funcionalidade",
+   "professor"
+  ],
+  "pai": "[FAP - 0047]",
+  "criterios": [
+   "Prazo acima de 30 dias é rejeitado"
+  ]
+ },
+ {
+  "id": "[FAP - 0051]",
+  "tipo": "feature",
+  "titulo": "Aprovação de reserva pedagógica",
+  "prioridade": "P0",
+  "tags": [
+   "FEATURE",
+   "EP: Reserva Pedagógica"
+  ],
+  "pai": "[FAP - 0046]"
+ },
+ {
+  "id": "[FAP - 0052]",
+  "tipo": "historia",
+  "rf": "RF-17",
+  "titulo": "Aprovar ou recusar uma reserva pedagógica",
+  "historia": "Como bibliotecária ou chefe, quero aprovar ou recusar uma reserva pedagógica, para controlar o uso do acervo. (a fila fica no painel: ver Painel)",
+  "prioridade": "P0",
+  "tags": [
+   "HISTÓRIA",
+   "EP: Reserva Pedagógica",
+   "P0",
+   "reserva-pedagogica",
+   "funcionalidade",
+   "bibliotecaria"
+  ],
+  "pai": "[FAP - 0051]",
+  "criterios": [
+   "Decisão registrada com autor e data",
+   "Professor é informado da decisão"
+  ]
+ },
+ {
+  "id": "[FAP - 0053]",
+  "tipo": "feature",
+  "titulo": "Devolução e renovação da reserva",
+  "prioridade": "P0",
+  "tags": [
+   "FEATURE",
+   "EP: Reserva Pedagógica"
+  ],
+  "pai": "[FAP - 0046]"
+ },
+ {
+  "id": "[FAP - 0054]",
+  "tipo": "historia",
+  "rf": "RF-19",
+  "titulo": "Registrar a devolução dos livros após o período didático",
+  "historia": "Como bibliotecária, quero registrar a devolução dos livros após o período didático, para encerrar a reserva.",
+  "prioridade": "P0",
+  "tags": [
+   "HISTÓRIA",
+   "EP: Reserva Pedagógica",
+   "P0",
+   "reserva-pedagogica",
+   "funcionalidade",
+   "bibliotecaria"
+  ],
+  "pai": "[FAP - 0053]",
+  "criterios": [
+   "Livros voltam a disponível"
+  ]
+ },
+ {
+  "id": "[FAP - 0055]",
+  "tipo": "historia",
+  "rf": "RF-20",
+  "titulo": "Renovar a reserva ao final do prazo, mediante nova aprovação",
+  "historia": "Como professor, quero renovar a reserva ao final do prazo, mediante nova aprovação, para continuar usando os livros.",
+  "prioridade": "P1",
+  "tags": [
+   "HISTÓRIA",
+   "EP: Reserva Pedagógica",
+   "P1",
+   "reserva-pedagogica",
+   "funcionalidade",
+   "professor"
+  ],
+  "pai": "[FAP - 0053]",
+  "criterios": [
+   "Renovação passa pela fila de aprovação"
+  ]
+ },
+ {
+  "id": "[FAP - 0056]",
+  "tipo": "epico",
+  "titulo": "Prazos, Multas e Notificações",
+  "prioridade": "P0",
+  "tags": [
+   "ÉPICO",
+   "EP: Prazos, Multas e Notificações",
+   "multas",
+   "notificacoes"
+  ],
+  "pai": null
+ },
+ {
+  "id": "[FAP - 0057]",
+  "tipo": "feature",
+  "titulo": "Cálculo de prazo e multa",
+  "prioridade": "P0",
+  "tags": [
+   "FEATURE",
+   "EP: Prazos, Multas e Notificações"
+  ],
+  "pai": "[FAP - 0056]"
+ },
+ {
+  "id": "[FAP - 0058]",
+  "tipo": "historia",
+  "rf": "RF-21",
+  "titulo": "Calcular prazo de devolução automaticamente",
+  "historia": "Como bibliotecária, quero que o prazo de devolução seja calculado automaticamente (7 dias, ou o definido na reserva pedagógica), para não depender de controle manual.",
+  "prioridade": "P0",
+  "tags": [
+   "HISTÓRIA",
+   "EP: Prazos, Multas e Notificações",
+   "P0",
+   "multas",
+   "funcionalidade"
+  ],
+  "pai": "[FAP - 0057]",
+  "criterios": [
+   "Prazo correto por tipo de empréstimo"
+  ]
+ },
+ {
+  "id": "[FAP - 0059]",
+  "tipo": "historia",
+  "rf": "RF-22",
+  "titulo": "Calcular multa por atraso automaticamente",
+  "historia": "Como bibliotecária, quero que a multa por atraso seja calculada automaticamente (R$ 1,00 por dia), para não depender de contas manuais.",
+  "prioridade": "P0",
+  "tags": [
+   "HISTÓRIA",
+   "EP: Prazos, Multas e Notificações",
+   "P0",
+   "multas",
+   "funcionalidade"
+  ],
+  "pai": "[FAP - 0057]",
+  "criterios": [
+   "Valor = dias de atraso x R$ 1,00",
+   "Casos excepcionais (feriados, recessos) tratados ou documentados"
+  ]
+ },
+ {
+  "id": "[FAP - 0060]",
+  "tipo": "feature",
+  "titulo": "Quitação de multas",
+  "prioridade": "P0",
+  "tags": [
+   "FEATURE",
+   "EP: Prazos, Multas e Notificações"
+  ],
+  "pai": "[FAP - 0056]"
+ },
+ {
+  "id": "[FAP - 0061]",
+  "tipo": "historia",
+  "rf": "RF-23",
+  "titulo": "Registrar a baixa manual do pagamento da multa",
+  "historia": "Como bibliotecária, quero registrar a baixa manual do pagamento da multa, para liberar o usuário.",
+  "prioridade": "P0",
+  "tags": [
+   "HISTÓRIA",
+   "EP: Prazos, Multas e Notificações",
+   "P0",
+   "multas",
+   "tela",
+   "bibliotecaria"
+  ],
+  "pai": "[FAP - 0060]",
+  "criterios": [
+   "Baixa registrada com autor e data",
+   "Pagamento online fora do escopo"
+  ]
+ },
+ {
+  "id": "[FAP - 0062]",
+  "tipo": "feature",
+  "titulo": "Notificações de prazo",
+  "prioridade": "P0",
+  "tags": [
+   "FEATURE",
+   "EP: Prazos, Multas e Notificações"
+  ],
+  "pai": "[FAP - 0056]"
+ },
+ {
+  "id": "[FAP - 0063]",
+  "tipo": "historia",
+  "rf": "RF-24",
+  "titulo": "Ver avisos de prazo no painel do sistema",
+  "historia": "Como usuário, quero ver avisos de prazo no painel do sistema, para me organizar.",
+  "prioridade": "P1",
+  "tags": [
+   "HISTÓRIA",
+   "EP: Prazos, Multas e Notificações",
+   "P1",
+   "notificacoes",
+   "tela"
+  ],
+  "pai": "[FAP - 0062]",
+  "criterios": [
+   "Aviso para prazo próximo e vencido"
+  ]
+ },
+ {
+  "id": "[FAP - 0064]",
+  "tipo": "historia",
+  "rf": "RF-24",
+  "titulo": "Receber aviso de prazo por e-mail",
+  "historia": "Como usuário, quero receber aviso de prazo por e-mail, para ser lembrado fora do sistema.",
+  "prioridade": "P1",
+  "tags": [
+   "HISTÓRIA",
+   "EP: Prazos, Multas e Notificações",
+   "P1",
+   "notificacoes",
+   "api"
+  ],
+  "pai": "[FAP - 0062]",
+  "criterios": [
+   "Envio automático por e-mail"
+  ]
+ },
+ {
+  "id": "[FAP - 0065]",
+  "tipo": "historia",
+  "rf": "RF-24",
+  "titulo": "Receber aviso de prazo por WhatsApp",
+  "historia": "Como usuário, quero receber aviso de prazo por WhatsApp, para ser lembrado no canal que mais uso.",
+  "prioridade": "P1",
+  "tags": [
+   "HISTÓRIA",
+   "EP: Prazos, Multas e Notificações",
+   "P1",
+   "notificacoes",
+   "api"
+  ],
+  "pai": "[FAP - 0062]",
+  "criterios": [
+   "BLOQUEADA: definir mecanismo (API oficial do WhatsApp Business ou outro)"
+  ]
+ },
+ {
+  "id": "[FAP - 0066]",
+  "tipo": "epico",
+  "titulo": "Histórico e Relatórios",
+  "prioridade": "P0",
+  "tags": [
+   "ÉPICO",
+   "EP: Histórico e Relatórios",
+   "relatorios"
+  ],
+  "pai": null
+ },
+ {
+  "id": "[FAP - 0067]",
+  "tipo": "feature",
+  "titulo": "Histórico de empréstimos",
+  "prioridade": "P0",
+  "tags": [
+   "FEATURE",
+   "EP: Histórico e Relatórios"
+  ],
+  "pai": "[FAP - 0066]"
+ },
+ {
+  "id": "[FAP - 0068]",
+  "tipo": "historia",
+  "rf": "RF-25",
+  "titulo": "Consultar o histórico de empréstimos por usuário",
+  "historia": "Como bibliotecária, quero consultar o histórico de empréstimos por usuário, para saber o que cada pessoa já pegou.",
+  "prioridade": "P0",
+  "tags": [
+   "HISTÓRIA",
+   "EP: Histórico e Relatórios",
+   "P0",
+   "relatorios",
+   "tela",
+   "bibliotecaria"
+  ],
+  "pai": "[FAP - 0067]",
+  "criterios": [
+   "Lista cronológica com datas e status"
+  ]
+ },
+ {
+  "id": "[FAP - 0069]",
+  "tipo": "historia",
+  "rf": "RF-26",
+  "titulo": "Consultar o histórico de empréstimos por livro",
+  "historia": "Como bibliotecária, quero consultar o histórico de empréstimos por livro, para saber por quem ele passou.",
+  "prioridade": "P0",
+  "tags": [
+   "HISTÓRIA",
+   "EP: Histórico e Relatórios",
+   "P0",
+   "relatorios",
+   "tela",
+   "bibliotecaria"
+  ],
+  "pai": "[FAP - 0067]",
+  "criterios": [
+   "Lista cronológica com datas e status"
+  ]
+ },
+ {
+  "id": "[FAP - 0070]",
+  "tipo": "feature",
+  "titulo": "Relatórios",
+  "prioridade": "P0",
+  "tags": [
+   "FEATURE",
+   "EP: Histórico e Relatórios"
+  ],
+  "pai": "[FAP - 0066]"
+ },
+ {
+  "id": "[FAP - 0071]",
+  "tipo": "historia",
+  "rf": "RF-27",
+  "titulo": "Gerar relatório de livros em atraso",
+  "historia": "Como bibliotecária, quero um relatório de livros em atraso, para cobrar as devoluções.",
+  "prioridade": "P1",
+  "tags": [
+   "HISTÓRIA",
+   "EP: Histórico e Relatórios",
+   "P1",
+   "relatorios",
+   "tela",
+   "bibliotecaria"
+  ],
+  "pai": "[FAP - 0070]",
+  "criterios": [
+   "Lista de atrasados com usuário e dias de atraso"
+  ]
+ },
+ {
+  "id": "[FAP - 0072]",
+  "tipo": "historia",
+  "rf": "RF-28",
+  "titulo": "Gerar relatório de acervo",
+  "historia": "Como bibliotecária, quero um relatório de acervo (estoque e quantidade disponível por título), para acompanhar o estoque.",
+  "prioridade": "P2",
+  "tags": [
+   "HISTÓRIA",
+   "EP: Histórico e Relatórios",
+   "P2",
+   "relatorios",
+   "tela",
+   "bibliotecaria"
+  ],
+  "pai": "[FAP - 0070]",
+  "criterios": [
+   "Estoque e disponível por título"
+  ]
+ },
+ {
+  "id": "[FAP - 0073]",
+  "tipo": "historia",
+  "rf": "RF-29",
+  "titulo": "Gerar relatório de reservas pedagógicas",
+  "historia": "Como bibliotecária, quero um relatório de reservas pedagógicas (solicitações, aprovações e recusas), para acompanhá-las.",
+  "prioridade": "P1",
+  "tags": [
+   "HISTÓRIA",
+   "EP: Histórico e Relatórios",
+   "P1",
+   "relatorios",
+   "tela",
+   "bibliotecaria"
+  ],
+  "pai": "[FAP - 0070]",
+  "criterios": [
+   "Totais por status e período"
+  ]
+ },
+ {
+  "id": "[FAP - 0074]",
+  "tipo": "epico",
+  "titulo": "Painel da Bibliotecária",
+  "prioridade": "P0",
+  "tags": [
+   "ÉPICO",
+   "EP: Painel da Bibliotecária",
+   "painel-admin"
+  ],
+  "pai": null
+ },
+ {
+  "id": "[FAP - 0075]",
+  "tipo": "feature",
+  "titulo": "Visão geral",
+  "prioridade": "P0",
+  "tags": [
+   "FEATURE",
+   "EP: Painel da Bibliotecária"
+  ],
+  "pai": "[FAP - 0074]"
+ },
+ {
+  "id": "[FAP - 0076]",
+  "tipo": "historia",
+  "rf": "RF-30",
+  "titulo": "Exibir visão geral da operação",
+  "historia": "Como bibliotecária, quero uma visão geral com livros emprestados, atrasados e disponíveis, para acompanhar a operação.",
+  "prioridade": "P1",
+  "tags": [
+   "HISTÓRIA",
+   "EP: Painel da Bibliotecária",
+   "P1",
+   "painel-admin",
+   "tela",
+   "bibliotecaria"
+  ],
+  "pai": "[FAP - 0075]",
+  "criterios": [
+   "Indicadores atualizados"
+  ]
+ },
+ {
+  "id": "[FAP - 0077]",
+  "tipo": "feature",
+  "titulo": "Gestão operacional",
+  "prioridade": "P0",
+  "tags": [
+   "FEATURE",
+   "EP: Painel da Bibliotecária"
+  ],
+  "pai": "[FAP - 0074]"
+ },
+ {
+  "id": "[FAP - 0078]",
+  "tipo": "historia",
+  "rf": "RF-31",
+  "titulo": "Gerenciar empréstimos, devoluções, renovações e reservas pelo painel",
+  "historia": "Como bibliotecária, quero gerenciar empréstimos, devoluções, renovações e reservas pelo painel, para agilizar o atendimento.",
+  "prioridade": "P0",
+  "tags": [
+   "HISTÓRIA",
+   "EP: Painel da Bibliotecária",
+   "P0",
+   "painel-admin",
+   "tela",
+   "bibliotecaria"
+  ],
+  "pai": "[FAP - 0077]",
+  "criterios": [
+   "Fluxos acessíveis no painel",
+   "Acesso restrito a funcionários"
+  ]
+ },
+ {
+  "id": "[FAP - 0079]",
+  "tipo": "feature",
+  "titulo": "Fila de aprovação",
+  "prioridade": "P0",
+  "tags": [
+   "FEATURE",
+   "EP: Painel da Bibliotecária"
+  ],
+  "pai": "[FAP - 0074]"
+ },
+ {
+  "id": "[FAP - 0080]",
+  "tipo": "historia",
+  "rf": "RF-32",
+  "titulo": "Exibir fila de aprovação de reservas pedagógicas",
+  "historia": "Como bibliotecária ou chefe, quero uma fila de aprovação das reservas pedagógicas e renovações solicitadas, para decidir sobre elas.",
+  "prioridade": "P0",
+  "tags": [
+   "HISTÓRIA",
+   "EP: Painel da Bibliotecária",
+   "P0",
+   "painel-admin",
+   "tela",
+   "bibliotecaria"
+  ],
+  "pai": "[FAP - 0079]",
+  "criterios": [
+   "Lista pendentes com aprovar/recusar"
+  ]
+ }
+]
