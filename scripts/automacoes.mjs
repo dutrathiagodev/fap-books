@@ -117,9 +117,11 @@ async function main() {
   // Histórico só dos cards que precisam dele (PR, QA, Rejected, Done com membros).
   const alvo = new Set(cards.filter(c => [L.progress, L.blocked, L.pr, L.qa, L.rejected, L.done].includes(nomeDe[c.idList])).map(c => c.id))
   for (const id of alvo) {
-    const acts = await api('GET', `/cards/${id}/actions`, { filter: 'updateCard:idList', limit: '100' })
+    const acts = await api('GET', `/cards/${id}/actions`, { filter: 'updateCard:idList,commentCard', limit: '100' })
     const quem = lista => acts.find(a => a.data?.listAfter?.name === lista)?.idMemberCreator
-    cache[id] = { pr: quem(L.pr), progress: quem(L.progress) }
+    // O workflow de PR move o card com o token do Thiago e grava o autor real num comentário "PR-AUTOR: <id>".
+    const marcado = acts.find(a => a.type === 'commentCard' && /^PR-AUTOR: \w+/.test(a.data?.text ?? ''))?.data.text.split(' ')[1]
+    cache[id] = { pr: marcado ?? quem(L.pr), progress: quem(L.progress) }
   }
   const acoes = planejar(cards, listas, c => cache[c.id])
   const nomes = { [THIAGO]: 'Thiago', [BRENO]: 'Breno' }
