@@ -1,0 +1,16 @@
+[
+  {
+    "titulo": "Reunião: apresentação do projeto e da arquitetura",
+    "descricao": "Reunião para apresentar o FAP Books ao time, antes de as telas começarem. Ninguém precisa saber nada antes.\n\nPauta sugerida:\n- O problema da biblioteca e o que o FAP Books resolve (PRD: docs/prd.md)\n- Os 3 perfis: aluno, professor e funcionário da biblioteca\n- O quadro do Trello: listas, cards, etiquetas e o que acontece sozinho\n- A estrutura do código (src/app, src/components, services, types, lib) e a regra: só o service fala com o Supabase\n- Como cada tela vira 3 cards: Design (Stitch → Figma), Blocos e a Tela\n- A divisão das telas por pessoa\n- Configuração de ambiente (card FAP - 0180): tirar dúvidas ao vivo\n- Combinados do time: perguntar antes, passo pequeno, chave nunca no Git\n\nMaterial: docs/tutorial-do-grupo.md",
+    "etiquetas": "REUNIAO, docs, P0",
+    "checklist": [
+      "Marcar data e horário com o time",
+      "Todos com o ambiente configurado (card FAP - 0180)",
+      "Apresentar o PRD e o quadro do Trello",
+      "Mostrar a estrutura do código rodando",
+      "Combinar quem começa por qual tela",
+      "Registrar dúvidas e atualizar o tutorial"
+    ],
+    "membros": "6515cff8159cb78d54ad4074,68ca9fb753f35f1a0a8f2e7e,67195d0c150f447a3be11937,63fb58a30bbf172e395d48ca,68d138655f90a29c7c2a8900,6a5e8ced6137038c8b598826"
+  }
+]
