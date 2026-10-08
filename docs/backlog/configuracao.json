@@ -1,0 +1,96 @@
+[
+  {
+    "titulo": "Configurar secrets TRELLO_KEY e TRELLO_TOKEN no GitHub",
+    "descricao": "Criar os secrets do repositório que as automações do Trello usam. Gerar um token novo (as credenciais que apareceram no chat devem ser descartadas).\n\nOnde: GitHub → Settings → Secrets and variables → Actions.",
+    "etiquetas": "CONFIG, infra, P0",
+    "checklist": [
+      "Gerar token novo do Trello (link \"token\" na Chave de API do Power-Up)",
+      "Criar TRELLO_KEY e TRELLO_TOKEN nos secrets",
+      "Revogar o token e o segredo antigos"
+    ],
+    "membros": "6515cff8159cb78d54ad4074"
+  },
+  {
+    "titulo": "Preencher o usuário da Julia no GitHub em usuarios.json",
+    "descricao": "Sem o usuário dela em scripts/usuarios.json, os PRs dela marcam só o Thiago e o autor não é registrado.\n\nArquivo: scripts/usuarios.json (chave github_para_trello, usuário em minúsculas; id Trello 68d138655f90a29c7c2a8900).",
+    "etiquetas": "CONFIG, infra, P0",
+    "checklist": [
+      "Descobrir o usuário da Julia no GitHub",
+      "Preencher em scripts/usuarios.json e remover o campo pendente",
+      "Commit na develop"
+    ],
+    "membros": "6515cff8159cb78d54ad4074"
+  },
+  {
+    "titulo": "Levar as automações à main (PR develop → main)",
+    "descricao": "O agendamento das automações só roda a partir da main. Abrir o PR develop → main junto com o assistente e fazer o merge.\n\nBranch do PR no padrão FAP/<número do card>.",
+    "etiquetas": "CONFIG, infra, P0",
+    "checklist": [
+      "Abrir o PR develop → main",
+      "Revisar o diff e fazer o merge",
+      "Confirmar que o workflow \"Automações do Trello\" aparece em Actions"
+    ],
+    "membros": "6515cff8159cb78d54ad4074"
+  },
+  {
+    "titulo": "Testar as automações do Trello de ponta a ponta",
+    "descricao": "Validar contra o Trello de verdade, o que ainda não foi feito (os testes até agora foram só de lógica).\n\nDepende de: [FAP - 0161]\nDepende de: [FAP - 0163]",
+    "etiquetas": "CONFIG, infra, P0",
+    "checklist": [
+      "Rodar \"Automações do Trello\" à mão (Actions → Run workflow)",
+      "Testar In Progress com dependência pendente → Blocked",
+      "Testar Awaiting PR, QA, QA Rejected e Done (marcações)",
+      "Testar fechar pai quando os filhos terminam",
+      "Abrir um PR de teste em FAP/<número> e ver o card mover"
+    ],
+    "membros": "6515cff8159cb78d54ad4074"
+  },
+  {
+    "titulo": "Ativar o Power-Up do GitHub no quadro do Trello",
+    "descricao": "Mostrar o PR, o branch e os commits dentro de cada card.\n\nOnde: quadro → Power-Ups → GitHub → Adicionar, e autorizar o repositório.",
+    "etiquetas": "CONFIG, infra, P0",
+    "checklist": [
+      "Adicionar o Power-Up GitHub ao quadro",
+      "Autorizar o acesso ao repositório fap-books",
+      "Anexar um PR de teste a um card"
+    ],
+    "membros": "6515cff8159cb78d54ad4074"
+  },
+  {
+    "titulo": "Compartilhar o quadro do Trello com a equipe",
+    "descricao": "Convidar as 5 pessoas do projeto como membros do quadro FAP Books.",
+    "etiquetas": "CONFIG, infra, P0",
+    "checklist": [
+      "emanueldossantosbim@gmail.com",
+      "brenogruberfoz@gmail.com",
+      "sousafrancielio887@gmail.com",
+      "igaumsant@gmail.com",
+      "juhwassao@gmail.com",
+      "Conferir que todos aparecem como membros"
+    ],
+    "membros": "6515cff8159cb78d54ad4074"
+  },
+  {
+    "titulo": "Testar o bloqueio da main com um colaborador",
+    "descricao": "O ruleset da main nunca foi testado com alguém que não é o dono.",
+    "etiquetas": "CONFIG, infra, P0",
+    "checklist": [
+      "Pedir a um colaborador para tentar push direto na main",
+      "Confirmar que foi recusado",
+      "Confirmar que ele consegue abrir PR e que não consegue fazer o merge"
+    ],
+    "membros": "6515cff8159cb78d54ad4074"
+  },
+  {
+    "titulo": "Criar o projeto no Supabase e configurar variáveis de ambiente",
+    "descricao": "Criar o projeto do FAP Books no Supabase e registrar URL e chaves de forma segura (nunca no repositório).\n\nRelacionado: [FAP - 0003] e [FAP - 0004]",
+    "etiquetas": "CONFIG, infra, P0",
+    "checklist": [
+      "Criar o projeto no Supabase",
+      "Guardar URL e chaves em .env local e nos secrets do GitHub",
+      "Documentar no README o passo a passo",
+      "Confirmar que .env está no .gitignore"
+    ],
+    "membros": "6515cff8159cb78d54ad4074"
+  }
+]
