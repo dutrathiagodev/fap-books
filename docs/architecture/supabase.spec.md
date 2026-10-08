@@ -95,7 +95,7 @@ Capas de livros ficam num bucket `book-covers`. Leitura pública para as capas; 
 
 ## Tipos do TypeScript
 
-Depois de mudar o banco, gere os tipos: `supabase gen types typescript` e guarde em `src/infra/supabase/database.types.ts`. Assim o TypeScript avisa se um nome de coluna estiver errado.
+Depois de mudar o banco, gere os tipos: `supabase gen types typescript` e guarde em `src/lib/supabase/database.types.ts`. Assim o TypeScript avisa se um nome de coluna estiver errado.
 
 ## Checklist de revisão de migration
 
@@ -111,4 +111,4 @@ Depois de mudar o banco, gere os tipos: `supabase gen types typescript` e guarde
 
 ## Quem fala com o banco
 
-Só **código de servidor** do Next.js (Server Components e Server Actions), pelo cliente em `src/infra/supabase/server-client.ts`, usando a sessão do usuário. O navegador usa o Supabase apenas para login e para arquivos públicos.
+Só **código de servidor** do Next.js (páginas e Server Actions, sempre pelos `services`), pelo cliente em `src/lib/supabase/server-client.ts`, usando a sessão do usuário. O navegador usa o Supabase apenas para login e para arquivos públicos.
