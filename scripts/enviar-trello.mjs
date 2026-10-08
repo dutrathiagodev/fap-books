@@ -1,5 +1,5 @@
 // Envia o backlog para o Trello usando a CLI (`trello`, já autenticada).
-// Uso: node scripts/enviar-trello.mjs descrever | design | mover "<lista>" 0003 0004
+// Uso: node scripts/enviar-trello.mjs descrever | design [arquivo.json] [lista] | mover "<lista>" 0003 0004
 import { execFileSync } from 'node:child_process'
 import { readFileSync } from 'node:fs'
 
@@ -34,16 +34,16 @@ if (cmd === 'descrever') {
     console.log(`${c.name} -> ${dest}`)
   }
 } else if (cmd === 'design') {
-  const itens = JSON.parse(readFileSync('docs/backlog/design-telas.json', 'utf8'))
+  const itens = JSON.parse(readFileSync(args[0] ?? 'docs/backlog/design-telas.json', 'utf8'))
   const existentes = cards()
   let next = Math.max(0, ...existentes.map(c => +num(c) || 0))
   const labels = tr('labels', 'list', '--board', BOARD)
   const labelId = n => {
     let l = labels.find(x => x.name === n)
-    if (!l) { l = tr('labels', 'create', '--board', BOARD, '--name', n, '--color', ({ DESIGN: 'pink', BLOCO: 'lime', FRONT: 'sky', TELA: 'purple' })[n] ?? 'black'); labels.push(l) }
+    if (!l) { l = tr('labels', 'create', '--board', BOARD, '--name', n, '--color', ({ DESIGN: 'pink', BLOCO: 'lime', FRONT: 'sky', TELA: 'purple', CONFIG: 'orange' })[n] ?? 'black'); labels.push(l) }
     return l.id
   }
-  const back = listId('📥 Backlog')
+  const back = listId(args[1] ?? '📥 Backlog')
   for (const it of itens) {
     const name = `[FAP - ${String(++next).padStart(4, '0')}] - ${it.titulo}`
     if (existentes.some(c => c.name === name)) { console.log(`já existe: ${name}`); continue }
@@ -55,4 +55,4 @@ if (cmd === 'descrever') {
     }
     console.log(name)
   }
-} else console.log('Comandos: descrever | design | mover "<lista>" <numeros...>')
+} else console.log('Comandos: descrever | design [arquivo.json] [lista] | mover "<lista>" <numeros...>')
