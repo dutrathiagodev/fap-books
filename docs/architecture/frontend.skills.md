@@ -1,47 +1,47 @@
-# Frontend Skills — Clean Architecture + Next.js
+# Frontend Skills — Clean Architecture + Next.js + Supabase
 
-Guia prático para implementar uma feature do frontend (`apps/web`). As regras normativas estão em [frontend.spec.md](frontend.spec.md).
+Guia prático para implementar uma feature. As regras completas estão em [frontend.spec.md](frontend.spec.md). Se algo aqui soar estranho, o [Guia do aluno](guia-do-aluno.md) explica cada conceito do zero.
 
-## Objetivo
+## O que cada camada faz
 
-Manter as features consistentes, com camadas claras:
-
-- **domain:** contratos e regras de negócio
-- **data:** implementações dos contratos
-- **infra:** adaptadores de fontes externas (API NestJS, Supabase)
-- **presenter:** estado de tela (hooks e Server Actions)
-- **modules:** composição da tela (page, views e widgets)
-- **main/di:** montagem das dependências
+- **domain:** o que o sistema é e as regras do negócio
+- **data:** como trazer e levar dados (cumpre o que o domain pede)
+- **infra:** a ligação com o Supabase
+- **presenter:** o estado da tela
+- **modules:** a tela (page, views, widgets)
+- **main/di:** a montagem das peças
 
 ## Skills (regras práticas)
 
-1. **A page decide os cenários.** Loading, erro, vazio e sucesso ficam na page.
-2. **A view principal só renderiza sucesso.** Sem `useEffect` de busca e sem `if (loading)` dentro dela.
-3. **O presenter não conhece JSX.** Hooks devolvem estado e funções; Server Actions devolvem resultado tipado.
-4. **O domain não depende de framework.** Sem React, Next ou Supabase nos imports.
-5. **O data implementa o contrato.** `repository-impl` recebe o adaptador da infra e converte o `model` em `entity` com o mapeador.
-6. **A infra esconde o detalhe externo.** URL da API, token, SDK do Supabase e storage ficam em `infra/`.
-7. **DI por feature.** Um arquivo `main/di/<feature>.dependencies.ts` com fábricas: adapter → repository → usecase.
-8. **Server Component por padrão.** Busque dados no servidor e passe para a view por props. `"use client"` só para formulário, evento e estado local.
-9. **UI sem estado quando possível.** Widgets puros em `modules/<feature>/widgets/`.
-10. **Nomes claros.** `kebab-case` nos arquivos, `PascalCase` nos componentes, sem abreviações ambíguas.
-11. **Testes mínimos.** Caso de uso com repositório falso e o fluxo principal da page.
+1. **A page decide o cenário.** Carregando, erro, vazio e sucesso.
+2. **A view só mostra sucesso.** Sem `if (loading)` e sem busca de dados dentro dela.
+3. **O presenter não desenha tela.** Hooks devolvem estado e funções; Server Actions devolvem um resultado.
+4. **O domain não conhece framework.** Nenhum import de React, Next ou Supabase.
+5. **O data cumpre o contrato.** O repositório usa o adaptador e converte o dado do banco em entidade com o mapper.
+6. **A infra esconde o Supabase.** Quem precisa de dados nunca fala com o Supabase direto.
+7. **Montagem por funções.** Um arquivo `main/di/<feature>.dependencies.ts` com `makeXxx()`.
+8. **Servidor por padrão.** Busque dados no servidor e passe para a view por props. `"use client"` só para o que é interativo.
+9. **Widgets simples.** Pedaços reutilizáveis ficam em `modules/<feature>/widgets/`.
+10. **Nomes claros.** `kebab-case` nos arquivos, `PascalCase` nos componentes, código em inglês.
+11. **Regra com teste.** Toda regra do negócio (limite, prazo, multa) tem teste.
+12. **Banco sempre protegido.** Toda tabela nova nasce com RLS e permissões explícitas.
 
 ## Receita rápida
 
-1. Criar entity, repository e usecase em `domain/<feature>/`.
-2. Criar model, mapper e repository-impl em `data/<feature>/`.
-3. Criar o adaptador em `infra/adapters/<feature>/`.
-4. Criar state, hook e actions em `presenter/<feature>/`.
-5. Criar page, views (sucesso, loading, erro, vazio) e widgets em `modules/<feature>/`.
-6. Criar a fábrica em `main/di/<feature>.dependencies.ts`.
-7. Criar a rota fina em `app/<rota>/page.tsx` (e `loading.tsx` e `error.tsx`).
-8. Rodar lint, typecheck, test e build.
+1. Domain: entity, repository (contrato) e usecase.
+2. Data: model, mapper e repository-impl.
+3. Infra: adapter que fala com o Supabase.
+4. Presenter: state, hook e actions.
+5. Modules: page, views (sucesso, loading, erro, vazio) e widgets.
+6. Main/di: `make<Feature>()`.
+7. App: rota curta com `loading.tsx` e `error.tsx`.
+8. Banco: migration com tabela, RLS e permissões.
+9. Testes, lint, typecheck e build.
 
-## Exemplo de page (Server Component)
+## Exemplo de page
 
 ```tsx
-// modules/books/page/books-page.tsx
+// src/modules/books/page/books-page.tsx
 import { Suspense } from "react";
 import { makeListBooks } from "@/main/di/books.dependencies";
 import { BooksView } from "./view/books-view";
@@ -63,15 +63,32 @@ export function BooksPage() {
 }
 ```
 
-O erro vai para o `error.tsx` da rota. A rota em `app/livros/page.tsx` apenas devolve `<BooksPage />`.
+A rota `src/app/livros/page.tsx` só devolve `<BooksPage />`. Se der erro, o Next.js mostra o `error.tsx`.
+
+## Exemplo de montagem
+
+```ts
+// src/main/di/books.dependencies.ts
+import { createServerClient } from "@/infra/supabase/server-client";
+import { BooksSupabaseAdapter } from "@/infra/adapters/books/books-supabase.adapter";
+import { BooksRepositoryImpl } from "@/data/books/repositories/books.repository-impl";
+import { ListBooksUseCase } from "@/domain/books/usecases/list-books.usecase";
+
+export function makeListBooks() {
+  const adapter = new BooksSupabaseAdapter(createServerClient);
+  const repository = new BooksRepositoryImpl(adapter);
+  return new ListBooksUseCase(repository);
+}
+```
 
 ## Definition of Done
 
 - Estrutura de pastas segue o spec.
-- Page centraliza a decisão de cenário; view só trata sucesso.
-- Dependências montadas em `main/di`.
-- Sem import proibido no `domain`.
-- Lint, typecheck, testes e build passando.
+- Page decide o cenário; view só mostra sucesso.
+- Nenhum import proibido no `domain`.
+- Tabela com RLS e permissões.
+- Testes, lint, typecheck e build passando.
+- PR com descrição clara.
 
 ## Scaffold
 
