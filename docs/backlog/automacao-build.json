@@ -1,0 +1,14 @@
+[
+  {
+    "titulo": "Automação: tirar o card de Awaiting Build depois da build",
+    "descricao": "Hoje o card fica parado em Awaiting Build depois do merge, porque nada o tira de lá. Criar a regra: depois do merge, o GitHub roda lint, typecheck e build; se passar, o card vai para Awaiting QA (ou direto para Done quando for de documentação ou configuração, que não precisa de teste).\n\nArquivos: .github/workflows/trello-pr.yml e scripts/trello-pr.mjs\nBranch: FAP/0183",
+    "etiquetas": "CONFIG, P1",
+    "checklist": [
+      "Build roda depois do merge",
+      "Card vai para Awaiting QA quando a build passa",
+      "Cards docs e CONFIG vão direto para Done",
+      "Testes da regra passando"
+    ],
+    "membros": "6515cff8159cb78d54ad4074"
+  }
+]
