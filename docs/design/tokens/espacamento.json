@@ -1,0 +1,36 @@
+{
+  "spacing": {
+    "1": {
+      "$type": "number",
+      "$value": 4
+    },
+    "2": {
+      "$type": "number",
+      "$value": 8
+    },
+    "3": {
+      "$type": "number",
+      "$value": 12
+    },
+    "4": {
+      "$type": "number",
+      "$value": 16
+    },
+    "6": {
+      "$type": "number",
+      "$value": 24
+    },
+    "8": {
+      "$type": "number",
+      "$value": 32
+    },
+    "12": {
+      "$type": "number",
+      "$value": 48
+    },
+    "16": {
+      "$type": "number",
+      "$value": 64
+    }
+  }
+}

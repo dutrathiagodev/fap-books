@@ -1,26 +1,122 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/*
+  Tokens do design system do FAP Books.
+  Fonte da verdade: Figma (coleções Color, Spacing e Radius).
+  Valores em docs/design/tokens/.
+*/
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  /* Escala navy (identidade da marca: 900 e 800) */
+  --color-navy-50: #eff4fa;
+  --color-navy-100: #dfe9f6;
+  --color-navy-200: #c0d3ed;
+  --color-navy-300: #90b3df;
+  --color-navy-400: #598dcf;
+  --color-navy-500: #3075cf;
+  --color-navy-600: #215dab;
+  --color-navy-700: #154a8e;
+  --color-navy-800: #0d3b6e;
+  --color-navy-900: #032b5e;
+  --color-navy-950: #031730;
+
+  /* Cinzas: 600 para texto (contraste 5,3:1), 500 só para bordas e ícones */
+  --color-gray-500: #8c8c8c;
+  --color-gray-600: #6b6b6b;
+
+  /* Estados: texto (700) e fundo (100) */
+  --color-success-100: #dcfce7;
+  --color-success-700: #15803d;
+  --color-warning-100: #fef3c7;
+  --color-warning-700: #b45309;
+  --color-danger-100: #fee2e2;
+  --color-danger-700: #b91c1c;
+  --color-info-100: #e0f2fe;
+  --color-info-700: #0369a1;
+
+  /* Cores de uso (as mesmas do Figma): prefira estas nos componentes */
+  --color-page: var(--page);
+  --color-surface: var(--surface);
+  --color-subtle: var(--subtle);
+  --color-selected: var(--selected);
+  --color-brand: var(--brand);
+  --color-brand-hover: var(--brand-hover);
+  --color-ink: var(--ink);
+  --color-ink-muted: var(--ink-muted);
+  --color-on-brand: #ffffff;
+  --color-link: var(--link);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-focus: var(--focus);
+
+  /* Raios: 8 px em botões e campos, 12 px em cards e modais */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+
+  /* Fontes: Lora nos títulos, Inter no resto */
+  --font-sans: var(--font-inter);
+  --font-heading: var(--font-lora);
+
+  /* Estilos de texto (tamanho / altura de linha) */
+  --text-h1-brand: 3rem;
+  --text-h1-brand--line-height: 3.5rem;
+  --text-h1: 2.25rem;
+  --text-h1--line-height: 2.75rem;
+  --text-h2: 1.75rem;
+  --text-h2--line-height: 2.25rem;
+  --text-h3: 1.375rem;
+  --text-h3--line-height: 1.875rem;
+
+  /* Sombras */
+  --shadow-sm: 0 1px 2px rgb(3 23 48 / 0.1);
+  --shadow-md: 0 4px 8px rgb(3 23 48 / 0.12);
+  --shadow-lg: 0 12px 24px rgb(3 23 48 / 0.16);
 }
 
+/* Tema claro (o único desenhado no Figma por enquanto) */
+:root {
+  --page: #ffffff;
+  --surface: #ffffff;
+  --subtle: var(--color-navy-50);
+  --selected: var(--color-navy-100);
+  --brand: var(--color-navy-900);
+  --brand-hover: var(--color-navy-700);
+  --ink: var(--color-navy-950);
+  --ink-muted: var(--color-gray-600);
+  --link: var(--color-navy-500);
+  --line: var(--color-navy-200);
+  --line-strong: var(--color-gray-500);
+  --focus: var(--color-navy-500);
+}
+
+/* Tema escuro provisório: ainda não foi desenhado no Figma */
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --page: #0a0a0a;
+    --surface: #171717;
+    --subtle: var(--color-navy-950);
+    --selected: var(--color-navy-900);
+    --brand: var(--color-navy-500);
+    --brand-hover: var(--color-navy-400);
+    --ink: #ededed;
+    --ink-muted: #a3a3a3;
+    --link: var(--color-navy-300);
+    --line: var(--color-navy-800);
+    --line-strong: var(--color-gray-500);
+    --focus: var(--color-navy-300);
   }
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--page);
+  color: var(--ink);
+  font-family: var(--font-sans), system-ui, sans-serif;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-heading), Georgia, serif;
+  font-weight: 600;
 }
