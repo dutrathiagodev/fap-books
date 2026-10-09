@@ -70,3 +70,15 @@ docker rm -f fapdb
 ```
 
 Todas as linhas devem mostrar `PASS`.
+
+## Dados de teste
+
+O arquivo `supabase/seed.sql` cria 20 livros fictícios (códigos `T-001` a `T-020`) e, se já existir um aluno cadastrado, 3 empréstimos de exemplo (um em dia, um devolvido e um atrasado). Pode rodar mais de uma vez: não duplica.
+
+Como rodar (só quem tem acesso ao banco, e **só com dados fictícios**):
+
+1. No painel do Supabase, abra o **SQL Editor** do projeto `fap-books`.
+2. Cole o conteúdo de `supabase/seed.sql` e clique em **Run**.
+3. Para ver os empréstimos de exemplo, crie antes os usuários de teste (card `0186`) e rode o seed de novo.
+
+Para testar num Postgres local (sem tocar no banco real), rode o seed depois das migrations, como na seção acima.
