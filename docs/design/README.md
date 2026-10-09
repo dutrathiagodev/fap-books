@@ -25,8 +25,22 @@ O design system vive no **Figma** (arquivo "FAP BOOKS - Gestão para Biblioteca"
 - **Valores em arquivo:** `docs/design/tokens/` (`cores-v2.json`, `espacamento.json`, `raios.json`).
 - **Como usar as classes:** [guia de Tailwind](../guias/tailwind.md), seção 3.
 
+## Como usar um ícone
+
+Os mesmos ícones do Figma (página `Icons`, componentes `lucide/<nome>`) existem no código com o mesmo nome, pela biblioteca `lucide-react`:
+
+```tsx
+import { BookOpen } from "lucide-react";
+
+<BookOpen size={20} strokeWidth={1.5} aria-hidden="true" />
+```
+
+- Tamanhos: 16, 20 ou 24 px. Traço sempre 1,5.
+- Cor: herda do texto. Use `className="text-ink-muted"` para mudar.
+- Ícone sozinho num botão precisa de `aria-label` no botão. Ícone ao lado de texto leva `aria-hidden="true"`.
+- O nome no Figma `lucide/book-open` vira `BookOpen` no código.
+
 ## O que falta
 
 - Componentes de interface no Figma (botão, campo, tabela, modal e os outros).
-- Instalar `lucide-react` no código (depende de aprovação).
 - Tema escuro desenhado.
