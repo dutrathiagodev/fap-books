@@ -190,5 +190,7 @@ npm run build       # simula o que vai para produção
 ## No FAP Books
 
 - Rotas em `src/app`, componentes em `src/components`, dados nos `services`.
-- O `src/proxy.ts` (antigo *middleware*) renova a sessão do Supabase a cada requisição.
+- O `src/proxy.ts` (antigo *middleware*) renova a sessão do Supabase a cada requisição **e** manda cada perfil para a sua área (`/aluno`, `/professor`, `/funcionario`), usando a regra de `src/domain/access`.
+- Dentro de uma página protegida, chame `requireRole("student")` (de `src/lib/require-role.ts`): é a segunda barreira, caso o proxy falhe. Conteúdo que depende de quem acessa fica dentro de `<Suspense>`, por causa do `cacheComponents`.
+- Sair da conta é a Server Action `logout()` em `src/app/actions/auth.ts`.
 - O projeto usa `cacheComponents`, por isso páginas que dependem de quem acessa leem os cookies antes de qualquer outra coisa (já feito em `src/lib/supabase/server-client.ts`).
