@@ -1,6 +1,6 @@
 # FAP Books — Histórico da conversa de configuração
 
-Resumo cronológico da configuração e da construção da base do projeto (GitHub, Figma, PRD, backlog, Trello, automações, arquitetura, Supabase e documentação). Atualizado em 2026-10-08. **Nenhuma chave, senha ou token é registrado aqui**; os que apareceram em conversas foram omitidos de propósito e devem ser revogados (ver Pendências).
+Resumo cronológico da configuração e da construção da base do projeto (GitHub, Figma, PRD, backlog, Trello, automações, arquitetura, Supabase e documentação). Atualizado em 2026-10-09. **Nenhuma chave, senha ou token é registrado aqui**; os que apareceram em conversas foram omitidos de propósito e devem ser revogados (ver Pendências).
 
 ## 1. Configuração do GitHub
 
@@ -91,9 +91,23 @@ Scripts em `scripts/` e workflows em `.github/workflows/`. Os testes de lógica 
 - `README.md` no estilo do open-gitops/project.
 - **Fora do repositório** (pasta `Projeto-IEC`, sem remoto): dois PDFs (roteiro do apresentador, só para o dono, e guia do time) e a skill `mentor-fap-books`, uma mentoria rigorosa por card, inspirada no `guithepc/mentor-prompt`.
 
+## 10b. Login, perfis e dados de teste (cards 0185, 0186 e 0187)
+
+- **Seed** (`supabase/seed.sql`): 20 livros fictícios (`T-001` a `T-020`) e 3 empréstimos de exemplo (em dia, devolvido e atrasado), rodado no banco real. Como rodar: `docs/database/modelo-de-dados.md`.
+- **Usuários de teste:** um aluno, um professor e um funcionário, criados no painel do Supabase pelo dono, que digitou as senhas. Nenhuma senha foi para o Git ou o chat.
+- **Login e rotas por perfil:** `/login`, e `/aluno`, `/professor` e `/funcionario`, cada uma só para o seu perfil. Regra pura em `src/domain/access` (com 6 testes), usada em **duas barreiras**: `src/proxy.ts` (antes da página) e `requireRole` (dentro da página). Logout por Server Action. Mensagem de erro própria ("E-mail ou senha incorretos.").
+- **Logo:** versões para modo claro e escuro (PNG transparente) no componente `Logo`, e ícone da aba.
+
+## 10c. Design system (card 0098, em andamento)
+
+- Decidido pergunta a pergunta com o dono: Lora nos títulos e Inter no resto, escala navy 50 a 950, cinzas `#6B6B6B` (texto) e `#8C8C8C` (bordas), 4 cores de estado, cantos de 8 e 12 px, grade de 4 px, telas 375/768/1280, ícones Lucide, tema claro primeiro. Tudo em [`docs/design/README.md`](design/README.md).
+- **Figma:** variáveis `Color`, `Spacing` e `Radius`, 9 estilos de texto, 3 de sombra e 41 ícones Lucide como componentes. O kit antigo (e-commerce) e a biblioteca antiga de ícones foram apagados. Limites do plano gratuito: 3 páginas por arquivo, 1 modo por coleção (sem tema escuro) e MCP com 20 chamadas por mês, por isso boa parte foi feita pelo navegador.
+- **Código:** tokens no `globals.css`, fontes no `layout.tsx` e `Button` com 8 px (PR `FAP/0098`).
+- **Falta:** os 29 componentes de interface no Figma e instalar `lucide-react` (só com aprovação).
+
 ## 11. Entregas
 
-- PRs de `#3` a `#15`, todos mergeados. O fluxo é: card, branch `FAP/<número>`, PR para a `develop` e entrega na `main` por PR com bypass do dono.
+- PRs de `#3` a `#23`, todos mergeados (o `#23` levou a logo, o seed e o login para a `main`). O fluxo é: card, branch `FAP/<número>`, PR para a `develop` e entrega na `main` por PR com bypass do dono.
 - **v0.1.0** na `main` (PR #14, 2026-10-08): estrutura `src/`, Supabase, banco, CI, automações do Trello, PRD, arquitetura e guias. Versão do `package.json`: `0.1.0`. Próximas entregas seguem o padrão `v0.2.0` e assim por diante.
 
 ## 12. Combinados
@@ -102,14 +116,16 @@ Scripts em `scripts/` e workflows em `.github/workflows/`. Os testes de lógica 
 - **Sem o nome do Claude** nos commits e PRs novos (só o do dono). Os 12 commits antigos mantêm o `Co-Authored-By`; remover exigiria reescrever o histórico e desativar o ruleset da `main`, e o dono disse que dos antigos não precisa.
 - Chave, senha e token nunca no Git, no grupo ou em print.
 
+- **Ao mergear o PR `develop` → `main`, não apague a `develop`.** Ela é permanente. Nos PRs `FAP/<n>` pode apagar a branch.
+
 ## 13. Pendências
 
 1. **Reunião:** marcar a apresentação do projeto (`0181`) e a aula de Git e PR (`0179`); os cards estão com prazo em 09/10 e só o dono marcado.
-2. **Dar acesso ao Figma** aos 5 colegas e a **Julia aceitar o convite** do repositório.
+2. **Julia aceitar o convite** do repositório. (O acesso ao Figma já foi dado ao time.)
 3. **Todos fazerem o card `0180`** (configuração de ambiente).
 4. **Revogar as credenciais** que apareceram em conversas (token e segredo do Trello e token do Figma).
-5. Cards novos em To Do: `0185` (dados de teste), `0186` (usuários de teste), `0187` (login e proteção de rotas) e `0188` (deploy, só com autorização do responsável).
-6. Cards de design em To Do (17), começando por `0098` e `0101`.
+5. `0188` (deploy), só com autorização do responsável. Os cards `0185`, `0186`, `0187`, `0007`, `0008` e `0194` já estão em Done.
+6. Cards de design em To Do (16), começando por `0101`. O `0098` (base visual) está em andamento.
 7. `0167`: testar o bloqueio da `main` com um colaborador.
 8. Decidir sobre o **Vitest** e sobre o **cadastro de usuários pela funcionária**.
 9. Definir a API de **WhatsApp** (`0065`) e a regra de exclusão de livro com empréstimo ativo.
