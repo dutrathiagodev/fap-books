@@ -40,7 +40,24 @@ import { BookOpen } from "lucide-react";
 - Ícone sozinho num botão precisa de `aria-label` no botão. Ícone ao lado de texto leva `aria-hidden="true"`.
 - O nome no Figma `lucide/book-open` vira `BookOpen` no código.
 
-## O que falta
+## Situação dos componentes no Figma
 
-- Componentes de interface no Figma (botão, campo, tabela, modal e os outros).
-- Tema escuro desenhado.
+**Prontos, com as variáveis do design system** (página `🧩 Components`):
+`Button`, `IconButton`, `Input`, `Checkbox`, `Radio`, `Switch`, `Badge` (6 cores: Gray, Primary, Error, Warning, Success e Blue), `Avatar`, `tab` e `notification`. Os 41 ícones Lucide estão na página `Icons`.
+
+**Ainda não existem** (viraram um card próprio no Trello):
+Textarea, Seletor de data, Campo de formulário, `Select`, Tabela, Paginação, Card de livro, Modal, Alerta/Toast, Estado vazio, Skeleton, Estado de erro, Cabeçalho, Menu lateral, Menu do celular, Cabeçalho de página e `Breadcrumb` (o do kit é só um esqueleto).
+
+**Detalhes conhecidos nos que já existem**
+- `Checkbox` selecionado: o estado padrão tem fundo azul claro; o ideal é navy com o check branco.
+- `Input`: o foco e o erro ainda usam a sombra antiga do kit (`Elevations/03`).
+- `Button`: o rótulo ainda não usa o estilo de texto "Menu e Botão".
+- Raio 8 px digitado nos botões (não ligado à variável `Radius`).
+
+**Fora do escopo por enquanto**
+- Tema escuro desenhado (o do código é provisório).
+- Seção de fundamentos (cores, textos, grade e sombras) no topo da página `Components`.
+
+## Como o time deve usar enquanto isso
+
+Nas telas, use os componentes prontos acima e as classes do `globals.css` ([guia de Tailwind](../guias/tailwind.md), seção 3). Para um componente que ainda não existe, monte com os tokens e avise no card, para virar componente depois.
