@@ -104,7 +104,7 @@ Scripts em `scripts/` e workflows em `.github/workflows/`. Os testes de lógica 
 - **Figma:** variáveis `Color`, `Spacing` e `Radius`, 9 estilos de texto, 3 de sombra e 41 ícones Lucide como componentes. O kit antigo (e-commerce) e a biblioteca antiga de ícones foram apagados. Limites do plano gratuito: 3 páginas por arquivo, 1 modo por coleção (sem tema escuro) e MCP com 20 chamadas por mês, por isso boa parte foi feita pelo navegador.
 - **Código:** tokens no `globals.css`, fontes no `layout.tsx` e `Button` com 8 px (PR `FAP/0098`).
 - **Ícones no código:** `lucide-react` instalado (aprovado pelo dono), PR `FAP/0098-icones`.
-- **Falta:** os 29 componentes de interface no Figma.
+- **Fechado em 2026-10-13:** `Button`, `IconButton`, `Input`, `Checkbox`, `Radio`, `Switch`, `Badge`, `Avatar`, `tab` e `notification` prontos no Figma. Os 17 componentes que faltam (formulários, tabela, modal, cabeçalho e menus) viraram um card novo; a criação por código ficou bloqueada pela cota do MCP do Figma no plano gratuito.
 
 ## 11. Entregas
 
