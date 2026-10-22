@@ -114,7 +114,7 @@ Scripts em `scripts/` e workflows em `.github/workflows/`. Os testes de lógica 
 ## 12. Combinados
 
 - Manter tudo **simples**; perguntar antes de criar pasta, camada, repositório ou tecnologia nova.
-- **Sem o nome do Claude** nos commits e PRs novos (só o do dono). Os 12 commits antigos mantêm o `Co-Authored-By`; remover exigiria reescrever o histórico e desativar o ruleset da `main`, e o dono disse que dos antigos não precisa.
+- Commits e PRs sempre no nome do dono, sem coautores nem créditos de ferramentas.
 - Chave, senha e token nunca no Git, no grupo ou em print.
 
 - **Ao mergear o PR `develop` → `main`, não apague a `develop`.** Ela é permanente. Nos PRs `FAP/<n>` pode apagar a branch.
