@@ -1,7 +1,24 @@
+<!-- markdownlint-disable MD033 -->
+<div align="center">
+
 # FAP Books
 
-<!-- markdownlint-disable MD033 -->
-Sistema de gestão e empréstimo de livros da Biblioteca da **Faculdade Adventista do Paraná (FAP)**.
+**Sistema de gestão e empréstimo de livros da Biblioteca da Faculdade Adventista do Paraná (FAP).**
+
+[![Site](https://img.shields.io/badge/site-online-032B5E?style=for-the-badge)](https://fap-books.vercel.app)
+[![Figma](https://img.shields.io/badge/design-Figma-B5121B?style=for-the-badge&logo=figma&logoColor=white)](https://www.figma.com/design/xOr6nlx1EqLMYmSJLh4sHI/FAP-BOOKS---Gestao-para-Biblioteca)
+![Status](https://img.shields.io/badge/status-MVP_em_desenvolvimento-0D3B6E?style=for-the-badge)
+
+![Next.js](https://img.shields.io/badge/Next.js-16-000000?logo=nextdotjs&logoColor=white)
+![React](https://img.shields.io/badge/React-19-149ECA?logo=react&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript&logoColor=white)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4-06B6D4?logo=tailwindcss&logoColor=white)
+![Supabase](https://img.shields.io/badge/Supabase-PostgreSQL-3ECF8E?logo=supabase&logoColor=white)
+![Vercel](https://img.shields.io/badge/Vercel-deploy-000000?logo=vercel&logoColor=white)
+
+![Tela de login do FAP Books](docs/images/tela-principal.png)
+
+</div>
 
 ## Missão
 
@@ -9,9 +26,14 @@ Olá!
 O FAP Books digitaliza e centraliza o fluxo que hoje é feito à mão na biblioteca da FAP: cadastro do acervo, cadastro de alunos, professores e funcionários, empréstimos, devoluções, renovações, reservas, prazos e multas.
 O produto reúne, em um só lugar, uma área de consulta ao acervo (para alunos e funcionários) e uma área administrativa exclusiva da bibliotecária. O resultado esperado é mais organização do estoque, rastreabilidade de quem está com cada livro e menos erros e atrasos causados pelo controle manual.
 
-> Status: **em desenvolvimento** (MVP). O produto é descrito no PRD v0.3, um documento vivo.
+## Links
 
-**Site no ar:** [fap-books.vercel.app](https://fap-books.vercel.app) (publicado na Vercel a cada mudança na `main`).
+| | |
+|---|---|
+| Site publicado | https://fap-books.vercel.app (atualizado a cada mudança na `main`) |
+| Design no Figma | [FAP BOOKS - Gestão para Biblioteca](https://www.figma.com/design/xOr6nlx1EqLMYmSJLh4sHI/FAP-BOOKS---Gestao-para-Biblioteca) |
+| Requisitos do produto | [`docs/prd.md`](docs/prd.md) (PRD v0.3, documento vivo) |
+| Fluxo de telas de design | [`docs/design/fluxo-de-telas.md`](docs/design/fluxo-de-telas.md) |
 
 ## Módulos
 
