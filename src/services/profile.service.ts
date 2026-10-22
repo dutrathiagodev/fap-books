@@ -1,9 +1,14 @@
+import { connection } from "next/server";
 import { createSupabaseServerClient } from "@/lib/supabase/server-client";
 import type { Profile, UserRole } from "@/types/profile";
 
 // Devolve o perfil de quem está logado, ou null (sem login ou perfil inativo).
 // O RLS garante que cada pessoa só enxerga o próprio perfil.
 export async function getCurrentProfile(): Promise<Profile | null> {
+  // O perfil é de quem está logado: só pode ser montado quando a requisição chega.
+  // O cliente do Supabase usa a hora atual para conferir a sessão; sem esta espera, o Next
+  // tenta pré-renderizar a página e avisa. Não use cache aqui: misturaria os dados das pessoas.
+  await connection();
   const supabase = await createSupabaseServerClient();
 
   const { data: claims } = await supabase.auth.getClaims();
