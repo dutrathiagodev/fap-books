@@ -98,13 +98,21 @@ Scripts em `scripts/` e workflows em `.github/workflows/`. Os testes de lógica 
 - **Login e rotas por perfil:** `/login`, e `/aluno`, `/professor` e `/funcionario`, cada uma só para o seu perfil. Regra pura em `src/domain/access` (com 6 testes), usada em **duas barreiras**: `src/proxy.ts` (antes da página) e `requireRole` (dentro da página). Logout por Server Action. Mensagem de erro própria ("E-mail ou senha incorretos.").
 - **Logo:** versões para modo claro e escuro (PNG transparente) no componente `Logo`, e ícone da aba.
 
-## 10c. Design system (card 0098, em andamento)
+## 10c. Design system (card 0098, fechado em 2026-10-23)
 
 - Decidido pergunta a pergunta com o dono: Lora nos títulos e Inter no resto, escala navy 50 a 950, cinzas `#6B6B6B` (texto) e `#8C8C8C` (bordas), 4 cores de estado, cantos de 8 e 12 px, grade de 4 px, telas 375/768/1280, ícones Lucide, tema claro primeiro. Tudo em [`docs/design/README.md`](design/README.md).
 - **Figma:** variáveis `Color`, `Spacing` e `Radius`, 9 estilos de texto, 3 de sombra e 41 ícones Lucide como componentes. O kit antigo (e-commerce) e a biblioteca antiga de ícones foram apagados. Limites do plano gratuito: 3 páginas por arquivo, 1 modo por coleção (sem tema escuro) e MCP com 20 chamadas por mês, por isso boa parte foi feita pelo navegador.
 - **Código:** tokens no `globals.css`, fontes no `layout.tsx` e `Button` com 8 px (PR `FAP/0098`).
 - **Ícones no código:** `lucide-react` instalado (aprovado pelo dono), PR `FAP/0098-icones`.
-- **Falta:** os 29 componentes de interface no Figma.
+- **Fechado:** os componentes de interface foram feitos no Figma e o dono aprovou a base visual.
+
+## 10d. Fechamento do dia 2026-10-23
+
+- **Trello:** `0108` e `0213` (telas do Emanuel) em Done, com as telas refeitas no Figma a partir do Stitch: aluno com visual editorial e professor/funcionário como painel corporativo, em seção cinza por autor e com o nome igual ao do card. `0164` (automações) em Done pelas evidências: 122 execuções verdes, selftest das 8 regras e teste do PR comprovado.
+- **0013 e 0012** (interface base) em To Do: o layout responsivo está no código (PR 41), mas o critério "Telas seguem o Figma" depende dos cards de design.
+- **Código:** Next.js atualizado para 16.4.2 (PR 43, correção de segurança). Entregas na `main`: PRs 42 e 44. A `develop` exige o check "qualidade" e não aceita push direto.
+- **GitHub:** ticket aberto no suporte para tirar o usuário `claude` da lista de contribuidores (não há commit nem coautor dele no histórico; é cache). Aguardando resposta por e-mail.
+- **Em andamento com o time:** `0180`, `0129` e `0105`.
 
 ## 11. Entregas
 
@@ -126,7 +134,7 @@ Scripts em `scripts/` e workflows em `.github/workflows/`. Os testes de lógica 
 3. **Todos fazerem o card `0180`** (configuração de ambiente).
 4. **Revogar as credenciais** que apareceram em conversas (token e segredo do Trello e token do Figma).
 5. `0188` (deploy), só com autorização do responsável. Os cards `0185`, `0186`, `0187`, `0007`, `0008` e `0194` já estão em Done.
-6. Cards de design em To Do (16), começando por `0101`. O `0098` (base visual) está em andamento.
+6. Cards de design em To Do, começando por `0101`. O `0098` (base visual) foi fechado.
 7. `0167`: testar o bloqueio da `main` com um colaborador.
 8. Decidir sobre o **Vitest** e sobre o **cadastro de usuários pela funcionária**.
 9. Definir a API de **WhatsApp** (`0065`) e a regra de exclusão de livro com empréstimo ativo.
