@@ -12,6 +12,7 @@ Regras gerais: valem as cores, raios e espaços de [`globals.css`](../../src/app
 | Quero acesso, "Conheça o FAP Books", "Conheça o nosso acervo" | Rola até a seção | Mesmo comportamento das âncoras |
 | Botão de voltar ao topo (seta) | Rola até o cabeçalho | `window.scrollTo({ top: 0, behavior: "smooth" })`. Aparece só depois de rolar 400 px |
 | Botão de acessibilidade | Abre o painel por cima da página | Painel com `role="dialog"`, `aria-modal="false"` e foco no primeiro controle. Fecha com `Esc`, clique fora ou no próprio botão |
+| Abas de "Nossos recursos" (Busca no acervo, Empréstimos, Reservas, Painel) | Cada aba é uma variante (`Aba=...`) com texto e imagem próprios. O clique troca de variante | Troca o texto e a imagem com fade de 150 ms. A aba ativa usa o fundo `brand`. A aba é um botão com `role="tab"` e `aria-selected`; o conteúdo é `role="tabpanel"` |
 | Perguntas frequentes | Abre e fecha cada pergunta (variantes Fechada e Aberta) | Botão com `aria-expanded` e `aria-controls`. Ícone troca de seta para baixo para seta para cima. Altura anima em 200 ms. Várias perguntas podem ficar abertas |
 
 ## Só no código (o Figma não anima)
@@ -19,7 +20,6 @@ Regras gerais: valem as cores, raios e espaços de [`globals.css`](../../src/app
 - **Contadores da faixa de números** (7 dias, 5 livros, 30 dias, R$ 1,00): contam de 0 até o valor em 1,2 s, uma única vez, quando a faixa entra 50 % na tela (`IntersectionObserver`). Sem movimento, mostram o valor final.
 - **Hover dos cards** (Perfis, Novidades): sobem 2 px, a borda vai para `link` e a sombra para `shadow-md`, em 150 ms.
 - **Hover e foco dos botões**: fundo vai para `brand-hover` (primário) ou `selected` (secundário), em 150 ms. O foco visível usa `focus` com contorno de 2 px.
-- **Abas de "Nossos recursos"** (Busca no acervo, Empréstimos, Reservas, Painel): troca o texto e a imagem com fade de 150 ms. A aba ativa usa o fundo `brand`.
 - **Menu do celular**: abre em gaveta pela esquerda em 200 ms, com fundo escurecido que fecha ao clicar.
 
 ## Modo escuro
@@ -29,5 +29,5 @@ Os mesmos movimentos valem no escuro. A troca de tema não anima (corte seco), p
 ## O que ainda não existe no Figma
 
 - Hover de cards e botões como variantes.
-- Abas de recursos como variantes.
+- Imagem da aba "Painel": usa a tela de Meus empréstimos do professor, porque o painel da bibliotecária (cards 0157 e 0147) ainda não foi desenhado. Trocar quando existir.
 - Menu do celular da landing.
