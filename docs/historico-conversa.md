@@ -114,6 +114,14 @@ Scripts em `scripts/` e workflows em `.github/workflows/`. Os testes de lógica 
 - **GitHub:** ticket aberto no suporte para tirar o usuário `claude` da lista de contribuidores (não há commit nem coautor dele no histórico; é cache). Aguardando resposta por e-mail.
 - **Em andamento com o time:** `0180`, `0129` e `0105`.
 
+## 10e. Capas reais, acervo de teste e capa no banco (2026-10-23, à tarde)
+
+- **Figma (telas do Emanuel, cards `0108` e `0213`):** as capas azuis de exemplo foram trocadas pela **capa do livro de mesmo nome da legenda** (Dom Casmurro, Memórias Póstumas, Algoritmos, Anatomia Humana, Teologia Sistemática, Metodologia Científica, O Conflito dos Séculos e Direito Constitucional). Valeu para a faixa de novidades, o grid do acervo, as telas de detalhe, os empréstimos e a busca do professor (faixas horizontais, com a etiqueta de categoria mantida). Nada foi apagado das telas: o Detalhe do aluno chegou a perder o título e a capa num erro do script e foi restaurado do histórico de versões do Figma. O avatar do card "Indicação do professor" agora usa uma foto com fundo recortado.
+- **Cuidado com as imagens:** as capas vieram da Open Library (Dom Casmurro e Memórias Póstumas) e de recortes da busca de imagens (as outras seis), em baixa resolução. Servem para o protótipo; para a apresentação, trocar por capas oficiais. Ficaram fora do Git, na pasta local `Projeto-IEC/capas-de-teste`.
+- **Banco (migration `add_book_cover`):** coluna opcional `books.cover_url` e bucket público `book-covers` (JPG, PNG ou WebP, até 2 MB) em que só a bibliotecária envia arquivos. Testada num Postgres 17 novo (36 testes `PASS`, 5 novos para as capas) e aplicada no projeto real, conferindo coluna, bucket e policy depois.
+- **Seed alinhado ao design:** os 20 livros (`T-001` a `T-020`) agora são os livros das telas, nas sete categorias dos filtros (Literatura brasileira, Computação, Saúde, Teologia, Religião, Metodologia e Direito). O seed atualiza pelo código, então os 3 empréstimos de exemplo continuaram nos mesmos livros. Rodado também no banco real.
+- **Em aberto:** enviar as 8 capas de teste ao Storage pelo painel e preencher `cover_url` (passo a passo em `docs/database/modelo-de-dados.md`); o PRD ainda não cita a capa no RF-01 (decidir se vira requisito); o envio pela tela é o card `0119`, que depende do design `0117`.
+
 ## 11. Entregas
 
 - PRs de `#3` a `#23`, todos mergeados (o `#23` levou a logo, o seed e o login para a `main`). O fluxo é: card, branch `FAP/<número>`, PR para a `develop` e entrega na `main` por PR com bypass do dono.
@@ -138,4 +146,5 @@ Scripts em `scripts/` e workflows em `.github/workflows/`. Os testes de lógica 
 7. `0167`: testar o bloqueio da `main` com um colaborador.
 8. Decidir sobre o **Vitest** e sobre o **cadastro de usuários pela funcionária**.
 9. Definir a API de **WhatsApp** (`0065`) e a regra de exclusão de livro com empréstimo ativo.
-10. Incluir a automação por evento (PR #15) na `main` na próxima entrega, e instalar a skill do mentor, se o time quiser usá-la.
+10. Enviar as 8 capas de teste ao Storage (`book-covers`) e preencher `cover_url`; trocar os recortes por capas oficiais antes de apresentar.
+11. Incluir a automação por evento (PR #15) na `main` na próxima entrega, e instalar a skill do mentor, se o time quiser usá-la.
