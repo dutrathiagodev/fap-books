@@ -103,3 +103,22 @@ begin
   denied:=false; begin perform count(*) from public.books; exception when others then denied:=true; end;
   perform pg_temp.say('visitante sem login NÃO acessa o acervo', denied);
 end $$;
+
+-- capas dos livros (migration add_book_cover)
+do $$
+declare A1 text:='00000000-0000-0000-0000-000000000001'; L1 text:='00000000-0000-0000-0000-000000000004';
+        denied boolean; u text;
+begin
+  perform pg_temp.as_user(L1);
+  update public.books set cover_url = 'https://exemplo.test/book-covers/C-001.jpg' where code = 'C-001';
+  select cover_url into u from public.books where code = 'C-001';
+  perform pg_temp.say('bibliotecária salva a capa do livro', u like '%C-001.jpg');
+  perform pg_temp.say('livro sem capa continua válido (cover_url vazio)', (select cover_url is null from public.books where code = 'C-002'));
+  insert into storage.objects (bucket_id, name) values ('book-covers', 'C-001.jpg');
+  perform pg_temp.say('bibliotecária envia arquivo para o bucket de capas', true);
+  perform pg_temp.as_user(A1);
+  denied:=false; begin insert into storage.objects (bucket_id, name) values ('book-covers', 'X.jpg'); exception when others then denied:=true; end;
+  perform pg_temp.say('aluno NÃO envia arquivo para o bucket de capas', denied);
+  perform set_config('role','postgres',true);
+  perform pg_temp.say('bucket book-covers é público e limitado a 2 MB', (select public and file_size_limit = 2097152 from storage.buckets where id='book-covers'));
+end $$;
