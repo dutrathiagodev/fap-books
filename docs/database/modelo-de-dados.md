@@ -57,6 +57,10 @@ Quem decide isso é o **RLS** do banco: mesmo que alguém tente burlar a tela, o
 - **Como a bibliotecária cadastra um aluno novo?** Hoje o perfil nasce quando a pessoa cria a conta. Cadastrar por outra pessoa exige criar o usuário de login pelo servidor, com a chave secreta. Vamos decidir isso junto com a tela de cadastro de usuários (`FAP - 0029`).
 - **Notificações** (WhatsApp, e-mail) ainda não têm tabela: dependem da definição do mecanismo de envio (PRD, seção 13).
 
+## Backup
+
+O plano gratuito do Supabase não faz backup automático. Uma rotina diária no GitHub Actions exporta os dados, criptografa e guarda por 30 dias. Como configurar, baixar e restaurar: [`backup.md`](backup.md).
+
 ## Como testar as migrations sem tocar no banco real
 
 Precisa do Docker. As regras de acesso são testadas num Postgres comum que simula o Supabase:
