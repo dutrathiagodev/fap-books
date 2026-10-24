@@ -38,6 +38,11 @@ jobs:
           sudo apt-get install -y -qq postgresql-common
           sudo /usr/share/postgresql-common/pgdg/apt.postgresql.org.sh -y
           sudo apt-get install -y -qq postgresql-client-17
+          # O runner já traz o pg_dump 16; o banco é 17, então o 17 precisa vir primeiro no PATH.
+          echo "/usr/lib/postgresql/17/bin" >> "$GITHUB_PATH"
+
+      - name: Conferir a versão do pg_dump
+        run: pg_dump --version
 
       - name: Gerar o backup criptografado
         env:
