@@ -150,7 +150,7 @@ Entrar no sistema e manter o acervo: login, listagem do acervo e formulário de 
 
 **Estados:** Vazio ("Nenhum livro cadastrado" com botão de ação); Sem resultado de busca; Carregando (esqueleto); Erro; Celular: a tabela vira lista de cards.
 
-**Regras:** Excluir livro com empréstimo ativo: regra **a definir com o time**; desenhar o botão desabilitado com tooltip.
+**Regras:** livro com histórico (empréstimo ou reserva) não é excluído, é **inativado**; desenhar o botão excluir desabilitado com tooltip "Livro com histórico: use Inativar". A exclusão de livro sem histórico pede uma segunda confirmação digitando o nome do livro.
 
 **Visual:** Badges: Disponível (sucesso), Emprestado (informação), Reservado (atenção).
 

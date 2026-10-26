@@ -166,8 +166,8 @@ Critérios de aceite:
 Tags: `HISTÓRIA`, `EP: Acervo`, `P0`, `acervo`, `tela`, `bibliotecaria` · Pai: [FAP - 0017]
 
 Critérios de aceite:
-- Confirmação antes de excluir
-- Regra para livro com empréstimo ativo: a definir com o time
+- Segunda confirmação antes de excluir, digitando o nome do livro
+- Livro com histórico (empréstimo ou reserva) não é excluído, é inativado
 
 ### [FAP - 0021] - Importação em lote  `FEATURE`
 
