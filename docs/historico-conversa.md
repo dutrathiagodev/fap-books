@@ -122,6 +122,8 @@ Scripts em `scripts/` e workflows em `.github/workflows/`. Os testes de lógica 
 - **Seed alinhado ao design:** os 20 livros (`T-001` a `T-020`) agora são os livros das telas, nas sete categorias dos filtros (Literatura brasileira, Computação, Saúde, Teologia, Religião, Metodologia e Direito). O seed atualiza pelo código, então os 3 empréstimos de exemplo continuaram nos mesmos livros. Rodado também no banco real.
 - **Em aberto:** enviar as 8 capas de teste ao Storage pelo painel e preencher `cover_url` (passo a passo em `docs/database/modelo-de-dados.md`); o PRD ainda não cita a capa no RF-01 (decidir se vira requisito); o envio pela tela é o card `0119`, que depende do design `0117`.
 
+- **Decisões do dono (26/10):** cadastro de aluno e demais perfis por **convite por e-mail**; livro **só é excluído sem histórico** e os demais são **inativados**, com segunda confirmação digitando o nome do livro; capa do livro vira requisito **opcional** no RF-01. Banco: migration `block_book_delete_with_history` (reserva comum também bloqueia a exclusão) e 5 testes novos (41 `PASS`).
+
 ## 11. Entregas
 
 - PRs de `#3` a `#23`, todos mergeados (o `#23` levou a logo, o seed e o login para a `main`). O fluxo é: card, branch `FAP/<número>`, PR para a `develop` e entrega na `main` por PR com bypass do dono.
