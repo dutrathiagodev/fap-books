@@ -43,7 +43,7 @@ export function LoginForm() {
           type="email"
           autoComplete="email"
           required
-          className="rounded-lg border border-zinc-300 px-4 py-3 text-base dark:border-zinc-700 dark:bg-zinc-900"
+          className="rounded-md border border-line-strong bg-surface px-4 py-3 text-base focus:border-focus focus:outline-2 focus:outline-focus"
         />
       </label>
       <label className="flex flex-col gap-1 text-sm">
@@ -53,11 +53,11 @@ export function LoginForm() {
           type="password"
           autoComplete="current-password"
           required
-          className="rounded-lg border border-zinc-300 px-4 py-3 text-base dark:border-zinc-700 dark:bg-zinc-900"
+          className="rounded-md border border-line-strong bg-surface px-4 py-3 text-base focus:border-focus focus:outline-2 focus:outline-focus"
         />
       </label>
       <Button type="submit" text={loading ? "Entrando..." : "Entrar"} />
-      <p role="alert" className="min-h-5 text-sm text-red-600">
+      <p role="alert" className="min-h-5 text-sm text-danger-700">
         {message}
       </p>
     </form>
