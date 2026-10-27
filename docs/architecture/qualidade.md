@@ -18,7 +18,7 @@ Se algum falhar, **não abra o PR**. Leia a mensagem, corrija e rode de novo.
 
 Não é preciso testar tudo. Teste o que, se quebrar, causa prejuízo:
 
-1. **Regras do negócio:** limite de 5 livros, prazo de 7 dias, multa de R$ 1,00 por dia, reserva pedagógica de até 30 dias. Cada regra tem pelo menos um teste do caso certo e um do caso que deve falhar.
+1. **Regras do negócio:** limite de 3 livros, prazo de 7 dias, multa de R$ 1,00 por dia, reserva pedagógica de até 30 dias. Cada regra tem pelo menos um teste do caso certo e um do caso que deve falhar.
 2. **Fluxo principal da page:** carregando, vazio e sucesso aparecem.
 3. **Segurança do banco:** a policy deixa o aluno ler só o dele e bloqueia o que não pode.
 

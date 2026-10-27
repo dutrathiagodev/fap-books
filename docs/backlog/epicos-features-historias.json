@@ -620,8 +620,8 @@
   "id": "[FAP - 0038]",
   "tipo": "historia",
   "rf": "RF-14",
-  "titulo": "Limitar empréstimos a 5 livros por usuário",
-  "historia": "Como bibliotecária, quero que o sistema limite a 5 livros emprestados por usuário, para aplicar a regra da biblioteca.",
+  "titulo": "Limitar empréstimos a 3 livros por usuário",
+  "historia": "Como bibliotecária, quero que o sistema limite a 3 livros emprestados por usuário, para aplicar a regra da biblioteca.",
   "prioridade": "P0",
   "tags": [
    "HISTÓRIA",

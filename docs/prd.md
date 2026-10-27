@@ -71,7 +71,7 @@ O sistema terá três perfis de usuário: **Aluno**, **Professor** (com regras d
 
 ### Persona 1 — Aluno
 
-Utiliza o sistema principalmente para consultar o acervo, verificar disponibilidade de livros, acompanhar seus próprios empréstimos, prazos e eventuais multas, além de solicitar renovação ou reserva de um livro indisponível. Prazo padrão de 7 dias e limite de até 5 livros emprestados simultaneamente.
+Utiliza o sistema principalmente para consultar o acervo, verificar disponibilidade de livros, acompanhar seus próprios empréstimos, prazos e eventuais multas, além de solicitar renovação ou reserva de um livro indisponível. Prazo padrão de 7 dias e limite de até 3 livros emprestados simultaneamente.
 
 ### Persona 2 — Professor
 
@@ -89,7 +89,7 @@ Responsável por cadastrar livros e usuários, registrar empréstimos e devoluç
 - Cadastro de usuários — alunos, professores e funcionários da biblioteca (com cargo).
 - Consulta/pesquisa do acervo.
 - Controle de disponibilidade dos livros em tempo real.
-- Registro de empréstimos, limitado a até 5 livros simultâneos por usuário.
+- Registro de empréstimos, limitado a até 3 livros simultâneos por usuário (4 para formandos).
 - Registro de devoluções.
 - Renovação de empréstimo.
 - Reserva de livros indisponíveis (aluno).
@@ -146,7 +146,7 @@ Prioridade classificada em MoSCoW: **Must have** (essencial ao MVP), **Should ha
 | RF-11 | Registro de devolução de livro | Must have | Planejado |
 | RF-12 | Renovação de empréstimo | Should have | Planejado |
 | RF-13 | Reserva de livro indisponível | Should have | Planejado |
-| RF-14 | Limite de até 5 livros emprestados simultaneamente por usuário | Must have | Planejado |
+| RF-14 | Limite de até 3 livros emprestados simultaneamente por usuário (4 para formandos) | Must have | Planejado |
 | RF-15 | Bloqueio de novo empréstimo para usuário com pendência (atraso ou multa em aberto) | Should have | Planejado |
 
 ### 6.4 Reserva Pedagógica (Professor)
@@ -282,7 +282,7 @@ Gestão de projeto realizada via Trello.
 ### Decisões já fechadas
 
 - Prazo padrão de empréstimo: 7 dias, igual para alunos e professores (a reserva pedagógica do professor segue prazo próprio, de até 30 dias).
-- Limite de livros emprestados simultaneamente: até 5 por usuário.
+- Limite de livros emprestados simultaneamente: até 3 por usuário (4 para formandos), conforme o Regulamento 2025 da biblioteca.
 - Multa por atraso: R$ 1,00 por dia, com baixa manual do pagamento registrada pela bibliotecária no sistema (quitação presencial).
 - Canal de notificação de prazo: WhatsApp, e-mail e painel do sistema.
 - Migração do acervo: cadastro manual pela bibliotecária e/ou importação em lote via planilha (Excel/CSV).

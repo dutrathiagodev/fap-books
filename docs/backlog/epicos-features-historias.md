@@ -301,9 +301,9 @@ Critérios de aceite:
 - Prazo padrão de 7 dias
 - Status do livro passa a emprestado
 
-#### [FAP - 0038] - Limitar empréstimos a 5 livros por usuário  `HISTÓRIA` `RF-14` `P0`
+#### [FAP - 0038] - Limitar empréstimos a 3 livros por usuário  `HISTÓRIA` `RF-14` `P0`
 
-> Como bibliotecária, quero que o sistema limite a 5 livros emprestados por usuário, para aplicar a regra da biblioteca.
+> Como bibliotecária, quero que o sistema limite a 3 livros emprestados por usuário, para aplicar a regra da biblioteca.
 
 Tags: `HISTÓRIA`, `EP: Empréstimos e Devoluções`, `P0`, `emprestimos`, `funcionalidade` · Pai: [FAP - 0036]
 

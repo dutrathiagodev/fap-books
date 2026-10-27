@@ -70,7 +70,7 @@ export async function listBooks(): Promise<Book[]> {
 
 ```ts
 // src/domain/loans/loan-rules.ts
-export const MAX_ACTIVE_LOANS = 5;
+export const MAX_ACTIVE_LOANS = 3;
 export const FINE_PER_DAY_IN_CENTS = 100;
 
 export function canBorrow(activeLoans: number): boolean {
