@@ -1,0 +1,52 @@
+[
+  {
+    "titulo": "Dados de teste (seed) para o front",
+    "descricao": "Criar dados de exemplo no banco para o time ver as telas funcionando: uns 20 livros (títulos, autores, categorias e quantidades variadas, alguns com quantidade 0) e alguns empréstimos de exemplo.\n\nEntra como supabase/seed.sql, simples e fácil de rodar de novo. Usar só dados fictícios, nunca dados reais de alunos.\n\nDepende de: [FAP - 0004]",
+    "etiquetas": "CONFIG, banco, P0",
+    "checklist": [
+      "supabase/seed.sql com livros de exemplo",
+      "Empréstimos de exemplo (um em dia e um atrasado)",
+      "Passo a passo para rodar o seed no guia do banco",
+      "Rodado no projeto fap-books e conferido na tela de livros"
+    ],
+    "membros": "6515cff8159cb78d54ad4074"
+  },
+  {
+    "titulo": "Perfis de teste: aluno, professor e funcionário",
+    "descricao": "Criar três usuários de teste no Supabase Auth, um de cada perfil, para o time testar cada visão do sistema sem mexer no banco à mão.\n\n- aluno (student)\n- professor (teacher)\n- funcionário da biblioteca (librarian)\n\nUsar e-mails fictícios de teste. As senhas ficam só com o responsável e são combinadas fora do Git e do chat. O papel de cada um é definido no banco (o cadastro sempre nasce como aluno).\n\nDepende de: [FAP - 0004]",
+    "etiquetas": "CONFIG, banco, P0",
+    "checklist": [
+      "Três usuários criados no Supabase Auth",
+      "Papéis ajustados (teacher e librarian)",
+      "Senhas combinadas fora do Git e do chat",
+      "Cada perfil entra e vê só o que pode (teste rápido)"
+    ],
+    "membros": "6515cff8159cb78d54ad4074"
+  },
+  {
+    "titulo": "Login e proteção de rotas por perfil",
+    "descricao": "A parte técnica do login: entrar, sair e proteger as telas por perfil. Aluno e professor não abrem o painel da bibliotecária; quem não está logado vai para /login.\n\nUsa os clientes do Supabase em src/lib/supabase e o src/proxy.ts. A tela de login em si é o card de design/blocos da tela de login.\n\nRelacionado: [FAP - 0007] e [FAP - 0008]\nDepende de: [FAP - 0003]\nDepende de: [FAP - 0180]",
+    "etiquetas": "FRONT, auth, P0",
+    "checklist": [
+      "Entrar e sair funcionando",
+      "Rotas do painel só para o funcionário da biblioteca",
+      "Quem não está logado vai para /login",
+      "Teste com os 3 perfis de teste",
+      "Lint, typecheck e build passando"
+    ],
+    "membros": "6515cff8159cb78d54ad4074"
+  },
+  {
+    "titulo": "Deploy do site (Vercel)",
+    "descricao": "Colocar o site no ar para o time e a professora verem as telas funcionando, sem precisar rodar no notebook.\n\nPontos: conta e projeto na Vercel ligados ao repositório, deploy automático da branch main, variáveis NEXT_PUBLIC_SUPABASE_URL e NEXT_PUBLIC_SUPABASE_ANON_KEY configuradas lá (nunca a chave secreta), e o endereço do site no Supabase em Authentication, URL Configuration.\n\nPerguntar ao responsável antes de criar a conta ou conectar o repositório.\n\nDepende de: [FAP - 0003]",
+    "etiquetas": "CONFIG, infra, P1",
+    "checklist": [
+      "Conta e projeto criados na Vercel (com a autorização do responsável)",
+      "Deploy automático da main",
+      "Variáveis públicas configuradas (sem chave secreta)",
+      "URL do site cadastrada no Supabase",
+      "Link do site no README"
+    ],
+    "membros": "6515cff8159cb78d54ad4074"
+  }
+]
