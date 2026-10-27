@@ -55,7 +55,19 @@ npm run build   # gera a build de produção
 npm run start   # serve a build de produção
 ```
 
-Variáveis de ambiente ficam em um `.env` local e **nunca** vão para o repositório.
+Variáveis de ambiente ficam em um `.env.local` e **nunca** vão para o repositório.
+
+### Banco de dados (Supabase)
+
+O banco e o login ficam no projeto **fap-books** (organização FAP Books, região São Paulo). Passo a passo para rodar o projeto com o banco:
+
+1. Peça acesso à organização **FAP Books** no Supabase a quem é Owner.
+2. Copie `.env.example` para `.env.local` e preencha `NEXT_PUBLIC_SUPABASE_URL` e `NEXT_PUBLIC_SUPABASE_ANON_KEY` (painel: Project Settings → API Keys, chave **publicável**). Nunca coloque a chave secreta aqui nem no Git.
+3. Rode `npm run dev` e entre em [http://localhost:3000/login](http://localhost:3000/login) com um usuário de teste (as senhas são combinadas fora do Git e do chat).
+4. O esquema do banco está em `supabase/migrations/` (versionado, com RLS em toda tabela). Para testar mudanças sem tocar no banco real, veja [docs/database/modelo-de-dados.md](docs/database/modelo-de-dados.md).
+5. Dados de teste: `supabase/seed.sql` (livros e empréstimos de exemplo). Os usuários de teste são criados em Authentication → Users, no painel.
+
+Mais detalhes: [docs/onboarding.md](docs/onboarding.md).
 
 ## Fluxo de trabalho
 
