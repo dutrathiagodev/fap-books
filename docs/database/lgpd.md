@@ -39,7 +39,7 @@ Pontos positivos:
 
 ### Pontos a corrigir ou decidir
 
-1. **`audit_logs_insert_own` é aberta demais.** Qualquer pessoa logada pode gravar o registro que quiser em seu nome, com `action` e `details` livres. Dois riscos: poluir a auditoria e gravar dado pessoal em `details`. Quando o card 0010 for feito, a gravação deveria ficar num serviço do servidor, e `details` só pode guardar ids, nunca nome, e-mail ou texto digitado.
+1. **Auditoria restrita (corrigido na migration `20261027180000_restrict_audit_logs`).** A política antiga deixava qualquer pessoa logada gravar a ação e os detalhes que quisesse. Agora só entram ações e entidades conhecidas, `details` só aceita ids (chaves terminadas em `_id` com uuid ou número) e quem não é bibliotecária só grava as ações que a própria pessoa faz (reservas). Testado em `supabase/tests/01-regras-de-acesso.sql`. **Falta aplicar essa migration no banco real** (SQL Editor do Supabase).
 2. **A pessoa não corrige os próprios dados.** Hoje só a bibliotecária edita `profiles`. Para atender o direito de correção, o pedido vai pela bibliotecária (ou se cria uma edição restrita ao próprio nome, no futuro).
 3. **Todo funcionário vê todos os perfis, empréstimos e multas.** Para uma biblioteca pequena é aceitável (é a função dele), mas vale restringir o perfil de funcionário a quem precisa e manter `active = false` para quem sair.
 4. **Backup guarda tudo, inclusive `auth.users`.** Ele sai **criptografado** (AES-256) e fica 30 dias como artefato do GitHub, que provavelmente armazena fora do Brasil (a confirmar). Seria uma transferência internacional de dado criptografado; a senha (`BACKUP_PASSPHRASE`) nunca fica no repositório. O projeto acadêmico aceita esse risco (seção 6); em uso real, a FAP decide se aceita ou muda o destino do backup.
@@ -48,7 +48,7 @@ Pontos positivos:
 
 - O código não escreve logs hoje (nenhum `console.*` em `src/`) e `audit_logs` ainda não é gravada por ninguém.
 - A tela de login mostra só "E-mail ou senha incorretos", nunca o erro bruto do banco.
-- **Regra para quando o 0010 for feito:** `audit_logs` guarda quem (`actor_id`), qual ação e qual registro (`entity`, `entity_id`). **Não** guardar nome, e-mail, senha nem texto livre em `details`. Esse critério só fecha de verdade quando a auditoria existir.
+- **Regra da auditoria:** `audit_logs` guarda quem (`actor_id`), qual ação e qual registro (`entity`, `entity_id`). **Não** guarda nome, e-mail, senha nem texto livre em `details`, e o banco recusa isso (migration `20261027180000_restrict_audit_logs`). Quando o card 0010 gravar a auditoria, é só usar as ações e entidades da lista da migration.
 - Os logs da Vercel e do Supabase (acesso e erro) também são logs: não imprimir dado pessoal em mensagem de erro.
 
 ## 4. Onde os dados ficam (operadores)
@@ -104,7 +104,7 @@ O FAP Books é um trabalho acadêmico. Por isso adotamos regras **genéricas e p
 
 | Critério do card | Situação |
 | -- | -- |
-| Acesso mínimo necessário por perfil | levantado e conferido; falta o ajuste da política de auditoria (seção 2, ponto 1), que entra com o card 0010 |
+| Acesso mínimo necessário por perfil | levantado e conferido; a política de auditoria foi restringida (seção 2, ponto 1), falta aplicá-la no banco real |
 | Regras de RLS revisadas | revisadas em 27/10; achados na seção 2 |
-| Sem dados pessoais em logs | hoje não há logs; a regra está na seção 3 e se confirma quando a auditoria (0010) existir |
+| Sem dados pessoais em logs | hoje não há logs, e o banco já recusa dado pessoal em `audit_logs` (seção 3) |
 | Regra de guarda e apagamento | **definida na seção 6** (padrão do projeto acadêmico; a FAP confirma se for usar de verdade) |
