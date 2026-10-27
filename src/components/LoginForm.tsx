@@ -69,7 +69,7 @@ export function LoginForm() {
         />
       </label>
       <Button type="submit" text={loading ? "Entrando..." : "Entrar"} />
-      <p role="alert" className="min-h-5 text-sm text-danger-700">
+      <p role="alert" className="min-h-5 text-sm text-danger">
         {message}
       </p>
     </form>

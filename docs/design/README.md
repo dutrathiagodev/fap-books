@@ -16,14 +16,14 @@ O design system vive no **Figma** (arquivo "FAP BOOKS - Gestão para Biblioteca"
 | Espaçamento | Grade de 4 px |
 | Telas | Celular 375, tablet 768 e desktop 1280 |
 | Ícones | Lucide, 16/20/24 px, traço 1,5 |
-| Tema | Claro primeiro. O escuro vem depois |
+| Tema | Claro e escuro. O escuro é navy (fundos `#061224` e `#0B1D36`), com o azul vivo só nas ações |
 
 ## Onde está cada coisa
 
 - **Figma:** variáveis `Color`, `Spacing` e `Radius`, estilos de texto e de sombra, e 41 ícones Lucide como componentes (página `Icons`).
 - **Código:** `src/app/globals.css` (tokens), `src/app/layout.tsx` (fontes) e `src/components` (componentes).
 - **Fluxo de telas:** [fluxo-de-telas.md](fluxo-de-telas.md) (quem desenha o quê, em que ordem, e como manter a sequência).
-- **Valores em arquivo:** `docs/design/tokens/` (`cores-v2.json`, `espacamento.json`, `raios.json`).
+- **Valores em arquivo:** `docs/design/tokens/` (`cores-v2.json`, `cores-escuro-v2.json`, `espacamento.json`, `raios.json`).
 - **Como usar as classes:** [guia de Tailwind](../guias/tailwind.md), seção 3.
 
 ## Como usar um ícone
@@ -45,7 +45,7 @@ import { BookOpen } from "lucide-react";
 
 - **Design system fechado** (card `0098`, aprovado pelo dono): variáveis, estilos de texto e de sombra, ícones e a página `🧩 Components` (botão, campo, caixa de seleção, opção, interruptor, selo, avatar, abas, chip de filtro, aviso, card de indicador, passos e envio de arquivo).
 - **Telas no Figma** (página `🖥️ UI web`): cada frame leva o título do card do Trello e fica numa seção por autor. As seções seguem a ordem do fluxo, da esquerda para a direita: Landing page, hover e foco dos botões, layout base (0101, com os estados vazio e carregamento do 0104), sidebar, Francielio (0105 a 0117), Emanuel (0108 e 0213), Igor (0121), Breno (0144 a 0153), cadastro (0204) e telas escuras (0205). Ao criar uma seção nova, encaixe-a nessa ordem.
-- **Modo escuro:** as telas do sistema têm versão escura na seção "Telas escuras" (card `0205`), com uma coleção de variáveis própria, porque o plano gratuito do Figma permite só um modo por coleção.
+- **Modo escuro:** as telas do sistema têm versão escura na seção "Telas escuras" (card `0205`), com uma coleção de variáveis própria ("Color (Escuro)"), porque o plano gratuito do Figma permite só um modo por coleção. Em 27/10 o escuro foi refeito em tons de navy (antes era cinza neutro com azul vivo): valores em [cores-escuro-v2.json](tokens/cores-escuro-v2.json), com os contrastes conferidos, e o menu lateral e o painel do login passaram para `navy/950`. As cores soltas das telas 0108 e 0213 foram ligadas às variáveis. O código segue o mesmo bloco escuro em `globals.css`.
 - **Falta desenhar:** telas do Igor (0126, 0135, 0138, 0140) e da Julia (0157, 0147). Depois delas vem a revisão final do Figma (0209), que também cobre a versão escura dessas telas.
 - **Código:** `AppShell` segue o layout base aprovado no Figma (card `0101`): menu lateral navy por perfil, cabeçalho de 72 px com sino e menu do usuário, gaveta no celular e `PageHeader` (cards `0102` e `0103`). Os estados vazio, carregamento e esqueleto (card `0104`) vieram depois do desenho. O login usa os tokens (card `0013`). Itens de menu sem tela aparecem desativados até o card da tela ser entregue.
 - **Regra do time:** design primeiro, código depois. Bloco ou tela sem frame no Figma é desenhado antes de ser construído.
@@ -54,4 +54,5 @@ import { BookOpen } from "lucide-react";
 ## O que falta
 
 - Telas dos outros cards de design (cada pessoa entrega o link do Stitch e o dono leva para o Figma).
-- Tema escuro desenhado.
+- Igualar a largura do menu lateral das telas 0108 e 0213 (256 px) à das outras (272 px).
+- Trocar o fundo azul claro das capas de livros (degradê) nas telas escuras.
