@@ -61,11 +61,11 @@
     "descricao": "Convidar as 5 pessoas do projeto como membros do quadro FAP Books.",
     "etiquetas": "CONFIG, infra, P0",
     "checklist": [
-      "emanueldossantosbim@gmail.com",
-      "brenogruberfoz@gmail.com",
-      "sousafrancielio887@gmail.com",
-      "igaumsant@gmail.com",
-      "juhwassao@gmail.com",
+      "Convidar Emanuel (pelo usuário do GitHub)",
+      "Convidar Breno (pelo usuário do GitHub)",
+      "Convidar Francielio (pelo usuário do GitHub)",
+      "Convidar Igor (pelo usuário do GitHub)",
+      "Convidar Julia (pelo usuário do GitHub)",
       "Conferir que todos aparecem como membros"
     ],
     "membros": "6515cff8159cb78d54ad4074"
