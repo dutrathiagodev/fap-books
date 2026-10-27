@@ -173,7 +173,7 @@ Fundo 100 + texto 700 do estado, 12 px Medium, padding 4 × 12, com ícone de 16
 - Fecha com X, Esc e clique fora (exceto em ações destrutivas).
 
 ### Alertas e avisos (inline)
-Faixa com fundo 100 do estado, borda esquerda de 4 px na cor 700, ícone, título em Medium e texto. Ex.: "Limite de 5 livros atingido", "Usuário com multa em aberto: empréstimo bloqueado".
+Faixa com fundo 100 do estado, borda esquerda de 4 px na cor 700, ícone, título em Medium e texto. Ex.: "Limite de 3 livros atingido", "Usuário com multa em aberto: empréstimo bloqueado".
 
 ### Toast
 Canto superior direito, mesmo visual do alerta, some em 5 s.
@@ -202,11 +202,11 @@ Círculo, iniciais em Inter 500 sobre `#DFE9F6` com texto `#032B5E`, tamanhos 32
 - **Login:** fundo branco, logo centralizada (220 px), formulário com largura máxima 384 px, campos E-mail e Senha, botão "Entrar" de largura total, mensagem de erro abaixo. Sem cadastro público: contas são criadas pela bibliotecária.
 - **Painel da bibliotecária:** 4 cards de indicador no topo, atalhos de operação (Novo empréstimo, Registrar devolução, Cadastrar livro, Cadastrar usuário), lista de pendências e avisos de prazo (a vencer, hoje, atrasado).
 - **Busca de livros:** campo grande no topo, filtros (categoria, status), grade de cards de livro, paginação.
-- **Operação de balcão (empréstimo/devolução):** fluxo em passos curtos: buscar usuário → buscar livro → resumo com prazo de devolução (7 dias) → confirmar → comprovante. Alertas de limite (5 livros) e atraso visíveis antes de confirmar.
+- **Operação de balcão (empréstimo/devolução):** fluxo em passos curtos: buscar usuário → buscar livro → resumo com prazo de devolução (7 dias) → confirmar → comprovante. Alertas de limite (3 livros) e atraso visíveis antes de confirmar.
 
 ## 10. Regras de negócio que aparecem na interface
 
-- Prazo padrão de empréstimo: **7 dias**. Limite: **5 livros** simultâneos por usuário.
+- Prazo padrão de empréstimo: **7 dias**. Limite: **3 livros** simultâneos por usuário.
 - Multa: **R$ 1,00 por dia de atraso**. Pagamento presencial, baixa manual pela bibliotecária (sem pagamento online).
 - Usuário com atraso ou multa em aberto fica **bloqueado** para novo empréstimo.
 - Reserva pedagógica: só professor, com solicitação antecipada, prazo escolhido por ele (**máximo 30 dias**), aprovação ou recusa (com justificativa) pela bibliotecária. Renovação exige nova aprovação.

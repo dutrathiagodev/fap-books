@@ -7,11 +7,11 @@ Este guia é para quem está começando. Você **não precisa** saber backend ne
 Pense em uma biblioteca de verdade:
 
 - **O balcão** é o que a pessoa vê e toca. No sistema, são as **telas**.
-- **O regulamento** diz que cada aluno leva até 5 livros por 7 dias. No sistema, são as **regras do negócio**.
+- **O regulamento** diz que cada aluno leva até 3 livros por 7 dias (4 para formandos). No sistema, são as **regras do negócio**.
 - **O arquivo** guarda as fichas dos livros. No sistema, é o **banco de dados**.
 - **O segurança** só deixa entrar quem pode. No sistema, é o **login e as permissões**.
 
-Arquitetura é a forma de organizar o código para cada uma dessas coisas ficar em um lugar só. Assim, quando o regulamento mudar (por exemplo, de 5 para 3 livros), você sabe exatamente em qual arquivo mexer, e nada na tela quebra.
+Arquitetura é a forma de organizar o código para cada uma dessas coisas ficar em um lugar só. Assim, quando o regulamento mudar (por exemplo, de 3 para 4 livros), você sabe exatamente em qual arquivo mexer, e nada na tela quebra.
 
 ## 2. As peças do projeto
 
@@ -38,7 +38,7 @@ Arquitetura é a forma de organizar o código para cada uma dessas coisas ficar 
 | **Type** | A descrição do formato de um dado | `Book` com `id` e `name` |
 | **Server Component** | Componente que roda no servidor e já chega pronto | A página `/books` |
 | **`"use client"`** | Marca um componente que roda no navegador (tem `useState`, clique ou formulário) | O formulário de login |
-| **Regra do negócio** | Uma regra que vem do regulamento da biblioteca | Máximo de 5 livros |
+| **Regra do negócio** | Uma regra que vem do regulamento da biblioteca | Máximo de 3 livros |
 | **Banco de dados** | Onde os dados ficam guardados, em tabelas | Tabela `books` |
 | **Tabela / linha / coluna** | Uma planilha: cada linha é um registro | Uma linha por livro |
 | **Migration** | Um arquivo que descreve uma mudança no banco | "Criar a tabela `books`" |
@@ -77,7 +77,7 @@ Se você escreveu `supabase.from(...)` dentro de um componente ou de uma página
 
 ### Quando aparecer uma regra do negócio
 
-Regras como "máximo de 5 livros" ou "multa de R$ 1,00 por dia" vão para funções simples em `src/domain/<feature>/`, com teste. É o **Nível 2** da arquitetura ([frontend.spec.md](frontend.spec.md)). Só crie essa pasta quando a primeira regra aparecer. E se um dia o time quiser mais camadas, existe o caminho descrito em [futuro/camadas-completas.md](futuro/camadas-completas.md).
+Regras como "máximo de 3 livros" ou "multa de R$ 1,00 por dia" vão para funções simples em `src/domain/<feature>/`, com teste. É o **Nível 2** da arquitetura ([frontend.spec.md](frontend.spec.md)). Só crie essa pasta quando a primeira regra aparecer. E se um dia o time quiser mais camadas, existe o caminho descrito em [futuro/camadas-completas.md](futuro/camadas-completas.md).
 
 ## 5. O caminho de uma tela: "lista de livros"
 
