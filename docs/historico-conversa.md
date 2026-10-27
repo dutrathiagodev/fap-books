@@ -103,7 +103,8 @@ Scripts em `scripts/` e workflows em `.github/workflows/`. Os testes de lógica 
 - Decidido pergunta a pergunta com o dono: Lora nos títulos e Inter no resto, escala navy 50 a 950, cinzas `#6B6B6B` (texto) e `#8C8C8C` (bordas), 4 cores de estado, cantos de 8 e 12 px, grade de 4 px, telas 375/768/1280, ícones Lucide, tema claro primeiro. Tudo em [`docs/design/README.md`](design/README.md).
 - **Figma:** variáveis `Color`, `Spacing` e `Radius`, 9 estilos de texto, 3 de sombra e 41 ícones Lucide como componentes. O kit antigo (e-commerce) e a biblioteca antiga de ícones foram apagados. Limites do plano gratuito: 3 páginas por arquivo, 1 modo por coleção (sem tema escuro) e MCP com 20 chamadas por mês, por isso boa parte foi feita pelo navegador.
 - **Código:** tokens no `globals.css`, fontes no `layout.tsx` e `Button` com 8 px (PR `FAP/0098`).
-- **Falta:** os 29 componentes de interface no Figma e instalar `lucide-react` (só com aprovação).
+- **Ícones no código:** `lucide-react` instalado (aprovado pelo dono), PR `FAP/0098-icones`.
+- **Falta:** os 29 componentes de interface no Figma.
 
 ## 11. Entregas
 
