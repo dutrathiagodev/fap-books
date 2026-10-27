@@ -54,7 +54,7 @@ Requisito: RF-03","HISTÓRIA, EP: Acervo, P0, acervo, tela, bibliotecaria",Ediç
 📥 Backlog,[FAP - 0020] - Excluir um livro cadastrado,"Como bibliotecária, quero excluir um livro cadastrado, para remover itens que saíram do acervo.
 
 Pai: [FAP - 0017]
-Requisito: RF-03","HISTÓRIA, EP: Acervo, P0, acervo, tela, bibliotecaria",Confirmação antes de excluir; Regra para livro com empréstimo ativo: a definir com o time
+Requisito: RF-03","HISTÓRIA, EP: Acervo, P0, acervo, tela, bibliotecaria",Segunda confirmação antes de excluir, digitando o nome do livro; Livro com histórico (empréstimo ou reserva) não é excluído, é inativado
 📥 Backlog,[FAP - 0021] - Importação em lote,Pai: [FAP - 0016],"FEATURE, EP: Acervo",
 📥 Backlog,[FAP - 0022] - Importar livros em lote por planilha,"Como bibliotecária, quero importar livros em lote por planilha (Excel/CSV), para migrar o acervo inicial sem digitar um a um.
 
@@ -102,7 +102,7 @@ Requisito: RF-09","HISTÓRIA, EP: Usuários, P1, usuarios, tela, bibliotecaria",
 
 Pai: [FAP - 0036]
 Requisito: RF-10","HISTÓRIA, EP: Empréstimos e Devoluções, P0, emprestimos, funcionalidade, bibliotecaria",Empréstimo vinculado a usuário e livro; Prazo padrão de 7 dias; Status do livro passa a emprestado
-📥 Backlog,[FAP - 0038] - Limitar empréstimos a 5 livros por usuário,"Como bibliotecária, quero que o sistema limite a 5 livros emprestados por usuário, para aplicar a regra da biblioteca.
+📥 Backlog,[FAP - 0038] - Limitar empréstimos a 3 livros por usuário,"Como bibliotecária, quero que o sistema limite a 3 livros emprestados por usuário, para aplicar a regra da biblioteca.
 
 Pai: [FAP - 0036]
 Requisito: RF-14","HISTÓRIA, EP: Empréstimos e Devoluções, P0, emprestimos, funcionalidade",6º empréstimo é bloqueado com mensagem clara
@@ -135,10 +135,10 @@ Requisito: RF-16","HISTÓRIA, EP: Reserva Pedagógica, P0, reserva-pedagogica, t
 
 Pai: [FAP - 0047]
 Requisito: RF-16","HISTÓRIA, EP: Reserva Pedagógica, P0, reserva-pedagogica, tela, bibliotecaria",Mesmo fluxo de aprovação da solicitação online
-📥 Backlog,[FAP - 0050] - Definir o prazo de posse dos livros,"Como professor, quero definir o prazo de posse dos livros (máximo 30 dias), para planejar o uso em sala.
+📥 Backlog,[FAP - 0050] - Definir o prazo de posse dos livros,"Como professor, quero definir o prazo de posse dos livros (máximo 30 dias por padrão), para planejar o uso em sala.
 
 Pai: [FAP - 0047]
-Requisito: RF-18","HISTÓRIA, EP: Reserva Pedagógica, P0, reserva-pedagogica, funcionalidade, professor",Prazo acima de 30 dias é rejeitado
+Requisito: RF-18","HISTÓRIA, EP: Reserva Pedagógica, P0, reserva-pedagogica, funcionalidade, professor",Prazo acima de 30 dias é rejeitado; O limite de 30 dias é o padrão e pode ser alterado pela bibliotecária
 📥 Backlog,[FAP - 0051] - Aprovação de reserva pedagógica,Pai: [FAP - 0046],"FEATURE, EP: Reserva Pedagógica",
 📥 Backlog,[FAP - 0052] - Aprovar ou recusar uma reserva pedagógica,"Como bibliotecária ou chefe, quero aprovar ou recusar uma reserva pedagógica, para controlar o uso do acervo. (a fila fica no painel: ver Painel)
 

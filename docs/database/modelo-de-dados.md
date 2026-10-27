@@ -47,14 +47,18 @@ Quem decide isso é o **RLS** do banco: mesmo que alguém tente burlar a tela, o
 
 | No banco | No código (`src/domain`, com teste) |
 | -- | -- |
-| Prazo da reserva pedagógica entre 1 e 30 dias | Limite de 5 livros por pessoa |
+| Prazo da reserva pedagógica entre 1 e 30 dias (hoje fixo; o limite passará a ser uma configuração da bibliotecária, com 30 como padrão) | Limite de 3 livros por pessoa |
 | Quantidade de livros nunca negativa | Prazo padrão de 7 dias |
 | Quem pode ver e escrever em cada tabela | Cálculo da multa (R$ 1,00 por dia) |
 | O papel de cada pessoa nunca vem do cadastro | Se o livro está disponível (quantidade menos empréstimos em aberto) |
 
+## Exclusão de livro
+
+Decidido em 26/10: livro **com histórico** (empréstimo ou reserva) não é excluído, é **inativado** (`books.status = 'inactive'`). Só livro sem histórico pode ser excluído, e a tela pede uma segunda confirmação digitando o nome do livro. O banco garante a primeira parte: as chaves de empréstimos, reservas e itens de reserva pedagógica são `on delete restrict` (migration `block_book_delete_with_history`). A confirmação com o nome é da tela (`FAP - 0020` e design `0113`).
+
 ## Pontos ainda em aberto
 
-- **Como a bibliotecária cadastra um aluno novo?** Hoje o perfil nasce quando a pessoa cria a conta. Cadastrar por outra pessoa exige criar o usuário de login pelo servidor, com a chave secreta. Vamos decidir isso junto com a tela de cadastro de usuários (`FAP - 0029`).
+- **Como a bibliotecária cadastra uma pessoa nova?** Decidido em 26/10: por **convite por e-mail**, a pessoa define a própria senha (sem senha provisória). Exige código de servidor (Server Action) com a chave secreta, que nunca vai ao navegador; a implementação vem com a tela de cadastro de usuários (`FAP - 0029`).
 - **Notificações** (WhatsApp, e-mail) ainda não têm tabela: dependem da definição do mecanismo de envio (PRD, seção 13).
 
 ## Backup

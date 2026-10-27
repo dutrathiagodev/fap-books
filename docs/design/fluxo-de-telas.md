@@ -150,7 +150,7 @@ Entrar no sistema e manter o acervo: login, listagem do acervo e formulário de 
 
 **Estados:** Vazio ("Nenhum livro cadastrado" com botão de ação); Sem resultado de busca; Carregando (esqueleto); Erro; Celular: a tabela vira lista de cards.
 
-**Regras:** Excluir livro com empréstimo ativo: regra **a definir com o time**; desenhar o botão desabilitado com tooltip.
+**Regras:** livro com histórico (empréstimo ou reserva) não é excluído, é **inativado**; desenhar o botão excluir desabilitado com tooltip "Livro com histórico: use Inativar". A exclusão de livro sem histórico pede uma segunda confirmação digitando o nome do livro.
 
 **Visual:** Badges: Disponível (sucesso), Emprestado (informação), Reservado (atenção).
 
@@ -200,16 +200,16 @@ O que quem pega livro enxerga: pesquisa e detalhe do livro, e a área pessoal (e
 **Entrega:** Fim do fluxo: link do Stitch e lista de componentes novos.
 
 **Deve ter:**
-- **Início**: resumo (empréstimos ativos "X de 5", próximo vencimento, multa em aberto) e os avisos de prazo.
+- **Início**: resumo (empréstimos ativos "X de 3", próximo vencimento, multa em aberto) e os avisos de prazo.
 - **Meus empréstimos**: lista com livro, retirado em, vence em, dias restantes, badge (Emprestado ou Atrasado), multa acumulada e botão "Renovar" (desabilitado com explicação quando há atraso ou multa).
 - **Modal de renovação**: mostra o novo prazo e pede confirmação.
 - **Minhas reservas**: livro, estado, data e "Cancelar reserva".
 - **Multas**: valor, dias de atraso e status (Em aberto ou Paga), com a nota "Pagamento presencial na biblioteca".
-- **Alertas**: "Limite de 5 livros atingido" e "Usuário com multa em aberto: empréstimo bloqueado".
+- **Alertas**: "Limite de 3 livros atingido" e "Usuário com multa em aberto: empréstimo bloqueado".
 
 **Estados:** Vazio em cada seção; Carregando; Erro; Renovação bloqueada; Celular: tabelas viram cards.
 
-**Regras:** Prazo padrão 7 dias, limite de 5 livros, multa de R$ 1,00 por dia; sem pagamento online.
+**Regras:** Prazo padrão 7 dias, limite de 3 livros, multa de R$ 1,00 por dia; sem pagamento online.
 
 **Visual:** Reaproveitar o card de livro, os badges e a tabela do design system.
 
@@ -225,14 +225,14 @@ O dia a dia do balcão: empréstimo e devolução, multa gerada, histórico e re
 
 **Deve ter:**
 - **Abas**: Empréstimo, Devolução e Renovação.
-- **Empréstimo em passos curtos**: 1) buscar usuário (card com avatar, perfil, empréstimos ativos "X de 5" e pendências); 2) buscar livro (com badge de disponibilidade); 3) resumo com a data de devolução (hoje + 7 dias); 4) confirmar; 5) comprovante com "Novo empréstimo".
+- **Empréstimo em passos curtos**: 1) buscar usuário (card com avatar, perfil, empréstimos ativos "X de 3" e pendências); 2) buscar livro (com badge de disponibilidade); 3) resumo com a data de devolução (hoje + 7 dias); 4) confirmar; 5) comprovante com "Novo empréstimo".
 - **Devolução**: buscar por livro ou usuário, lista dos empréstimos abertos e "Registrar devolução". Com atraso, mostrar a multa calculada (R$ 1,00 x dias) e o atalho para dar baixa.
 - **Renovação**: escolher o empréstimo e confirmar o novo prazo.
-- **Alertas visíveis**: limite de 5 livros, usuário com multa em aberto (bloqueia o botão confirmar) e livro indisponível.
+- **Alertas visíveis**: limite de 3 livros, usuário com multa em aberto (bloqueia o botão confirmar) e livro indisponível.
 
 **Estados:** Sem resultado na busca; Carregando; Erro; Confirmação concluída (comprovante); Passo bloqueado por pendência.
 
-**Regras:** Prazo 7 dias; limite 5 livros; atraso gera multa de R$ 1,00 por dia.
+**Regras:** Prazo 7 dias; limite 3 livros; atraso gera multa de R$ 1,00 por dia.
 
 **Visual:** Operação do balcão: poucos cliques, botão primário sempre no fim do passo.
 
@@ -307,7 +307,7 @@ Cadastro e gestão de usuários, e todo o ciclo da reserva pedagógica: solicita
 
 **Estados:** Erro por campo; Salvando; Sucesso (toast); E-mail já cadastrado.
 
-**Regras:** Cada perfil recebe as regras do próprio perfil (aluno e professor: 7 dias e 5 livros; reserva pedagógica só professor).
+**Regras:** Cada perfil recebe as regras do próprio perfil (aluno e professor: 7 dias e 3 livros; reserva pedagógica só professor).
 
 **Visual:** Mesmo formulário e componentes do cadastro de livro (0117).
 
