@@ -7,9 +7,8 @@
 //  3. Card pai ("Pai: [FAP - N]" nos filhos) com todos os filhos em ✅ Done            -> ✅ Done (em cascata)
 //  4. 🚧 In Progress / 🚫 Blocked: marca quem arrastou o card para In Progress (fica responsável)
 //  5. 🔀 Awaiting PR : marca Thiago e quem arrastou o card para lá
-//  6. 🔍 Awaiting QA : marca o Breno (QA), inclusive nos cards dele
-//  7. ❌ QA Rejected : marca Thiago e quem arrastou o card para Awaiting PR
-//  8. ✅ Done        : fica só quem arrastou o card para Awaiting PR (se houver histórico)
+//  6. ❌ QA Rejected : marca Thiago e quem arrastou o card para Awaiting PR
+//  7. ✅ Done        : fica só quem arrastou o card para Awaiting PR (se houver histórico)
 const BOARD = '6ac6e9c9b825cc2a16bc7c4f'
 const THIAGO = '6515cff8159cb78d54ad4074'
 const BRENO = '68ca9fb753f35f1a0a8f2e7e'
@@ -52,7 +51,6 @@ export function planejar(cards, listas, hist) {
     let quer = atual
     if ([L.progress, L.blocked].includes(lista) && h.progress) quer = uniq([...atual, h.progress])
     else if (lista === L.pr) quer = uniq([...atual, THIAGO, ...(autor ? [autor] : [])])
-    else if (lista === L.qa) quer = uniq([...atual, BRENO])
     else if (lista === L.rejected) quer = uniq([...atual, THIAGO, ...(autor ? [autor] : [])])
     else if (lista === L.done && autor) quer = [autor]
     if (!mesmo(atual, quer)) acoes.push({ tipo: 'membros', c, quer, motivo: `lista ${lista}` })
@@ -80,9 +78,7 @@ function selftest() {
   a = planejar([card('0004', L.pr)], listas, () => ({ pr: PR }))
   assert(mesmo(a[0].quer, [THIAGO, PR]), 'Awaiting PR marca Thiago e quem arrastou')
   a = planejar([card('0004', L.qa, '', [PR, THIAGO])], listas, () => ({ pr: PR }))
-  assert(a[0].quer.includes(BRENO), 'Awaiting QA marca o Breno')
-  a = planejar([card('0004', L.qa, '', [BRENO, THIAGO])], listas, () => ({ pr: BRENO }))
-  assert(a.length === 0, 'Awaiting QA: o Breno pode testar o próprio card')
+  assert(a.length === 0, 'Awaiting QA não marca ninguém')
   a = planejar([card('0004', L.rejected, '', [PR, BRENO])], listas, () => ({ pr: PR }))
   assert(a[0].quer.includes(THIAGO) && a[0].quer.includes(PR), 'QA Rejected marca Thiago e o autor do PR')
   a = planejar([card('0004', L.done, '', [PR, THIAGO, BRENO])], listas, () => ({ pr: PR }))
