@@ -22,6 +22,7 @@ O design system vive no **Figma** (arquivo "FAP BOOKS - Gestão para Biblioteca"
 
 - **Figma:** variáveis `Color`, `Spacing` e `Radius`, estilos de texto e de sombra, e 41 ícones Lucide como componentes (página `Icons`).
 - **Código:** `src/app/globals.css` (tokens), `src/app/layout.tsx` (fontes) e `src/components` (componentes).
+- **Fluxo de telas:** [fluxo-de-telas.md](fluxo-de-telas.md) (quem desenha o quê, em que ordem, e como manter a sequência).
 - **Valores em arquivo:** `docs/design/tokens/` (`cores-v2.json`, `espacamento.json`, `raios.json`).
 - **Como usar as classes:** [guia de Tailwind](../guias/tailwind.md), seção 3.
 
