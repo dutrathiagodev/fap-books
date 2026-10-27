@@ -2,7 +2,9 @@
 //   PR aberto/reaberto/pronto para revisão -> 🔀 Awaiting PR (marca Thiago + autor do PR)
 //   PR mergeado                            -> 🏗️ Awaiting Build
 //   PR fechado sem merge                   -> 🚧 In Progress
-// Uso no workflow: node scripts/trello-pr.mjs   (lê GITHUB_EVENT_PATH)   |   node scripts/trello-pr.mjs --selftest
+//   (depois do merge e da build passar, com --apos-build)
+//        card de documentação ou configuração -> ✅ Done   |   os demais -> 🔍 Awaiting QA
+// Uso no workflow: node scripts/trello-pr.mjs   (lê GITHUB_EVENT_PATH)   |   node scripts/trello-pr.mjs --apos-build   |   node scripts/trello-pr.mjs --selftest
 import { readFileSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -10,6 +12,12 @@ import { fileURLToPath } from 'node:url'
 const BOARD = '6ac6e9c9b825cc2a16bc7c4f'
 const THIAGO = '6515cff8159cb78d54ad4074'
 const usuarios = JSON.parse(readFileSync(join(dirname(fileURLToPath(import.meta.url)), 'usuarios.json'), 'utf8')).github_para_trello
+
+// Depois que a build passou: card que não precisa de teste (documentação, configuração, arquitetura, reunião) vai direto para Done.
+const SEM_QA = ['docs', 'CONFIG', 'ARQUITETURA', 'REUNIAO']
+export function destinoAposBuild(etiquetas) {
+  return etiquetas.some(e => SEM_QA.includes(e)) ? '✅ Done' : '🔍 Awaiting QA'
+}
 
 export function decidir(ev) {
   const pr = ev.pull_request
@@ -26,6 +34,14 @@ export function decidir(ev) {
   return null
 }
 
+// Depois do merge: só interessa o PR mergeado de uma branch FAP/<número>.
+export function decidirAposBuild(ev) {
+  const pr = ev.pull_request
+  const n = pr?.head?.ref?.match(/^FAP\/(\d{1,4})$/i)?.[1]
+  if (!n || !pr.merged) return null
+  return { card: n.padStart(4, '0') }
+}
+
 function selftest() {
   const ok = (c, m) => { if (!c) throw new Error(`falhou: ${m}`); console.log(`ok - ${m}`) }
   const ev = (action, extra = {}, ref = 'FAP/0003') => ({ action, pull_request: { head: { ref }, user: { login: 'Brenogruber' }, draft: false, merged: false, ...extra } })
@@ -37,12 +53,20 @@ function selftest() {
   ok(decidir(ev('opened', {}, 'feature/x')) === null, 'branch fora do padrão é ignorada')
   ok(decidir(ev('opened', { draft: true })) === null, 'PR em rascunho é ignorado')
   ok(decidir(ev('opened', { user: { login: 'alguem-sem-mapa' } })).membros.length === 1, 'autor sem mapeamento só marca o Thiago')
+  ok(decidirAposBuild({ pull_request: { head: { ref: 'FAP/0007' }, merged: true } }).card === '0007', 'depois do merge, extrai o card da branch')
+  ok(decidirAposBuild({ pull_request: { head: { ref: 'FAP/0007' }, merged: false } }) === null, 'PR fechado sem merge não dispara o pós-build')
+  ok(destinoAposBuild(['BLOCO', 'FRONT', 'P0']) === '🔍 Awaiting QA', 'card de código vai para Awaiting QA depois da build')
+  ok(destinoAposBuild(['CONFIG', 'infra']) === '✅ Done', 'card de configuração vai direto para Done')
+  ok(destinoAposBuild(['docs', 'P1']) === '✅ Done', 'card de documentação vai direto para Done')
+  ok(destinoAposBuild([]) === '🔍 Awaiting QA', 'card sem etiqueta vai para QA (o mais seguro)')
 }
 
 async function main() {
   const { TRELLO_KEY: key, TRELLO_TOKEN: token, GITHUB_EVENT_PATH } = process.env
   if (!key || !token) throw new Error('Defina TRELLO_KEY e TRELLO_TOKEN')
-  const d = decidir(JSON.parse(readFileSync(GITHUB_EVENT_PATH, 'utf8')))
+  const ev = JSON.parse(readFileSync(GITHUB_EVENT_PATH, 'utf8'))
+  const aposBuild = process.argv.includes('--apos-build')
+  const d = aposBuild ? decidirAposBuild(ev) : decidir(ev)
   if (!d) return console.log('Evento ignorado (branch fora do padrão FAP/<número> ou sem ação).')
   const api = async (method, path, params = {}) => {
     const url = new URL(`https://api.trello.com/1${path}`)
@@ -52,9 +76,16 @@ async function main() {
     return res.json()
   }
   const listas = await api('GET', `/boards/${BOARD}/lists`)
-  const cards = await api('GET', `/boards/${BOARD}/cards`, { fields: 'name,idList,idMembers' })
+  const cards = await api('GET', `/boards/${BOARD}/cards`, { fields: 'name,idList,idMembers', })
   const card = cards.find(c => c.name.startsWith(`[FAP - ${d.card}]`))
   if (!card) return console.log(`Card [FAP - ${d.card}] não encontrado.`)
+  if (aposBuild) {
+    // Só mexe se o card ainda está em Awaiting Build (ninguém o moveu na mão no meio do caminho).
+    const atual = listas.find(l => l.id === card.idList)?.name
+    if (atual !== '🏗️ Awaiting Build') return console.log(`[FAP - ${d.card}] está em ${atual}, não em Awaiting Build. Nada a fazer.`)
+    const etiquetas = (await api('GET', `/cards/${card.id}/labels`)).map(l => l.name)
+    d.lista = destinoAposBuild(etiquetas)
+  }
   const lista = listas.find(l => l.name === d.lista)
   const params = { idList: lista.id }
   if (d.membros) params.idMembers = [...new Set([...card.idMembers, ...d.membros])].join(',')
