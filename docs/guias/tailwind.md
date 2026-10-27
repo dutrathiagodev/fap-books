@@ -57,7 +57,7 @@ Centralizar uma coisa na tela inteira: `flex flex-col items-center justify-cente
 
 As cores, fontes, raios e sombras do projeto já são **nomes prontos** no `src/app/globals.css`. Use os nomes, **não** valores soltos como `bg-[#032B5E]`.
 
-| Para quê | Classe | Valor |
+| Para quê | Classe | Valor (claro) |
 | -- | -- | -- |
 | Fundo da página | `bg-page` | branco |
 | Fundo de cards | `bg-surface` | branco |
@@ -71,6 +71,8 @@ As cores, fontes, raios e sombras do projeto já são **nomes prontos** no `src/
 | Foco | `ring-focus` | navy 500 |
 | Estados | `text-success-700 bg-success-100`, e o mesmo com `warning`, `danger`, `info` | |
 | Escala completa | `bg-navy-50` até `bg-navy-950` | |
+
+No tema escuro (automático pelo sistema) as mesmas classes trocam de valor: fundos em navy (`#061224`, `#0B1D36`), botão `navy 400` com texto `navy 950`, texto `#E6EDF7`. Também existem `bg-side` (menu lateral: navy 900 no claro, navy 950 no escuro) e `text-danger` (erro). Valores completos em `docs/design/tokens/cores-escuro-v2.json`.
 
 - **Raios:** `rounded-md` (8 px) em botões e campos, `rounded-lg` (12 px) em cards e modais.
 - **Sombras:** `shadow-sm`, `shadow-md` e `shadow-lg`.

@@ -227,7 +227,7 @@ export function AppShell({ profile, noticeCount = 0, children }: AppShellProps) 
     <div className="flex min-h-screen flex-1">
       {/* Menu lateral (computador) */}
       <aside
-        className={`hidden shrink-0 flex-col bg-navy-900 transition-[width] md:flex ${collapsed ? "w-[68px]" : "w-60"}`}
+        className={`hidden shrink-0 flex-col bg-side transition-[width] md:flex ${collapsed ? "w-[68px]" : "w-60"}`}
       >
         <div className="flex h-[72px] items-center justify-center px-3">
           {collapsed ? <BookOpen size={24} className="text-white" aria-hidden /> : <Logo width={104} tone="white" />}
@@ -244,7 +244,7 @@ export function AppShell({ profile, noticeCount = 0, children }: AppShellProps) 
             onClick={() => setDrawer(false)}
             className="absolute inset-0 cursor-default bg-ink/50"
           />
-          <aside className="relative flex h-full w-64 flex-col bg-navy-900 shadow-lg">
+          <aside className="relative flex h-full w-64 flex-col bg-side shadow-lg">
             <div className="flex h-[72px] items-center justify-between px-4">
               <Logo width={104} tone="white" />
               <button
