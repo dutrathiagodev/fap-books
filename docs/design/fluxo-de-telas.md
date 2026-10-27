@@ -22,12 +22,12 @@ Telas já em Awaiting PR ou em andamento (0105, 0121, 0129, 0135) continuam com 
 
 - **Um fluxo, uma pessoa.** Quem começou o fluxo continua nele; mexer na ordem exige combinar no grupo.
 - **Siga a ordem do card.** Cada card diz "tela N de M", a anterior e a próxima. Comece a próxima tela do seu fluxo assim que **entregar** a atual (Awaiting PR), sem esperar o Done.
-- **Só o molde bloqueia.** O layout base (0101) é desenhado primeiro, por quem tem o fluxo "Estrutura e painel". Enquanto ele não sai, as demais pessoas usam o frame "Modelo de tela - Web 1440" que já existe no Figma.
-- **Entrega com recado.** Ao entregar uma tela, preencha no card: link do frame, componentes **novos** criados e decisões que a próxima tela herda.
+- **Só o molde bloqueia.** O layout base (0101) é desenhado primeiro, por quem tem o fluxo "Estrutura e painel". Enquanto ele não sai, as demais pessoas usam como referência o "Modelo de tela - Web 1440" que já existe no Figma.
+- **Entrega com recado.** Ao entregar uma tela, preencha no card: link do projeto do Stitch, componentes **novos** criados e decisões que a próxima tela herda.
 - **Reaproveite, não recrie.** Botão, campo, tabela, card de livro, badge, modal e alertas vêm da página `🧩 Components`. Componente novo só se não existir; avise o time.
-- **Cruzamento entre fluxos.** Quando a sua tela usa algo de outro fluxo (ex.: o card de livro do 0108 no 0213), peça o link do frame; não espere a aprovação.
+- **Cruzamento entre fluxos.** Quando a sua tela usa algo de outro fluxo (ex.: o card de livro do 0108 no 0213), peça o link do Stitch; não espere a aprovação.
 - **Dependência no Trello só quando é real.** O "Depende de" segura o card em Backlog até o anterior chegar em Done (depois da QA), o que recriaria a espera. Dentro do mesmo fluxo a ordem é combinada pelo texto do card e pela ordem na lista To Do.
-- **Frame no lugar certo.** Página `🖥️ UI web`, dentro do molde, com nome `Tela - <nome> - Web 1440` e `Tela - <nome> - Celular 375`.
+- **Quem passa para o Figma é o Thiago.** O designer entrega o link do projeto do Stitch no card; o Thiago exporta para a página `🖥️ UI web`, dentro do molde, com nome `Tela - <nome> - Web 1440` e `Tela - <nome> - Celular 375`.
 - **Dúvida de regra de negócio** (marcada como "a definir"): pergunte no grupo antes de desenhar uma suposição.
 
 ## 4. Regras visuais (valem para toda tela)
@@ -37,7 +37,7 @@ Telas já em Awaiting PR ou em andamento (0105, 0121, 0129, 0135) continuam com 
 - Títulos em Lora SemiBold (H1 36 px nas páginas internas), todo o resto em Inter (corpo 16, botões e menus 14 Medium, legenda 12).
 - Um único botão primário navy `#032B5E` por área. Texto secundário `#6B6B6B`, nunca `#8C8C8C`.
 - Ícones Lucide, traço 1,5, 16/20/24 px. Estado = cor + ícone + texto (ex.: badge "Atrasado" vermelho com ícone).
-- Frames em 1280 (desktop, prioridade), 768 e 375. Todo estado desenhado: padrão, vazio, carregando e erro, mais os específicos da tela.
+- Telas em 1280 (desktop, prioridade), 768 e 375. Todo estado desenhado: padrão, vazio, carregando e erro, mais os específicos da tela.
 - Textos em português do Brasil. Datas `dd/mm/aaaa`, moeda `R$ 1,00`.
 
 ## 5. Texto padrão para o recado de entrega
@@ -46,7 +46,7 @@ Cole no comentário do card ao entregar:
 
 ```text
 Entrega: [FAP - NNNN] <nome da tela>
-Frame (Figma): <link>
+Projeto no Stitch: <link>
 Componentes novos: <lista ou "nenhum">
 Decisões que a próxima tela herda: <lista>
 Pendências / dúvidas de regra: <lista ou "nenhuma">
@@ -63,7 +63,7 @@ Molde de todas as telas e a casa da bibliotecária: do layout base ao painel e a
 
 **Perfil:** Todos os perfis  
 **Recebe:** Base visual (0098) já entregue em código e no Figma.  
-**Entrega:** Frame do molde por perfil, para o 0157 e para todas as telas seguintes.
+**Entrega:** Tela do molde por perfil (Stitch), para o 0157 e para todas as telas seguintes.
 
 **Deve ter:**
 - **Cabeçalho superior** branco (72 px): busca, sino de avisos com contador e menu do usuário (avatar com iniciais, nome, perfil e "Sair").
@@ -74,13 +74,13 @@ Molde de todas as telas e a casa da bibliotecária: do layout base ao painel e a
 
 **Estados:** Item de menu ativo (fundo `#0D3B6E` e barra clara à esquerda), hover e foco visível; Sino com e sem avisos; Menu da gaveta aberto e fechado; Menu em cada um dos 3 perfis.
 
-**Visual:** O frame "Modelo de tela - Web 1440" já tem Menu lateral, Cabeçalho e Cabeçalho de página: complete com as variantes por perfil e a versão celular. Esta tela é o **molde**: toda outra tela é desenhada dentro dela.
+**Visual:** O Figma já tem o "Modelo de tela - Web 1440" (Menu lateral, Cabeçalho e Cabeçalho de página): use-o de referência no Stitch e desenhe as variantes por perfil e a versão celular. Esta tela é o **molde**: toda outra tela é desenhada dentro dela.
 
 #### [FAP - 0157] Painel da bibliotecária: visão geral (tela 2 de 3)
 
 **Perfil:** Funcionário da biblioteca  
 **Recebe:** Molde do 0101.  
-**Entrega:** Frame do painel com a faixa de avisos reservada para o 0147.
+**Entrega:** Tela do painel (Stitch) com a faixa de avisos reservada para o 0147.
 
 **Deve ter:**
 - **4 cards de indicador** no topo: Emprestados, Atrasados, Disponíveis e Multas em aberto (número grande em Lora, rótulo em 12 px `#6B6B6B`, ícone de 20 px no canto).
@@ -98,7 +98,7 @@ Molde de todas as telas e a casa da bibliotecária: do layout base ao painel e a
 
 **Perfil:** Funcionário (painel) e Aluno/Professor (sino e Início)  
 **Recebe:** Painel do 0157 (faixa de avisos).  
-**Entrega:** Último card deste fluxo: entregar o link do frame e a lista de componentes novos ao time.
+**Entrega:** Último card deste fluxo: entregar o link do Stitch e a lista de componentes novos ao time.
 
 **Deve ter:**
 - **Lista de avisos agrupada** em A vencer (até 2 dias), Vence hoje e Atrasado. Cada item: pessoa, livro, data de vencimento, dias de atraso, multa acumulada (R$ 1,00 por dia), badge de status e o atalho "Ver empréstimo".
@@ -120,7 +120,7 @@ Entrar no sistema e manter o acervo: login, listagem do acervo e formulário de 
 
 **Perfil:** Todos os perfis  
 **Recebe:** Início do fluxo (já em andamento).  
-**Entrega:** Frame do login e definição de a que tela cada perfil chega, para o 0113 e o 0108.
+**Entrega:** Tela de login (Stitch) e a definição de a que tela cada perfil chega, para o 0113 e o 0108.
 
 **Deve ter:**
 - **Logo** centralizada (cerca de 220 px) e H1 de marca (Lora, 48 px; 36 no celular).
@@ -138,7 +138,7 @@ Entrar no sistema e manter o acervo: login, listagem do acervo e formulário de 
 #### [FAP - 0113] Listagem do acervo (bibliotecária) (tela 2 de 3)
 
 **Perfil:** Funcionário da biblioteca  
-**Recebe:** Frame do login e do molde.  
+**Recebe:** Login e molde (Stitch).  
 **Entrega:** "Novo livro" e "Editar" abrem o formulário do 0117; "Importar planilha" abre a aba de importação do 0117.
 
 **Deve ter:**
@@ -158,7 +158,7 @@ Entrar no sistema e manter o acervo: login, listagem do acervo e formulário de 
 
 **Perfil:** Funcionário da biblioteca  
 **Recebe:** Listagem do 0113 (ações Novo e Editar).  
-**Entrega:** Frame do formulário e da importação, para o time de blocos.
+**Entrega:** Tela do formulário e da importação (Stitch), para o time de blocos.
 
 **Deve ter:**
 - **Formulário** em página com cabeçalho e migalhas, card com largura máxima de 720 px: Título*, Autor*, Categoria* (select), Código/ISBN*, Quantidade* (número), Status e capa opcional (upload).
@@ -178,8 +178,8 @@ O que quem pega livro enxerga: pesquisa e detalhe do livro, e a área pessoal (e
 #### [FAP - 0108] Pesquisa de livros e detalhe do livro (tela 1 de 2)
 
 **Perfil:** Aluno e Professor (consulta pública)  
-**Recebe:** Frame do login e do molde (perfil Aluno/Professor).  
-**Entrega:** Frame do detalhe, que o 0213 reaproveita (card de livro e badge).
+**Recebe:** Login e molde (Stitch), perfil Aluno/Professor.  
+**Entrega:** Tela do detalhe (Stitch), que o 0213 reaproveita (card de livro e badge).
 
 **Deve ter:**
 - **Busca**: campo grande no topo, filtros em chips (categoria e status) e paginação.
@@ -197,7 +197,7 @@ O que quem pega livro enxerga: pesquisa e detalhe do livro, e a área pessoal (e
 
 **Perfil:** Aluno e Professor  
 **Recebe:** Pesquisa e detalhe do 0108.  
-**Entrega:** Fim do fluxo: link do frame e lista de componentes novos.
+**Entrega:** Fim do fluxo: link do Stitch e lista de componentes novos.
 
 **Deve ter:**
 - **Início**: resumo (empréstimos ativos "X de 5", próximo vencimento, multa em aberto) e os avisos de prazo.
@@ -240,7 +240,7 @@ O dia a dia do balcão: empréstimo e devolução, multa gerada, histórico e re
 
 **Perfil:** Funcionário da biblioteca  
 **Recebe:** Devolução com atraso do 0129.  
-**Entrega:** Frame da lista e do modal; o histórico (0149) mostra a multa de cada empréstimo.
+**Entrega:** Tela da lista e do modal (Stitch); o histórico (0149) mostra a multa de cada empréstimo.
 
 **Deve ter:**
 - **Lista de multas**: usuário, livro, dias de atraso, valor (R$), status (badge Em aberto ou Paga) e data do pagamento.
@@ -258,7 +258,7 @@ O dia a dia do balcão: empréstimo e devolução, multa gerada, histórico e re
 
 **Perfil:** Funcionário da biblioteca  
 **Recebe:** Lista de multas do 0144 (link para o histórico).  
-**Entrega:** Frame da tabela de histórico, que o 0153 reaproveita nos relatórios.
+**Entrega:** Tela da tabela de histórico (Stitch), que o 0153 reaproveita nos relatórios.
 
 **Deve ter:**
 - **Duas abas**: Por usuário e Por livro, cada uma com busca.
@@ -275,7 +275,7 @@ O dia a dia do balcão: empréstimo e devolução, multa gerada, histórico e re
 
 **Perfil:** Funcionário da biblioteca  
 **Recebe:** Tabela do histórico do 0149.  
-**Entrega:** Fim do fluxo do Breno: link do frame e componentes novos.
+**Entrega:** Fim do fluxo do Breno: link do Stitch e componentes novos.
 
 **Deve ter:**
 - **Três abas**: Livros em atraso, Acervo e Reservas pedagógicas.
@@ -315,7 +315,7 @@ Cadastro e gestão de usuários, e todo o ciclo da reserva pedagógica: solicita
 
 **Perfil:** Funcionário da biblioteca  
 **Recebe:** Formulário do 0121.  
-**Entrega:** Frame da listagem e do modal, para o time de blocos.
+**Entrega:** Tela da listagem e do modal (Stitch), para o time de blocos.
 
 **Deve ter:**
 - **Tabela**: Nome, E-mail, Perfil (badge), Cargo (funcionários), Status (Ativo ou Inativo) e empréstimos ativos.
@@ -368,7 +368,7 @@ Cadastro e gestão de usuários, e todo o ciclo da reserva pedagógica: solicita
 
 **Perfil:** Funcionário da biblioteca (chefe ou auxiliar)  
 **Recebe:** Solicitações do 0135 e do 0138.  
-**Entrega:** Fim do fluxo do Igor: link do frame e componentes novos.
+**Entrega:** Fim do fluxo do Igor: link do Stitch e componentes novos.
 
 **Deve ter:**
 - **Lista de pendentes**: professor, livros, período, prazo em dias, origem (Online ou Presencial), data da solicitação e tipo (Nova ou Renovação).
