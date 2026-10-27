@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { UserPanel } from "@/components";
+import { LoadingState, UserPanel } from "@/components";
 import { requireRole } from "@/lib/require-role";
 
 // A página lê quem está logado (dado que muda por pessoa), por isso fica dentro do Suspense.
@@ -10,7 +10,7 @@ async function ProfessorContent() {
 
 export default function ProfessorPage() {
   return (
-    <Suspense fallback={<p className="p-6">Carregando...</p>}>
+    <Suspense fallback={<LoadingState />}>
       <ProfessorContent />
     </Suspense>
   );
