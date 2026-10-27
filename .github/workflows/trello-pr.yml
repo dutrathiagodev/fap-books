@@ -23,3 +23,27 @@ jobs:
         env:
           TRELLO_KEY: ${{ secrets.TRELLO_KEY }}
           TRELLO_TOKEN: ${{ secrets.TRELLO_TOKEN }}
+
+  # Depois do merge: roda a build. Se passar, tira o card de Awaiting Build
+  # (vai para Awaiting QA, ou direto para Done se for documentação ou configuração).
+  build-e-qa:
+    if: github.event.action == 'closed' && github.event.pull_request.merged == true
+    needs: mover-card
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.merge_commit_sha }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm run build
+      - run: node scripts/trello-pr.mjs --apos-build
+        env:
+          TRELLO_KEY: ${{ secrets.TRELLO_KEY }}
+          TRELLO_TOKEN: ${{ secrets.TRELLO_TOKEN }}
