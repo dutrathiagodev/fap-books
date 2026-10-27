@@ -200,7 +200,7 @@ O que quem pega livro enxerga: pesquisa e detalhe do livro, e a área pessoal (e
 **Entrega:** Fim do fluxo: link do Stitch e lista de componentes novos.
 
 **Deve ter:**
-- **Início**: resumo (empréstimos ativos "X de 5", próximo vencimento, multa em aberto) e os avisos de prazo.
+- **Início**: resumo (empréstimos ativos "X de 3", próximo vencimento, multa em aberto) e os avisos de prazo.
 - **Meus empréstimos**: lista com livro, retirado em, vence em, dias restantes, badge (Emprestado ou Atrasado), multa acumulada e botão "Renovar" (desabilitado com explicação quando há atraso ou multa).
 - **Modal de renovação**: mostra o novo prazo e pede confirmação.
 - **Minhas reservas**: livro, estado, data e "Cancelar reserva".
