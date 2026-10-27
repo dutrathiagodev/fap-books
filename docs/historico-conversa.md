@@ -48,7 +48,7 @@ Scripts em `scripts/` e workflows em `.github/workflows/`. Os testes de lógica 
 | -- | -- |
 | Dependências | Card em In Progress com `Depende de:` pendente vai para Blocked; ao liberar, sobe para To Do |
 | Pai fecha | Card pai vai para Done quando todos os filhos (`Pai:`) estão em Done, em cascata |
-| Marcação de pessoas | In Progress marca quem arrastou; Awaiting PR marca o dono e o autor; Awaiting QA marca o Breno; QA Rejected marca o dono e o autor; Done deixa só o autor do PR |
+| Marcação de pessoas | In Progress marca quem arrastou; Awaiting PR marca o dono e o autor; QA Rejected marca o dono e o autor; Done deixa só o autor do PR |
 | PR move o card | Branch `FAP/<número>`: PR aberto vai para Awaiting PR; merge vai para Awaiting Build; fechado sem merge volta para In Progress |
 | Depois da build | Depois do merge, lint, typecheck e build; se passar, o card vai para Awaiting QA, ou direto para Done se tiver etiqueta de documentação ou configuração |
 
