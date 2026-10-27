@@ -13,3 +13,5 @@ create table storage.objects (id uuid primary key default gen_random_uuid(), buc
 alter table storage.objects enable row level security;
 grant usage on schema storage to authenticated;
 grant select, insert, update, delete on storage.objects to authenticated;
+-- Logins por provedor (o backup também exporta esta tabela).
+create table auth.identities (id uuid primary key default gen_random_uuid(), user_id uuid not null references auth.users(id) on delete cascade, provider text not null default 'email', identity_data jsonb default '{}'::jsonb);
