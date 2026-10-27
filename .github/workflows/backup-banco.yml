@@ -1,0 +1,54 @@
+name: Backup do banco
+
+# Todo dia às 03:00 (horário de Brasília) e também quando alguém clicar em "Run workflow".
+# O banco é exportado, criptografado e guardado como artefato por 30 dias. Veja docs/database/backup.md.
+# O agendamento só roda a partir da branch padrão (main).
+on:
+  schedule:
+    - cron: '0 6 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: backup-banco
+  cancel-in-progress: false
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Conferir os segredos
+        env:
+          SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+          BACKUP_PASSPHRASE: ${{ secrets.BACKUP_PASSPHRASE }}
+        run: |
+          faltando=0
+          [ -n "$SUPABASE_DB_URL" ] || { echo "::error::Falta o segredo SUPABASE_DB_URL (veja docs/database/backup.md)"; faltando=1; }
+          [ -n "$BACKUP_PASSPHRASE" ] || { echo "::error::Falta o segredo BACKUP_PASSPHRASE (veja docs/database/backup.md)"; faltando=1; }
+          exit $faltando
+
+      - name: Instalar o cliente do PostgreSQL 17
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq postgresql-common
+          sudo /usr/share/postgresql-common/pgdg/apt.postgresql.org.sh -y
+          sudo apt-get install -y -qq postgresql-client-17
+
+      - name: Gerar o backup criptografado
+        env:
+          SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+          BACKUP_PASSPHRASE: ${{ secrets.BACKUP_PASSPHRASE }}
+        run: scripts/backup-banco.sh backups
+
+      - name: Guardar o arquivo (30 dias)
+        uses: actions/upload-artifact@v4
+        with:
+          name: backup-banco-${{ github.run_id }}
+          path: backups/*.tar.enc
+          retention-days: 30
+          if-no-files-found: error
