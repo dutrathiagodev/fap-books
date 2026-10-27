@@ -119,9 +119,9 @@ Prioridade classificada em MoSCoW: **Must have** (essencial ao MVP), **Should ha
 
 | ID | Requisito | Prioridade | Status |
 | -- | -- | -- | -- |
-| RF-01 | Cadastro manual de livros (título, autor, categoria, código/ISBN, quantidade, status) | Must have | Planejado |
+| RF-01 | Cadastro manual de livros (título, autor, categoria, código/ISBN, quantidade, status e capa opcional) | Must have | Planejado |
 | RF-02 | Importação de livros em lote via planilha (Excel/CSV) para a migração inicial do acervo | Must have | Planejado |
-| RF-03 | Edição e exclusão de livros cadastrados | Must have | Planejado |
+| RF-03 | Edição e exclusão de livros cadastrados. Só livro sem histórico (empréstimo ou reserva) pode ser excluído; os demais são inativados. A exclusão pede uma segunda confirmação em que a bibliotecária digita o nome do livro | Must have | Planejado |
 | RF-04 | Consulta/pesquisa de livros por título, autor, categoria ou código | Must have | Planejado |
 | RF-05 | Exibição do status/disponibilidade do livro em tempo real (disponível, emprestado, reservado) | Must have | Planejado |
 
@@ -131,7 +131,7 @@ Prioridade classificada em MoSCoW: **Must have** (essencial ao MVP), **Should ha
 
 | ID | Requisito | Prioridade | Status |
 | -- | -- | -- | -- |
-| RF-06 | Cadastro de alunos | Must have | Planejado |
+| RF-06 | Cadastro de alunos pela bibliotecária, que envia um convite por e-mail; a própria pessoa define a senha | Must have | Planejado |
 | RF-07 | Cadastro de professores | Must have | Planejado |
 | RF-08 | Cadastro de funcionários da biblioteca, com campo de cargo (ex.: chefe da biblioteca, auxiliar de biblioteca) | Must have | Planejado |
 | RF-09 | Edição e inativação de cadastro de usuário | Should have | Planejado |
