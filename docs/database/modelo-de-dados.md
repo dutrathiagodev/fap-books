@@ -7,7 +7,7 @@ O banco do FAP Books é simples: **7 tabelas** que vêm direto dos requisitos do
 | Tabela | O que guarda | Requisitos |
 | -- | -- | -- |
 | `profiles` | Cada pessoa: nome, e-mail, papel (`student`, `teacher` ou `librarian`), cargo e se está ativa | RF-06 a RF-09 |
-| `books` | O acervo: título, autor, categoria, código, quantidade e status | RF-01 a RF-05 |
+| `books` | O acervo: título, autor, categoria, código, quantidade, status e capa (opcional) | RF-01 a RF-05 |
 | `loans` | Empréstimos: livro, pessoa, prazo, devolução e renovações | RF-10 a RF-12, RF-14, RF-21 |
 | `fines` | A multa de um empréstimo atrasado, em centavos, e a baixa manual | RF-22, RF-23 |
 | `reservations` | Reserva de livro indisponível (aluno) | RF-13 |
@@ -71,11 +71,42 @@ docker rm -f fapdb
 
 Todas as linhas devem mostrar `PASS`.
 
+## Categorias do acervo
+
+A coluna `category` é texto livre (o PRD não fixa uma lista). Os filtros das telas do Figma (cards 0108, 0113 e 0117) usam estas sete categorias, e o seed já usa só elas:
+
+| Categoria | Exemplo no seed |
+| -- | -- |
+| Literatura brasileira | Dom Casmurro |
+| Computação | Algoritmos: Teoria e Prática |
+| Saúde | Anatomia Humana |
+| Teologia | Introdução à Teologia Sistemática |
+| Religião | O Conflito dos Séculos |
+| Metodologia | Fundamentos de Metodologia Científica |
+| Direito | Curso de Direito Constitucional |
+
+Se o time decidir outra lista, é só mudar o seed e os filtros da tela; o banco aceita qualquer texto.
+
+## Capa do livro
+
+- A coluna `books.cover_url` guarda o endereço público da capa. É **opcional**: sem ela, a tela mostra o placeholder do design system.
+- As imagens ficam no bucket **`book-covers`** do Storage (público para leitura; JPG, PNG ou WebP, até 2 MB). Só a bibliotecária envia, troca ou apaga arquivos. A regra está na migration `add_book_cover`.
+- Nome do arquivo: o código do livro, por exemplo `T-001.jpg`. O endereço fica `<url do projeto>/storage/v1/object/public/book-covers/T-001.jpg`.
+- O envio pela tela é o bloco `FAP - 0119` (upload de capa), que ainda não foi construído. Enquanto isso, as capas de teste são enviadas pelo painel do Supabase (**Storage > book-covers > Upload**), e depois se preenche a coluna com um `update` no SQL Editor:
+
+```sql
+update public.books
+set cover_url = 'https://<id-do-projeto>.supabase.co/storage/v1/object/public/book-covers/' || code || '.jpg'
+where code in ('T-001', 'T-002', 'T-010', 'T-014', 'T-016', 'T-017', 'T-018', 'T-019');
+```
+
 ## Dados de teste
 
-O arquivo `supabase/seed.sql` cria 20 livros fictícios (códigos `T-001` a `T-020`) e, se já existir um aluno cadastrado, 3 empréstimos de exemplo (um em dia, um devolvido e um atrasado). Pode rodar mais de uma vez: não duplica.
+O arquivo `supabase/seed.sql` cria 20 livros (códigos `T-001` a `T-020`) com títulos, autores e categorias **iguais aos das telas do Figma**, e, se já existir um aluno cadastrado, 3 empréstimos de exemplo (um em dia, um devolvido e um atrasado). Os livros são reais; os empréstimos e as pessoas são fictícios.
 
-Como rodar (só quem tem acesso ao banco, e **só com dados fictícios**):
+Pode rodar mais de uma vez: o livro com o mesmo código é **atualizado** para os dados do seed (mantém o mesmo `id`, então os empréstimos continuam valendo), e os empréstimos não são duplicados.
+
+Como rodar (só quem tem acesso ao banco, e **só com dados de teste**):
 
 1. No painel do Supabase, abra o **SQL Editor** do projeto `fap-books`.
 2. Cole o conteúdo de `supabase/seed.sql` e clique em **Run**.
