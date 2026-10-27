@@ -111,7 +111,6 @@ Scripts em `scripts/` e workflows em `.github/workflows/`. Os testes de lógica 
 - **Trello:** `0108` e `0213` (telas do Emanuel) em Done, com as telas refeitas no Figma a partir do Stitch: aluno com visual editorial e professor/funcionário como painel corporativo, em seção cinza por autor e com o nome igual ao do card. `0164` (automações) em Done pelas evidências: 122 execuções verdes, selftest das 8 regras e teste do PR comprovado.
 - **0013 e 0012** (interface base) em To Do: o layout responsivo está no código (PR 41), mas o critério "Telas seguem o Figma" depende dos cards de design.
 - **Código:** Next.js atualizado para 16.4.2 (PR 43, correção de segurança). Entregas na `main`: PRs 42 e 44. A `develop` exige o check "qualidade" e não aceita push direto.
-- **GitHub:** ticket aberto no suporte para tirar o usuário `claude` da lista de contribuidores (não há commit nem coautor dele no histórico; é cache). Aguardando resposta por e-mail.
 - **Em andamento com o time:** `0180`, `0129` e `0105`.
 
 ## 10e. Capas reais, acervo de teste e capa no banco (2026-10-23, à tarde)
