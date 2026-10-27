@@ -41,7 +41,7 @@ O produto reúne, em um só lugar, uma área de consulta ao acervo (para alunos 
 | -- | -- | -- |
 | 📚 | **Acervo** | Cadastro, edição e exclusão de livros; pesquisa por título, autor, categoria ou código; disponibilidade em tempo real |
 | 👥 | **Usuários** | Cadastro de alunos, professores e funcionários da biblioteca, com cargo e perfil de acesso |
-| 🔄 | **Empréstimos e devoluções** | Empréstimo de até 5 livros por usuário, devolução, renovação e reserva de livros indisponíveis |
+| 🔄 | **Empréstimos e devoluções** | Empréstimo de até 3 livros por usuário, devolução, renovação e reserva de livros indisponíveis |
 | 🎓 | **Reserva pedagógica** | Solicitação antecipada pelo professor, aprovação da bibliotecária e prazo de posse de até 30 dias |
 | ⏰ | **Prazos, multas e notificações** | Prazo padrão de 7 dias, multa de R$ 1,00 por dia de atraso com baixa manual e avisos por WhatsApp, e-mail e painel |
 | 🧾 | **Histórico e relatórios** | Histórico de empréstimos por usuário e por livro; relatórios de atraso, acervo e reservas |
