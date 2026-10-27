@@ -106,9 +106,16 @@ async function main() {
   const api = async (method, path, params = {}) => {
     const url = new URL(`https://api.trello.com/1${path}`)
     url.search = new URLSearchParams({ ...params, key, token })
-    const res = await fetch(url, { method })
-    if (!res.ok) throw new Error(`${method} ${path} -> ${res.status}`)
-    return res.json()
+    // O Trello limita as chamadas (429): espera e tenta de novo até 5 vezes.
+    for (let t = 1; ; t++) {
+      const res = await fetch(url, { method })
+      if (res.ok) return res.json()
+      if ((res.status === 429 || res.status >= 500) && t < 5) {
+        await new Promise(r => setTimeout(r, t * 3000))
+        continue
+      }
+      throw new Error(`${method} ${path} -> ${res.status}`)
+    }
   }
   const listas = await api('GET', `/boards/${BOARD}/lists`)
   const cards = await api('GET', `/boards/${BOARD}/cards`, { fields: 'name,desc,idList,idMembers' })
