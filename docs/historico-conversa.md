@@ -146,7 +146,7 @@ Scripts em `scripts/` e workflows em `.github/workflows/`. Os testes de lógica 
 5. `0188` (deploy), só com autorização do responsável. Os cards `0185`, `0186`, `0187`, `0007`, `0008` e `0194` já estão em Done.
 6. Cards de design em To Do, começando por `0101`. O `0098` (base visual) foi fechado.
 7. `0167`: testar o bloqueio da `main` com um colaborador.
-8. Decidir sobre o **Vitest** e sobre o **cadastro de usuários pela funcionária**.
-9. Definir a API de **WhatsApp** (`0065`) e a regra de exclusão de livro com empréstimo ativo.
+8. ~~Decidir sobre o Vitest e sobre o cadastro de usuários pela funcionária~~ Decidido: o Vitest está em uso e o cadastro será por convite por e-mail (26/10).
+9. Definir a API de **WhatsApp** (`0065`). (A regra de exclusão de livro foi decidida em 26/10: ver a seção 10e.)
 10. Enviar as 8 capas de teste ao Storage (`book-covers`) e preencher `cover_url`; trocar os recortes por capas oficiais antes de apresentar.
 11. Incluir a automação por evento (PR #15) na `main` na próxima entrega, e instalar a skill do mentor, se o time quiser usá-la.
