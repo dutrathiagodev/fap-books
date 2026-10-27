@@ -43,7 +43,9 @@
   --color-brand-hover: var(--brand-hover);
   --color-ink: var(--ink);
   --color-ink-muted: var(--ink-muted);
-  --color-on-brand: #ffffff;
+  --color-on-brand: var(--on-brand);
+  --color-side: var(--side);
+  --color-danger: var(--danger);
   --color-link: var(--link);
   --color-line: var(--line);
   --color-line-strong: var(--line-strong);
@@ -74,7 +76,7 @@
   --shadow-lg: 0 12px 24px rgb(3 23 48 / 0.16);
 }
 
-/* Tema claro (o único desenhado no Figma por enquanto) */
+/* Tema claro */
 :root {
   --page: #ffffff;
   --surface: #ffffff;
@@ -84,26 +86,32 @@
   --brand-hover: var(--color-navy-700);
   --ink: var(--color-navy-950);
   --ink-muted: var(--color-gray-600);
+  --on-brand: #ffffff;
+  --side: var(--color-navy-900);
+  --danger: var(--color-danger-700);
   --link: var(--color-navy-500);
   --line: var(--color-navy-200);
   --line-strong: var(--color-gray-500);
   --focus: var(--color-navy-500);
 }
 
-/* Tema escuro provisório: ainda não foi desenhado no Figma */
+/* Tema escuro: navy, conforme o Figma (coleção "Color (Escuro)"). Contrastes: texto 14,3:1, apoio 7,7:1, botão 5,3:1, borda de campo 3,8:1 */
 @media (prefers-color-scheme: dark) {
   :root {
-    --page: #0a0a0a;
-    --surface: #171717;
-    --subtle: var(--color-navy-950);
-    --selected: var(--color-navy-900);
-    --brand: var(--color-navy-500);
-    --brand-hover: var(--color-navy-400);
-    --ink: #ededed;
-    --ink-muted: #a3a3a3;
+    --page: #061224;
+    --surface: #0b1d36;
+    --subtle: #0f2745;
+    --selected: #143360;
+    --brand: var(--color-navy-400);
+    --brand-hover: var(--color-navy-300);
+    --on-brand: var(--color-navy-950);
+    --side: var(--color-navy-950);
+    --danger: #f87171;
+    --ink: #e6edf7;
+    --ink-muted: #9db0cb;
     --link: var(--color-navy-300);
-    --line: var(--color-navy-800);
-    --line-strong: var(--color-gray-500);
+    --line: #1b3558;
+    --line-strong: #5a78a6;
     --focus: var(--color-navy-300);
   }
 }

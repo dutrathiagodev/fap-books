@@ -1,0 +1,113 @@
+{
+  "$description": "Tema escuro (navy) do FAP Books. Espelha a coleção 'Color (Escuro)' do Figma e o bloco prefers-color-scheme: dark de src/app/globals.css. Primitivos navy e gray são os mesmos de cores-v2.json.",
+  "bg": {
+    "page": {
+      "$type": "color",
+      "$value": "#061224"
+    },
+    "surface": {
+      "$type": "color",
+      "$value": "#0B1D36"
+    },
+    "subtle": {
+      "$type": "color",
+      "$value": "#0F2745"
+    },
+    "selected": {
+      "$type": "color",
+      "$value": "#143360"
+    },
+    "brand": {
+      "$type": "color",
+      "$value": "{navy.400}"
+    },
+    "brand-hover": {
+      "$type": "color",
+      "$value": "{navy.300}"
+    },
+    "side": {
+      "$type": "color",
+      "$value": "{navy.950}"
+    }
+  },
+  "text": {
+    "primary": {
+      "$type": "color",
+      "$value": "#E6EDF7"
+    },
+    "secondary": {
+      "$type": "color",
+      "$value": "#9DB0CB"
+    },
+    "on-brand": {
+      "$type": "color",
+      "$value": "{navy.950}"
+    },
+    "link": {
+      "$type": "color",
+      "$value": "{navy.300}"
+    }
+  },
+  "border": {
+    "default": {
+      "$type": "color",
+      "$value": "#1B3558"
+    },
+    "strong": {
+      "$type": "color",
+      "$value": "#5A78A6"
+    },
+    "focus": {
+      "$type": "color",
+      "$value": "{navy.300}"
+    }
+  },
+  "state": {
+    "success": {
+      "bg": {
+        "$type": "color",
+        "$value": "#0F2A1B"
+      },
+      "text": {
+        "$type": "color",
+        "$value": "#4ADE80"
+      }
+    },
+    "warning": {
+      "bg": {
+        "$type": "color",
+        "$value": "#2E2410"
+      },
+      "text": {
+        "$type": "color",
+        "$value": "#FBBF24"
+      }
+    },
+    "danger": {
+      "bg": {
+        "$type": "color",
+        "$value": "#321414"
+      },
+      "text": {
+        "$type": "color",
+        "$value": "#F87171"
+      }
+    },
+    "info": {
+      "bg": {
+        "$type": "color",
+        "$value": "#0C2A3D"
+      },
+      "text": {
+        "$type": "color",
+        "$value": "#7DD3FC"
+      }
+    }
+  },
+  "contraste": {
+    "texto-sobre-cartao": "14,3:1",
+    "texto-secundario-sobre-cartao": "7,7:1",
+    "texto-no-botao-primario": "5,3:1",
+    "borda-de-campo-sobre-cartao": "3,8:1"
+  }
+}
