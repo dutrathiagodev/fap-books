@@ -41,11 +41,14 @@ import { BookOpen } from "lucide-react";
 - Ícone sozinho num botão precisa de `aria-label` no botão. Ícone ao lado de texto leva `aria-hidden="true"`.
 - O nome no Figma `lucide/book-open` vira `BookOpen` no código.
 
-## Situação (2026-10-23)
+## Situação (2026-10-27)
 
 - **Design system fechado** (card `0098`, aprovado pelo dono): variáveis, estilos de texto e de sombra, ícones e a página `🧩 Components` (botão, campo, caixa de seleção, opção, interruptor, selo, avatar, abas, chip de filtro, aviso, card de indicador, passos e envio de arquivo).
-- **Telas no Figma** (página `🖥️ UI web`): cada frame leva o título do card do Trello e fica numa seção cinza por autor. Já existem as seções "Telas do Emanuel (0108 – 0213)", com as versões de aluno e de professor/funcionário, e "Landing page".
-- **Código:** `AppShell` segue o layout base aprovado no Figma (card `0101`): menu lateral navy por perfil, cabeçalho de 72 px com sino e menu do usuário, gaveta no celular e `PageHeader` (cards `0102` e `0103`). O login usa os tokens (card `0013`). Itens de menu sem tela aparecem desativados até o card da tela ser entregue.
+- **Telas no Figma** (página `🖥️ UI web`): cada frame leva o título do card do Trello e fica numa seção por autor. As seções seguem a ordem do fluxo, da esquerda para a direita: Landing page, hover e foco dos botões, layout base (0101, com os estados vazio e carregamento do 0104), sidebar, Francielio (0105 a 0117), Emanuel (0108 e 0213), Igor (0121), Breno (0144 a 0153), cadastro (0204) e telas escuras (0205). Ao criar uma seção nova, encaixe-a nessa ordem.
+- **Modo escuro:** as telas do sistema têm versão escura na seção "Telas escuras" (card `0205`), com uma coleção de variáveis própria, porque o plano gratuito do Figma permite só um modo por coleção.
+- **Falta desenhar:** telas do Igor (0126, 0135, 0138, 0140) e da Julia (0157, 0147). Depois delas vem a revisão final do Figma (0209), que também cobre a versão escura dessas telas.
+- **Código:** `AppShell` segue o layout base aprovado no Figma (card `0101`): menu lateral navy por perfil, cabeçalho de 72 px com sino e menu do usuário, gaveta no celular e `PageHeader` (cards `0102` e `0103`). Os estados vazio, carregamento e esqueleto (card `0104`) vieram depois do desenho. O login usa os tokens (card `0013`). Itens de menu sem tela aparecem desativados até o card da tela ser entregue.
+- **Regra do time:** design primeiro, código depois. Bloco ou tela sem frame no Figma é desenhado antes de ser construído.
 - **Referências:** [wireframes](referencias/) e o [guia visual do Stitch](stitch/DESIGN.md) com o [prompt](stitch/prompt-stitch.md).
 
 ## O que falta
