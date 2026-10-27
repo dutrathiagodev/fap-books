@@ -45,7 +45,7 @@ import { BookOpen } from "lucide-react";
 
 - **Design system fechado** (card `0098`, aprovado pelo dono): variáveis, estilos de texto e de sombra, ícones e a página `🧩 Components` (botão, campo, caixa de seleção, opção, interruptor, selo, avatar, abas, chip de filtro, aviso, card de indicador, passos e envio de arquivo).
 - **Telas no Figma** (página `🖥️ UI web`): cada frame leva o título do card do Trello e fica numa seção cinza por autor. Já existem as seções "Telas do Emanuel (0108 – 0213)", com as versões de aluno e de professor/funcionário, e "Landing page".
-- **Código:** `AppShell` (menu lateral recolhível e gaveta no celular) e login já usam os tokens (card `0013`, PR 41). O critério "Telas seguem o Figma" do `0013` e o card pai `0012` ficam em To Do até os cards de design fecharem.
+- **Código:** `AppShell` segue o layout base aprovado no Figma (card `0101`): menu lateral navy por perfil, cabeçalho de 72 px com sino e menu do usuário, gaveta no celular e `PageHeader` (cards `0102` e `0103`). O login usa os tokens (card `0013`). Itens de menu sem tela aparecem desativados até o card da tela ser entregue.
 - **Referências:** [wireframes](referencias/) e o [guia visual do Stitch](stitch/DESIGN.md) com o [prompt](stitch/prompt-stitch.md).
 
 ## O que falta

@@ -1,5 +1,6 @@
 import type { Profile } from "@/types/profile";
 import { AppShell } from "./AppShell";
+import { PageHeader } from "./PageHeader";
 
 interface UserPanelProps {
   title: string;
@@ -10,13 +11,12 @@ interface UserPanelProps {
 // As telas de verdade entram pelos cards de design e de blocos.
 export function UserPanel({ title, profile }: UserPanelProps) {
   return (
-    <AppShell profile={profile} title={title}>
-      <div className="mx-auto flex max-w-3xl flex-col gap-4">
-        <h1 className="text-h2">{title}</h1>
-        <p className="text-base text-ink-muted">
-          Olá, {profile.fullName}. Você entrou como {profile.email}.
-        </p>
-      </div>
+    <AppShell profile={profile}>
+      <PageHeader
+        title={title}
+        breadcrumbs={[{ label: "Início" }]}
+        description={`Olá, ${profile.fullName}. Você entrou como ${profile.email}.`}
+      />
     </AppShell>
   );
 }
