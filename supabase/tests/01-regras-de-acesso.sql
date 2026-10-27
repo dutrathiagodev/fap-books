@@ -122,3 +122,28 @@ begin
   perform set_config('role','postgres',true);
   perform pg_temp.say('bucket book-covers é público e limitado a 2 MB', (select public and file_size_limit = 2097152 from storage.buckets where id='book-covers'));
 end $$;
+
+-- exclusão e inativação de livro (migration block_book_delete_with_history)
+do $$
+declare A1 text:='00000000-0000-0000-0000-000000000001'; L1 text:='00000000-0000-0000-0000-000000000004';
+        denied boolean; c int;
+begin
+  perform pg_temp.as_user(L1);
+  insert into public.books (id,title,author,code,quantity) values ('b0000000-0000-0000-0000-0000000000e1','Livro sem histórico','Autor','E-001',1);
+  delete from public.books where code = 'E-001'; get diagnostics c = row_count;
+  perform pg_temp.say('bibliotecária exclui livro SEM histórico', c = 1);
+  denied:=false; begin delete from public.books where code = 'C-001'; exception when others then denied:=true; end;
+  perform pg_temp.say('livro COM empréstimo NÃO pode ser excluído', denied);
+  insert into public.books (id,title,author,code,quantity) values ('b0000000-0000-0000-0000-0000000000e2','Livro com reserva','Autor','E-002',1);
+  perform set_config('role','postgres',true);
+  insert into public.reservations(book_id,user_id) values ('b0000000-0000-0000-0000-0000000000e2',A1::uuid);
+  perform pg_temp.as_user(L1);
+  denied:=false; begin delete from public.books where code = 'E-002'; exception when others then denied:=true; end;
+  perform pg_temp.say('livro COM reserva pendente NÃO pode ser excluído', denied);
+  update public.books set status = 'inactive' where code = 'E-002'; get diagnostics c = row_count;
+  perform pg_temp.say('bibliotecária inativa livro com histórico', c = 1);
+  perform pg_temp.as_user(A1);
+  denied:=false; begin delete from public.books where code = 'C-001'; exception when others then denied:=true; end;
+  update public.books set status = 'inactive' where code = 'C-001'; get diagnostics c = row_count;
+  perform pg_temp.say('aluno NÃO exclui nem inativa livro', c = 0);
+end $$;
