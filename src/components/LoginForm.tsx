@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createSupabaseBrowserClient } from "@/lib/supabase/browser-client";
 import { Button } from "./Button";
@@ -10,6 +10,18 @@ export function LoginForm() {
   const router = useRouter();
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
+  const formRef = useRef<HTMLFormElement>(null);
+
+  // O Next guarda a tela de login escondida quando a pessoa entra. Ao sair e voltar, ela
+  // reaparece com o estado antigo; por isso limpamos o formulário quando a tela é escondida.
+  useEffect(() => {
+    const form = formRef.current;
+    return () => {
+      form?.reset();
+      setLoading(false);
+      setMessage("");
+    };
+  }, []);
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -35,7 +47,7 @@ export function LoginForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex w-full flex-col gap-4">
+    <form ref={formRef} onSubmit={handleSubmit} className="flex w-full flex-col gap-4">
       <label className="flex flex-col gap-1 text-sm">
         E-mail
         <input

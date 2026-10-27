@@ -24,9 +24,6 @@ const nextConfig: NextConfig = {
   async headers() {
     return [{ source: "/:path*", headers: cabecalhosDeSeguranca }];
   },
-  experimental: {
-    agentFeedback: true,
-  },
   cacheComponents: true,
   partialPrefetching: true,
   turbopack: {

@@ -166,8 +166,8 @@ Critérios de aceite:
 Tags: `HISTÓRIA`, `EP: Acervo`, `P0`, `acervo`, `tela`, `bibliotecaria` · Pai: [FAP - 0017]
 
 Critérios de aceite:
-- Confirmação antes de excluir
-- Regra para livro com empréstimo ativo: a definir com o time
+- Segunda confirmação antes de excluir, digitando o nome do livro
+- Livro com histórico (empréstimo ou reserva) não é excluído, é inativado
 
 ### [FAP - 0021] - Importação em lote  `FEATURE`
 
@@ -301,9 +301,9 @@ Critérios de aceite:
 - Prazo padrão de 7 dias
 - Status do livro passa a emprestado
 
-#### [FAP - 0038] - Limitar empréstimos a 5 livros por usuário  `HISTÓRIA` `RF-14` `P0`
+#### [FAP - 0038] - Limitar empréstimos a 3 livros por usuário  `HISTÓRIA` `RF-14` `P0`
 
-> Como bibliotecária, quero que o sistema limite a 5 livros emprestados por usuário, para aplicar a regra da biblioteca.
+> Como bibliotecária, quero que o sistema limite a 3 livros emprestados por usuário, para aplicar a regra da biblioteca.
 
 Tags: `HISTÓRIA`, `EP: Empréstimos e Devoluções`, `P0`, `emprestimos`, `funcionalidade` · Pai: [FAP - 0036]
 
@@ -395,12 +395,13 @@ Critérios de aceite:
 
 #### [FAP - 0050] - Definir o prazo de posse dos livros  `HISTÓRIA` `RF-18` `P0`
 
-> Como professor, quero definir o prazo de posse dos livros (máximo 30 dias), para planejar o uso em sala.
+> Como professor, quero definir o prazo de posse dos livros (máximo 30 dias por padrão), para planejar o uso em sala.
 
 Tags: `HISTÓRIA`, `EP: Reserva Pedagógica`, `P0`, `reserva-pedagogica`, `funcionalidade`, `professor` · Pai: [FAP - 0047]
 
 Critérios de aceite:
 - Prazo acima de 30 dias é rejeitado
+- O limite de 30 dias é o padrão e pode ser alterado pela bibliotecária
 
 ### [FAP - 0051] - Aprovação de reserva pedagógica  `FEATURE`
 

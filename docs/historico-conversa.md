@@ -48,7 +48,7 @@ Scripts em `scripts/` e workflows em `.github/workflows/`. Os testes de lógica 
 | -- | -- |
 | Dependências | Card em In Progress com `Depende de:` pendente vai para Blocked; ao liberar, sobe para To Do |
 | Pai fecha | Card pai vai para Done quando todos os filhos (`Pai:`) estão em Done, em cascata |
-| Marcação de pessoas | In Progress marca quem arrastou; Awaiting PR marca o dono e o autor; Awaiting QA marca o Breno; QA Rejected marca o dono e o autor; Done deixa só o autor do PR |
+| Marcação de pessoas | In Progress marca quem arrastou; Awaiting PR marca o dono e o autor; QA Rejected marca o dono e o autor; Done deixa só o autor do PR |
 | PR move o card | Branch `FAP/<número>`: PR aberto vai para Awaiting PR; merge vai para Awaiting Build; fechado sem merge volta para In Progress |
 | Depois da build | Depois do merge, lint, typecheck e build; se passar, o card vai para Awaiting QA, ou direto para Done se tiver etiqueta de documentação ou configuração |
 
@@ -111,7 +111,6 @@ Scripts em `scripts/` e workflows em `.github/workflows/`. Os testes de lógica 
 - **Trello:** `0108` e `0213` (telas do Emanuel) em Done, com as telas refeitas no Figma a partir do Stitch: aluno com visual editorial e professor/funcionário como painel corporativo, em seção cinza por autor e com o nome igual ao do card. `0164` (automações) em Done pelas evidências: 122 execuções verdes, selftest das 8 regras e teste do PR comprovado.
 - **0013 e 0012** (interface base) em To Do: o layout responsivo está no código (PR 41), mas o critério "Telas seguem o Figma" depende dos cards de design.
 - **Código:** Next.js atualizado para 16.4.2 (PR 43, correção de segurança). Entregas na `main`: PRs 42 e 44. A `develop` exige o check "qualidade" e não aceita push direto.
-- **GitHub:** ticket aberto no suporte para tirar o usuário `claude` da lista de contribuidores (não há commit nem coautor dele no histórico; é cache). Aguardando resposta por e-mail.
 - **Em andamento com o time:** `0180`, `0129` e `0105`.
 
 ## 10e. Capas reais, acervo de teste e capa no banco (2026-10-23, à tarde)
@@ -121,6 +120,8 @@ Scripts em `scripts/` e workflows em `.github/workflows/`. Os testes de lógica 
 - **Banco (migration `add_book_cover`):** coluna opcional `books.cover_url` e bucket público `book-covers` (JPG, PNG ou WebP, até 2 MB) em que só a bibliotecária envia arquivos. Testada num Postgres 17 novo (36 testes `PASS`, 5 novos para as capas) e aplicada no projeto real, conferindo coluna, bucket e policy depois.
 - **Seed alinhado ao design:** os 20 livros (`T-001` a `T-020`) agora são os livros das telas, nas sete categorias dos filtros (Literatura brasileira, Computação, Saúde, Teologia, Religião, Metodologia e Direito). O seed atualiza pelo código, então os 3 empréstimos de exemplo continuaram nos mesmos livros. Rodado também no banco real.
 - **Em aberto:** enviar as 8 capas de teste ao Storage pelo painel e preencher `cover_url` (passo a passo em `docs/database/modelo-de-dados.md`); o PRD ainda não cita a capa no RF-01 (decidir se vira requisito); o envio pela tela é o card `0119`, que depende do design `0117`.
+
+- **Decisões do dono (26/10):** cadastro de aluno e demais perfis por **convite por e-mail**; livro **só é excluído sem histórico** e os demais são **inativados**, com segunda confirmação digitando o nome do livro; capa do livro vira requisito **opcional** no RF-01. Banco: migration `block_book_delete_with_history` (reserva comum também bloqueia a exclusão) e 5 testes novos (41 `PASS`).
 
 ## 11. Entregas
 
@@ -144,7 +145,7 @@ Scripts em `scripts/` e workflows em `.github/workflows/`. Os testes de lógica 
 5. `0188` (deploy), só com autorização do responsável. Os cards `0185`, `0186`, `0187`, `0007`, `0008` e `0194` já estão em Done.
 6. Cards de design em To Do, começando por `0101`. O `0098` (base visual) foi fechado.
 7. `0167`: testar o bloqueio da `main` com um colaborador.
-8. Decidir sobre o **Vitest** e sobre o **cadastro de usuários pela funcionária**.
-9. Definir a API de **WhatsApp** (`0065`) e a regra de exclusão de livro com empréstimo ativo.
+8. ~~Decidir sobre o Vitest e sobre o cadastro de usuários pela funcionária~~ Decidido: o Vitest está em uso e o cadastro será por convite por e-mail (26/10).
+9. Definir a API de **WhatsApp** (`0065`). (A regra de exclusão de livro foi decidida em 26/10: ver a seção 10e.)
 10. Enviar as 8 capas de teste ao Storage (`book-covers`) e preencher `cover_url`; trocar os recortes por capas oficiais antes de apresentar.
 11. Incluir a automação por evento (PR #15) na `main` na próxima entrega, e instalar a skill do mentor, se o time quiser usá-la.
