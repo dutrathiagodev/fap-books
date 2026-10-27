@@ -47,7 +47,7 @@ Quem decide isso é o **RLS** do banco: mesmo que alguém tente burlar a tela, o
 
 | No banco | No código (`src/domain`, com teste) |
 | -- | -- |
-| Prazo da reserva pedagógica entre 1 e 30 dias | Limite de 3 livros por pessoa |
+| Prazo da reserva pedagógica entre 1 e 30 dias (hoje fixo; o limite passará a ser uma configuração da bibliotecária, com 30 como padrão) | Limite de 3 livros por pessoa |
 | Quantidade de livros nunca negativa | Prazo padrão de 7 dias |
 | Quem pode ver e escrever em cada tabela | Cálculo da multa (R$ 1,00 por dia) |
 | O papel de cada pessoa nunca vem do cadastro | Se o livro está disponível (quantidade menos empréstimos em aberto) |
