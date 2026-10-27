@@ -2,13 +2,13 @@
 
 A qualidade é prioridade no FAP Books. Este guia diz **o que verificar**, **como** e **por quê**, em linguagem simples.
 
-## As 5 verificações antes de abrir um PR
+## As verificações antes de abrir um PR
 
 | Comando | O que confere | Por que importa |
 | -- | -- | -- |
 | `npm run lint` | Estilo e erros comuns de código | Todo mundo escreve do mesmo jeito |
 | `npm run typecheck` | Tipos do TypeScript | Pega erro de nome e de tipo antes de rodar |
-| `npm run test` | Testes automáticos | Garante que as regras continuam certas |
+| `npm run test` | Os testes automáticos das regras | Garante que as regras continuam certas |
 | `npm run build` | Se o site compila para produção | Evita quebrar a publicação |
 | Revisar o diff | Você leu o que mudou? | Você é a primeira pessoa a revisar |
 
@@ -22,7 +22,7 @@ Não é preciso testar tudo. Teste o que, se quebrar, causa prejuízo:
 2. **Fluxo principal da page:** carregando, vazio e sucesso aparecem.
 3. **Segurança do banco:** a policy deixa o aluno ler só o dele e bloqueia o que não pode.
 
-Ferramentas: Vitest (testes) e Testing Library (telas). Elas serão adicionadas no card de configuração do projeto.
+Ferramenta: **Vitest**, já instalado. Rode `npm run test`. Os arquivos de teste ficam ao lado do código e terminam em `.test.ts` (por exemplo, `src/domain/loans/loan-rules.test.ts`). Testar telas fica para depois, se o time pedir.
 
 ## Como é um bom PR
 
