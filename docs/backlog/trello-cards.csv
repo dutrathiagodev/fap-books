@@ -135,10 +135,10 @@ Requisito: RF-16","HISTÓRIA, EP: Reserva Pedagógica, P0, reserva-pedagogica, t
 
 Pai: [FAP - 0047]
 Requisito: RF-16","HISTÓRIA, EP: Reserva Pedagógica, P0, reserva-pedagogica, tela, bibliotecaria",Mesmo fluxo de aprovação da solicitação online
-📥 Backlog,[FAP - 0050] - Definir o prazo de posse dos livros,"Como professor, quero definir o prazo de posse dos livros (máximo 30 dias), para planejar o uso em sala.
+📥 Backlog,[FAP - 0050] - Definir o prazo de posse dos livros,"Como professor, quero definir o prazo de posse dos livros (máximo 30 dias por padrão), para planejar o uso em sala.
 
 Pai: [FAP - 0047]
-Requisito: RF-18","HISTÓRIA, EP: Reserva Pedagógica, P0, reserva-pedagogica, funcionalidade, professor",Prazo acima de 30 dias é rejeitado
+Requisito: RF-18","HISTÓRIA, EP: Reserva Pedagógica, P0, reserva-pedagogica, funcionalidade, professor",Prazo acima de 30 dias é rejeitado; O limite de 30 dias é o padrão e pode ser alterado pela bibliotecária
 📥 Backlog,[FAP - 0051] - Aprovação de reserva pedagógica,Pai: [FAP - 0046],"FEATURE, EP: Reserva Pedagógica",
 📥 Backlog,[FAP - 0052] - Aprovar ou recusar uma reserva pedagógica,"Como bibliotecária ou chefe, quero aprovar ou recusar uma reserva pedagógica, para controlar o uso do acervo. (a fila fica no painel: ver Painel)
 
