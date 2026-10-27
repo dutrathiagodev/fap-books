@@ -86,10 +86,20 @@ begin
 
   -- auditoria
   perform pg_temp.as_user(A1);
-  insert into public.audit_logs(actor_id,action,entity) values (A1::uuid,'test','books');
-  perform pg_temp.say('aluno grava auditoria em seu nome', true);
-  denied:=false; begin insert into public.audit_logs(actor_id,action,entity) values (L1::uuid,'fake','books'); exception when others then denied:=true; end;
+  insert into public.audit_logs(actor_id,action,entity,details) values (A1::uuid,'reservation_created','reservations','{"book_id":"b0000000-0000-0000-0000-000000000001"}');
+  perform pg_temp.say('aluno grava auditoria da própria reserva, só com ids', true);
+  denied:=false; begin insert into public.audit_logs(actor_id,action,entity) values (L1::uuid,'reservation_created','reservations'); exception when others then denied:=true; end;
   perform pg_temp.say('aluno NÃO grava auditoria em nome de outro', denied);
+  denied:=false; begin insert into public.audit_logs(actor_id,action,entity) values (A1::uuid,'loan_created','loans'); exception when others then denied:=true; end;
+  perform pg_temp.say('aluno NÃO grava ação de bibliotecária (empréstimo)', denied);
+  denied:=false; begin insert into public.audit_logs(actor_id,action,entity) values (A1::uuid,'fake','reservations'); exception when others then denied:=true; end;
+  perform pg_temp.say('ação desconhecida é recusada', denied);
+  denied:=false; begin insert into public.audit_logs(actor_id,action,entity) values (A1::uuid,'reservation_created','qualquer'); exception when others then denied:=true; end;
+  perform pg_temp.say('entidade desconhecida é recusada', denied);
+  denied:=false; begin insert into public.audit_logs(actor_id,action,entity,details) values (A1::uuid,'reservation_created','reservations','{"nome":"Aluno Um"}'); exception when others then denied:=true; end;
+  perform pg_temp.say('auditoria NÃO aceita nome ou texto em details', denied);
+  denied:=false; begin insert into public.audit_logs(actor_id,action,entity,details) values (A1::uuid,'reservation_created','reservations','{"user_id":"aluno1@x.com"}'); exception when others then denied:=true; end;
+  perform pg_temp.say('auditoria NÃO aceita e-mail disfarçado de id', denied);
   select count(*) into c from public.audit_logs; perform pg_temp.say('aluno NÃO lê a auditoria', c=0);
   denied:=false; begin update public.audit_logs set action='x'; exception when others then denied:=true; end;
   perform pg_temp.say('auditoria não pode ser editada', denied);
@@ -97,6 +107,8 @@ begin
   perform pg_temp.say('auditoria não pode ser apagada', denied);
   perform pg_temp.as_user(L1); select count(*) into c from public.audit_logs;
   perform pg_temp.say('bibliotecária lê a auditoria', c=1);
+  insert into public.audit_logs(actor_id,action,entity,details) values (L1::uuid,'loan_created','loans','{"loan_id":"b0000000-0000-0000-0000-000000000009","book_id":"b0000000-0000-0000-0000-000000000001"}');
+  perform pg_temp.say('bibliotecária grava auditoria de empréstimo, só com ids', true);
 
   -- anônimo
   perform set_config('role','anon',true);
