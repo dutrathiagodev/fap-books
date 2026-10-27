@@ -112,7 +112,7 @@ Cada tela tem 3 tipos de card, na ordem:
 | **Igor** | Cadastro de usuários, Solicitar reserva, Relatórios |
 | **Thiago** | Configuração do projeto (GitHub, Supabase, CI, banco) |
 
-O design vem **primeiro**: comece pelo card de design da sua tela. Os de **Base visual** e **Layout base** são os primeiros, porque as outras telas reaproveitam as cores e o menu. A paleta é navy `#032B5E` e `#0D3B6E`, branco `#FFFFFF` e cinza `#8C8C8C`.
+O design vem **primeiro**: comece pelo card de design da sua tela. Os de **Base visual** e **Layout base** são os primeiros, porque as outras telas reaproveitam as cores e o menu. Cores, fontes, cantos e ícones já estão definidos: veja [`docs/design/README.md`](design/README.md) e use as **classes prontas** do guia de Tailwind (`bg-brand`, `text-ink`, `rounded-md`), nunca valores soltos como `#032B5E`.
 
 ## 9. Combinados do time
 
