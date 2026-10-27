@@ -1,6 +1,10 @@
 name: Automações do Trello
 
+# O agendamento do GitHub é só um reforço (ele pode atrasar ou nem disparar).
+# O que garante a automação são os eventos: push na develop/main e o fim do workflow de PR.
 on:
+  push:
+    branches: [develop, main]
   schedule:
     - cron: '*/10 * * * *'
   workflow_dispatch:
