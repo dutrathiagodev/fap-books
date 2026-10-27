@@ -77,11 +77,11 @@ O FAP Books é um trabalho acadêmico. Por isso adotamos regras **genéricas e p
 | -- | -- | -- |
 | **Finalidade** | Só o serviço de biblioteca: empréstimo, devolução, multa e reserva. Os dados não servem para outro fim | não |
 | **Base legal** | Execução do serviço de biblioteca para o aluno ou professor (art. 7º, V) e interesse legítimo da instituição no controle do acervo (art. 7º, IX) | sim |
-| **Menores de idade** | Presumimos que todos são maiores de 18 anos (ensino superior). Se houver menor, é preciso consentimento do responsável | sim |
+| **Menores de idade** | **Há estudantes menores de 18 anos (ensino médio).** O tratamento dos dados deles é feito **no melhor interesse do menor** (art. 14): só os dados mínimos, texto do aviso em linguagem simples e o responsável legal pode pedir acesso, correção ou eliminação em nome do menor. Não usamos dado de menor para marketing nem para qualquer fim fora da biblioteca. A base legal é a mesma da biblioteca, e a FAP confirma se exige também o consentimento de um responsável | sim |
 | **Guarda** | Empréstimos, multas e reservas: **5 anos** depois da última movimentação da pessoa. Conta de quem sai: fica **inativa**. Auditoria (só ids): 5 anos. Backup: 30 dias | sim |
 | **Apagamento** | Passado o prazo, **anonimizar** (trocar nome e e-mail por um código) em vez de apagar, porque o histórico impede apagar de vez. Antes disso, só a pedido e se não houver multa em aberto | sim |
-| **Direitos do titular** | O pedido vai por e-mail à biblioteca; a bibliotecária executa e responde em até **15 dias**. Canal provisório: o e-mail oficial da biblioteca (`biblioteca.fap@educadventista.org.br`) | sim |
-| **Encarregado (DPO)** | **A definir pela FAP.** Até lá, o contato é o canal acima | sim |
+| **Direitos do titular** | O pedido vai por e-mail à biblioteca; a bibliotecária executa e responde em até **15 dias**. Canal provisório: **`privacidade@fapbooks.example`** (e-mail genérico de exemplo; a FAP troca pelo real) | sim |
+| **Encarregado (DPO)** | É a pessoa que a instituição indica para ser o canal entre ela, os titulares dos dados e a ANPD (LGPD, art. 5º, VIII). **A FAP ainda precisa indicar quem é**; até lá, o contato é o canal acima. Não achamos o nome em fonte pública | sim |
 | **Backup** | Mantido como está (criptografado, 30 dias). O risco de o GitHub guardar fora do Brasil é registrado e aceito no projeto acadêmico | sim, se for produção |
 | **Incidente de segurança** | Avisar logo o responsável da biblioteca. A comunicação à ANPD e aos titulares é da FAP (a regulamentação fala em 3 dias úteis; confirmar a regra vigente) | sim |
 | **Aviso de privacidade** | Texto-base abaixo; entra na landing e no login depois de ter design | só o texto |
@@ -94,10 +94,11 @@ O FAP Books é um trabalho acadêmico. Por isso adotamos regras **genéricas e p
 - Chave secreta do banco fora do navegador e do Git; repositório com varredura de segredos e Dependabot ligados.
 - Backup diário criptografado; restauração testada.
 - Login sem mensagem de erro bruta; nenhum log com dado pessoal.
+- Dados de menores: nenhuma coleta além do que os adultos já têm; nada de CPF, telefone, endereço nem foto.
 
 ### Texto-base do aviso de privacidade (rascunho)
 
-> **Como usamos seus dados.** O FAP Books guarda seu nome, e-mail e o histórico dos seus empréstimos, reservas e multas, só para a biblioteca controlar o acervo e atender você. Só você e a equipe da biblioteca veem esses dados. Guardamos por até 5 anos depois da sua última movimentação e depois os tornamos anônimos. Para ver, corrigir ou pedir a eliminação dos seus dados, escreva para biblioteca.fap@educadventista.org.br.
+> **Como usamos seus dados.** O FAP Books guarda seu nome, e-mail e o histórico dos seus empréstimos, reservas e multas, só para a biblioteca controlar o acervo e atender você. Só você e a equipe da biblioteca veem esses dados. Guardamos por até 5 anos depois da sua última movimentação e depois os tornamos anônimos. Para ver, corrigir ou pedir a eliminação dos seus dados, escreva para privacidade@fapbooks.example. Se você tem menos de 18 anos, seu pai, mãe ou responsável também pode fazer esse pedido por você.
 
 ## 7. O que o card 0011 pede e como está
 
