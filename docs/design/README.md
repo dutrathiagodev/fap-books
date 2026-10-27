@@ -41,7 +41,14 @@ import { BookOpen } from "lucide-react";
 - Ícone sozinho num botão precisa de `aria-label` no botão. Ícone ao lado de texto leva `aria-hidden="true"`.
 - O nome no Figma `lucide/book-open` vira `BookOpen` no código.
 
+## Situação (2026-10-23)
+
+- **Design system fechado** (card `0098`, aprovado pelo dono): variáveis, estilos de texto e de sombra, ícones e a página `🧩 Components` (botão, campo, caixa de seleção, opção, interruptor, selo, avatar, abas, chip de filtro, aviso, card de indicador, passos e envio de arquivo).
+- **Telas no Figma** (página `🖥️ UI web`): cada frame leva o título do card do Trello e fica numa seção cinza por autor. Já existem as seções "Telas do Emanuel (0108 – 0213)", com as versões de aluno e de professor/funcionário, e "Landing page".
+- **Código:** `AppShell` (menu lateral recolhível e gaveta no celular) e login já usam os tokens (card `0013`, PR 41). O critério "Telas seguem o Figma" do `0013` e o card pai `0012` ficam em To Do até os cards de design fecharem.
+- **Referências:** [wireframes](referencias/) e o [guia visual do Stitch](stitch/DESIGN.md) com o [prompt](stitch/prompt-stitch.md).
+
 ## O que falta
 
-- Componentes de interface no Figma (botão, campo, tabela, modal e os outros).
+- Telas dos outros cards de design (cada pessoa entrega o link do Stitch e o dono leva para o Figma).
 - Tema escuro desenhado.
