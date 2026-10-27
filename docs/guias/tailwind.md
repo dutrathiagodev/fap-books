@@ -9,7 +9,7 @@ Tailwind é um jeito de **estilizar usando classes prontas direto no HTML**, em 
 > Analogia: em vez de pedir "uma estante azul, com 30 cm de largura", você monta a estante escolhendo peças prontas: `azul` + `30cm` + `bordas arredondadas`. Cada peça é uma classe.
 
 ```tsx
-<button className="px-6 py-3 bg-[#032B5E] text-white rounded-full">Salvar</button>
+<button className="px-6 py-3 bg-brand text-on-brand rounded-md">Salvar</button>
 ```
 
 Lido em voz alta: *padding horizontal 6, padding vertical 3, fundo navy, texto branco, bordas bem arredondadas*.
@@ -53,23 +53,38 @@ export function BookRow() {
 
 Centralizar uma coisa na tela inteira: `flex flex-col items-center justify-center min-h-screen`.
 
-## 3. Cores personalizadas do FAP Books
+## 3. Cores e tokens do FAP Books
 
-A paleta do projeto: navy `#032B5E` e `#0D3B6E`, branco `#FFFFFF` e cinza `#8C8C8C`. Para usar uma cor fora da lista, coloque o valor entre colchetes:
+As cores, fontes, raios e sombras do projeto já são **nomes prontos** no `src/app/globals.css`. Use os nomes, **não** valores soltos como `bg-[#032B5E]`.
 
-```tsx
-<div className="bg-[#032B5E] text-white">Cabeçalho</div>
-<button className="bg-[#032B5E] hover:bg-[#0D3B6E]">Entrar</button>
-```
+| Para quê | Classe | Valor |
+| -- | -- | -- |
+| Fundo da página | `bg-page` | branco |
+| Fundo de cards | `bg-surface` | branco |
+| Fundo suave | `bg-subtle` | navy 50 |
+| Botão principal | `bg-brand` / `hover:bg-brand-hover` | navy 900 / navy 700 |
+| Texto em cima do botão | `text-on-brand` | branco |
+| Texto principal | `text-ink` | navy 950 |
+| Texto secundário | `text-ink-muted` | cinza `#6B6B6B` |
+| Borda comum | `border-line` | navy 200 |
+| Borda de campo | `border-line-strong` | cinza `#8C8C8C` |
+| Foco | `ring-focus` | navy 500 |
+| Estados | `text-success-700 bg-success-100`, e o mesmo com `warning`, `danger`, `info` | |
+| Escala completa | `bg-navy-50` até `bg-navy-950` | |
 
-> **Dica de profissional:** quando a mesma cor aparece em muitos lugares, vale transformá-la em um nome (`bg-brand`). Isso se faz no `globals.css`, na seção `@theme`. Pergunte ao time antes: faz parte do card de Base visual.
+- **Raios:** `rounded-md` (8 px) em botões e campos, `rounded-lg` (12 px) em cards e modais.
+- **Sombras:** `shadow-sm`, `shadow-md` e `shadow-lg`.
+- **Fontes:** o texto já é Inter. Títulos `h1`, `h2` e `h3` já saem em Lora. Tamanhos: `text-h1-brand` (48, login), `text-h1` (36), `text-h2` (28) e `text-h3` (22).
+- **Cinza `#8C8C8C`** só em bordas e ícones. Para texto use `text-ink-muted`, que tem contraste suficiente.
+
+> Os valores vêm do Figma (coleções `Color`, `Spacing` e `Radius`) e estão em `docs/design/tokens/`. Mudou no Figma, muda aqui.
 
 ## 4. Estados: hover e foco
 
 Coloque o estado antes da classe, com `:`
 
 ```tsx
-<button className="bg-[#032B5E] hover:bg-[#0D3B6E] focus:outline-none focus:ring-2 transition-colors">
+<button className="bg-brand hover:bg-brand-hover focus:outline-none focus:ring-2 transition-colors">
   Entrar
 </button>
 ```
@@ -129,5 +144,5 @@ O arquivo `src/app/globals.css` começa com:
 
 ## No FAP Books
 
-- Paleta e botões seguem o design do Figma (cards de **Design**).
+- Paleta, fontes e botões seguem o design do Figma (cards de **Design**). Os nomes estão no `globals.css` e na seção 3 deste guia.
 - Cada **Bloco** de tela vira um componente com Tailwind, fiel ao frame do Figma.
