@@ -75,7 +75,7 @@ Utiliza o sistema principalmente para consultar o acervo, verificar disponibilid
 
 ### Persona 2 — Professor
 
-Utiliza o acervo para fins didáticos e tem uma regra de reserva diferenciada: pode solicitar, com antecedência, a reserva de um ou mais livros para uso em disciplina, por um prazo que ele mesmo define, limitado a no máximo 30 dias. Essa reserva pedagógica passa por um fluxo mais formal (solicitação antecipada e aprovação da bibliotecária) antes de ser confirmada, e o livro deve ser devolvido após o período de uso definido. Principal dor: falta de previsibilidade sobre a disponibilidade de um livro para uso em sala de aula.
+Utiliza o acervo para fins didáticos e tem uma regra de reserva diferenciada: pode solicitar, com antecedência, a reserva de um ou mais livros para uso em disciplina, por um prazo que ele mesmo define, limitado a no máximo 30 dias (valor padrão, que a bibliotecária pode alterar). Essa reserva pedagógica passa por um fluxo mais formal (solicitação antecipada e aprovação da bibliotecária) antes de ser confirmada, e o livro deve ser devolvido após o período de uso definido. Principal dor: falta de previsibilidade sobre a disponibilidade de um livro para uso em sala de aula.
 
 ### Persona 3 — Funcionário da Biblioteca (administrador do sistema)
 
@@ -93,7 +93,7 @@ Responsável por cadastrar livros e usuários, registrar empréstimos e devoluç
 - Registro de devoluções.
 - Renovação de empréstimo.
 - Reserva de livros indisponíveis (aluno).
-- Reserva pedagógica de livros pelo professor, com solicitação antecipada, aprovação da bibliotecária e prazo de posse definido pelo professor (máximo de 30 dias).
+- Reserva pedagógica de livros pelo professor, com solicitação antecipada, aprovação da bibliotecária e prazo de posse definido pelo professor (máximo de 30 dias por padrão, ajustável pela bibliotecária).
 - Controle do prazo de devolução (padrão de 7 dias), com cálculo automático de multa (R$ 1,00 por dia de atraso) e baixa manual do pagamento pela bibliotecária.
 - Notificação de prazo por WhatsApp, e-mail e painel do sistema.
 - Histórico de empréstimos por usuário e por livro.
@@ -157,7 +157,7 @@ Prioridade classificada em MoSCoW: **Must have** (essencial ao MVP), **Should ha
 | -- | -- | -- | -- |
 | RF-16 | Solicitação de reserva pedagógica de livro pelo professor, com antecedência — podendo ser feita online (pelo sistema) ou presencialmente na biblioteca | Must have | Planejado |
 | RF-17 | Aprovação (ou recusa) da reserva pedagógica pela bibliotecária/chefe da biblioteca | Must have | Planejado |
-| RF-18 | Definição, pelo professor, do prazo de posse do livro reservado, limitado a no máximo 30 dias | Must have | Planejado |
+| RF-18 | Definição, pelo professor, do prazo de posse do livro reservado, limitado a no máximo 30 dias por padrão; a bibliotecária pode alterar esse limite | Must have | Planejado |
 | RF-19 | Registro de devolução do livro após o período de uso didático definido | Must have | Planejado |
 | RF-20 | Renovação da reserva pedagógica ao final do prazo, mediante nova aprovação da bibliotecária | Should have | Planejado |
 
@@ -281,14 +281,14 @@ Gestão de projeto realizada via Trello.
 
 ### Decisões já fechadas
 
-- Prazo padrão de empréstimo: 7 dias, igual para alunos e professores (a reserva pedagógica do professor segue prazo próprio, de até 30 dias).
+- Prazo padrão de empréstimo: 7 dias, igual para alunos e professores (a reserva pedagógica do professor segue prazo próprio, de até 30 dias por padrão, com limite ajustável pela bibliotecária).
 - Limite de livros emprestados simultaneamente: até 3 por usuário (4 para formandos), conforme o Regulamento 2025 da biblioteca.
 - Multa por atraso: R$ 1,00 por dia, com baixa manual do pagamento registrada pela bibliotecária no sistema (quitação presencial).
 - Canal de notificação de prazo: WhatsApp, e-mail e painel do sistema.
 - Migração do acervo: cadastro manual pela bibliotecária e/ou importação em lote via planilha (Excel/CSV).
 - Perfis diferenciados: aluno e professor seguem regras próprias de empréstimo/reserva; o cadastro com "cargo" (ex.: chefe da biblioteca, auxiliar) é específico do perfil de funcionário da biblioteca, responsável pela administração do sistema.
 - Solicitação da reserva pedagógica pode ser feita tanto pelo sistema (online) quanto presencialmente na biblioteca; a aprovação continua sendo sempre feita pela bibliotecária/chefe da biblioteca.
-- Renovação da reserva pedagógica: permitida ao final do prazo de 30 dias, mediante nova aprovação da bibliotecária.
+- Renovação da reserva pedagógica: permitida ao final do prazo (30 dias por padrão), mediante nova aprovação da bibliotecária.
 - Relatórios: além dos relatórios gerais de acervo e atraso, haverá um relatório específico de reservas pedagógicas (solicitações, aprovações e recusas).
 
 ### Perguntas em aberto / próximos passos

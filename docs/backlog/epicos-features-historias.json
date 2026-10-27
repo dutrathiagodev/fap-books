@@ -819,7 +819,7 @@
   "tipo": "historia",
   "rf": "RF-18",
   "titulo": "Definir o prazo de posse dos livros",
-  "historia": "Como professor, quero definir o prazo de posse dos livros (máximo 30 dias), para planejar o uso em sala.",
+  "historia": "Como professor, quero definir o prazo de posse dos livros (máximo 30 dias por padrão), para planejar o uso em sala.",
   "prioridade": "P0",
   "tags": [
    "HISTÓRIA",
@@ -831,7 +831,8 @@
   ],
   "pai": "[FAP - 0047]",
   "criterios": [
-   "Prazo acima de 30 dias é rejeitado"
+   "Prazo acima de 30 dias é rejeitado",
+   "O limite de 30 dias é o padrão e pode ser alterado pela bibliotecária"
   ]
  },
  {

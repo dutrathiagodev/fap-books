@@ -395,12 +395,13 @@ Critérios de aceite:
 
 #### [FAP - 0050] - Definir o prazo de posse dos livros  `HISTÓRIA` `RF-18` `P0`
 
-> Como professor, quero definir o prazo de posse dos livros (máximo 30 dias), para planejar o uso em sala.
+> Como professor, quero definir o prazo de posse dos livros (máximo 30 dias por padrão), para planejar o uso em sala.
 
 Tags: `HISTÓRIA`, `EP: Reserva Pedagógica`, `P0`, `reserva-pedagogica`, `funcionalidade`, `professor` · Pai: [FAP - 0047]
 
 Critérios de aceite:
 - Prazo acima de 30 dias é rejeitado
+- O limite de 30 dias é o padrão e pode ser alterado pela bibliotecária
 
 ### [FAP - 0051] - Aprovação de reserva pedagógica  `FEATURE`
 
