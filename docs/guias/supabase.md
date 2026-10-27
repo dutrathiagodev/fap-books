@@ -236,5 +236,7 @@ A secret fica com o responsável pelo banco. No começo, **não precisa dela**.
 ## No FAP Books
 
 - Só os **services** falam com o Supabase.
+- Quem está logado vem de `getCurrentProfile()` (`src/services/profile.service.ts`), que lê o perfil ativo na tabela `profiles`. O papel (`student`, `teacher`, `librarian`) vem do banco, nunca do navegador.
+- Dados de teste: `supabase/seed.sql` (20 livros e 3 empréstimos). Veja como rodar em [modelo-de-dados.md](../database/modelo-de-dados.md).
 - Toda tabela tem RLS e `grant` explícito.
 - Regras como "máximo de 5 livros" ficam no código (`src/domain`), com teste.
