@@ -11,6 +11,8 @@ O produto reúne, em um só lugar, uma área de consulta ao acervo (para alunos 
 
 > Status: **em desenvolvimento** (MVP). O produto é descrito no PRD v0.3, um documento vivo.
 
+**Site no ar:** [fap-books.vercel.app](https://fap-books.vercel.app) (publicado na Vercel a cada mudança na `main`).
+
 ## Módulos
 
 | | Módulo | Descrição |
