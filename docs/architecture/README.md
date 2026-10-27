@@ -24,13 +24,14 @@
 | As **6 camadas completas** ficam como caminho de evolução (`futuro/`) | Eram o desenho inicial, mas estavam muito além do que o time viu em aula | 2026-10-08 |
 | **Qualidade é prioridade** | Lint, typecheck, testes e build a cada PR, com guia explicando cada um | 2026-10-08 |
 | App na **raiz** do repositório, código em `src/`, imports com `@/` apontando para `src/` | Sem monorepo enquanto não houver segundo projeto. O alias `@/components` evita erro de caminho na compilação (no projeto do professor é `@/src/components`) | 2026-10-08 |
+| **Vitest** instalado para testar as regras do negócio (Nível 2); Testing Library só se o time pedir | Teste simples e rápido, só onde uma regra errada custa caro | 2026-10-08 |
 | Nomes de código em **inglês**, textos da tela em **português** | É o que o projeto do professor já faz | 2026-10-08 |
 | Banco **sempre versionado** em migrations, **RLS em toda tabela** | Segurança e histórico; não há API entre o site e o banco | 2026-10-08 |
 | Supabase na região **Brasil (São Paulo)** | Usuários da FAP estão no Brasil | 2026-10-07 |
 
 ## Em aberto (a confirmar com o time)
 
-- **Ferramenta de testes:** proposta de **Vitest**, para as regras do Nível 2 (e Testing Library só se o time pedir).
+- Nada em aberto no momento.
 
 ## Régua de simplicidade
 
