@@ -102,7 +102,7 @@ Requisito: RF-09","HISTÓRIA, EP: Usuários, P1, usuarios, tela, bibliotecaria",
 
 Pai: [FAP - 0036]
 Requisito: RF-10","HISTÓRIA, EP: Empréstimos e Devoluções, P0, emprestimos, funcionalidade, bibliotecaria",Empréstimo vinculado a usuário e livro; Prazo padrão de 7 dias; Status do livro passa a emprestado
-📥 Backlog,[FAP - 0038] - Limitar empréstimos a 5 livros por usuário,"Como bibliotecária, quero que o sistema limite a 5 livros emprestados por usuário, para aplicar a regra da biblioteca.
+📥 Backlog,[FAP - 0038] - Limitar empréstimos a 3 livros por usuário,"Como bibliotecária, quero que o sistema limite a 3 livros emprestados por usuário, para aplicar a regra da biblioteca.
 
 Pai: [FAP - 0036]
 Requisito: RF-14","HISTÓRIA, EP: Empréstimos e Devoluções, P0, emprestimos, funcionalidade",6º empréstimo é bloqueado com mensagem clara

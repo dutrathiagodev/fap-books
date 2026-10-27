@@ -13,7 +13,7 @@ Nesta fase o projeto tem **duas peças**: o site (Next.js) e o Supabase (banco, 
 | Nível | Quando usar | O que tem |
 | -- | -- | -- |
 | **1 — Base (o do professor)** | **Sempre**, em todas as telas | `app`, `components`, `lib`, `services`, `types` |
-| **2 — Regras do negócio** | Quando aparece uma regra: limite de 5 livros, prazo de 7 dias, multa de R$ 1,00 por dia | Nível 1 + `domain` (funções puras e testadas) |
+| **2 — Regras do negócio** | Quando aparece uma regra: limite de 3 livros, prazo de 7 dias, multa de R$ 1,00 por dia | Nível 1 + `domain` (funções puras e testadas) |
 | **3 — Camadas completas** | Só se o time pedir, no futuro | [Camadas completas](futuro/camadas-completas.md) |
 
 ## Nível 1 — Estrutura

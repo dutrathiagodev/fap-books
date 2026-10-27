@@ -154,10 +154,10 @@ Elementos:
 
 Elementos:
 - Abas: Empréstimo, Devolução, Renovação
-- Passo 1: buscar usuário (nome ou matrícula), mostrar card com perfil, livros em posse (ex.: 3 de 5) e situação
+- Passo 1: buscar usuário (nome ou matrícula), mostrar card com perfil, livros em posse (ex.: 2 de 3) e situação
 - Passo 2: buscar livro (título ou código)
 - Passo 3: resumo com usuário, livro e prazo de devolução (7 dias, com a data)
-- Alertas de limite e atraso: "Limite de 5 livros atingido" e "Usuário com multa em aberto: empréstimo bloqueado"
+- Alertas de limite e atraso: "Limite de 3 livros atingido" e "Usuário com multa em aberto: empréstimo bloqueado"
 - Botão primário "Confirmar empréstimo"
 - Tela de comprovante com os dados e botão "Imprimir"
 
@@ -235,7 +235,7 @@ Componentes importantes:
 Regras de experiência:
 - O aluno e o professor consultam o acervo, veem seus empréstimos e renovam.
 - A bibliotecária opera tudo no balcão: busca usuário, busca livro, confirma, imprime o comprovante.
-- Prazo padrão de empréstimo: 7 dias. Limite: 5 livros por usuário.
+- Prazo padrão de empréstimo: 7 dias. Limite: 3 livros por usuário.
 - Multa de R$ 1,00 por dia de atraso, quitada presencialmente, com baixa manual.
 - Usuário com atraso ou multa em aberto fica bloqueado para novo empréstimo.
 - A reserva pedagógica é só do professor, com prazo de até 30 dias e aprovação da bibliotecária.

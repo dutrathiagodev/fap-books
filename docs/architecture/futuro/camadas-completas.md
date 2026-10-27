@@ -18,7 +18,7 @@ Cada feature usa estas camadas, dentro de `src/`. Em palavras simples:
 
 | Camada | Pasta | Em palavras simples |
 | -- | -- | -- |
-| domain | `src/domain/<feature>/` | **O que o sistema é e quais são as regras.** Um livro, um empréstimo, o limite de 5 livros. Não sabe que existem React, Next ou banco |
+| domain | `src/domain/<feature>/` | **O que o sistema é e quais são as regras.** Um livro, um empréstimo, o limite de 3 livros. Não sabe que existem React, Next ou banco |
 | data | `src/data/<feature>/` | **Como trazer e levar dados.** Implementa o que o domain pede e converte o formato do banco para o formato do sistema |
 | infra | `src/infra/` | **Os fios que ligam ao mundo de fora.** Cliente do Supabase (login, banco, arquivos) |
 | presenter | `src/presenter/<feature>/` | **O estado da tela.** Hooks e Server Actions que chamam os casos de uso |
@@ -80,7 +80,7 @@ src/
 5. **O domain define contratos.** O caso de uso depende de uma interface (`<feature>.repository.ts`), nunca de `fetch` ou do Supabase.
 6. **O data cumpre o contrato.** O `repository-impl` usa o adaptador da `infra` e o mapper para devolver entidades.
 7. **Montagem por funções simples.** `main/di/<feature>.dependencies.ts` exporta funções como `makeListBooks()`. Elas criam o adaptador, o repositório e o caso de uso e devolvem o caso de uso pronto. Sem biblioteca de injeção. Se um dia for preciso algo mais forte, só esse arquivo muda.
-8. **As regras do negócio ficam no domain.** Limite de 5 livros, prazo de 7 dias, multa de R$ 1,00 por dia. Elas rodam no servidor, dentro dos casos de uso chamados pelas Server Actions.
+8. **As regras do negócio ficam no domain.** Limite de 3 livros, prazo de 7 dias, multa de R$ 1,00 por dia. Elas rodam no servidor, dentro dos casos de uso chamados pelas Server Actions.
 9. **Segurança em duas barreiras.** (1) O servidor checa o perfil do usuário antes de executar o caso de uso. (2) O **RLS do Supabase** impede que o banco entregue dados a quem não pode. Como não há API entre o site e o banco, o RLS é obrigatório em toda tabela.
 10. **Login.** A sessão é do Supabase Auth. O `src/proxy.ts` protege rotas por perfil (nesta versão do Next.js o antigo *middleware* se chama *proxy*).
 11. **Segredos.** Só variáveis `NEXT_PUBLIC_*` vão ao navegador. A chave de serviço do Supabase nunca é usada no navegador e só aparece em código de servidor.

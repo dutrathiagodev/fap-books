@@ -17,7 +17,7 @@ Regras gerais: valem as cores, raios e espaços de [`globals.css`](../../src/app
 
 ## Só no código (o Figma não anima)
 
-- **Contadores da faixa de números** (7 dias, 5 livros, 30 dias, R$ 1,00): contam de 0 até o valor em 1,2 s, uma única vez, quando a faixa entra 50 % na tela (`IntersectionObserver`). Sem movimento, mostram o valor final.
+- **Contadores da faixa de números** (7 dias, 3 livros, 30 dias, R$ 1,00): contam de 0 até o valor em 1,2 s, uma única vez, quando a faixa entra 50 % na tela (`IntersectionObserver`). Sem movimento, mostram o valor final.
 - **Hover dos cards** (Perfis, Novidades): sobem 2 px, a borda vai para `link` e a sombra para `shadow-md`, em 150 ms.
 - **Hover e foco dos botões**: fundo vai para `brand-hover` (primário) ou `selected` (secundário), em 150 ms. O foco visível usa `focus` com contorno de 2 px.
 - **Menu do celular**: abre em gaveta pela esquerda em 200 ms, com fundo escurecido que fecha ao clicar.
@@ -28,6 +28,6 @@ Os mesmos movimentos valem no escuro. A troca de tema não anima (corte seco), p
 
 ## O que ainda não existe no Figma
 
-- Hover de cards e botões como variantes.
+- Hover dos cards como variantes. Os botões já têm: componente "Botão da landing" (Tema x Tipo x Estado: padrão, hover, foco) aplicado nas seções, com Smart Animate de 150 ms. Cores: primário claro #032B5E vai para #154A8E; secundário claro #DFE9F6 vai para #C0D3ED; primário escuro #3075CF vai para #598DCF; secundário escuro #154A8E vai para #215DAB. O botão "Entrar" do cabeçalho (com ícone) ainda não usa o componente.
 - Imagem da aba "Painel": usa a tela de Meus empréstimos do professor, porque o painel da bibliotecária (cards 0157 e 0147) ainda não foi desenhado. Trocar quando existir.
 - Menu do celular da landing.
