@@ -37,7 +37,6 @@ As listas seguem a vida da tarefa:
 | arrasta um card para **In Progress** | te marca como responsável. Se faltar uma dependência, o card vai para **Blocked** |
 | abre um PR em `FAP/<número>` | move o card para **Awaiting PR** |
 | o PR é mergeado | move para **Awaiting Build** |
-| o card chega em **Awaiting QA** | marca o Breno para testar |
 | todos os filhos de um card terminam | o card pai vai para **Done** |
 
 Isso roda por automações a cada 10 minutos: pode levar um pouco para o card se mexer.
