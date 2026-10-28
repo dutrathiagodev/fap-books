@@ -4,7 +4,11 @@ import { decideRoute } from "./access-rules";
 describe("decideRoute", () => {
   it("manda quem não está logado para /login", () => {
     expect(decideRoute("/aluno", null)).toEqual({ action: "redirect", to: "/login" });
-    expect(decideRoute("/", null)).toEqual({ action: "redirect", to: "/login" });
+    expect(decideRoute("/livros", null)).toEqual({ action: "redirect", to: "/login" });
+  });
+
+  it("deixa quem não está logado abrir a landing page na raiz", () => {
+    expect(decideRoute("/", null)).toEqual({ action: "allow" });
   });
 
   it("deixa quem não está logado abrir o /login", () => {
