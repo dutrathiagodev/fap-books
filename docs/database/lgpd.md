@@ -46,7 +46,7 @@ Pontos positivos:
 
 ## 3. Dados pessoais em logs
 
-- O código não escreve logs hoje (nenhum `console.*` em `src/`) e `audit_logs` ainda não é gravada por ninguém.
+- O único log do código é o erro de gravação da auditoria (`audit.service.ts`), que escreve só a mensagem do banco, sem dado pessoal. `audit_logs` é gravada nas ações de livro (excluir e inativar).
 - A tela de login mostra só "E-mail ou senha incorretos", nunca o erro bruto do banco.
 - **Regra da auditoria:** `audit_logs` guarda quem (`actor_id`), qual ação e qual registro (`entity`, `entity_id`). **Não** guarda nome, e-mail, senha nem texto livre em `details`, e o banco recusa isso (migration `20261027180000_restrict_audit_logs`). Quando o card 0010 gravar a auditoria, é só usar as ações e entidades da lista da migration.
 - Os logs da Vercel e do Supabase (acesso e erro) também são logs: não imprimir dado pessoal em mensagem de erro.
@@ -67,7 +67,7 @@ Pontos positivos:
 | Acesso aos próprios dados | a pessoa vê o próprio perfil, empréstimos, multas e reservas |
 | Correção | só pela bibliotecária (ver ponto 2) |
 | Eliminação | o sistema **inativa** em vez de apagar (RF-09); o histórico impede apagar de vez. O caso de pedido de eliminação está na seção 6 |
-| Informação clara sobre o uso | **ainda não existe** aviso de privacidade no sistema nem na landing |
+| Informação clara sobre o uso | aviso em `/privacidade` (card 0222), ligado no login; falta o link no rodapé da landing, que ainda não existe no código |
 
 ## 6. Decisões adotadas no projeto
 
