@@ -148,6 +148,6 @@ Scripts em `scripts/` e workflows em `.github/workflows/`. Os testes de lógica 
 2. **Fotos de pessoas da landing:** registrar origem e autorização por escrito.
 3. **Textos legais:** revisão de `/termos` e `/acessibilidade` pela biblioteca ou pela FAP.
 4. **Código que vem do design:** busca (`0109` a `0112`), limite de 3 livros por pessoa (4 para formandos), prazo configurável da reserva pedagógica (`0218`) e as telas de usuários, empréstimo, multas, histórico e relatórios.
-5. **Banco:** tirar `TRUNCATE`, `REFERENCES` e `TRIGGER` de `anon` e `authenticated` (a API não usa); registrar no histórico do Supabase as migrations `block_book_delete_with_history` e `restrict_audit_logs`, que estão em vigor; trocar as senhas dos usuários de teste antes de uso real.
+5. **Banco:** registrar no histórico do Supabase as migrations `block_book_delete_with_history` e `restrict_audit_logs`, que estão em vigor; ligar a proteção contra senhas vazadas se o plano permitir; trocar as senhas dos usuários de teste antes de uso real. (`TRUNCATE`, `REFERENCES` e `TRIGGER` de `anon` e `authenticated` já foram retirados em 28/10, migration `20261028170852`.)
 6. **Decisões abertas:** como a funcionária cadastra um aluno (convite por e-mail foi a decisão de 26/10; falta implementar), avisos por WhatsApp (`0065`, adiado) e limite de envios da newsletter por IP.
 7. **Release:** a `main` está à frente da v0.4.0; a próxima release alinha o `package.json`.
