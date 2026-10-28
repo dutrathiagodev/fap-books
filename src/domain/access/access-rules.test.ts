@@ -26,6 +26,14 @@ describe("decideRoute", () => {
     expect(decideRoute("/privacidadex", null)).toEqual({ action: "redirect", to: "/login" });
   });
 
+  it("deixa qualquer pessoa abrir termos, acessibilidade e suporte", () => {
+    for (const path of ["/termos", "/acessibilidade", "/suporte"]) {
+      expect(decideRoute(path, null)).toEqual({ action: "allow" });
+      expect(decideRoute(path, "teacher")).toEqual({ action: "allow" });
+    }
+    expect(decideRoute("/termosx", null)).toEqual({ action: "redirect", to: "/login" });
+  });
+
   it("deixa cada perfil abrir a própria área, inclusive subpáginas", () => {
     expect(decideRoute("/aluno", "student")).toEqual({ action: "allow" });
     expect(decideRoute("/professor/reservas", "teacher")).toEqual({ action: "allow" });
