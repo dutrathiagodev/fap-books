@@ -6,7 +6,7 @@ function InfoCard({ icon: Icon, title, children }: { icon: LucideIcon; title: st
   return (
     <li className="flex flex-col rounded-2xl border border-line bg-surface p-[29px] lg:h-[354px]">
       <h3 className="flex items-center gap-[14px] font-heading text-[22px] font-semibold leading-[30px]">
-        <span aria-hidden className="flex size-11 items-center justify-center rounded-[10px] bg-selected text-brand">
+        <span aria-hidden className="flex size-11 items-center justify-center rounded-[10px] bg-selected text-brand dark:bg-navy-900">
           <Icon size={22} strokeWidth={1.5} />
         </span>
         {title}
@@ -28,7 +28,7 @@ export function LandingContact() {
     <section id="contato" aria-label="Horário e contato" className="bg-subtle">
       <div className={`${CONTAINER} py-14 lg:min-h-[652px] lg:py-[77px] lg:px-[72px]`}>
         <div>
-          <span className="text-[13px] font-semibold uppercase leading-[18px] text-navy-900">Horário e contato</span>
+          <span className="text-[13px] font-semibold uppercase leading-[18px] text-eyebrow">Horário e contato</span>
           <h2 className="mt-2.5 font-heading text-[28px] font-semibold leading-9">Venha nos visitar ou fale com a gente</h2>
           <p className="mt-2.5 text-base leading-6 text-ink-muted">
             Biblioteca Professor Renato Gross, no campus da FAP, subindo a escadaria.

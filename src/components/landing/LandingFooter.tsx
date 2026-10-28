@@ -18,7 +18,7 @@ const NAV = [
 // Termos, Acessibilidade, Suporte e as redes entram quando tiverem página e endereço.
 export function LandingFooter() {
   return (
-    <footer className="relative bg-soft">
+    <footer className="relative bg-foot">
       <span aria-hidden className="absolute left-1/2 top-0 hidden h-[95px] w-[190px] -translate-x-1/2 rounded-b-full bg-page lg:block" />
       <div className={`${CONTAINER} flex flex-col items-center gap-10 py-14 lg:min-h-[500px] lg:gap-0 lg:pt-[90px]`}>
         <div className="flex items-center gap-6">
@@ -51,7 +51,7 @@ export function LandingFooter() {
           Política de Privacidade
         </Link>
       </div>
-      <div className="border-t border-line">
+      <div className="border-t border-line bg-surface">
         <div className={`${CONTAINER} flex flex-col items-center justify-between gap-2 py-5 text-sm text-ink-muted sm:flex-row`}>
           <span>© FAP Books</span>
           <span>Faculdade Adventista do Paraná</span>

@@ -41,6 +41,14 @@
   --color-surface: var(--surface);
   --color-subtle: var(--subtle);
   --color-soft: var(--soft);
+  --color-accent: var(--accent);
+  --color-eyebrow: var(--eyebrow);
+  --color-band: var(--band);
+  --color-foot: var(--foot);
+  --color-feature: var(--feature);
+  --color-btn-soft: var(--btn-soft);
+  --color-btn-soft-hover: var(--btn-soft-hover);
+  --color-btn-feature: var(--btn-feature);
   --color-selected: var(--selected);
   --color-brand: var(--brand);
   --color-brand-hover: var(--brand-hover);
@@ -85,6 +93,15 @@
   --surface: #ffffff;
   --subtle: var(--color-navy-50);
   --soft: #f4f7fb;
+  /* Tokens só da landing (Figma, cards 0195 e 0198) */
+  --accent: var(--color-navy-700);
+  --eyebrow: var(--color-navy-900);
+  --band: var(--color-navy-50);
+  --foot: #f4f7fb;
+  --feature: var(--color-navy-925);
+  --btn-soft: var(--color-navy-100);
+  --btn-soft-hover: var(--color-navy-200);
+  --btn-feature: var(--color-navy-900);
   --selected: var(--color-navy-100);
   --brand: var(--color-navy-900);
   --brand-hover: var(--color-navy-700);
@@ -118,6 +135,33 @@
     --line: #1b3558;
     --line-strong: #5a78a6;
     --focus: var(--color-navy-300);
+  }
+}
+
+/* Landing no escuro (Figma, card 0198): fundo neutro #0a0a0a com faixas azuis, diferente do navy das telas internas */
+@media (prefers-color-scheme: dark) {
+  .landing {
+    --page: #0a0a0a;
+    --surface: #171717;
+    --subtle: #0a0a0a;
+    --soft: #032b5e;
+    --selected: #0d3b6e;
+    --brand: var(--color-navy-500);
+    --brand-hover: var(--color-navy-400);
+    --on-brand: #ffffff;
+    --ink: #ededed;
+    --ink-muted: #a3a3a3;
+    --link: var(--color-navy-400);
+    --line: #0d3b6e;
+    --focus: var(--color-navy-300);
+    --accent: var(--color-navy-300);
+    --eyebrow: var(--color-navy-300);
+    --band: #031730;
+    --foot: #07101d;
+    --feature: #032b5e;
+    --btn-soft: var(--color-navy-700);
+    --btn-soft-hover: var(--color-navy-600);
+    --btn-feature: var(--color-navy-600);
   }
 }
 

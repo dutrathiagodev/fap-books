@@ -1,11 +1,11 @@
 import Image from "next/image";
 import { NEWS } from "@/content/landing";
-import { CONTAINER } from "./styles";
+import { BUTTON_PRIMARY, CONTAINER } from "./styles";
 
 // Seção de novidades (Figma, card 0195: 740 px, título Lora Bold 46, cartões de 378 px com imagem de 240 px).
-// Os cartões são fixos por enquanto; o botão "Ver todas" não tem para onde levar até existir uma página de novidades.
-// As imagens são capas do acervo de exemplo (public/capas), na mesma ordem de NEWS.
-const NEWS_COVERS = ["T-010", "T-016", "T-019"];
+// Os cartões são fixos por enquanto; "Ver todas as novidades" leva ao contato da biblioteca até existir uma página de novidades.
+// As imagens são capas do Figma (public/capas), na mesma ordem de NEWS.
+const NEWS_COVERS = ["dom-casmurro", "pequeno-principe", "memorias-postumas"];
 
 export function LandingNews() {
   return (
@@ -23,6 +23,11 @@ export function LandingNews() {
             </li>
           ))}
         </ul>
+        <div className="mt-12 flex justify-center">
+          <a href="#contato" className={`${BUTTON_PRIMARY} px-[22px]`}>
+            Ver todas as novidades
+          </a>
+        </div>
       </div>
     </section>
   );

@@ -25,8 +25,8 @@ export function LandingHero() {
       <div className={`${CONTAINER} relative`}>
         <div className="flex flex-col pb-16 pt-12 lg:min-h-[660px] lg:pb-[82px] lg:pt-[90px]">
           <h1 className="max-w-[540px] font-heading text-[40px] font-bold leading-[48px] md:text-[60px] md:leading-[68px]">
-            <span className="block text-navy-700">Biblioteca da FAP</span>
-            <span className="block text-navy-700">para alunos,</span>
+            <span className="block text-accent">Biblioteca da FAP</span>
+            <span className="block text-accent">para alunos,</span>
             <span className="block">professores e</span>
             <span className="block">bibliotecários!</span>
           </h1>
@@ -42,6 +42,13 @@ export function LandingHero() {
               Quero acesso
             </a>
           </div>
+          <Image
+            src="/fotos/landing-hero-palestrante.webp"
+            alt=""
+            width={440}
+            height={660}
+            className="mx-auto mt-8 h-auto w-[240px] lg:hidden"
+          />
         </div>
 
         <div aria-hidden className="absolute inset-y-0 left-8 right-0 hidden lg:block">
