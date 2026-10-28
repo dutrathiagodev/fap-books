@@ -4,11 +4,20 @@ import { decideRoute } from "./access-rules";
 describe("decideRoute", () => {
   it("manda quem não está logado para /login", () => {
     expect(decideRoute("/aluno", null)).toEqual({ action: "redirect", to: "/login" });
-    expect(decideRoute("/", null)).toEqual({ action: "redirect", to: "/login" });
+    expect(decideRoute("/livros", null)).toEqual({ action: "redirect", to: "/login" });
+  });
+
+  it("deixa quem não está logado abrir a landing page na raiz", () => {
+    expect(decideRoute("/", null)).toEqual({ action: "allow" });
   });
 
   it("deixa quem não está logado abrir o /login", () => {
     expect(decideRoute("/login", null)).toEqual({ action: "allow" });
+  });
+
+  it("deixa quem não está logado abrir as boas-vindas do celular", () => {
+    expect(decideRoute("/boas-vindas", null)).toEqual({ action: "allow" });
+    expect(decideRoute("/boas-vindas", "student")).toEqual({ action: "redirect", to: "/aluno" });
   });
 
   it("deixa qualquer pessoa abrir o aviso de privacidade", () => {
