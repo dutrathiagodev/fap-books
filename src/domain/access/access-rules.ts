@@ -9,6 +9,12 @@ export const ROLE_HOME: Record<UserRole, string> = {
 
 export const LOGIN_PATH = "/login";
 
+// Boas-vindas do celular (Figma, card 0221): qualquer pessoa abre; no computador a própria tela leva ao login.
+export const WELCOME_PATH = "/boas-vindas";
+
+// Landing page (Figma, cards 0195 e 0198): a raiz é pública para quem não está logado.
+export const LANDING_PATH = "/";
+
 // Aviso de privacidade (LGPD): qualquer pessoa lê, logada ou não.
 export const PRIVACY_PATH = "/privacidade";
 
@@ -25,7 +31,7 @@ export function decideRoute(pathname: string, role: UserRole | null): RouteDecis
   if (isInside(pathname, PRIVACY_PATH)) return { action: "allow" };
 
   if (role === null) {
-    return pathname === LOGIN_PATH
+    return pathname === LOGIN_PATH || pathname === LANDING_PATH || pathname === WELCOME_PATH
       ? { action: "allow" }
       : { action: "redirect", to: LOGIN_PATH };
   }

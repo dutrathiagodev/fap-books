@@ -100,6 +100,19 @@ O FAP Books é um trabalho acadêmico. Por isso adotamos regras **genéricas e p
 
 > **Como usamos seus dados.** O FAP Books guarda seu nome, e-mail e o histórico dos seus empréstimos, reservas e multas, só para a biblioteca controlar o acervo e atender você. Só você e a equipe da biblioteca veem esses dados. Guardamos por até 5 anos depois da sua última movimentação e depois os tornamos anônimos. Para ver, corrigir ou pedir a eliminação dos seus dados, escreva para thiago_dutra@educadventista.org. Encarregado pelo tratamento dos dados: Thiago. Respondemos em até 15 dias. Se você tem menos de 18 anos, seu pai, mãe ou responsável também pode fazer esse pedido por você.
 
+## Newsletter da landing page
+
+| Ponto | Como está |
+|---|---|
+| **Dado coletado** | Só nome e e-mail, na tabela `newsletter_subscribers`. Nada de dado de empréstimo. |
+| **Base legal** | **Consentimento** da própria pessoa (caixa marcada, não pré-marcada). Guardamos a data (`consented_at`) e a **versão do texto** que ela viu (`consent_text_version`, hoje `newsletter-v1`). Ao mudar o texto da tela, troque a versão em `src/domain/newsletter/newsletter-rules.ts`. |
+| **Finalidade** | Enviar novidades e avisos da biblioteca. Nenhum outro uso. |
+| **Quem acessa** | O visitante só consegue **se inscrever** (RLS de insert; sem leitura, sem escolher a data). Só a bibliotecária vê, atualiza e apaga inscritos. |
+| **Repetido** | O mesmo e-mail não entra duas vezes e a tela mostra o mesmo sucesso, para não revelar quem já está inscrito. |
+| **Sair da lista** | Por e-mail ao encarregado (o do aviso de privacidade); a bibliotecária marca `unsubscribed_at` ou apaga a linha. Um link de descadastro no e-mail entra quando houver o envio automático. |
+| **Guarda** | Enquanto a pessoa não pedir para sair. Quem sai é apagado em até 15 dias. |
+| **Antispam** | Campo-isca invisível e validação no servidor. Limite de tentativas por IP **ainda não existe** (risco registrado). |
+
 ## 7. O que o card 0011 pede e como está
 
 | Critério do card | Situação |
