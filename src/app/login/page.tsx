@@ -1,4 +1,6 @@
+import Link from "next/link";
 import { Info, ShieldCheck } from "lucide-react";
+import { PRIVACY_PATH } from "@/domain/access/access-rules";
 import { LoginForm, Logo } from "@/components";
 
 // Tela de login conforme o Figma (card 0105): painel navy com as boas-vindas e o formulário só com e-mail e senha.
@@ -45,7 +47,12 @@ export default function LoginPage() {
           </p>
           <p className="flex items-start gap-2 text-xs text-ink-muted">
             <ShieldCheck size={16} strokeWidth={1.5} aria-hidden className="shrink-0 text-link" />
-            Seus dados são usados só pela biblioteca e guardados por até 5 anos.
+            <span>
+              Seus dados são usados só pela biblioteca e guardados por até 5 anos.{" "}
+              <Link href={PRIVACY_PATH} className="font-medium text-link underline">
+                Ler o aviso de privacidade
+              </Link>
+            </span>
           </p>
         </div>
       </section>

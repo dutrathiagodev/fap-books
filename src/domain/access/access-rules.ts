@@ -9,6 +9,9 @@ export const ROLE_HOME: Record<UserRole, string> = {
 
 export const LOGIN_PATH = "/login";
 
+// Aviso de privacidade (LGPD): qualquer pessoa lê, logada ou não.
+export const PRIVACY_PATH = "/privacidade";
+
 export type RouteDecision =
   | { action: "allow" }
   | { action: "redirect"; to: string };
@@ -19,6 +22,8 @@ function isInside(pathname: string, area: string) {
 
 // Decide o que fazer com o endereço pedido. role é null quando a pessoa não está logada.
 export function decideRoute(pathname: string, role: UserRole | null): RouteDecision {
+  if (isInside(pathname, PRIVACY_PATH)) return { action: "allow" };
+
   if (role === null) {
     return pathname === LOGIN_PATH
       ? { action: "allow" }
