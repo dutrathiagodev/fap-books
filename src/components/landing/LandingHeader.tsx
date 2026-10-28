@@ -1,51 +1,51 @@
 import Link from "next/link";
-import { LogIn } from "lucide-react";
+import { ChevronDown, LogIn } from "lucide-react";
 import { LOGIN_PATH } from "@/domain/access/access-rules";
 import { Logo } from "../Logo";
+import { BUTTON_PRIMARY, BUTTON_SOFT, CONTAINER } from "./styles";
 
 // Links da página, na ordem do Figma. Cada um aponta para o id de uma seção da landing.
 const NAV_LINKS = [
-  { label: "Início", href: "#inicio" },
+  { label: "Início", href: "#inicio", active: true },
   { label: "Quem somos", href: "#quem-somos" },
-  { label: "Perfis", href: "#perfis" },
+  { label: "Perfis", href: "#perfis", dropdown: true },
   { label: "Recursos", href: "#recursos" },
   { label: "Acervo", href: "#acervo" },
   { label: "Novidades", href: "#novidades" },
   { label: "Contato", href: "#contato" },
 ];
-// Cabeçalho da landing: logo, links da página e os botões de acesso.
+
+// Cabeçalho da landing (Figma: 80 px, logo de 78×54, links em Inter Bold 15 e dois botões de 48 px).
 export function LandingHeader() {
   return (
-    <header className="sticky top-0 z-20 border-b border-line bg-surface/95 backdrop-blur">
-      <div className="mx-auto flex h-[72px] w-full max-w-[1200px] items-center justify-between gap-6 px-4 md:px-8">
+    <header className="sticky top-0 z-20 border-b border-line bg-surface">
+      <div className={`${CONTAINER} flex h-20 items-center`}>
         <Link href="/" aria-label="FAP Books, página inicial">
-          <Logo width={84} />
+          <Logo width={78} />
         </Link>
 
-        <nav aria-label="Páginas da landing" className="hidden items-center gap-5 lg:flex">
-          {NAV_LINKS.map((link) => (
+        <nav aria-label="Páginas da landing" className="ml-[102px] hidden items-center gap-[42px] xl:flex">
+          {NAV_LINKS.map(({ label, href, active, dropdown }) => (
             <a
-              key={link.href}
-              href={link.href}
-              className="text-sm font-medium hover:text-link focus-visible:outline-2 focus-visible:outline-focus"
+              key={href}
+              href={href}
+              aria-current={active ? "location" : undefined}
+              className={`relative inline-flex items-center gap-2 text-[15px] font-bold leading-[18px] hover:text-link focus-visible:outline-2 focus-visible:outline-focus ${
+                active ? "after:absolute after:left-0 after:top-[25px] after:h-[3px] after:w-full after:bg-brand" : ""
+              }`}
             >
-              {link.label}
+              {label}
+              {dropdown && <ChevronDown size={8} strokeWidth={2} aria-hidden />}
             </a>
           ))}
         </nav>
 
-        <div className="flex items-center gap-3">
-          <a
-            href="#acesso"
-            className="hidden rounded-md bg-selected px-4 py-2.5 text-sm font-medium text-brand hover:bg-navy-100 focus-visible:outline-2 focus-visible:outline-focus sm:inline-flex"
-          >
+        <div className="ml-auto flex items-center gap-4">
+          <a href="#acesso" className={`${BUTTON_SOFT} hidden sm:inline-flex`}>
             Quero acesso
           </a>
-          <Link
-            href={LOGIN_PATH}
-            className="inline-flex items-center gap-2 rounded-md bg-brand px-4 py-2.5 text-sm font-medium text-on-brand hover:bg-brand-hover focus-visible:outline-2 focus-visible:outline-focus"
-          >
-            <LogIn size={16} strokeWidth={1.5} aria-hidden />
+          <Link href={LOGIN_PATH} className={`${BUTTON_PRIMARY} px-8`}>
+            <LogIn size={14} strokeWidth={2} aria-hidden />
             Entrar
           </Link>
         </div>

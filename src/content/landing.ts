@@ -68,7 +68,7 @@ export const RESOURCE_TABS: ResourceTab[] = [
 // Regras do Regulamento 2025 (alunos do ensino superior).
 export const NUMBERS = [
   { value: "7 dias", label: "de prazo de empréstimo" },
-  { value: "3 livros", label: "por pessoa, ao mesmo tempo" },
+  { value: "3 livros", label: "por pessoa ao mesmo tempo" },
   { value: "30 dias", label: "na reserva pedagógica" },
   { value: "R$ 1,00", label: "de multa por dia de atraso" },
 ];
