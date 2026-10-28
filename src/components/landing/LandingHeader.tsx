@@ -41,7 +41,7 @@ export function LandingHeader() {
         </nav>
 
         <div className="ml-auto flex items-center gap-4">
-          <a href="#acesso" className={`${BUTTON_SOFT} hidden sm:inline-flex`}>
+          <a href="#acesso" className={`${BUTTON_SOFT} max-sm:hidden`}>
             Quero acesso
           </a>
           <Link href={LOGIN_PATH} className={`${BUTTON_PRIMARY} px-8`}>

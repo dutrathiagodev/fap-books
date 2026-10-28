@@ -10,7 +10,7 @@ export function LandingNumbers() {
   return (
     <section aria-label="Regras do empréstimo" className="bg-page">
       <div className={`${CONTAINER} py-10`}>
-        <ul className="grid gap-8 rounded-xl bg-navy-925 px-8 py-8 text-white sm:grid-cols-2 lg:h-[200px] lg:grid-cols-[repeat(4,290px)] lg:items-center lg:gap-0 lg:py-0 lg:pl-[68px]">
+        <ul className="grid gap-8 rounded-xl bg-feature dark:border dark:border-navy-300 px-8 py-8 text-white sm:grid-cols-2 lg:h-[200px] lg:grid-cols-[repeat(4,290px)] lg:items-center lg:gap-0 lg:py-0 lg:pl-[68px]">
           {NUMBERS.map(({ value, label }, index) => {
             const Icon = ICONS[index];
             return (
