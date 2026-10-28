@@ -1,22 +1,23 @@
 import { BookOpen } from "lucide-react";
 import { NEWS } from "@/content/landing";
-import { SectionIntro } from "./SectionIntro";
+import { CONTAINER } from "./styles";
 
-// Seção de novidades (Figma, card 0195). Os cartões são fixos por enquanto; o botão "Ver todas" entra
-// quando existir uma página de novidades. A imagem é ilustrativa (ainda não há capas autorizadas, card 0223).
+// Seção de novidades (Figma, card 0195: 740 px, título Lora Bold 46, cartões de 378 px com imagem de 240 px).
+// Os cartões são fixos por enquanto; o botão "Ver todas" não tem para onde levar até existir uma página de novidades.
+// A imagem é ilustrativa (ainda não há capas autorizadas, card 0223).
 export function LandingNews() {
   return (
-    <section id="novidades" className="bg-page">
-      <div className="mx-auto flex w-full max-w-[1200px] flex-col gap-10 px-4 py-14 md:px-8 md:py-20">
-        <SectionIntro title="Novidades da biblioteca" />
-        <ul className="grid gap-6 md:grid-cols-3">
+    <section id="novidades" className="bg-page lg:min-h-[740px]">
+      <div className={`${CONTAINER} pb-12 pt-[50px]`}>
+        <h2 className="text-center font-heading text-[32px] font-bold leading-[55px] md:text-[46px]">Novidades da biblioteca</h2>
+        <ul className="mt-[43px] grid gap-8 md:grid-cols-3 md:gap-[33px]">
           {NEWS.map(({ title, text }) => (
-            <li key={title} className="flex flex-col gap-3">
-              <span aria-hidden className="flex h-44 items-center justify-center rounded-lg bg-selected text-brand">
+            <li key={title}>
+              <span aria-hidden className="flex h-[222px] items-center justify-center rounded-lg bg-selected text-brand">
                 <BookOpen size={40} strokeWidth={1.5} />
               </span>
-              <h3 className="text-base font-semibold">{title}</h3>
-              <p className="text-sm text-ink-muted">{text}</p>
+              <h3 className="mt-[19px] min-h-[46px] text-xl font-bold leading-[22px]">{title}</h3>
+              <p className="mt-8 text-[15px] leading-[21px] text-ink-muted">{text}</p>
             </li>
           ))}
         </ul>
