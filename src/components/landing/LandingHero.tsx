@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { BookOpen, Bookmark, Library, type LucideIcon } from "lucide-react";
 import { BUTTON_PRIMARY, BUTTON_SOFT, CONTAINER } from "./styles";
 
@@ -17,7 +18,7 @@ const DIAMONDS: Diamond[] = [
 ];
 
 // Apresentação (Figma, card 0195: 660 px de altura, título Lora Bold 60/68 em duas cores).
-// A foto da pessoa do Figma não entra: não há imagem autorizada no projeto.
+// Foto do palestrante: recorte do Figma (440×660, fundo transparente); origem e autorização em material-de-apoio/fotos-unsplash/CREDITOS.md.
 export function LandingHero() {
   return (
     <section id="inicio" className="relative overflow-hidden bg-soft">
@@ -43,9 +44,17 @@ export function LandingHero() {
           </div>
         </div>
 
-        <div aria-hidden className="absolute inset-0 hidden lg:block">
+        <div aria-hidden className="absolute inset-y-0 left-8 right-0 hidden lg:block">
           <span className="absolute left-[989px] top-[299px] size-[622px] rounded-full bg-navy-700" />
           <span className="absolute left-[942px] top-[506px] h-px w-[385px] origin-left -rotate-[44deg] bg-link/70" />
+          <Image
+            src="/fotos/landing-hero-palestrante.webp"
+            alt=""
+            width={440}
+            height={660}
+            priority
+            className="absolute left-[540px] top-0 h-[660px] w-[440px]"
+          />
           {DIAMONDS.map(({ icon: Icon, left, top, color }) => (
             <span
               key={top + left}
