@@ -1,14 +1,26 @@
+import Image from "next/image";
 import Link from "next/link";
 import { LOGIN_PATH } from "@/domain/access/access-rules";
 import { BUTTON_PRIMARY, BUTTON_SOFT, CONTAINER } from "./styles";
 
 // Seção "Peça o seu acesso" (Figma, card 0195: 600 px, título Lora Bold 54/66, círculo azul à esquerda).
-// A foto da pessoa do Figma não entra: não há imagem autorizada no projeto.
+// Foto do aluno: recorte do Figma (fundo transparente); origem e autorização em material-de-apoio/fotos-unsplash/CREDITOS.md.
 // "Quero acesso" leva ao contato da biblioteca até existir a tela de pedido de acesso (card 0204).
 export function LandingAccess() {
   return (
     <section id="acesso" className="relative overflow-hidden bg-page">
-      <span aria-hidden className="absolute -top-1 left-[26px] hidden size-[608px] rounded-full bg-link lg:block" />
+      {/* Losango azul (quadrado de 440 px girado 45°, cantos de 90 px) e foto do aluno cortada por ele (Figma: centro em x=330, y=300). */}
+      <div aria-hidden className="absolute left-[110px] top-[80px] hidden size-[440px] rotate-45 overflow-hidden rounded-[90px] bg-link lg:block">
+        <div className="absolute inset-0 -rotate-45">
+          <Image
+            src="/fotos/landing-acesso-aluno.webp"
+            alt=""
+            width={633}
+            height={488}
+            className="absolute -left-[55px] top-[8px] h-[488px] w-[633px] max-w-none"
+          />
+        </div>
+      </div>
       <div className={`${CONTAINER} relative`}>
         <div className="py-16 lg:min-h-[600px] lg:pl-[520px] lg:pt-[186px] lg:pb-0">
           <h2 className="font-heading text-[32px] font-bold leading-10 md:text-[54px] md:leading-[66px]">

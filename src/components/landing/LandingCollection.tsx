@@ -1,21 +1,22 @@
-import { BookOpen } from "lucide-react";
+import Image from "next/image";
 import { COURSES } from "@/content/landing";
 import { CONTAINER } from "./styles";
 
-// Capas ilustrativas: ainda não há capas reais autorizadas no projeto (card 0223), então usamos cores da marca.
+// Capas do acervo (arquivos em public/capas, vindos de material-de-apoio/capas-para-upload; ver CREDITOS.md).
+// O Figma mostra 12 capas e o acervo de exemplo tem 8, então as últimas quatro repetem as primeiras.
 const COVERS = [
-  "bg-amber-300",
-  "bg-pink-300",
-  "bg-stone-300",
-  "bg-white",
-  "bg-stone-200",
-  "bg-pink-200",
-  "bg-amber-200",
-  "bg-stone-400",
-  "bg-sky-200",
-  "bg-pink-300",
-  "bg-stone-300",
-  "bg-amber-300",
+  { file: "T-001", title: "Dom Casmurro" },
+  { file: "T-002", title: "Memórias Póstumas de Brás Cubas" },
+  { file: "T-010", title: "Algoritmos" },
+  { file: "T-014", title: "Gray's Anatomy" },
+  { file: "T-016", title: "Teologia Sistemática" },
+  { file: "T-019", title: "Curso de Direito Constitucional" },
+  { file: "T-018", title: "Fundamentos de Metodologia Científica" },
+  { file: "T-017", title: "O Conflito dos Séculos" },
+  { file: "T-014", title: "Gray's Anatomy" },
+  { file: "T-010", title: "Algoritmos" },
+  { file: "T-002", title: "Memórias Póstumas de Brás Cubas" },
+  { file: "T-001", title: "Dom Casmurro" },
 ];
 
 // Seção do acervo (Figma, card 0195: 760 px, fundo #031f45, capas de 130×185 e losango "3 livros") e a faixa dos cursos.
@@ -28,13 +29,15 @@ export function LandingCollection() {
 
         <div className={`${CONTAINER} grid items-center gap-12 py-16 lg:min-h-[760px] lg:grid-cols-[586px_1fr] lg:gap-[34px] lg:py-0`}>
           <div aria-hidden className="relative mx-auto grid w-full max-w-[586px] grid-cols-4 gap-x-[22px] gap-y-[15px] lg:mx-0 lg:ml-5">
-            {COVERS.map((color, index) => (
-              <span
+            {COVERS.map(({ file }, index) => (
+              <Image
                 key={index}
-                className={`flex aspect-[130/185] items-center justify-center rounded-lg text-navy-950 shadow-md ${color}`}
-              >
-                <BookOpen size={20} strokeWidth={1.5} />
-              </span>
+                src={`/capas/landing-${file}.webp`}
+                alt=""
+                width={260}
+                height={370}
+                className="aspect-[130/185] w-full rounded-lg object-cover shadow-md"
+              />
             ))}
             <span className="absolute left-1/2 top-1/2 flex size-[300px] -translate-x-1/2 -translate-y-1/2 rotate-45 items-center justify-center rounded-[36px] bg-navy-400 shadow-lg">
               <span className="-rotate-45 text-center text-navy-950">
