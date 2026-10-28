@@ -20,10 +20,10 @@ describe("navItemsFor", () => {
     expect(labels).not.toContain("Início");
   });
 
-  it("só o primeiro item de cada perfil tem endereço por enquanto", () => {
+  it("só o início tem endereço no aluno e no professor; a funcionária também tem o acervo", () => {
     expect(navItemsFor("student").filter((i) => i.href).map((i) => i.href)).toEqual(["/aluno"]);
     expect(navItemsFor("teacher").filter((i) => i.href).map((i) => i.href)).toEqual(["/professor"]);
-    expect(navItemsFor("librarian").filter((i) => i.href).map((i) => i.href)).toEqual(["/funcionario"]);
+    expect(navItemsFor("librarian").filter((i) => i.href).map((i) => i.href)).toEqual(["/funcionario", "/funcionario/acervo"]);
   });
 
   it("nenhum perfil repete item", () => {
@@ -37,9 +37,16 @@ describe("navItemsFor", () => {
 describe("isActive", () => {
   const home = { key: "home" as const, label: "Início", href: "/aluno" };
 
-  it("fica ativo na própria página e nas subpáginas", () => {
+  it("o início só fica ativo nele mesmo, não nas telas dentro da área", () => {
     expect(isActive(home, "/aluno")).toBe(true);
-    expect(isActive(home, "/aluno/livros")).toBe(true);
+    expect(isActive(home, "/aluno/livros")).toBe(false);
+  });
+
+  it("outros itens ficam ativos na própria página e nas subpáginas", () => {
+    const books = { key: "books" as const, label: "Acervo", href: "/funcionario/acervo" };
+    expect(isActive(books, "/funcionario/acervo")).toBe(true);
+    expect(isActive(books, "/funcionario/acervo/novo")).toBe(true);
+    expect(isActive(books, "/funcionario")).toBe(false);
   });
 
   it("não fica ativo em outra área nem com nome parecido", () => {
