@@ -5,8 +5,8 @@ import { LOGIN_PATH } from "@/domain/access/access-rules";
 
 export const metadata: Metadata = { title: "Aviso de privacidade | FAP Books" };
 
-// E-mail genérico até a FAP indicar o contato oficial e o encarregado (docs/database/lgpd.md).
-const PRIVACY_EMAIL = "privacidade@fapbooks.example";
+// Contato do encarregado pelo tratamento dos dados (docs/database/lgpd.md).
+const PRIVACY_EMAIL = "thiago_dutra@educadventista.org";
 
 // Aviso de privacidade (Figma, card 0219): texto curto e claro, público. O detalhe técnico fica em docs/database/lgpd.md.
 export default function PrivacidadePage() {
@@ -31,7 +31,12 @@ export default function PrivacidadePage() {
           <a href={`mailto:${PRIVACY_EMAIL}`} className="font-medium text-link underline">
             {PRIVACY_EMAIL}
           </a>
-          . Respondemos em até 15 dias.
+          .
+        </p>
+        <p className="text-sm text-ink-muted">
+          Encarregado pelo tratamento dos dados: Thiago.
+          <br />
+          Respondemos em até 15 dias.
         </p>
         <Link href={LOGIN_PATH} className="mt-2 text-sm font-medium text-link underline">
           Voltar ao login
