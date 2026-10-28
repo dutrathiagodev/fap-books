@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { FirstVisitRedirect } from "@/components/WelcomeStorage";
 import { LandingAccess } from "@/components/landing/LandingAccess";
 import { LandingCollection } from "@/components/landing/LandingCollection";
 import { LandingContact } from "@/components/landing/LandingContact";
@@ -21,9 +22,11 @@ export const metadata: Metadata = {
 // Landing page (Figma, cards 0195 e 0198): página pública. O único formulário é o da newsletter,
 // que valida no servidor e só grava nome e e-mail com consentimento (tabela newsletter_subscribers).
 // Quem está logado nem chega aqui: o proxy.ts leva cada pessoa para a área dela.
+// No celular, no primeiro acesso, a pessoa é levada às boas-vindas (FirstVisitRedirect).
 export default function Home() {
   return (
     <>
+      <FirstVisitRedirect />
       <LandingHeader />
       <main className="flex-1">
         <LandingHero />
