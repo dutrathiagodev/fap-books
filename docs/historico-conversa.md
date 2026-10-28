@@ -123,6 +123,12 @@ Scripts em `scripts/` e workflows em `.github/workflows/`. Os testes de lógica 
 
 - **Decisões do dono (26/10):** cadastro de aluno e demais perfis por **convite por e-mail**; livro **só é excluído sem histórico** e os demais são **inativados**, com segunda confirmação digitando o nome do livro; capa do livro vira requisito **opcional** no RF-01. Banco: migration `block_book_delete_with_history` (reserva comum também bloqueia a exclusão) e 5 testes novos (41 `PASS`).
 
+## 10f. Código do layout base, login, acervo, landing e rodapé (27 e 28/10/2026)
+
+- **27/10:** layout base no código (cards `0102` a `0104`), LGPD documentada (`0011`) e auditoria restrita a ações e ids conhecidos, modo escuro em navy, login igual ao Figma (`0083`), favicon, acervo da bibliotecária com exclusão e inativação de livro (`0020`) e aviso de privacidade (`0222`). Versões **0.3.0** e **0.4.0** publicadas.
+- **28/10:** foto no login, menu lateral novo, e-mail e encarregado oficiais no aviso (`0220`, `0222`); regra de qualidade de software ([qualidade-de-software.md](qualidade-de-software.md)) e checklist no modelo de PR; **landing page** na raiz do site (`0210`) com newsletter (tabela `newsletter_subscribers`, só nome e e-mail com consentimento), tela de boas-vindas do celular (`0221`), modo claro e escuro conforme os cards `0195` e `0198`, fotos e capas do Figma, páginas `/termos`, `/acessibilidade` e `/suporte` e redes da Faculdade Adventista do Paraná no rodapé. Tudo na `main` e no ar (PRs `#99`, `#101`, `#103` e `#105`).
+- **Em aberto:** a origem e a autorização por escrito das fotos de pessoas da landing; a revisão dos textos de termos e de acessibilidade pela biblioteca ou pela FAP; a aprovação do design do `0210`, que depende da revisão final do Figma (`0209`).
+
 ## 11. Entregas
 
 - PRs de `#3` a `#23`, todos mergeados (o `#23` levou a logo, o seed e o login para a `main`). O fluxo é: card, branch `FAP/<número>`, PR para a `develop` e entrega na `main` por PR com bypass do dono.
@@ -136,16 +142,12 @@ Scripts em `scripts/` e workflows em `.github/workflows/`. Os testes de lógica 
 
 - **Ao mergear o PR `develop` → `main`, não apague a `develop`.** Ela é permanente. Nos PRs `FAP/<n>` pode apagar a branch.
 
-## 13. Pendências
+## 13. Pendências (atualizado em 28/10/2026)
 
-1. **Reunião:** marcar a apresentação do projeto (`0181`) e a aula de Git e PR (`0179`); os cards estão com prazo em 09/10 e só o dono marcado.
-2. **Julia aceitar o convite** do repositório. (O acesso ao Figma já foi dado ao time.)
-3. **Todos fazerem o card `0180`** (configuração de ambiente).
-4. **Revogar as credenciais** que apareceram em conversas (token e segredo do Trello e token do Figma).
-5. `0188` (deploy), só com autorização do responsável. Os cards `0185`, `0186`, `0187`, `0007`, `0008` e `0194` já estão em Done.
-6. Cards de design em To Do, começando por `0101`. O `0098` (base visual) foi fechado.
-7. `0167`: testar o bloqueio da `main` com um colaborador.
-8. ~~Decidir sobre o Vitest e sobre o cadastro de usuários pela funcionária~~ Decidido: o Vitest está em uso e o cadastro será por convite por e-mail (26/10).
-9. Definir a API de **WhatsApp** (`0065`). (A regra de exclusão de livro foi decidida em 26/10: ver a seção 10e.)
-10. Enviar as 8 capas de teste ao Storage (`book-covers`) e preencher `cover_url`; trocar os recortes por capas oficiais antes de apresentar.
-11. Incluir a automação por evento (PR #15) na `main` na próxima entrega, e instalar a skill do mentor, se o time quiser usá-la.
+1. **Telas do Igor** (`0126`, `0135`, `0138`, `0140`) e **da Julia** (`0157`, `0147`); depois delas, a revisão final do Figma (`0209`, bloqueada) e o fechamento do `0210`.
+2. **Fotos de pessoas da landing:** registrar origem e autorização por escrito.
+3. **Textos legais:** revisão de `/termos` e `/acessibilidade` pela biblioteca ou pela FAP.
+4. **Código que vem do design:** busca (`0109` a `0112`), limite de 3 livros por pessoa (4 para formandos), prazo configurável da reserva pedagógica (`0218`) e as telas de usuários, empréstimo, multas, histórico e relatórios.
+5. **Banco:** registrar no histórico do Supabase as migrations `block_book_delete_with_history` e `restrict_audit_logs`, que estão em vigor; ligar a proteção contra senhas vazadas se o plano permitir; trocar as senhas dos usuários de teste antes de uso real. (`TRUNCATE`, `REFERENCES` e `TRIGGER` de `anon` e `authenticated` já foram retirados em 28/10, migration `20261028170852`.)
+6. **Decisões abertas:** como a funcionária cadastra um aluno (convite por e-mail foi a decisão de 26/10; falta implementar), avisos por WhatsApp (`0065`, adiado) e limite de envios da newsletter por IP.
+7. **Release:** a `main` está à frente da v0.4.0; a próxima release alinha o `package.json`.
