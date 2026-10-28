@@ -39,14 +39,14 @@ Pontos positivos:
 
 ### Pontos a corrigir ou decidir
 
-1. **Auditoria restrita (corrigido na migration `20261027180000_restrict_audit_logs`).** A política antiga deixava qualquer pessoa logada gravar a ação e os detalhes que quisesse. Agora só entram ações e entidades conhecidas, `details` só aceita ids (chaves terminadas em `_id` com uuid ou número) e quem não é bibliotecária só grava as ações que a própria pessoa faz (reservas). Testado em `supabase/tests/01-regras-de-acesso.sql`. **Falta aplicar essa migration no banco real** (SQL Editor do Supabase).
+1. **Auditoria restrita (corrigido na migration `20261027180000_restrict_audit_logs`).** A política antiga deixava qualquer pessoa logada gravar a ação e os detalhes que quisesse. Agora só entram ações e entidades conhecidas, `details` só aceita ids (chaves terminadas em `_id` com uuid ou número) e quem não é bibliotecária só grava as ações que a própria pessoa faz (reservas). Testado em `supabase/tests/01-regras-de-acesso.sql`. Aplicada no banco real em 27/10 (SQL Editor do Supabase) e conferida.
 2. **A pessoa não corrige os próprios dados.** Hoje só a bibliotecária edita `profiles`. Para atender o direito de correção, o pedido vai pela bibliotecária (ou se cria uma edição restrita ao próprio nome, no futuro).
 3. **Todo funcionário vê todos os perfis, empréstimos e multas.** Para uma biblioteca pequena é aceitável (é a função dele), mas vale restringir o perfil de funcionário a quem precisa e manter `active = false` para quem sair.
 4. **Backup guarda tudo, inclusive `auth.users`.** Ele sai **criptografado** (AES-256) e fica 30 dias como artefato do GitHub, que provavelmente armazena fora do Brasil (a confirmar). Seria uma transferência internacional de dado criptografado; a senha (`BACKUP_PASSPHRASE`) nunca fica no repositório. O projeto acadêmico aceita esse risco (seção 6); em uso real, a FAP decide se aceita ou muda o destino do backup.
 
 ## 3. Dados pessoais em logs
 
-- O código não escreve logs hoje (nenhum `console.*` em `src/`) e `audit_logs` ainda não é gravada por ninguém.
+- O único log do código é o erro de gravação da auditoria (`audit.service.ts`), que escreve só a mensagem do banco, sem dado pessoal. `audit_logs` é gravada nas ações de livro (excluir e inativar).
 - A tela de login mostra só "E-mail ou senha incorretos", nunca o erro bruto do banco.
 - **Regra da auditoria:** `audit_logs` guarda quem (`actor_id`), qual ação e qual registro (`entity`, `entity_id`). **Não** guarda nome, e-mail, senha nem texto livre em `details`, e o banco recusa isso (migration `20261027180000_restrict_audit_logs`). Quando o card 0010 gravar a auditoria, é só usar as ações e entidades da lista da migration.
 - Os logs da Vercel e do Supabase (acesso e erro) também são logs: não imprimir dado pessoal em mensagem de erro.
@@ -67,7 +67,7 @@ Pontos positivos:
 | Acesso aos próprios dados | a pessoa vê o próprio perfil, empréstimos, multas e reservas |
 | Correção | só pela bibliotecária (ver ponto 2) |
 | Eliminação | o sistema **inativa** em vez de apagar (RF-09); o histórico impede apagar de vez. O caso de pedido de eliminação está na seção 6 |
-| Informação clara sobre o uso | **ainda não existe** aviso de privacidade no sistema nem na landing |
+| Informação clara sobre o uso | aviso em `/privacidade` (card 0222), ligado no login; falta o link no rodapé da landing, que ainda não existe no código |
 
 ## 6. Decisões adotadas no projeto
 
