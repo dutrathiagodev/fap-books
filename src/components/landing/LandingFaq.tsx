@@ -8,7 +8,7 @@ export function LandingFaq() {
     <section id="duvidas" className="bg-subtle">
       <div className="mx-auto w-full max-w-[1040px] px-4 py-16 md:px-8 lg:py-[87px]">
         <div className="text-center">
-          <span className="text-xs font-normal uppercase leading-4 text-navy-700">Dúvidas frequentes</span>
+          <span className="text-xs font-normal uppercase leading-4 text-accent">Dúvidas frequentes</span>
           <h2 className="mt-3 font-heading text-[28px] font-semibold leading-[44px] md:text-4xl">Perguntas frequentes</h2>
         </div>
         <div className="mx-auto mt-[48px] flex max-w-[880px] flex-col gap-4">
