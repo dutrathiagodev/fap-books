@@ -3,6 +3,7 @@ import Image from "next/image";
 import { Button } from "@/components/Button";
 import { Logo } from "@/components/Logo";
 import { MobileOnly } from "@/components/MobileOnly";
+import { WelcomeSeenMarker } from "@/components/WelcomeStorage";
 import { LOGIN_PATH } from "@/domain/access/access-rules";
 
 export const metadata: Metadata = { title: "Bem-vindo | FAP Books" };
@@ -13,6 +14,7 @@ export const metadata: Metadata = { title: "Bem-vindo | FAP Books" };
 export default function BoasVindasPage() {
   return (
     <MobileOnly desktopHref={LOGIN_PATH}>
+      <WelcomeSeenMarker />
       <main className="relative flex min-h-dvh flex-col items-center overflow-hidden bg-navy-950 text-white">
         {/* Foto da FAP (campus) com o gradiente por cima, só nos 640 px de cima. */}
         <div aria-hidden className="absolute inset-x-0 top-0 h-[640px]">
