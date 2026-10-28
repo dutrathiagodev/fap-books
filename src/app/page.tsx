@@ -25,7 +25,7 @@ export const metadata: Metadata = {
 // No celular, no primeiro acesso, a pessoa é levada às boas-vindas (FirstVisitRedirect).
 export default function Home() {
   return (
-    <>
+    <div className="landing bg-page text-ink">
       <FirstVisitRedirect />
       <LandingHeader />
       <main className="flex-1">
@@ -41,6 +41,6 @@ export default function Home() {
         <LandingNewsletter />
       </main>
       <LandingFooter />
-    </>
+    </div>
   );
 }
