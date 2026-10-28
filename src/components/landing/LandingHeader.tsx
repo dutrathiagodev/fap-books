@@ -3,12 +3,16 @@ import { LogIn } from "lucide-react";
 import { LOGIN_PATH } from "@/domain/access/access-rules";
 import { Logo } from "../Logo";
 
-// Cada link entra aqui quando a seção dele da landing existir (Figma, cards 0195 e 0198).
+// Links da página, na ordem do Figma. Cada um aponta para o id de uma seção da landing.
 const NAV_LINKS = [
   { label: "Início", href: "#inicio" },
+  { label: "Quem somos", href: "#quem-somos" },
+  { label: "Perfis", href: "#perfis" },
+  { label: "Recursos", href: "#recursos" },
+  { label: "Acervo", href: "#acervo" },
+  { label: "Novidades", href: "#novidades" },
   { label: "Contato", href: "#contato" },
 ];
-
 // Cabeçalho da landing: logo, links da página e os botões de acesso.
 export function LandingHeader() {
   return (
@@ -18,7 +22,7 @@ export function LandingHeader() {
           <Logo width={84} />
         </Link>
 
-        <nav aria-label="Páginas da landing" className="hidden items-center gap-6 md:flex">
+        <nav aria-label="Páginas da landing" className="hidden items-center gap-5 lg:flex">
           {NAV_LINKS.map((link) => (
             <a
               key={link.href}

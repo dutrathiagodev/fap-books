@@ -1,18 +1,12 @@
 import Link from "next/link";
+import { PROFILES } from "@/content/landing";
 import { PRIVACY_PATH } from "@/domain/access/access-rules";
 import { Logo } from "../Logo";
-
-// Atalhos por perfil: ligam a seção "Perfis" quando ela existir.
-const PROFILES = [
-  { eyebrow: "Para", title: "Alunos" },
-  { eyebrow: "Para", title: "Professores" },
-  { eyebrow: "Para a", title: "Equipe da biblioteca" },
-];
 
 // Rodapé da landing (Figma, card 0195). Termos, Acessibilidade, Suporte e as redes entram quando tiverem página e endereço.
 export function LandingFooter() {
   return (
-    <footer id="contato" className="border-t border-line bg-subtle">
+    <footer className="border-t border-line bg-subtle">
       <div className="mx-auto flex w-full max-w-[1200px] flex-col items-center gap-10 px-4 py-14 md:px-8">
         <div className="flex items-center gap-4">
           <Logo width={96} />
