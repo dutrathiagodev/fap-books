@@ -9,6 +9,9 @@ export const ROLE_HOME: Record<UserRole, string> = {
 
 export const LOGIN_PATH = "/login";
 
+// Landing page (Figma, cards 0195 e 0198): a raiz é pública para quem não está logado.
+export const LANDING_PATH = "/";
+
 // Aviso de privacidade (LGPD): qualquer pessoa lê, logada ou não.
 export const PRIVACY_PATH = "/privacidade";
 
@@ -25,7 +28,7 @@ export function decideRoute(pathname: string, role: UserRole | null): RouteDecis
   if (isInside(pathname, PRIVACY_PATH)) return { action: "allow" };
 
   if (role === null) {
-    return pathname === LOGIN_PATH
+    return pathname === LOGIN_PATH || pathname === LANDING_PATH
       ? { action: "allow" }
       : { action: "redirect", to: LOGIN_PATH };
   }
