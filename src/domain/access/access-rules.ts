@@ -18,6 +18,12 @@ export const LANDING_PATH = "/";
 // Aviso de privacidade (LGPD): qualquer pessoa lê, logada ou não.
 export const PRIVACY_PATH = "/privacidade";
 
+// Páginas públicas do rodapé da landing (Figma, card 0195): qualquer pessoa lê, logada ou não.
+export const TERMS_PATH = "/termos";
+export const ACCESSIBILITY_PATH = "/acessibilidade";
+export const SUPPORT_PATH = "/suporte";
+const PUBLIC_INFO_PATHS = [PRIVACY_PATH, TERMS_PATH, ACCESSIBILITY_PATH, SUPPORT_PATH];
+
 export type RouteDecision =
   | { action: "allow" }
   | { action: "redirect"; to: string };
@@ -28,7 +34,7 @@ function isInside(pathname: string, area: string) {
 
 // Decide o que fazer com o endereço pedido. role é null quando a pessoa não está logada.
 export function decideRoute(pathname: string, role: UserRole | null): RouteDecision {
-  if (isInside(pathname, PRIVACY_PATH)) return { action: "allow" };
+  if (PUBLIC_INFO_PATHS.some((path) => isInside(pathname, path))) return { action: "allow" };
 
   if (role === null) {
     return pathname === LOGIN_PATH || pathname === LANDING_PATH || pathname === WELCOME_PATH
