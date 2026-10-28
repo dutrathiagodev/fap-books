@@ -27,7 +27,7 @@ export function navItemsFor(role: UserRole): NavItem[] {
   if (role === "librarian") {
     return [
       { key: "home", label: "Painel", href: home },
-      { key: "books", label: "Acervo" },
+      { key: "books", label: "Acervo", href: "/funcionario/acervo" },
       { key: "users", label: "Usuários" },
       { key: "loans", label: "Empréstimos" },
       { key: "pedagogical", label: "Reservas pedagógicas" },
@@ -52,5 +52,7 @@ export function navItemsFor(role: UserRole): NavItem[] {
 // O item fica ativo na própria página e nas subpáginas dela.
 export function isActive(item: NavItem, pathname: string) {
   if (!item.href) return false;
+  // O início só fica ativo nele mesmo: as outras telas do perfil moram dentro do mesmo endereço-base.
+  if (item.key === "home") return pathname === item.href;
   return pathname === item.href || pathname.startsWith(`${item.href}/`);
 }
