@@ -14,7 +14,7 @@ export function LandingProfiles() {
       <div className={`${CONTAINER} pb-14 pt-[50px]`}>
         <h2 className="text-center font-heading text-[28px] font-bold leading-9 md:text-[40px] md:leading-[50px]">
           <span className="block">A melhor experiência para</span>
-          <span className="block text-navy-700">encontrar e emprestar livros!</span>
+          <span className="block text-accent">encontrar e emprestar livros!</span>
         </h2>
         <p className="mx-auto mt-[22px] max-w-[721px] text-center text-[17px] leading-[26px] text-ink-muted">
           O FAP Books foi pensado para facilitar a rotina de quem estuda, ensina e cuida do acervo: busca rápida, prazos
@@ -39,7 +39,7 @@ export function LandingProfiles() {
                     <Icon size={36} strokeWidth={1.5} className="-rotate-45 text-white" />
                   </span>
                 </span>
-                <span className="mt-[31px] text-[13px] font-bold uppercase leading-4 text-navy-700">{eyebrow}</span>
+                <span className="mt-[31px] text-[13px] font-bold uppercase leading-4 text-accent">{eyebrow}</span>
                 <h3 className="mt-[3px] font-heading text-[28px] font-bold leading-9">{title}</h3>
                 <p className="mt-[19px] max-w-[290px] text-[15px] leading-[23px] text-ink-muted">{text}</p>
                 {highlight && (

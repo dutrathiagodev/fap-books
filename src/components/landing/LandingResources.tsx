@@ -13,13 +13,13 @@ export function LandingResources() {
 
   return (
     <section id="recursos" className="bg-page py-[60px]">
-      <div className="bg-subtle">
+      <div className="bg-band">
         <div className={`${CONTAINER} grid gap-12 py-[75px] lg:min-h-[640px] lg:grid-cols-[440px_1fr] lg:gap-0 lg:py-0 lg:pl-10`}>
           <div className="flex flex-col items-start lg:pt-[75px]">
             <span className="text-[15px] font-bold leading-[18px]">Nossos recursos</span>
             <h2 className="mt-[15px] font-heading text-[32px] font-bold leading-10 md:text-[42px] md:leading-[50px]">
               <span className="block">Uma plataforma</span>
-              <span className="block text-navy-700">simples, segura e</span>
+              <span className="block text-accent">simples, segura e</span>
               <span className="block">acessível para todos</span>
             </h2>
             <p className="mt-[18px] max-w-[340px] text-base leading-[25px] text-ink-muted">

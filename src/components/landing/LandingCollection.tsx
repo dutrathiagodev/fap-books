@@ -2,34 +2,33 @@ import Image from "next/image";
 import { COURSES } from "@/content/landing";
 import { CONTAINER } from "./styles";
 
-// Capas do acervo (arquivos em public/capas, vindos de material-de-apoio/capas-para-upload; ver CREDITOS.md).
-// O Figma mostra 12 capas e o acervo de exemplo tem 8, então as últimas quatro repetem as primeiras.
+// Capas do acervo (arquivos em public/capas, exportados do Figma; ver CREDITOS.md). Mesma ordem das 12 capas do Figma.
 const COVERS = [
-  { file: "T-001", title: "Dom Casmurro" },
-  { file: "T-002", title: "Memórias Póstumas de Brás Cubas" },
-  { file: "T-010", title: "Algoritmos" },
-  { file: "T-014", title: "Gray's Anatomy" },
-  { file: "T-016", title: "Teologia Sistemática" },
-  { file: "T-019", title: "Curso de Direito Constitucional" },
-  { file: "T-018", title: "Fundamentos de Metodologia Científica" },
-  { file: "T-017", title: "O Conflito dos Séculos" },
-  { file: "T-014", title: "Gray's Anatomy" },
-  { file: "T-010", title: "Algoritmos" },
-  { file: "T-002", title: "Memórias Póstumas de Brás Cubas" },
-  { file: "T-001", title: "Dom Casmurro" },
+  "dom-casmurro",
+  "pequeno-principe",
+  "memorias-postumas",
+  "captains-of-the-sands",
+  "vidas-secas",
+  "hora-da-estrela",
+  "dom-casmurro",
+  "pequeno-principe",
+  "memorias-postumas",
+  "captains-of-the-sands",
+  "vidas-secas",
+  "hora-da-estrela",
 ];
 
 // Seção do acervo (Figma, card 0195: 760 px, fundo #031f45, capas de 130×185 e losango "3 livros") e a faixa dos cursos.
 export function LandingCollection() {
   return (
     <>
-      <section id="quem-somos" className="relative overflow-hidden bg-navy-925 text-white">
+      <section id="quem-somos" className="relative overflow-hidden bg-feature text-white">
         <span aria-hidden className="absolute left-1/2 top-0 hidden h-[95px] w-[190px] -translate-x-1/2 rounded-b-full bg-page lg:block" />
         <span aria-hidden className="absolute bottom-0 left-1/2 hidden h-[95px] w-[190px] -translate-x-1/2 rounded-t-full bg-page lg:block" />
 
         <div className={`${CONTAINER} grid items-center gap-12 py-16 lg:min-h-[760px] lg:grid-cols-[586px_1fr] lg:gap-[34px] lg:py-0`}>
           <div aria-hidden className="relative mx-auto grid w-full max-w-[586px] grid-cols-4 gap-x-[22px] gap-y-[15px] lg:mx-0 lg:ml-5">
-            {COVERS.map(({ file }, index) => (
+            {COVERS.map((file, index) => (
               <Image
                 key={index}
                 src={`/capas/landing-${file}.webp`}
@@ -39,10 +38,10 @@ export function LandingCollection() {
                 className="aspect-[130/185] w-full rounded-lg object-cover shadow-md"
               />
             ))}
-            <span className="absolute left-1/2 top-1/2 flex size-[300px] -translate-x-1/2 -translate-y-1/2 rotate-45 items-center justify-center rounded-[36px] bg-navy-400 shadow-lg">
+            <span className="absolute left-1/2 top-1/2 flex size-[190px] lg:size-[300px] -translate-x-1/2 -translate-y-1/2 rotate-45 items-center justify-center rounded-[36px] bg-navy-400 shadow-lg">
               <span className="-rotate-45 text-center text-navy-950">
-                <span className="block text-[40px] font-bold leading-[48px]">3 livros</span>
-                <span className="mx-auto block max-w-[210px] text-[15px] leading-[18px]">por pessoa, ao mesmo tempo</span>
+                <span className="block text-[26px] font-bold leading-8 lg:text-[40px] lg:leading-[48px]">3 livros</span>
+                <span className="mx-auto block max-w-[210px] text-[13px] leading-4 lg:text-[15px] lg:leading-[18px]">por pessoa, ao mesmo tempo</span>
               </span>
             </span>
           </div>
@@ -59,7 +58,7 @@ export function LandingCollection() {
             </p>
             <a
               href="#acesso"
-              className="mt-8 inline-flex h-12 items-center justify-center rounded-md bg-navy-900 px-[22px] text-[15px] font-bold text-white hover:bg-navy-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white lg:mt-[56px]"
+              className="mt-8 inline-flex h-12 items-center justify-center rounded-md bg-btn-feature px-[22px] text-[15px] font-bold text-white hover:bg-navy-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white lg:mt-[56px]"
             >
               Conheça o nosso acervo
             </a>

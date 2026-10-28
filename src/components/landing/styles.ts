@@ -8,4 +8,4 @@ const BUTTON_BASE =
 
 // Botão azul (principal) e botão claro (secundário), 48 px de altura, cantos de 8 px.
 export const BUTTON_PRIMARY = `${BUTTON_BASE} bg-brand text-on-brand hover:bg-brand-hover`;
-export const BUTTON_SOFT = `${BUTTON_BASE} bg-selected text-ink hover:bg-navy-200`;
+export const BUTTON_SOFT = `${BUTTON_BASE} bg-btn-soft text-ink hover:bg-btn-soft-hover`;
