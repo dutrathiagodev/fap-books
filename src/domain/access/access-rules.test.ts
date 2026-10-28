@@ -11,6 +11,12 @@ describe("decideRoute", () => {
     expect(decideRoute("/login", null)).toEqual({ action: "allow" });
   });
 
+  it("deixa qualquer pessoa abrir o aviso de privacidade", () => {
+    expect(decideRoute("/privacidade", null)).toEqual({ action: "allow" });
+    expect(decideRoute("/privacidade", "student")).toEqual({ action: "allow" });
+    expect(decideRoute("/privacidadex", null)).toEqual({ action: "redirect", to: "/login" });
+  });
+
   it("deixa cada perfil abrir a própria área, inclusive subpáginas", () => {
     expect(decideRoute("/aluno", "student")).toEqual({ action: "allow" });
     expect(decideRoute("/professor/reservas", "teacher")).toEqual({ action: "allow" });
