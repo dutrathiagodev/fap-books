@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { PROFILES } from "@/content/landing";
-import { CONTACTS } from "@/content/landing";
 import { ACCESSIBILITY_PATH, PRIVACY_PATH, SUPPORT_PATH, TERMS_PATH } from "@/domain/access/access-rules";
 import { Logo } from "../Logo";
 import { CONTAINER } from "./styles";
@@ -15,12 +14,12 @@ const NAV = [
   { label: "Contato", href: "#contato" },
 ];
 
-// Redes sociais do rodapé (círculos de 32 px do Figma). Facebook e LinkedIn entram quando a biblioteca passar os endereços oficiais.
+// Redes sociais da Faculdade Adventista do Paraná (círculos de 32 px do Figma), como estão no rodapé do site da FAP.
 const SOCIAL = [
-  { label: "Facebook", text: "f", href: null as string | null },
-  { label: "LinkedIn", text: "in", href: null as string | null },
-  { label: "Instagram", text: "ig", href: CONTACTS.find(({ label }) => label === "Instagram")?.href ?? null },
-].filter((network): network is { label: string; text: string; href: string } => network.href !== null);
+  { label: "Facebook", text: "f", href: "https://www.facebook.com/fap.faculdade/" },
+  { label: "LinkedIn", text: "in", href: "https://br.linkedin.com/school/faculdadefap/" },
+  { label: "Instagram", text: "ig", href: "https://www.instagram.com/faculdade.fap/" },
+];
 
 const LEGAL = [
   { label: "Termos e Condições", href: TERMS_PATH },
