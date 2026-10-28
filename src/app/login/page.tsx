@@ -1,14 +1,31 @@
+import Image from "next/image";
 import Link from "next/link";
 import { Info, ShieldCheck } from "lucide-react";
 import { PRIVACY_PATH } from "@/domain/access/access-rules";
 import { LoginForm, Logo } from "@/components";
 
-// Tela de login conforme o Figma (card 0105): painel navy com as boas-vindas e o formulário só com e-mail e senha.
-// A foto de livros do topo ainda não entra: falta uma imagem própria ou com licença livre.
+// Tela de login conforme o Figma (cards 0105 e 0219): painel navy com foto, as boas-vindas e o formulário só com e-mail e senha.
+// Fotos em public/fotos: biblioteca da FAP (desktop, uso autorizado pela FAP) e estante do Unsplash (celular, licença livre).
 export default function LoginPage() {
   return (
     <main className="flex flex-1 flex-col md:grid md:grid-cols-[5fr_7fr]">
-      <aside className="flex flex-col items-center gap-2 rounded-b-[28px] bg-linear-to-b from-navy-800 to-side px-6 pb-10 pt-12 text-center text-white md:items-start md:justify-between md:rounded-none md:px-12 md:py-12 md:text-left">
+      <aside className="relative isolate flex flex-col items-center gap-2 overflow-hidden rounded-b-[28px] bg-linear-to-b from-navy-800 to-side px-6 pb-10 pt-12 text-center text-white md:items-start md:justify-between md:rounded-none md:px-12 md:py-12 md:text-left">
+        <Image
+          src="/fotos/login-celular-topo.jpg"
+          alt=""
+          fill
+          priority
+          sizes="100vw"
+          className="-z-10 object-cover opacity-50 md:hidden"
+        />
+        <Image
+          src="/fotos/login-biblioteca.jpg"
+          alt=""
+          fill
+          priority
+          sizes="(min-width: 768px) 42vw, 0px"
+          className="-z-10 hidden object-cover opacity-20 md:block"
+        />
         <div className="flex flex-col items-center gap-2 md:items-start">
           <Logo width={150} tone="white" />
           <p className="text-sm text-navy-200">Biblioteca da Faculdade Adventista do Paraná</p>

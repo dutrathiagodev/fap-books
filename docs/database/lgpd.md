@@ -80,8 +80,8 @@ O FAP Books é um trabalho acadêmico. Por isso adotamos regras **genéricas e p
 | **Menores de idade** | **Há estudantes menores de 18 anos (ensino médio).** O tratamento dos dados deles é feito **no melhor interesse do menor** (art. 14): só os dados mínimos, texto do aviso em linguagem simples e o responsável legal pode pedir acesso, correção ou eliminação em nome do menor. Não usamos dado de menor para marketing nem para qualquer fim fora da biblioteca. A base legal é a mesma da biblioteca, e a FAP confirma se exige também o consentimento de um responsável | sim |
 | **Guarda** | Empréstimos, multas e reservas: **5 anos** depois da última movimentação da pessoa. Conta de quem sai: fica **inativa**. Auditoria (só ids): 5 anos. Backup: 30 dias | sim |
 | **Apagamento** | Passado o prazo, **anonimizar** (trocar nome e e-mail por um código) em vez de apagar, porque o histórico impede apagar de vez. Antes disso, só a pedido e se não houver multa em aberto | sim |
-| **Direitos do titular** | O pedido vai por e-mail à biblioteca; a bibliotecária executa e responde em até **15 dias**. Canal provisório: **`privacidade@fapbooks.example`** (e-mail genérico de exemplo; a FAP troca pelo real) | sim |
-| **Encarregado (DPO)** | É a pessoa que a instituição indica para ser o canal entre ela, os titulares dos dados e a ANPD (LGPD, art. 5º, VIII). **A FAP ainda precisa indicar quem é**; até lá, o contato é o canal acima. Não achamos o nome em fonte pública | sim |
+| **Direitos do titular** | O pedido vai por e-mail à biblioteca; a bibliotecária executa e responde em até **15 dias**. Canal: **`thiago_dutra@educadventista.org`**, e-mail do encarregado pelo tratamento dos dados (Thiago) | sim |
+| **Encarregado (DPO)** | É a pessoa que a instituição indica para ser o canal entre ela, os titulares dos dados e a ANPD (LGPD, art. 5º, VIII). No projeto, o encarregado é o **Thiago** (`thiago_dutra@educadventista.org`); a FAP pode oficializar ou trocar essa indicação. Não achamos o nome do encarregado da instituição em fonte pública | sim |
 | **Backup** | Mantido como está (criptografado, 30 dias). O risco de o GitHub guardar fora do Brasil é registrado e aceito no projeto acadêmico | sim, se for produção |
 | **Incidente de segurança** | Avisar logo o responsável da biblioteca. A comunicação à ANPD e aos titulares é da FAP (a regulamentação fala em 3 dias úteis; confirmar a regra vigente) | sim |
 | **Aviso de privacidade** | Texto-base abaixo; entra na landing e no login depois de ter design | só o texto |
@@ -98,7 +98,7 @@ O FAP Books é um trabalho acadêmico. Por isso adotamos regras **genéricas e p
 
 ### Texto-base do aviso de privacidade (rascunho)
 
-> **Como usamos seus dados.** O FAP Books guarda seu nome, e-mail e o histórico dos seus empréstimos, reservas e multas, só para a biblioteca controlar o acervo e atender você. Só você e a equipe da biblioteca veem esses dados. Guardamos por até 5 anos depois da sua última movimentação e depois os tornamos anônimos. Para ver, corrigir ou pedir a eliminação dos seus dados, escreva para privacidade@fapbooks.example. Se você tem menos de 18 anos, seu pai, mãe ou responsável também pode fazer esse pedido por você.
+> **Como usamos seus dados.** O FAP Books guarda seu nome, e-mail e o histórico dos seus empréstimos, reservas e multas, só para a biblioteca controlar o acervo e atender você. Só você e a equipe da biblioteca veem esses dados. Guardamos por até 5 anos depois da sua última movimentação e depois os tornamos anônimos. Para ver, corrigir ou pedir a eliminação dos seus dados, escreva para thiago_dutra@educadventista.org. Encarregado pelo tratamento dos dados: Thiago. Respondemos em até 15 dias. Se você tem menos de 18 anos, seu pai, mãe ou responsável também pode fazer esse pedido por você.
 
 ## 7. O que o card 0011 pede e como está
 

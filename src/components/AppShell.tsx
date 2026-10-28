@@ -6,7 +6,6 @@ import { usePathname } from "next/navigation";
 import {
   ArrowLeftRight,
   Bell,
-  BookOpen,
   Bookmark,
   ChartColumn,
   ChevronDown,
@@ -124,6 +123,21 @@ function MenuList({
   );
 }
 
+// Botão de recolher/abrir o menu: fica no topo do próprio menu, ao lado da logo (Figma, menu lateral).
+function SidebarToggle({ collapsed, onClick }: { collapsed: boolean; onClick: () => void }) {
+  return (
+    <button
+      type="button"
+      aria-label={collapsed ? "Expandir menu" : "Recolher menu"}
+      aria-expanded={!collapsed}
+      onClick={onClick}
+      className="flex size-9 shrink-0 cursor-pointer items-center justify-center rounded-md border border-navy-200/50 text-white hover:bg-navy-800 focus-visible:outline-2 focus-visible:outline-white"
+    >
+      {collapsed ? <PanelLeftOpen size={18} aria-hidden /> : <PanelLeftClose size={18} aria-hidden />}
+    </button>
+  );
+}
+
 function NoticeBell({ count }: { count: number }) {
   const label = count > 0 ? `${count} avisos de prazo` : "Sem avisos de prazo";
   return (
@@ -229,9 +243,18 @@ export function AppShell({ profile, noticeCount = 0, children }: AppShellProps) 
       <aside
         className={`hidden shrink-0 flex-col bg-side transition-[width] md:flex ${collapsed ? "w-[68px]" : "w-60"}`}
       >
-        <div className="flex h-[72px] items-center justify-center px-3">
-          {collapsed ? <BookOpen size={24} className="text-white" aria-hidden /> : <Logo width={104} tone="white" />}
-        </div>
+        {collapsed ? (
+          <div className="flex flex-col items-center gap-3 px-2 py-4">
+            <Logo width={40} tone="white" />
+            <SidebarToggle collapsed onClick={() => setCollapsed(false)} />
+          </div>
+        ) : (
+          <div className="flex h-[72px] items-center justify-between px-5">
+            <Logo width={72} tone="white" />
+            <SidebarToggle collapsed={false} onClick={() => setCollapsed(true)} />
+          </div>
+        )}
+        <div aria-hidden className="mx-4 border-t border-white/10" />
         <MenuList items={items} role={profile.role} pathname={pathname} wide={!collapsed} />
       </aside>
 
@@ -245,8 +268,8 @@ export function AppShell({ profile, noticeCount = 0, children }: AppShellProps) 
             className="absolute inset-0 cursor-default bg-ink/50"
           />
           <aside className="relative flex h-full w-64 flex-col bg-side shadow-lg">
-            <div className="flex h-[72px] items-center justify-between px-4">
-              <Logo width={104} tone="white" />
+            <div className="flex h-[72px] items-center justify-between px-5">
+              <Logo width={72} tone="white" />
               <button
                 type="button"
                 aria-label="Fechar menu"
@@ -256,6 +279,7 @@ export function AppShell({ profile, noticeCount = 0, children }: AppShellProps) 
                 <X size={20} aria-hidden />
               </button>
             </div>
+            <div aria-hidden className="mx-4 border-t border-white/10" />
             <MenuList
               items={items}
               role={profile.role}
@@ -280,14 +304,6 @@ export function AppShell({ profile, noticeCount = 0, children }: AppShellProps) 
           <div className="md:hidden">
             <Logo width={80} />
           </div>
-          <button
-            type="button"
-            aria-label={collapsed ? "Expandir menu" : "Recolher menu"}
-            onClick={() => setCollapsed((v) => !v)}
-            className="hidden cursor-pointer rounded-md p-2 hover:bg-subtle focus-visible:outline-2 focus-visible:outline-focus md:block"
-          >
-            {collapsed ? <PanelLeftOpen size={20} aria-hidden /> : <PanelLeftClose size={20} aria-hidden />}
-          </button>
 
           <div className="ml-auto flex items-center gap-3">
             <NoticeBell count={noticeCount} />
