@@ -15,6 +15,11 @@ describe("decideRoute", () => {
     expect(decideRoute("/login", null)).toEqual({ action: "allow" });
   });
 
+  it("deixa quem não está logado abrir as boas-vindas do celular", () => {
+    expect(decideRoute("/boas-vindas", null)).toEqual({ action: "allow" });
+    expect(decideRoute("/boas-vindas", "student")).toEqual({ action: "redirect", to: "/aluno" });
+  });
+
   it("deixa qualquer pessoa abrir o aviso de privacidade", () => {
     expect(decideRoute("/privacidade", null)).toEqual({ action: "allow" });
     expect(decideRoute("/privacidade", "student")).toEqual({ action: "allow" });
