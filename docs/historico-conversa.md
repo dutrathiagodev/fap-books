@@ -127,7 +127,7 @@ Scripts em `scripts/` e workflows em `.github/workflows/`. Os testes de lógica 
 
 - **27/10:** layout base no código (cards `0102` a `0104`), LGPD documentada (`0011`) e auditoria restrita a ações e ids conhecidos, modo escuro em navy, login igual ao Figma (`0083`), favicon, acervo da bibliotecária com exclusão e inativação de livro (`0020`) e aviso de privacidade (`0222`). Versões **0.3.0** e **0.4.0** publicadas.
 - **28/10:** foto no login, menu lateral novo, e-mail e encarregado oficiais no aviso (`0220`, `0222`); regra de qualidade de software ([qualidade-de-software.md](qualidade-de-software.md)) e checklist no modelo de PR; **landing page** na raiz do site (`0210`) com newsletter (tabela `newsletter_subscribers`, só nome e e-mail com consentimento), tela de boas-vindas do celular (`0221`), modo claro e escuro conforme os cards `0195` e `0198`, fotos e capas do Figma, páginas `/termos`, `/acessibilidade` e `/suporte` e redes da Faculdade Adventista do Paraná no rodapé. Tudo na `main` e no ar (PRs `#99`, `#101`, `#103` e `#105`).
-- **Em aberto:** a origem e a autorização por escrito das fotos de pessoas da landing; a revisão dos textos de termos e de acessibilidade pela biblioteca ou pela FAP; a aprovação do design do `0210`, que depende da revisão final do Figma (`0209`).
+- **Em aberto:** a aprovação do design do `0210`, que depende da revisão final do Figma (`0209`).
 
 ## 11. Entregas
 
@@ -145,9 +145,9 @@ Scripts em `scripts/` e workflows em `.github/workflows/`. Os testes de lógica 
 ## 13. Pendências (atualizado em 28/10/2026)
 
 1. **Telas do Igor** (`0126`, `0135`, `0138`, `0140`) e **da Julia** (`0157`, `0147`); depois delas, a revisão final do Figma (`0209`, bloqueada) e o fechamento do `0210`.
-2. **Fotos de pessoas da landing:** registrar origem e autorização por escrito.
-3. **Textos legais:** revisão de `/termos` e `/acessibilidade` pela biblioteca ou pela FAP.
+2. ~~Fotos de pessoas da landing~~ Liberadas por um professor da FAP para uso pedagógico; o dono decidiu que não precisa de documento (28/10).
+3. ~~Textos legais~~ `/termos` e `/acessibilidade` seguem os dados oficiais da biblioteca; o dono decidiu que não precisam de revisão externa (28/10).
 4. **Código que vem do design:** busca (`0109` a `0112`), limite de 3 livros por pessoa (4 para formandos), prazo configurável da reserva pedagógica (`0218`) e as telas de usuários, empréstimo, multas, histórico e relatórios.
-5. **Banco:** registrar no histórico do Supabase as migrations `block_book_delete_with_history` e `restrict_audit_logs`, que estão em vigor; ligar a proteção contra senhas vazadas se o plano permitir; trocar as senhas dos usuários de teste antes de uso real. (`TRUNCATE`, `REFERENCES` e `TRIGGER` de `anon` e `authenticated` já foram retirados em 28/10, migration `20261028170852`.)
+5. **Banco:** ligar a proteção contra senhas vazadas se o plano permitir; trocar as senhas dos usuários de teste antes de uso real. (`TRUNCATE`, `REFERENCES` e `TRIGGER` de `anon` e `authenticated` já foram retirados em 28/10, migration `20261028170852`.)
 6. **Decisões abertas:** como a funcionária cadastra um aluno (convite por e-mail foi a decisão de 26/10; falta implementar), avisos por WhatsApp (`0065`, adiado) e limite de envios da newsletter por IP.
 7. **Release:** a `main` está à frente da v0.4.0; a próxima release alinha o `package.json`.
