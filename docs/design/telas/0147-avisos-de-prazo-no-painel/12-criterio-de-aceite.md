@@ -19,3 +19,4 @@ Seção: **Telas do Thiago (0157 – 0147)**.
 
 - [Desktop (1280)](https://www.figma.com/design/xOr6nlx1EqLMYmSJLh4sHI/FAP-BOOKS---Gestao-para-Biblioteca?node-id=6928-6066)
 - [Desktop, aluno e professor (1280)](https://www.figma.com/design/xOr6nlx1EqLMYmSJLh4sHI/FAP-BOOKS---Gestao-para-Biblioteca?node-id=6928-6367)
+- [Mobile (375)](https://www.figma.com/design/xOr6nlx1EqLMYmSJLh4sHI/FAP-BOOKS---Gestao-para-Biblioteca?node-id=6928-6460)
