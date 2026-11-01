@@ -113,6 +113,8 @@ Os scripts em [`scripts/`](scripts) e os workflows em [`.github/workflows/`](.gi
 - Pull Request aberto, mergeado ou fechado move o card da branch `FAP/<número>`.
 - Card em `In Progress` com dependência pendente volta para `Blocked`, e sobe para `To Do` quando a dependência termina.
 - Card pai vai para `Done` quando todos os filhos terminam.
+- Todo Pull Request é anexado ao card que cita (branch `FAP/<número>` ou número no título), para o time abrir o PR direto do card.
+- Card pai ganha o checklist `Filhos`, com um item por filho; o item é marcado quando o filho vai para `Done`.
 - A pessoa que assume, abre o PR ou testa o card é marcada de acordo com a lista.
 
 As automações rodam a cada 10 minutos e precisam dos secrets `TRELLO_KEY` e `TRELLO_TOKEN` no repositório.

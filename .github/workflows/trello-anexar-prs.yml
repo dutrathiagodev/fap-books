@@ -1,0 +1,24 @@
+name: Trello - anexar PRs antigos
+
+# Liga os Pull Requests que já existem aos cards do Trello que eles citam. Roda só à mão.
+on:
+  workflow_dispatch:
+
+permissions:
+  pull-requests: read
+
+jobs:
+  anexar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node scripts/trello-anexar-prs.mjs --selftest
+      - run: node scripts/trello-anexar-prs.mjs
+        env:
+          TRELLO_KEY: ${{ secrets.TRELLO_KEY }}
+          TRELLO_TOKEN: ${{ secrets.TRELLO_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
