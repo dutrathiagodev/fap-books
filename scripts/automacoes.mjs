@@ -9,6 +9,7 @@
 //  5. 🔀 Awaiting PR : marca Thiago e quem arrastou o card para lá
 //  6. ❌ QA Rejected : marca Thiago e quem arrastou o card para Awaiting PR
 //  7. ✅ Done        : fica só quem arrastou o card para Awaiting PR (se houver histórico)
+//  8. Card pai: checklist "Filhos" com um item por filho ("Pai: [FAP - N]"); o item fica marcado quando o filho está em ✅ Done
 const BOARD = '6ac6e9c9b825cc2a16bc7c4f'
 const THIAGO = '6515cff8159cb78d54ad4074'
 const BRENO = '68ca9fb753f35f1a0a8f2e7e'
@@ -58,6 +59,31 @@ export function planejar(cards, listas, hist) {
   return acoes
 }
 
+// Regra 8: em cada card pai, uma checklist "Filhos" com um item por filho. O item fica marcado quando o filho está em Done,
+// então o pai mostra (ex.: 3/5) quantos filhos já terminaram. Puro e testável: cards trazem `checklists` (nome e itens).
+export const CHECKLIST_FILHOS = 'Filhos'
+const tituloDe = c => c.name.replace(/^\[FAP - \d+\]\s*-\s*/, '')
+export function planejarFilhos(cards, listas) {
+  const nomeDe = Object.fromEntries(listas.map(l => [l.id, l.name]))
+  const feito = c => nomeDe[c.idList] === L.done
+  const filhos = {}
+  for (const c of cards) { const p = paiDe(c); if (p) (filhos[p] ??= []).push(c) }
+  const acoes = []
+  for (const pai of cards) {
+    const lista = (filhos[num(pai)] ?? []).sort((a, b) => num(a).localeCompare(num(b)))
+    if (!lista.length) continue
+    const checklist = (pai.checklists ?? []).find(l => l.name === CHECKLIST_FILHOS)
+    if (!checklist) { acoes.push({ tipo: 'filhos-criar', c: pai, filhos: lista, feito, motivo: `${lista.length} filhos` }); continue }
+    const itens = Object.fromEntries(checklist.checkItems.map(i => [i.name.match(/^\[FAP - (\d+)\]/)?.[1], i]))
+    for (const f of lista) {
+      const item = itens[num(f)]
+      if (!item) acoes.push({ tipo: 'filhos-item', c: pai, checklist, filho: f, feito: feito(f), motivo: `novo filho [FAP - ${num(f)}]` })
+      else if ((item.state === 'complete') !== feito(f)) acoes.push({ tipo: 'filhos-marcar', c: pai, item, feito: feito(f), motivo: `[FAP - ${num(f)}] ${feito(f) ? 'concluído' : 'reaberto'}` })
+    }
+  }
+  return acoes
+}
+
 function selftest() {
   const assert = (ok, m) => { if (!ok) throw new Error(`falhou: ${m}`); console.log(`ok - ${m}`) }
   const listas = Object.values(L).map((name, i) => ({ id: `L${i}`, name }))
@@ -93,6 +119,21 @@ function selftest() {
   assert(a.some(x => x.lista === L.blocked) && a.some(x => x.quer?.includes('dev2')), 'In Progress barrado vai para Blocked e marca quem tentou')
   a = planejar([card('0004', L.progress, '', ['dev2'])], listas, () => ({ progress: 'dev2' }))
   assert(a.length === 0, 'In Progress é idempotente')
+  const pai = (checklists) => ({ ...card('0001', L.todo), checklists })
+  const filhosCards = [card('0002', L.done, 'Pai: [FAP - 0001]'), card('0003', L.todo, 'Pai: [FAP - 0001]')]
+  a = planejarFilhos([pai([]), ...filhosCards], listas)
+  assert(a.length === 1 && a[0].tipo === 'filhos-criar' && a[0].filhos.length === 2, 'pai sem checklist Filhos ganha a checklist com os filhos')
+  const lista = (i2, i3) => [{ name: 'Filhos', checkItems: [{ id: 'i2', name: '[FAP - 0002] x', state: i2 }, { id: 'i3', name: '[FAP - 0003] x', state: i3 }] }]
+  a = planejarFilhos([pai(lista('complete', 'incomplete')), ...filhosCards], listas)
+  assert(a.length === 0, 'checklist Filhos em dia não gera ação (idempotente)')
+  a = planejarFilhos([pai(lista('incomplete', 'incomplete')), ...filhosCards], listas)
+  assert(a.length === 1 && a[0].tipo === 'filhos-marcar' && a[0].feito === true, 'filho em Done marca o item')
+  a = planejarFilhos([pai(lista('complete', 'complete')), ...filhosCards], listas)
+  assert(a.length === 1 && a[0].feito === false, 'filho reaberto desmarca o item')
+  a = planejarFilhos([pai([{ name: 'Filhos', checkItems: [{ id: 'i2', name: '[FAP - 0002] x', state: 'complete' }] }]), ...filhosCards], listas)
+  assert(a.length === 1 && a[0].tipo === 'filhos-item' && a[0].filho.id === 'c0003', 'filho novo ganha item')
+  a = planejarFilhos([card('0002', L.done)], listas)
+  assert(a.length === 0, 'card sem filhos não ganha checklist')
 }
 
 async function main() {
@@ -114,7 +155,7 @@ async function main() {
     }
   }
   const listas = await api('GET', `/boards/${BOARD}/lists`)
-  const cards = await api('GET', `/boards/${BOARD}/cards`, { fields: 'name,desc,idList,idMembers' })
+  const cards = await api('GET', `/boards/${BOARD}/cards`, { fields: 'name,desc,idList,idMembers', checklists: 'all', checklist_fields: 'name' })
   const nomeDe = Object.fromEntries(listas.map(l => [l.id, l.name]))
   const cache = {}
   // Histórico só dos cards que precisam dele (PR, QA, Rejected, Done com membros).
@@ -137,7 +178,24 @@ async function main() {
       if (!dry) await api('PUT', `/cards/${a.c.id}`, { idMembers: a.quer.join(',') })
     }
   }
-  if (!acoes.length) console.log('Nada a fazer.')
+  // Regra 8 (checklist "Filhos" nos pais). Limite por rodada para não estourar o tempo; o que faltar fica para a próxima (a cada 10 min).
+  let restante = 120
+  const filhosAcoes = planejarFilhos(cards, listas)
+  const tit = c => tituloDe(c).slice(0, 120)
+  for (const a of filhosAcoes) {
+    if (restante <= 0) { console.log(`Limite da rodada: ${filhosAcoes.length - filhosAcoes.indexOf(a)} ações de filhos ficam para a próxima.`); break }
+    console.log(`${dry ? '[dry] ' : ''}${a.c.name}: filhos (${a.motivo})`)
+    if (dry) continue
+    if (a.tipo === 'filhos-criar') {
+      const nova = await api('POST', `/cards/${a.c.id}/checklists`, { name: CHECKLIST_FILHOS })
+      for (const f of a.filhos) { await api('POST', `/checklists/${nova.id}/checkItems`, { name: `[FAP - ${num(f)}] ${tit(f)}`, checked: String(a.feito(f)) }); restante-- }
+    } else if (a.tipo === 'filhos-item') {
+      await api('POST', `/checklists/${a.checklist.id}/checkItems`, { name: `[FAP - ${num(a.filho)}] ${tit(a.filho)}`, checked: String(a.feito) }); restante--
+    } else {
+      await api('PUT', `/cards/${a.c.id}/checkItem/${a.item.id}`, { state: a.feito ? 'complete' : 'incomplete' }); restante--
+    }
+  }
+  if (!acoes.length && !filhosAcoes.length) console.log('Nada a fazer.')
 }
 
 if (process.argv.includes('--selftest')) selftest()
