@@ -4,10 +4,12 @@
 //   PR fechado sem merge                   -> 🚧 In Progress
 //   (depois do merge e da build passar, com --apos-build)
 //        card de documentação ou configuração -> ✅ Done   |   os demais -> 🔍 Awaiting QA
+// Também anexa o link do PR a cada card que ele cita (branch FAP/<número>, "FAP-<número>" ou número de 4 dígitos no título): ver trello-anexos.mjs.
 // Uso no workflow: node scripts/trello-pr.mjs   (lê GITHUB_EVENT_PATH)   |   node scripts/trello-pr.mjs --apos-build   |   node scripts/trello-pr.mjs --selftest
 import { readFileSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { numerosDoPR, anexarPR, criarApi, selftestAnexos } from './trello-anexos.mjs'
 
 const BOARD = '6ac6e9c9b825cc2a16bc7c4f'
 const THIAGO = '6515cff8159cb78d54ad4074'
@@ -67,23 +69,17 @@ async function main() {
   const ev = JSON.parse(readFileSync(GITHUB_EVENT_PATH, 'utf8'))
   const aposBuild = process.argv.includes('--apos-build')
   const d = aposBuild ? decidirAposBuild(ev) : decidir(ev)
-  if (!d) return console.log('Evento ignorado (branch fora do padrão FAP/<número> ou sem ação).')
-  const api = async (method, path, params = {}) => {
-    const url = new URL(`https://api.trello.com/1${path}`)
-    url.search = new URLSearchParams({ ...params, key, token })
-    // O Trello limita as chamadas (429): espera e tenta de novo até 5 vezes.
-    for (let t = 1; ; t++) {
-      const res = await fetch(url, { method })
-      if (res.ok) return res.json()
-      if ((res.status === 429 || res.status >= 500) && t < 5) {
-        await new Promise(r => setTimeout(r, t * 3000))
-        continue
-      }
-      throw new Error(`${method} ${path} -> ${res.status}`)
-    }
-  }
+  const citados = aposBuild ? [] : numerosDoPR(ev.pull_request ?? {})
+  if (!d && !citados.length) return console.log('Evento ignorado (PR sem card citado e sem ação).')
+  const api = criarApi(key, token)
   const listas = await api('GET', `/boards/${BOARD}/lists`)
   const cards = await api('GET', `/boards/${BOARD}/cards`, { fields: 'name,idList,idMembers', })
+  // Liga o PR a cada card citado (anexo com o link), sem repetir.
+  for (const n of citados) {
+    const alvo = cards.find(c => c.name.startsWith(`[FAP - ${n}]`))
+    if (alvo && await anexarPR(api, alvo.id, ev.pull_request)) console.log(`PR #${ev.pull_request.number} anexado a [FAP - ${n}]`)
+  }
+  if (!d) return
   const card = cards.find(c => c.name.startsWith(`[FAP - ${d.card}]`))
   if (!card) return console.log(`Card [FAP - ${d.card}] não encontrado.`)
   if (aposBuild) {
@@ -103,5 +99,5 @@ async function main() {
   console.log(`[FAP - ${d.card}] -> ${d.lista}`)
 }
 
-if (process.argv.includes('--selftest')) selftest()
+if (process.argv.includes('--selftest')) { selftest(); selftestAnexos() }
 else await main()
