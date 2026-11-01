@@ -18,6 +18,8 @@ Telas soltas, uma para cada pessoa, não têm conexão: cada uma usa componentes
 
 Telas já em Awaiting PR ou em andamento (0105, 0121, 0129, 0135) continuam com quem estava; o fluxo prossegue a partir delas.
 
+Depois de desenhada, cada tela ganha a sua **especificação final** em `docs/design/telas/` (uma pasta por tela, uma seção por arquivo), que é o que o código segue.
+
 ## 3. Regras para manter a sequência
 
 - **Um fluxo, uma pessoa.** Quem começou o fluxo continua nele; mexer na ordem exige combinar no grupo.
