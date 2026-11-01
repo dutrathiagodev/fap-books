@@ -13,4 +13,8 @@ tela no Stitch (computador e celular) com todos os estados e o link do projeto n
 - `[FAP - 0138] - Registrar reserva pedagógica presencial (Stitch → Figma) / Mobile` (375 px)
 - Estados: padrão, vazio, carregando e erro, mais os listados em `04-estados.md`.
 
-Depois do desenho, anotar aqui o link de cada frame.
+## Links dos frames no Figma
+
+Seção: **Telas do Thiago (0126 – 0140)**.
+
+- [Desktop (1280)](https://www.figma.com/design/xOr6nlx1EqLMYmSJLh4sHI/FAP-BOOKS---Gestao-para-Biblioteca?node-id=6928-4139)
