@@ -18,3 +18,4 @@ tela no Stitch (computador e celular) com todos os estados e o link do projeto n
 Seção: **Telas do Thiago (0157 – 0147)**.
 
 - [Desktop (1280)](https://www.figma.com/design/xOr6nlx1EqLMYmSJLh4sHI/FAP-BOOKS---Gestao-para-Biblioteca?node-id=6928-5471)
+- [Mobile (375)](https://www.figma.com/design/xOr6nlx1EqLMYmSJLh4sHI/FAP-BOOKS---Gestao-para-Biblioteca?node-id=6928-5797)
