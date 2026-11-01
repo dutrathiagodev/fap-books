@@ -56,3 +56,7 @@ import { BookOpen } from "lucide-react";
 - Telas dos outros cards de design (cada pessoa entrega o link do Stitch e o dono leva para o Figma).
 - Igualar a largura do menu lateral das telas 0108 e 0213 (256 px) à das outras (272 px).
 - Trocar o fundo azul claro das capas de livros (degradê) nas telas escuras.
+
+## Especificação final das telas
+
+Cada tela de design tem uma pasta com uma seção por arquivo (contexto, perfil, conteúdo, estados, regras, visual, layouts, componentes, referência e critério): veja [`telas/README.md`](telas/README.md). As convenções de nome estão em [`telas/convencoes.md`](telas/convencoes.md).
