@@ -7,7 +7,7 @@ Tela: **avisos de prazo no painel**.
 
 **Fluxo:** Estrutura e painel.
 
-**🔗 Fluxo: Estrutura e painel** · tela 3 de 3 · responsável: Julia
+**🔗 Fluxo: Estrutura e painel** · tela 3 de 3 · responsável: Thiago Dutra (card antes de Julia Wassão)
 **Siga a ordem do fluxo de telas** (`docs/design/fluxo-de-telas.md`): uma tela de cada vez, na sequência abaixo.
 Sequência: 0101 → 0157 → **0147**
 - **Recebe da anterior:** Painel do 0157 (faixa de avisos).
