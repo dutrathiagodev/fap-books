@@ -1,7 +1,9 @@
 import { describe, expect, it } from "vitest";
 import {
+  availabilityParam,
   availableCopies,
   bookAvailability,
+  bookSearchHref,
   booksHref,
   cleanSearchTerm,
   bookSituation,
@@ -9,6 +11,7 @@ import {
   countSituations,
   isUuid,
   pageNumbers,
+  parseAvailabilityFilter,
   parseBookFilters,
 } from "./book-rules";
 
@@ -112,6 +115,35 @@ describe("parseBookFilters", () => {
       page: 3,
     });
     expect(parseBookFilters({ status: "x", pagina: "-2" })).toMatchObject({ status: "all", page: 1 });
+  });
+});
+
+describe("bookSearchHref", () => {
+  it("sem filtros devolve só o caminho", () => {
+    expect(bookSearchHref("/aluno/livros", {})).toBe("/aluno/livros");
+    expect(bookSearchHref("/aluno/livros", { query: "", category: "", availability: "all" })).toBe("/aluno/livros");
+  });
+  it("leva só o que tem valor e codifica o texto", () => {
+    expect(bookSearchHref("/aluno/livros", { query: "dom casmurro", category: "Romance", availability: "borrowed" })).toBe(
+      "/aluno/livros?q=dom+casmurro&categoria=Romance&situacao=emprestado",
+    );
+    expect(bookSearchHref("/aluno/livros", { category: "Saúde" })).toBe("/aluno/livros?categoria=Sa%C3%BAde");
+  });
+});
+
+describe("parseAvailabilityFilter", () => {
+  it("lê as três situações e trata o resto como todos", () => {
+    expect(parseAvailabilityFilter({ situacao: "disponivel" })).toBe("available");
+    expect(parseAvailabilityFilter({ situacao: "emprestado" })).toBe("borrowed");
+    expect(parseAvailabilityFilter({ situacao: ["reservado", "x"] })).toBe("reserved");
+    expect(parseAvailabilityFilter({ situacao: "x" })).toBe("all");
+    expect(parseAvailabilityFilter({})).toBe("all");
+  });
+  it("ida e volta com bookSearchHref", () => {
+    for (const availability of ["available", "borrowed", "reserved"] as const) {
+      const param = availabilityParam(availability);
+      expect(parseAvailabilityFilter({ situacao: param })).toBe(availability);
+    }
   });
 });
 

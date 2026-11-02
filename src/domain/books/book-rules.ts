@@ -1,4 +1,4 @@
-import type { BookListFilters, BookStatus, BookStatusFilter } from "@/types/book";
+import type { BookAvailabilityFilter, BookListFilters, BookStatus, BookStatusFilter } from "@/types/book";
 
 export type BookAvailability = "available" | "unavailable" | "inactive";
 
@@ -81,6 +81,44 @@ export function parseBookFilters(params: RawParams): BookListFilters {
     status: (["active", "inactive"].includes(status) ? status : "all") as BookStatusFilter,
     page: Number.isInteger(page) && page > 0 ? Math.min(page, 10000) : 1,
   };
+}
+
+// Estado da barra de busca da pesquisa de livros (Figma, card 0109): texto, categoria e STATUS.
+export interface BookSearchState {
+  query: string;
+  category: string;
+  availability: BookAvailabilityFilter;
+}
+
+const AVAILABILITY_PARAM: Record<Exclude<BookAvailabilityFilter, "all">, string> = {
+  available: "disponivel",
+  borrowed: "emprestado",
+  reserved: "reservado",
+};
+
+// Lê o STATUS do endereço (?situacao=disponivel|emprestado|reservado). Valor estranho vale "todos".
+export function parseAvailabilityFilter(params: RawParams): BookAvailabilityFilter {
+  const value = first(params.situacao);
+  const found = (Object.keys(AVAILABILITY_PARAM) as Array<keyof typeof AVAILABILITY_PARAM>).find(
+    (key) => AVAILABILITY_PARAM[key] === value,
+  );
+  return found ?? "all";
+}
+
+// Monta o endereço de uma pesquisa mantendo só o que tem valor. Mudar a busca volta para a primeira página
+// (o endereço não leva ?pagina=).
+export function bookSearchHref(basePath: string, state: Partial<BookSearchState>): string {
+  const search = new URLSearchParams();
+  if (state.query) search.set("q", state.query);
+  if (state.category) search.set("categoria", state.category);
+  if (state.availability && state.availability !== "all") search.set("situacao", AVAILABILITY_PARAM[state.availability]);
+  const text = search.toString();
+  return text ? `${basePath}?${text}` : basePath;
+}
+
+// Valor do ?situacao= de cada opção (o formulário de busca guarda o STATUS ativo num campo escondido).
+export function availabilityParam(availability: Exclude<BookAvailabilityFilter, "all">): string {
+  return AVAILABILITY_PARAM[availability];
 }
 
 export type PageItem = number | "…";
