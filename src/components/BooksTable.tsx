@@ -1,5 +1,5 @@
 import { BookOpen } from "lucide-react";
-import { availableCopies, bookAvailability, type BookAvailability } from "@/domain/books/book-rules";
+import { availableCopies, bookSituation, type BookSituation } from "@/domain/books/book-rules";
 import type { BookActionResult, BookListItem } from "@/types/book";
 import { BookRowActions } from "./BookRowActions";
 
@@ -9,9 +9,10 @@ interface BooksTableProps {
   onInactivate: (bookId: string) => Promise<BookActionResult>;
 }
 
-const STATUS: Record<BookAvailability, { label: string; className: string }> = {
+const STATUS: Record<BookSituation, { label: string; className: string }> = {
   available: { label: "Disponível", className: "bg-success-100 text-success-700" },
   unavailable: { label: "Emprestado", className: "bg-info-100 text-info-700" },
+  reserved: { label: "Reservado", className: "bg-warning-100 text-warning-700" },
   inactive: { label: "Inativo", className: "bg-subtle text-ink-muted" },
 };
 
@@ -33,7 +34,7 @@ export function BooksTable({ books, onDelete, onInactivate }: BooksTableProps) {
         </thead>
         <tbody>
           {books.map((book) => {
-            const status = STATUS[bookAvailability(book)];
+            const status = STATUS[bookSituation(book)];
             return (
               <tr key={book.id} className="border-b border-line last:border-b-0">
                 <td className="px-4 py-3">
