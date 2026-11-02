@@ -6,8 +6,11 @@ import {
   bookSearchHref,
   booksHref,
   cleanSearchTerm,
+  bookSituation,
   confirmsTitle,
+  countSituations,
   isUuid,
+  pageNumbers,
   parseAvailabilityFilter,
   parseBookFilters,
 } from "./book-rules";
@@ -30,6 +33,47 @@ describe("bookAvailability", () => {
   });
   it("com exemplar na estante fica disponível", () => {
     expect(bookAvailability({ quantity: 2, openLoans: 1, status: "active" })).toBe("available");
+  });
+});
+
+describe("bookSituation", () => {
+  const base = { quantity: 4, openLoans: 1, status: "active" as const, hasActiveReservation: false };
+
+  it("com exemplar livre e sem reserva fica disponível", () => {
+    expect(bookSituation(base)).toBe("available");
+  });
+  it("com exemplar livre guardado para reserva fica reservado", () => {
+    expect(bookSituation({ ...base, hasActiveReservation: true })).toBe("reserved");
+  });
+  it("sem exemplar livre fica emprestado, mesmo com reserva", () => {
+    expect(bookSituation({ ...base, openLoans: 4, hasActiveReservation: true })).toBe("unavailable");
+  });
+  it("livro inativo fica inativo, mesmo com reserva", () => {
+    expect(bookSituation({ ...base, status: "inactive", hasActiveReservation: true })).toBe("inactive");
+  });
+});
+
+describe("countSituations", () => {
+  const active = { quantity: 2, status: "active" as const };
+
+  it("conta cada situação e soma o total dos livros ativos", () => {
+    const counts = countSituations([
+      { ...active, openLoans: 0, hasActiveReservation: false },
+      { ...active, openLoans: 0, hasActiveReservation: false },
+      { ...active, openLoans: 2, hasActiveReservation: false },
+      { ...active, openLoans: 1, hasActiveReservation: true },
+    ]);
+    expect(counts).toEqual({ available: 2, unavailable: 1, reserved: 1 });
+  });
+  it("não conta livro inativo", () => {
+    expect(countSituations([{ quantity: 2, status: "inactive", openLoans: 0, hasActiveReservation: false }])).toEqual({
+      available: 0,
+      unavailable: 0,
+      reserved: 0,
+    });
+  });
+  it("lista vazia zera tudo", () => {
+    expect(countSituations([])).toEqual({ available: 0, unavailable: 0, reserved: 0 });
   });
 });
 
@@ -100,6 +144,25 @@ describe("parseAvailabilityFilter", () => {
       const param = availabilityParam(availability);
       expect(parseAvailabilityFilter({ situacao: param })).toBe(availability);
     }
+  });
+});
+
+describe("pageNumbers", () => {
+  it("mostra todas as páginas quando são poucas", () => {
+    expect(pageNumbers(1, 3)).toEqual([1, 2, 3]);
+    expect(pageNumbers(1, 1)).toEqual([1]);
+  });
+  it("na primeira página esconde o meio com reticências", () => {
+    expect(pageNumbers(1, 24)).toEqual([1, 2, "…", 24]);
+  });
+  it("no meio mostra a atual e as vizinhas", () => {
+    expect(pageNumbers(12, 24)).toEqual([1, "…", 11, 12, 13, "…", 24]);
+  });
+  it("na última página mostra as duas finais", () => {
+    expect(pageNumbers(24, 24)).toEqual([1, "…", 23, 24]);
+  });
+  it("buraco de uma página mostra o número em vez de reticências", () => {
+    expect(pageNumbers(4, 24)).toEqual([1, 2, 3, 4, 5, "…", 24]);
   });
 });
 

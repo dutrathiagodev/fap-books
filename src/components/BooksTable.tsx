@@ -51,7 +51,15 @@ export function BooksTable({ books, onDelete, onInactivate }: BooksTableProps) {
                   </div>
                 </td>
                 <td className="px-4 py-3">{book.author}</td>
-                <td className="px-4 py-3">{book.category ?? "—"}</td>
+                <td className="px-4 py-3">
+                  {book.category ? (
+                    <span className="inline-block whitespace-nowrap rounded-full bg-selected px-2.5 py-1 text-xs font-medium text-brand">
+                      {book.category}
+                    </span>
+                  ) : (
+                    "—"
+                  )}
+                </td>
                 <td className="px-4 py-3 text-ink-muted">{book.code}</td>
                 <td className="px-4 py-3">
                   {availableCopies(book.quantity, book.openLoans)} / {book.quantity}

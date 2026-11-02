@@ -12,6 +12,35 @@ export function bookAvailability(book: { quantity: number; openLoans: number; st
   return availableCopies(book.quantity, book.openLoans) > 0 ? "available" : "unavailable";
 }
 
+// Reservado = ainda há exemplar na estante, mas ele está guardado para uma reserva ativa (aguardando ou pronta).
+export type BookSituation = BookAvailability | "reserved";
+
+export function bookSituation(book: {
+  quantity: number;
+  openLoans: number;
+  status: BookStatus;
+  hasActiveReservation: boolean;
+}): BookSituation {
+  const availability = bookAvailability(book);
+  return availability === "available" && book.hasActiveReservation ? "reserved" : availability;
+}
+
+export interface SituationCounts {
+  available: number;
+  unavailable: number;
+  reserved: number;
+}
+
+// Contadores do topo do acervo. Livro inativo não entra em nenhum dos três.
+export function countSituations(books: Parameters<typeof bookSituation>[0][]): SituationCounts {
+  const counts: SituationCounts = { available: 0, unavailable: 0, reserved: 0 };
+  for (const book of books) {
+    const situation = bookSituation(book);
+    if (situation !== "inactive") counts[situation] += 1;
+  }
+  return counts;
+}
+
 // Tira da busca os caracteres que têm função no filtro do banco (vírgula, parênteses, curinga, aspas).
 export function cleanSearchTerm(raw: string): string {
   return raw
@@ -90,6 +119,23 @@ export function bookSearchHref(basePath: string, state: Partial<BookSearchState>
 // Valor do ?situacao= de cada opção (o formulário de busca guarda o STATUS ativo num campo escondido).
 export function availabilityParam(availability: Exclude<BookAvailabilityFilter, "all">): string {
   return AVAILABILITY_PARAM[availability];
+}
+
+export type PageItem = number | "…";
+
+// Números da paginação: primeira, última, atual e vizinhas. Buraco de uma página mostra o número; maior, mostra "…".
+export function pageNumbers(current: number, total: number): PageItem[] {
+  const shown = [...new Set([1, current - 1, current, current + 1, total])]
+    .filter((page) => page >= 1 && page <= total)
+    .sort((a, b) => a - b);
+  const items: PageItem[] = [];
+  shown.forEach((page, index) => {
+    const gap = index === 0 ? 0 : page - shown[index - 1];
+    if (gap === 2) items.push(page - 1);
+    else if (gap > 2) items.push("…");
+    items.push(page);
+  });
+  return items;
 }
 
 // Monta o endereço da listagem mantendo só os filtros que têm valor.
