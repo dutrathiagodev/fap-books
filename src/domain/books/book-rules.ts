@@ -54,6 +54,29 @@ export function parseBookFilters(params: RawParams): BookListFilters {
   };
 }
 
+// Estado da barra de busca da pesquisa de livros (Figma, card 0109): texto, categoria e "só disponíveis".
+export interface BookSearchState {
+  query: string;
+  category: string;
+  onlyAvailable: boolean;
+}
+
+// Monta o endereço de uma pesquisa mantendo só o que tem valor. Mudar a busca volta para a primeira página
+// (o endereço não leva ?pagina=).
+export function bookSearchHref(basePath: string, state: Partial<BookSearchState>): string {
+  const search = new URLSearchParams();
+  if (state.query) search.set("q", state.query);
+  if (state.category) search.set("categoria", state.category);
+  if (state.onlyAvailable) search.set("disponiveis", "1");
+  const text = search.toString();
+  return text ? `${basePath}?${text}` : basePath;
+}
+
+// Lê o chip "Disponíveis" do endereço (?disponiveis=1). Qualquer outro valor vale como desligado.
+export function parseOnlyAvailable(params: RawParams): boolean {
+  return first(params.disponiveis) === "1";
+}
+
 // Monta o endereço da listagem mantendo só os filtros que têm valor.
 export function booksHref(filters: Partial<BookListFilters>): string {
   const search = new URLSearchParams();

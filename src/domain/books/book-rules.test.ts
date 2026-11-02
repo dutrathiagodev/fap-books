@@ -2,11 +2,13 @@ import { describe, expect, it } from "vitest";
 import {
   availableCopies,
   bookAvailability,
+  bookSearchHref,
   booksHref,
   cleanSearchTerm,
   confirmsTitle,
   isUuid,
   parseBookFilters,
+  parseOnlyAvailable,
 } from "./book-rules";
 
 describe("availableCopies", () => {
@@ -68,6 +70,28 @@ describe("parseBookFilters", () => {
       page: 3,
     });
     expect(parseBookFilters({ status: "x", pagina: "-2" })).toMatchObject({ status: "all", page: 1 });
+  });
+});
+
+describe("bookSearchHref", () => {
+  it("sem filtros devolve só o caminho", () => {
+    expect(bookSearchHref("/aluno/livros", {})).toBe("/aluno/livros");
+    expect(bookSearchHref("/aluno/livros", { query: "", category: "", onlyAvailable: false })).toBe("/aluno/livros");
+  });
+  it("leva só o que tem valor e codifica o texto", () => {
+    expect(bookSearchHref("/aluno/livros", { query: "dom casmurro", category: "Romance", onlyAvailable: true })).toBe(
+      "/aluno/livros?q=dom+casmurro&categoria=Romance&disponiveis=1",
+    );
+    expect(bookSearchHref("/aluno/livros", { category: "Saúde" })).toBe("/aluno/livros?categoria=Sa%C3%BAde");
+  });
+});
+
+describe("parseOnlyAvailable", () => {
+  it("só 1 liga o chip", () => {
+    expect(parseOnlyAvailable({ disponiveis: "1" })).toBe(true);
+    expect(parseOnlyAvailable({ disponiveis: "0" })).toBe(false);
+    expect(parseOnlyAvailable({ disponiveis: ["1", "x"] })).toBe(true);
+    expect(parseOnlyAvailable({})).toBe(false);
   });
 });
 
