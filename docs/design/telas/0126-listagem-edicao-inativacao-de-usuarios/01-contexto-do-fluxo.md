@@ -7,7 +7,7 @@ Tela: **listagem, edição e inativação de usuários**.
 
 **Fluxo:** Usuários e reserva pedagógica.
 
-**🔗 Fluxo: Usuários e reserva pedagógica** · tela 2 de 5 · responsável: Igor
+**🔗 Fluxo: Usuários e reserva pedagógica** · tela 2 de 5 · responsável: Thiago Dutra (card antes de Igor Santana)
 **Siga a ordem do fluxo de telas** (`docs/design/fluxo-de-telas.md`): uma tela de cada vez, na sequência abaixo.
 Sequência: 0121 → **0126** → 0135 → 0138 → 0140
 - **Recebe da anterior:** Formulário do 0121.
