@@ -156,7 +156,7 @@ Scripts em `scripts/` e workflows em `.github/workflows/`. Os testes de lógica 
 1. ~~Telas do Igor e da Julia, revisão final do Figma (`0209`) e fechamento do `0210`~~ Feitos: as seis telas foram desenhadas pelo dono em 31/10, o time aprovou, e o `0209` e o `0210` foram para Done em 01/11.
 2. ~~Fotos de pessoas da landing~~ Liberadas por um professor da FAP para uso pedagógico; o dono decidiu que não precisa de documento (28/10).
 3. ~~Textos legais~~ `/termos` e `/acessibilidade` seguem os dados oficiais da biblioteca; o dono decidiu que não precisam de revisão externa (28/10).
-4. **Código que vem do design:** busca (`0109` a `0112`), limite de 3 livros por pessoa (4 para formandos), prazo configurável da reserva pedagógica (`0218`) e as telas de usuários, empréstimo, multas, histórico e relatórios.
+4. **Código que vem do design:** busca (`0109` em revisão no PR 122; `0110` a `0112` por fazer), limite de 3 livros por pessoa (4 para formandos), prazo configurável da reserva pedagógica (`0218`) e as telas de usuários, empréstimo, multas, histórico e relatórios.
 5. **Banco:** a proteção contra senhas vazadas é do plano pago do Supabase; o projeto fica no plano gratuito, então segue desligada. As senhas dos usuários de teste foram trocadas em 28/10 (ficam só com o dono). (`TRUNCATE`, `REFERENCES` e `TRIGGER` de `anon` e `authenticated` já foram retirados em 28/10, migration `20261028170852`.)
 6. **Decisões abertas:** como a funcionária cadastra um aluno (convite por e-mail foi a decisão de 26/10; falta implementar), avisos por WhatsApp (`0065`, adiado) e limite de envios da newsletter por IP.
 7. **Release:** a `main` está à frente da v0.4.0; a próxima release alinha o `package.json`.
