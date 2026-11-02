@@ -3,6 +3,9 @@ export type BookStatus = "active" | "inactive";
 
 export type BookStatusFilter = "all" | BookStatus;
 
+// Filtro STATUS da pesquisa de livros (Figma, card 0108): todos, disponível, emprestado ou reservado.
+export type BookAvailabilityFilter = "all" | "available" | "borrowed" | "reserved";
+
 // Uma linha da listagem do acervo (Figma, card 0113).
 export interface BookListItem {
   id: string;
