@@ -4,7 +4,9 @@ import {
   bookAvailability,
   booksHref,
   cleanSearchTerm,
+  bookSituation,
   confirmsTitle,
+  countSituations,
   isUuid,
   pageNumbers,
   parseBookFilters,
@@ -28,6 +30,47 @@ describe("bookAvailability", () => {
   });
   it("com exemplar na estante fica disponível", () => {
     expect(bookAvailability({ quantity: 2, openLoans: 1, status: "active" })).toBe("available");
+  });
+});
+
+describe("bookSituation", () => {
+  const base = { quantity: 4, openLoans: 1, status: "active" as const, hasActiveReservation: false };
+
+  it("com exemplar livre e sem reserva fica disponível", () => {
+    expect(bookSituation(base)).toBe("available");
+  });
+  it("com exemplar livre guardado para reserva fica reservado", () => {
+    expect(bookSituation({ ...base, hasActiveReservation: true })).toBe("reserved");
+  });
+  it("sem exemplar livre fica emprestado, mesmo com reserva", () => {
+    expect(bookSituation({ ...base, openLoans: 4, hasActiveReservation: true })).toBe("unavailable");
+  });
+  it("livro inativo fica inativo, mesmo com reserva", () => {
+    expect(bookSituation({ ...base, status: "inactive", hasActiveReservation: true })).toBe("inactive");
+  });
+});
+
+describe("countSituations", () => {
+  const active = { quantity: 2, status: "active" as const };
+
+  it("conta cada situação e soma o total dos livros ativos", () => {
+    const counts = countSituations([
+      { ...active, openLoans: 0, hasActiveReservation: false },
+      { ...active, openLoans: 0, hasActiveReservation: false },
+      { ...active, openLoans: 2, hasActiveReservation: false },
+      { ...active, openLoans: 1, hasActiveReservation: true },
+    ]);
+    expect(counts).toEqual({ available: 2, unavailable: 1, reserved: 1 });
+  });
+  it("não conta livro inativo", () => {
+    expect(countSituations([{ quantity: 2, status: "inactive", openLoans: 0, hasActiveReservation: false }])).toEqual({
+      available: 0,
+      unavailable: 0,
+      reserved: 0,
+    });
+  });
+  it("lista vazia zera tudo", () => {
+    expect(countSituations([])).toEqual({ available: 0, unavailable: 0, reserved: 0 });
   });
 });
 
