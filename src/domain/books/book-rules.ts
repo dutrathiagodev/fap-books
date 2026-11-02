@@ -1,4 +1,4 @@
-import type { BookListFilters, BookStatus, BookStatusFilter } from "@/types/book";
+import type { BookAvailabilityFilter, BookListFilters, BookStatus, BookStatusFilter } from "@/types/book";
 
 export type BookAvailability = "available" | "unavailable" | "inactive";
 
@@ -54,11 +54,26 @@ export function parseBookFilters(params: RawParams): BookListFilters {
   };
 }
 
-// Estado da barra de busca da pesquisa de livros (Figma, card 0109): texto, categoria e "só disponíveis".
+// Estado da barra de busca da pesquisa de livros (Figma, card 0109): texto, categoria e STATUS.
 export interface BookSearchState {
   query: string;
   category: string;
-  onlyAvailable: boolean;
+  availability: BookAvailabilityFilter;
+}
+
+const AVAILABILITY_PARAM: Record<Exclude<BookAvailabilityFilter, "all">, string> = {
+  available: "disponivel",
+  borrowed: "emprestado",
+  reserved: "reservado",
+};
+
+// Lê o STATUS do endereço (?situacao=disponivel|emprestado|reservado). Valor estranho vale "todos".
+export function parseAvailabilityFilter(params: RawParams): BookAvailabilityFilter {
+  const value = first(params.situacao);
+  const found = (Object.keys(AVAILABILITY_PARAM) as Array<keyof typeof AVAILABILITY_PARAM>).find(
+    (key) => AVAILABILITY_PARAM[key] === value,
+  );
+  return found ?? "all";
 }
 
 // Monta o endereço de uma pesquisa mantendo só o que tem valor. Mudar a busca volta para a primeira página
@@ -67,14 +82,14 @@ export function bookSearchHref(basePath: string, state: Partial<BookSearchState>
   const search = new URLSearchParams();
   if (state.query) search.set("q", state.query);
   if (state.category) search.set("categoria", state.category);
-  if (state.onlyAvailable) search.set("disponiveis", "1");
+  if (state.availability && state.availability !== "all") search.set("situacao", AVAILABILITY_PARAM[state.availability]);
   const text = search.toString();
   return text ? `${basePath}?${text}` : basePath;
 }
 
-// Lê o chip "Disponíveis" do endereço (?disponiveis=1). Qualquer outro valor vale como desligado.
-export function parseOnlyAvailable(params: RawParams): boolean {
-  return first(params.disponiveis) === "1";
+// Valor do ?situacao= de cada opção (o formulário de busca guarda o STATUS ativo num campo escondido).
+export function availabilityParam(availability: Exclude<BookAvailabilityFilter, "all">): string {
+  return AVAILABILITY_PARAM[availability];
 }
 
 // Monta o endereço da listagem mantendo só os filtros que têm valor.
