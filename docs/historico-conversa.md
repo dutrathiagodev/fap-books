@@ -153,7 +153,7 @@ Scripts em `scripts/` e workflows em `.github/workflows/`. Os testes de lógica 
 
 ## 13. Pendências (atualizado em 01/11/2026)
 
-1. **Telas do Igor** (`0126`, `0135`, `0138`, `0140`) e **da Julia** (`0157`, `0147`); depois delas, a revisão final do Figma (`0209`, bloqueada) e o fechamento do `0210`.
+1. ~~Telas do Igor e da Julia, revisão final do Figma (`0209`) e fechamento do `0210`~~ Feitos: as seis telas foram desenhadas pelo dono em 31/10, o time aprovou, e o `0209` e o `0210` foram para Done em 01/11.
 2. ~~Fotos de pessoas da landing~~ Liberadas por um professor da FAP para uso pedagógico; o dono decidiu que não precisa de documento (28/10).
 3. ~~Textos legais~~ `/termos` e `/acessibilidade` seguem os dados oficiais da biblioteca; o dono decidiu que não precisam de revisão externa (28/10).
 4. **Código que vem do design:** busca (`0109` a `0112`), limite de 3 livros por pessoa (4 para formandos), prazo configurável da reserva pedagógica (`0218`) e as telas de usuários, empréstimo, multas, histórico e relatórios.
