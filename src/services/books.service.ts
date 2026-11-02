@@ -1,6 +1,6 @@
 import { connection } from "next/server";
 import { createSupabaseServerClient } from "@/lib/supabase/server-client";
-import { cleanSearchTerm } from "@/domain/books/book-rules";
+import { cleanSearchTerm, countSituations, type SituationCounts } from "@/domain/books/book-rules";
 import type { BookActionResult, BookListFilters, BookListItem, BookListResult, BookStatus } from "@/types/book";
 import { recordAudit } from "./audit.service";
 
@@ -8,8 +8,48 @@ export const BOOKS_PAGE_SIZE = 10;
 
 // Código do Postgres para "ainda é usado por outra tabela" (empréstimo, reserva ou reserva pedagógica).
 const FOREIGN_KEY_VIOLATION = "23503";
+// Reserva que ainda guarda um exemplar: aguardando ou pronta para retirada (as outras já foram atendidas ou canceladas).
+const ACTIVE_RESERVATION_STATUSES = ["waiting", "ready"];
 // Código do PostgREST para página além do fim da lista.
 const RANGE_NOT_SATISFIABLE = "PGRST103";
+
+// Filtro de busca por título, autor ou código. A listagem e os contadores usam o mesmo, para os números baterem.
+function searchClause(term: string): string {
+  return `title.ilike.%${term}%,author.ilike.%${term}%,code.ilike.%${term}%`;
+}
+
+// Contadores do topo: quantos títulos do resultado do filtro (não só da página) estão disponíveis, emprestados ou reservados.
+// Lê até 1000 linhas por consulta (limite padrão do PostgREST); acima disso, trocar por uma função no banco.
+export async function countBookSituations(filters: BookListFilters): Promise<SituationCounts> {
+  await connection();
+  const supabase = await createSupabaseServerClient();
+
+  let booksQuery = supabase.from("books").select("id, quantity, status");
+  const term = cleanSearchTerm(filters.query);
+  if (term) booksQuery = booksQuery.or(searchClause(term));
+  if (filters.category) booksQuery = booksQuery.eq("category", filters.category);
+  if (filters.status !== "all") booksQuery = booksQuery.eq("status", filters.status);
+
+  const [books, loans, reservations] = await Promise.all([
+    booksQuery,
+    supabase.from("loans").select("book_id").is("returned_at", null),
+    supabase.from("reservations").select("book_id").in("status", ACTIVE_RESERVATION_STATUSES),
+  ]);
+  if (books.error || loans.error || reservations.error) throw new Error("Não foi possível contar o acervo.");
+
+  const openLoans = new Map<string, number>();
+  for (const loan of loans.data) openLoans.set(loan.book_id, (openLoans.get(loan.book_id) ?? 0) + 1);
+  const reserved = new Set(reservations.data.map((reservation) => reservation.book_id));
+
+  return countSituations(
+    books.data.map((book) => ({
+      quantity: book.quantity,
+      status: book.status as BookStatus,
+      openLoans: openLoans.get(book.id) ?? 0,
+      hasActiveReservation: reserved.has(book.id),
+    })),
+  );
+}
 
 // Lista o acervo com busca, filtros e página. Só a bibliotecária usa esta tela (o RLS libera a leitura a todos).
 export async function listBooks(filters: BookListFilters): Promise<BookListResult> {
@@ -24,7 +64,7 @@ export async function listBooks(filters: BookListFilters): Promise<BookListResul
     .range(from, from + BOOKS_PAGE_SIZE - 1);
 
   const term = cleanSearchTerm(filters.query);
-  if (term) query = query.or(`title.ilike.%${term}%,author.ilike.%${term}%,code.ilike.%${term}%`);
+  if (term) query = query.or(searchClause(term));
   if (filters.category) query = query.eq("category", filters.category);
   if (filters.status !== "all") query = query.eq("status", filters.status);
 
@@ -38,7 +78,9 @@ export async function listBooks(filters: BookListFilters): Promise<BookListResul
   const ids = data.map((row) => row.id);
   const [loans, reservations, pedagogical, categories] = await Promise.all([
     ids.length ? supabase.from("loans").select("book_id, returned_at").in("book_id", ids) : { data: [], error: null },
-    ids.length ? supabase.from("reservations").select("book_id").in("book_id", ids) : { data: [], error: null },
+    ids.length
+      ? supabase.from("reservations").select("book_id, status").in("book_id", ids)
+      : { data: [], error: null },
     ids.length
       ? supabase.from("pedagogical_reservation_books").select("book_id").in("book_id", ids)
       : { data: [], error: null },
@@ -55,6 +97,9 @@ export async function listBooks(filters: BookListFilters): Promise<BookListResul
     if (loan.returned_at === null) openLoans.set(loan.book_id, (openLoans.get(loan.book_id) ?? 0) + 1);
   }
   for (const row of [...(reservations.data ?? []), ...(pedagogical.data ?? [])]) withHistory.add(row.book_id);
+  const withActiveReservation = new Set(
+    (reservations.data ?? []).filter((row) => ACTIVE_RESERVATION_STATUSES.includes(row.status)).map((row) => row.book_id),
+  );
 
   const books: BookListItem[] = data.map((row) => ({
     id: row.id,
@@ -66,6 +111,7 @@ export async function listBooks(filters: BookListFilters): Promise<BookListResul
     status: row.status as BookStatus,
     coverUrl: row.cover_url,
     openLoans: openLoans.get(row.id) ?? 0,
+    hasActiveReservation: withActiveReservation.has(row.id),
     hasHistory: withHistory.has(row.id),
   }));
 

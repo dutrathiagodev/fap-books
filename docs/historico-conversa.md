@@ -131,6 +131,13 @@ Scripts em `scripts/` e workflows em `.github/workflows/`. Os testes de lógica 
 - **28/10:** foto no login, menu lateral novo, e-mail e encarregado oficiais no aviso (`0220`, `0222`); regra de qualidade de software ([qualidade-de-software.md](qualidade-de-software.md)) e checklist no modelo de PR; **landing page** na raiz do site (`0210`) com newsletter (tabela `newsletter_subscribers`, só nome e e-mail com consentimento), tela de boas-vindas do celular (`0221`), modo claro e escuro conforme os cards `0195` e `0198`, fotos e capas do Figma, páginas `/termos`, `/acessibilidade` e `/suporte` e redes da Faculdade Adventista do Paraná no rodapé. Tudo na `main` e no ar (PRs `#99`, `#101`, `#103` e `#105`).
 - **Em aberto:** a aprovação do design do `0210`, que depende da revisão final do Figma (`0209`).
 
+## 10g. Telas finais, Trello ligado ao GitHub e acervo (31/10 e 01/11/2026)
+
+- **31/10:** as seis telas que faltavam (`0126`, `0135`, `0138`, `0140`, `0157` e `0147`) foram desenhadas direto no Figma pelo dono, por decisão dele, com as variáveis, os estilos de texto e os componentes do design system; a documentação de cada tela entrou em `docs/design/telas/` (PRs 115 e 116).
+- **01/11:** o time aprovou as seis telas, a revisão final do Figma (`0209`) e o design da landing (`0210`) foram para Done, e o Trello passou a anexar cada PR ao card e a marcar a checklist `Filhos` dos cards pai (PRs 117 e 118).
+- **Acervo (`0114`):** paginação com números, categoria em etiqueta, contadores de disponíveis, emprestados e reservados, e o status Reservado na tabela (PRs 119 a 123).
+- **Em aberto:** a barra de busca da pesquisa de livros (`0109`, PR 122) e a página que a usa (`0110`).
+
 ## 11. Entregas
 
 - PRs de `#3` a `#23`, todos mergeados (o `#23` levou a logo, o seed e o login para a `main`). O fluxo é: card, branch `FAP/<número>`, PR para a `develop` e entrega na `main` por PR com bypass do dono.
@@ -144,12 +151,12 @@ Scripts em `scripts/` e workflows em `.github/workflows/`. Os testes de lógica 
 
 - **Ao mergear o PR `develop` → `main`, não apague a `develop`.** Ela é permanente. Nos PRs `FAP/<n>` pode apagar a branch.
 
-## 13. Pendências (atualizado em 28/10/2026)
+## 13. Pendências (atualizado em 01/11/2026)
 
-1. **Telas do Igor** (`0126`, `0135`, `0138`, `0140`) e **da Julia** (`0157`, `0147`); depois delas, a revisão final do Figma (`0209`, bloqueada) e o fechamento do `0210`.
+1. ~~Telas do Igor e da Julia, revisão final do Figma (`0209`) e fechamento do `0210`~~ Feitos: as seis telas foram desenhadas pelo dono em 31/10, o time aprovou, e o `0209` e o `0210` foram para Done em 01/11.
 2. ~~Fotos de pessoas da landing~~ Liberadas por um professor da FAP para uso pedagógico; o dono decidiu que não precisa de documento (28/10).
 3. ~~Textos legais~~ `/termos` e `/acessibilidade` seguem os dados oficiais da biblioteca; o dono decidiu que não precisam de revisão externa (28/10).
-4. **Código que vem do design:** busca (`0109` a `0112`), limite de 3 livros por pessoa (4 para formandos), prazo configurável da reserva pedagógica (`0218`) e as telas de usuários, empréstimo, multas, histórico e relatórios.
+4. **Código que vem do design:** busca (`0109` em revisão no PR 122; `0110` a `0112` por fazer), limite de 3 livros por pessoa (4 para formandos), prazo configurável da reserva pedagógica (`0218`) e as telas de usuários, empréstimo, multas, histórico e relatórios.
 5. **Banco:** a proteção contra senhas vazadas é do plano pago do Supabase; o projeto fica no plano gratuito, então segue desligada. As senhas dos usuários de teste foram trocadas em 28/10 (ficam só com o dono). (`TRUNCATE`, `REFERENCES` e `TRIGGER` de `anon` e `authenticated` já foram retirados em 28/10, migration `20261028170852`.)
 6. **Decisões abertas:** como a funcionária cadastra um aluno (convite por e-mail foi a decisão de 26/10; falta implementar), avisos por WhatsApp (`0065`, adiado) e limite de envios da newsletter por IP.
-7. **Release:** a `main` está à frente da v0.4.0; a próxima release alinha o `package.json`.
+7. **Release:** a v0.5.0 (28/10) é a última; a próxima só quando houver entrega nova no código, com o `package.json` alinhado.

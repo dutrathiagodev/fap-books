@@ -5,7 +5,7 @@ Tela: **registrar reserva pedagógica presencial**.
 
 ## Layout do celular (375 px)
 
-Moldura de **375 px**, nome `[FAP - 0138] - Registrar reserva pedagógica presencial (Stitch → Figma) / Mobile`.
+Moldura de **375 px**, nome `[FAP - 0138] - Registrar reserva pedagógica presencial / Mobile`.
 
 - **Cabeçalho móvel** de 64 px: botão de menu (abre a gaveta do card 0101), logo e sino.
 - **Principal** em coluna única, 16 px de respiro e 16 px entre blocos.
