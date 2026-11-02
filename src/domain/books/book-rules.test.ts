@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  availabilityParam,
   availableCopies,
   bookAvailability,
   bookSearchHref,
@@ -7,8 +8,8 @@ import {
   cleanSearchTerm,
   confirmsTitle,
   isUuid,
+  parseAvailabilityFilter,
   parseBookFilters,
-  parseOnlyAvailable,
 } from "./book-rules";
 
 describe("availableCopies", () => {
@@ -76,22 +77,29 @@ describe("parseBookFilters", () => {
 describe("bookSearchHref", () => {
   it("sem filtros devolve só o caminho", () => {
     expect(bookSearchHref("/aluno/livros", {})).toBe("/aluno/livros");
-    expect(bookSearchHref("/aluno/livros", { query: "", category: "", onlyAvailable: false })).toBe("/aluno/livros");
+    expect(bookSearchHref("/aluno/livros", { query: "", category: "", availability: "all" })).toBe("/aluno/livros");
   });
   it("leva só o que tem valor e codifica o texto", () => {
-    expect(bookSearchHref("/aluno/livros", { query: "dom casmurro", category: "Romance", onlyAvailable: true })).toBe(
-      "/aluno/livros?q=dom+casmurro&categoria=Romance&disponiveis=1",
+    expect(bookSearchHref("/aluno/livros", { query: "dom casmurro", category: "Romance", availability: "borrowed" })).toBe(
+      "/aluno/livros?q=dom+casmurro&categoria=Romance&situacao=emprestado",
     );
     expect(bookSearchHref("/aluno/livros", { category: "Saúde" })).toBe("/aluno/livros?categoria=Sa%C3%BAde");
   });
 });
 
-describe("parseOnlyAvailable", () => {
-  it("só 1 liga o chip", () => {
-    expect(parseOnlyAvailable({ disponiveis: "1" })).toBe(true);
-    expect(parseOnlyAvailable({ disponiveis: "0" })).toBe(false);
-    expect(parseOnlyAvailable({ disponiveis: ["1", "x"] })).toBe(true);
-    expect(parseOnlyAvailable({})).toBe(false);
+describe("parseAvailabilityFilter", () => {
+  it("lê as três situações e trata o resto como todos", () => {
+    expect(parseAvailabilityFilter({ situacao: "disponivel" })).toBe("available");
+    expect(parseAvailabilityFilter({ situacao: "emprestado" })).toBe("borrowed");
+    expect(parseAvailabilityFilter({ situacao: ["reservado", "x"] })).toBe("reserved");
+    expect(parseAvailabilityFilter({ situacao: "x" })).toBe("all");
+    expect(parseAvailabilityFilter({})).toBe("all");
+  });
+  it("ida e volta com bookSearchHref", () => {
+    for (const availability of ["available", "borrowed", "reserved"] as const) {
+      const param = availabilityParam(availability);
+      expect(parseAvailabilityFilter({ situacao: param })).toBe(availability);
+    }
   });
 });
 
