@@ -2,7 +2,7 @@ import { Suspense } from "react";
 import Link from "next/link";
 import { Info, Search } from "lucide-react";
 import { AppShell, BooksTable, EmptyState, LoadingState, PageHeader } from "@/components";
-import { booksHref, parseBookFilters } from "@/domain/books/book-rules";
+import { booksHref, pageNumbers, parseBookFilters } from "@/domain/books/book-rules";
 import { requireRole } from "@/lib/require-role";
 import { listBooks } from "@/services/books.service";
 import { deleteBookAction, inactivateBookAction } from "./actions";
@@ -101,9 +101,26 @@ async function AcervoContent({ searchParams }: { searchParams: SearchParams }) {
                   Anterior
                 </Link>
               )}
-              <span aria-current="page" className="px-2 font-medium">
-                Página {page} de {pages}
-              </span>
+              {pageNumbers(page, pages).map((item, index) =>
+                item === "…" ? (
+                  <span key={`gap-${index}`} aria-hidden className="px-1 text-ink-muted">
+                    …
+                  </span>
+                ) : item === page ? (
+                  <span key={item} aria-current="page" className="flex size-9 items-center justify-center rounded-md bg-brand font-medium text-on-brand">
+                    {item}
+                  </span>
+                ) : (
+                  <Link
+                    key={item}
+                    href={booksHref({ ...filters, page: item })}
+                    aria-label={`Ir para a página ${item}`}
+                    className="flex size-9 items-center justify-center rounded-md border border-line-strong hover:bg-subtle"
+                  >
+                    {item}
+                  </Link>
+                ),
+              )}
               {page < pages && (
                 <Link href={booksHref({ ...filters, page: page + 1 })} className="rounded-md border border-line-strong px-3 py-1.5 hover:bg-subtle">
                   Próxima
