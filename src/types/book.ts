@@ -15,6 +15,8 @@ export interface BookListItem {
   coverUrl: string | null;
   // Exemplares emprestados agora (empréstimos sem devolução).
   openLoans: number;
+  // Tem reserva aguardando ou pronta para retirada (guarda um exemplar).
+  hasActiveReservation: boolean;
   // Já teve empréstimo, reserva ou reserva pedagógica: não pode ser excluído, só inativado.
   hasHistory: boolean;
 }
