@@ -78,7 +78,9 @@ export async function listBooks(filters: BookListFilters): Promise<BookListResul
   const ids = data.map((row) => row.id);
   const [loans, reservations, pedagogical, categories] = await Promise.all([
     ids.length ? supabase.from("loans").select("book_id, returned_at").in("book_id", ids) : { data: [], error: null },
-    ids.length ? supabase.from("reservations").select("book_id").in("book_id", ids) : { data: [], error: null },
+    ids.length
+      ? supabase.from("reservations").select("book_id, status").in("book_id", ids)
+      : { data: [], error: null },
     ids.length
       ? supabase.from("pedagogical_reservation_books").select("book_id").in("book_id", ids)
       : { data: [], error: null },
@@ -95,6 +97,9 @@ export async function listBooks(filters: BookListFilters): Promise<BookListResul
     if (loan.returned_at === null) openLoans.set(loan.book_id, (openLoans.get(loan.book_id) ?? 0) + 1);
   }
   for (const row of [...(reservations.data ?? []), ...(pedagogical.data ?? [])]) withHistory.add(row.book_id);
+  const withActiveReservation = new Set(
+    (reservations.data ?? []).filter((row) => ACTIVE_RESERVATION_STATUSES.includes(row.status)).map((row) => row.book_id),
+  );
 
   const books: BookListItem[] = data.map((row) => ({
     id: row.id,
@@ -106,6 +111,7 @@ export async function listBooks(filters: BookListFilters): Promise<BookListResul
     status: row.status as BookStatus,
     coverUrl: row.cover_url,
     openLoans: openLoans.get(row.id) ?? 0,
+    hasActiveReservation: withActiveReservation.has(row.id),
     hasHistory: withHistory.has(row.id),
   }));
 
