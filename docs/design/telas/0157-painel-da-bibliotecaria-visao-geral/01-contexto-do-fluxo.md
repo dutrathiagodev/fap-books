@@ -7,7 +7,7 @@ Tela: **painel da bibliotecária: visão geral**.
 
 **Fluxo:** Estrutura e painel.
 
-**🔗 Fluxo: Estrutura e painel** · tela 2 de 3 · responsável: Julia
+**🔗 Fluxo: Estrutura e painel** · tela 2 de 3 · responsável: Thiago Dutra (card antes de Julia Wassão)
 **Siga a ordem do fluxo de telas** (`docs/design/fluxo-de-telas.md`): uma tela de cada vez, na sequência abaixo.
 Sequência: 0101 → **0157** → 0147
 - **Recebe da anterior:** Molde do 0101.

@@ -7,7 +7,7 @@ Tela: **solicitar reserva pedagógica (professor)**.
 
 **Fluxo:** Usuários e reserva pedagógica.
 
-**🔗 Fluxo: Usuários e reserva pedagógica** · tela 3 de 5 · responsável: Igor
+**🔗 Fluxo: Usuários e reserva pedagógica** · tela 3 de 5 · responsável: Thiago Dutra (card antes de Igor Santana)
 **Siga a ordem do fluxo de telas** (`docs/design/fluxo-de-telas.md`): uma tela de cada vez, na sequência abaixo.
 Sequência: 0121 → 0126 → **0135** → 0138 → 0140
 - **Recebe da anterior:** Pesquisa e detalhe (botão Solicitar reserva pedagógica).

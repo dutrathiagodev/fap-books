@@ -5,7 +5,7 @@ Tela: **painel da bibliotecária: visão geral**.
 
 ## Adaptação para tablet (768 px)
 
-Regra de adaptação, sem moldura própria no Figma por enquanto (o menu recolhido do card 0101 é a referência).
+Versão tablet descartada pelo dono em 01/11/2026: não haverá moldura de 768 px. Fica só a regra de adaptação abaixo, sem moldura própria no Figma (o menu recolhido do card 0101 é a referência).
 
 - O menu lateral fica **recolhido** (só ícones); abre por cima do conteúdo ao tocar.
 - Área principal com 24 px de respiro; os blocos continuam em coluna, com os campos lado a lado só quando cabem 2 colunas de 336 px.

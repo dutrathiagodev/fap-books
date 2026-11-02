@@ -5,7 +5,7 @@ Tela: **listagem, edição e inativação de usuários**.
 
 ## Layout do celular (375 px)
 
-Moldura de **375 px**, nome `[FAP - 0126] - Listagem, edição e inativação de usuários (Stitch → Figma) / Mobile`.
+Moldura de **375 px**, nome `[FAP - 0126] - Listagem, edição e inativação de usuários / Mobile`.
 
 - **Cabeçalho móvel** de 64 px: botão de menu (abre a gaveta do card 0101), logo e sino.
 - **Principal** em coluna única, 16 px de respiro e 16 px entre blocos.
