@@ -5,7 +5,7 @@ Tela: **avisos de prazo no painel**.
 
 ## Layout do celular (375 px)
 
-Moldura de **375 px**, nome `[FAP - 0147] - Avisos de prazo no painel (Stitch → Figma) / Mobile`.
+Moldura de **375 px**, nome `[FAP - 0147] - Avisos de prazo no painel / Mobile`.
 
 - **Cabeçalho móvel** de 64 px: botão de menu (abre a gaveta do card 0101), logo e sino.
 - **Principal** em coluna única, 16 px de respiro e 16 px entre blocos.

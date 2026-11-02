@@ -5,12 +5,12 @@ Tela: **painel da bibliotecária: visão geral**.
 
 ## Critério de aceite
 
-tela no Stitch (computador e celular) com todos os estados e o link do projeto neste card; depois, frame exportado para o Figma pelo Thiago e aprovado pelo time.
+tela desenhada direto no Figma (computador, celular e estados) por Thiago Dutra em 31/10/2026 e aprovada pelo time (item marcado no Trello em 01/11/2026).
 
 ## Frames esperados no Figma (página "🖥️ UI web")
 
-- `[FAP - 0157] - Painel da bibliotecária: visão geral (Stitch → Figma) / Desktop` (1280 px)
-- `[FAP - 0157] - Painel da bibliotecária: visão geral (Stitch → Figma) / Mobile` (375 px)
+- `[FAP - 0157] - Painel da bibliotecária: visão geral / Desktop` (1280 px)
+- `[FAP - 0157] - Painel da bibliotecária: visão geral / Mobile` (375 px)
 - Estados: padrão, vazio, carregando e erro, mais os listados em `04-estados.md`.
 
 ## Links dos frames no Figma
