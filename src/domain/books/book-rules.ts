@@ -12,6 +12,35 @@ export function bookAvailability(book: { quantity: number; openLoans: number; st
   return availableCopies(book.quantity, book.openLoans) > 0 ? "available" : "unavailable";
 }
 
+// Reservado = ainda há exemplar na estante, mas ele está guardado para uma reserva ativa (aguardando ou pronta).
+export type BookSituation = BookAvailability | "reserved";
+
+export function bookSituation(book: {
+  quantity: number;
+  openLoans: number;
+  status: BookStatus;
+  hasActiveReservation: boolean;
+}): BookSituation {
+  const availability = bookAvailability(book);
+  return availability === "available" && book.hasActiveReservation ? "reserved" : availability;
+}
+
+export interface SituationCounts {
+  available: number;
+  unavailable: number;
+  reserved: number;
+}
+
+// Contadores do topo do acervo. Livro inativo não entra em nenhum dos três.
+export function countSituations(books: Parameters<typeof bookSituation>[0][]): SituationCounts {
+  const counts: SituationCounts = { available: 0, unavailable: 0, reserved: 0 };
+  for (const book of books) {
+    const situation = bookSituation(book);
+    if (situation !== "inactive") counts[situation] += 1;
+  }
+  return counts;
+}
+
 // Tira da busca os caracteres que têm função no filtro do banco (vírgula, parênteses, curinga, aspas).
 export function cleanSearchTerm(raw: string): string {
   return raw
