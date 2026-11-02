@@ -5,7 +5,7 @@ Tela: **avisos de prazo no painel**.
 
 ## Layout do desktop (1280 px)
 
-Moldura de **1280 px** de largura, altura conforme o conteúdo, nome `[FAP - 0147] - Avisos de prazo no painel (Stitch → Figma) / Desktop`.
+Moldura de **1280 px** de largura, altura conforme o conteúdo, nome `[FAP - 0147] - Avisos de prazo no painel / Desktop`.
 
 - **Menu lateral** navy: 272 px (16 px de respiro, 240 px úteis), perfil **Funcionário (Aluno e Professor veem o sino e o Início)**, item ativo **Painel** (fundo `#0D3B6E` e barra clara à esquerda).
 - **Barra superior** branca de 72 px: busca (420 px), sino de avisos e menu do usuário.

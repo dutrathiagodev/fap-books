@@ -2,9 +2,9 @@ import { Suspense } from "react";
 import Link from "next/link";
 import { Info, Search } from "lucide-react";
 import { AppShell, BooksTable, EmptyState, LoadingState, PageHeader } from "@/components";
-import { booksHref, parseBookFilters } from "@/domain/books/book-rules";
+import { booksHref, pageNumbers, parseBookFilters, type SituationCounts } from "@/domain/books/book-rules";
 import { requireRole } from "@/lib/require-role";
-import { listBooks } from "@/services/books.service";
+import { countBookSituations, listBooks } from "@/services/books.service";
 import { deleteBookAction, inactivateBookAction } from "./actions";
 
 type SearchParams = Promise<Record<string, string | string[] | undefined>>;
@@ -12,11 +12,21 @@ type SearchParams = Promise<Record<string, string | string[] | undefined>>;
 const FIELD =
   "h-11 rounded-md border border-line-strong bg-surface px-3 text-sm outline-offset-2 focus-visible:outline-2 focus-visible:outline-focus";
 
+// Contadores ao lado do total (Figma, card 0113): a cor do ponto combina com a do status da linha.
+const SITUATION_COUNTERS: { key: keyof SituationCounts; dot: string; one: string; many: string }[] = [
+  { key: "available", dot: "bg-success-700", one: "disponível", many: "disponíveis" },
+  { key: "unavailable", dot: "bg-info-700", one: "emprestado", many: "emprestados" },
+  { key: "reserved", dot: "bg-warning-700", one: "reservado", many: "reservados" },
+];
+
 // A listagem lê quem está logado e os filtros do endereço (dados da requisição), por isso fica dentro do Suspense.
 async function AcervoContent({ searchParams }: { searchParams: SearchParams }) {
   const profile = await requireRole("librarian");
   const filters = parseBookFilters(await searchParams);
-  const { books, total, page, pageSize, categories } = await listBooks(filters);
+  const [{ books, total, page, pageSize, categories }, situations] = await Promise.all([
+    listBooks(filters),
+    countBookSituations(filters),
+  ]);
   const pages = Math.max(1, Math.ceil(total / pageSize));
   const hasFilter = Boolean(filters.query || filters.category || filters.status !== "all");
   const first = total === 0 ? 0 : (page - 1) * pageSize + 1;
@@ -70,9 +80,17 @@ async function AcervoContent({ searchParams }: { searchParams: SearchParams }) {
         </button>
       </form>
 
-      <p className="mb-3 text-sm text-ink-muted" role="status">
-        {total} {total === 1 ? "título cadastrado" : "títulos cadastrados"}
-      </p>
+      <div className="mb-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-ink-muted" role="status">
+        <span>
+          {total} {total === 1 ? "título cadastrado" : "títulos cadastrados"}
+        </span>
+        {SITUATION_COUNTERS.map(({ key, dot, one, many }) => (
+          <span key={key} className="flex items-center gap-1.5">
+            <span aria-hidden className={`size-2 rounded-full ${dot}`} />
+            {situations[key]} {situations[key] === 1 ? one : many}
+          </span>
+        ))}
+      </div>
 
       {books.length === 0 ? (
         <EmptyState
@@ -101,9 +119,26 @@ async function AcervoContent({ searchParams }: { searchParams: SearchParams }) {
                   Anterior
                 </Link>
               )}
-              <span aria-current="page" className="px-2 font-medium">
-                Página {page} de {pages}
-              </span>
+              {pageNumbers(page, pages).map((item, index) =>
+                item === "…" ? (
+                  <span key={`gap-${index}`} aria-hidden className="px-1 text-ink-muted">
+                    …
+                  </span>
+                ) : item === page ? (
+                  <span key={item} aria-current="page" className="flex size-9 items-center justify-center rounded-md bg-brand font-medium text-on-brand">
+                    {item}
+                  </span>
+                ) : (
+                  <Link
+                    key={item}
+                    href={booksHref({ ...filters, page: item })}
+                    aria-label={`Ir para a página ${item}`}
+                    className="flex size-9 items-center justify-center rounded-md border border-line-strong hover:bg-subtle"
+                  >
+                    {item}
+                  </Link>
+                ),
+              )}
               {page < pages && (
                 <Link href={booksHref({ ...filters, page: page + 1 })} className="rounded-md border border-line-strong px-3 py-1.5 hover:bg-subtle">
                   Próxima
