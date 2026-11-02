@@ -53,7 +53,9 @@ export function BooksTable({ books, onDelete, onInactivate }: BooksTableProps) {
                 <td className="px-4 py-3">{book.author}</td>
                 <td className="px-4 py-3">
                   {book.category ? (
-                    <span className="rounded-full bg-selected px-2.5 py-1 text-xs font-medium text-brand">{book.category}</span>
+                    <span className="inline-block whitespace-nowrap rounded-full bg-selected px-2.5 py-1 text-xs font-medium text-brand">
+                      {book.category}
+                    </span>
                   ) : (
                     "—"
                   )}
