@@ -151,7 +151,7 @@ Scripts em `scripts/` e workflows em `.github/workflows/`. Os testes de lógica 
 
 - **Ao mergear o PR `develop` → `main`, não apague a `develop`.** Ela é permanente. Nos PRs `FAP/<n>` pode apagar a branch.
 
-## 13. Pendências (atualizado em 28/10/2026)
+## 13. Pendências (atualizado em 01/11/2026)
 
 1. **Telas do Igor** (`0126`, `0135`, `0138`, `0140`) e **da Julia** (`0157`, `0147`); depois delas, a revisão final do Figma (`0209`, bloqueada) e o fechamento do `0210`.
 2. ~~Fotos de pessoas da landing~~ Liberadas por um professor da FAP para uso pedagógico; o dono decidiu que não precisa de documento (28/10).
