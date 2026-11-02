@@ -54,6 +54,23 @@ export function parseBookFilters(params: RawParams): BookListFilters {
   };
 }
 
+export type PageItem = number | "…";
+
+// Números da paginação: primeira, última, atual e vizinhas. Buraco de uma página mostra o número; maior, mostra "…".
+export function pageNumbers(current: number, total: number): PageItem[] {
+  const shown = [...new Set([1, current - 1, current, current + 1, total])]
+    .filter((page) => page >= 1 && page <= total)
+    .sort((a, b) => a - b);
+  const items: PageItem[] = [];
+  shown.forEach((page, index) => {
+    const gap = index === 0 ? 0 : page - shown[index - 1];
+    if (gap === 2) items.push(page - 1);
+    else if (gap > 2) items.push("…");
+    items.push(page);
+  });
+  return items;
+}
+
 // Monta o endereço da listagem mantendo só os filtros que têm valor.
 export function booksHref(filters: Partial<BookListFilters>): string {
   const search = new URLSearchParams();

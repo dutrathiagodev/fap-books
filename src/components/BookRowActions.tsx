@@ -50,15 +50,16 @@ export function BookRowActions({ book, onDelete, onInactivate }: BookRowActionsP
 
   return (
     <div className="flex items-center gap-2">
-      <button type="button" disabled title="Em breve" aria-label={`Ver ${book.title}`} className={`${ICON_BUTTON} cursor-not-allowed text-ink-muted opacity-50`}>
+      <button type="button" disabled title="Ver detalhes (em breve)" aria-label={`Ver ${book.title}`} className={`${ICON_BUTTON} cursor-not-allowed text-ink-muted opacity-50`}>
         <Eye size={16} aria-hidden />
       </button>
-      <button type="button" disabled title="Em breve" aria-label={`Editar ${book.title}`} className={`${ICON_BUTTON} cursor-not-allowed text-ink-muted opacity-50`}>
+      <button type="button" disabled title="Editar (em breve)" aria-label={`Editar ${book.title}`} className={`${ICON_BUTTON} cursor-not-allowed text-ink-muted opacity-50`}>
         <Pencil size={16} aria-hidden />
       </button>
       <button
         type="button"
         onClick={open}
+        title="Excluir"
         aria-label={`Excluir ${book.title}`}
         className={`${ICON_BUTTON} cursor-pointer border-danger-100 bg-danger-100 text-danger-700 hover:bg-danger-700 hover:text-white`}
       >

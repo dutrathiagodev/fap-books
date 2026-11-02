@@ -6,6 +6,7 @@ import {
   cleanSearchTerm,
   confirmsTitle,
   isUuid,
+  pageNumbers,
   parseBookFilters,
 } from "./book-rules";
 
@@ -68,6 +69,25 @@ describe("parseBookFilters", () => {
       page: 3,
     });
     expect(parseBookFilters({ status: "x", pagina: "-2" })).toMatchObject({ status: "all", page: 1 });
+  });
+});
+
+describe("pageNumbers", () => {
+  it("mostra todas as páginas quando são poucas", () => {
+    expect(pageNumbers(1, 3)).toEqual([1, 2, 3]);
+    expect(pageNumbers(1, 1)).toEqual([1]);
+  });
+  it("na primeira página esconde o meio com reticências", () => {
+    expect(pageNumbers(1, 24)).toEqual([1, 2, "…", 24]);
+  });
+  it("no meio mostra a atual e as vizinhas", () => {
+    expect(pageNumbers(12, 24)).toEqual([1, "…", 11, 12, 13, "…", 24]);
+  });
+  it("na última página mostra as duas finais", () => {
+    expect(pageNumbers(24, 24)).toEqual([1, "…", 23, 24]);
+  });
+  it("buraco de uma página mostra o número em vez de reticências", () => {
+    expect(pageNumbers(4, 24)).toEqual([1, 2, 3, 4, 5, "…", 24]);
   });
 });
 
