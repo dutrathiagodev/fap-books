@@ -108,6 +108,12 @@ set cover_url = 'https://<id-do-projeto>.supabase.co/storage/v1/object/public/bo
 where code in ('T-001', 'T-002', 'T-010', 'T-014', 'T-016', 'T-017', 'T-018', 'T-019');
 ```
 
+## Dados de catálogo do livro
+
+- Colunas **opcionais** de `books`, usadas pela página de detalhe (card 0111): `isbn` (10 a 20 caracteres), `publisher` (até 120), `publication_year` (1400 a 2100), `description` (sinopse, até 2000), `shelf_location` (ex.: "Estante 4B · Prateleira 2", até 80) e `cdd` (até 20). Livro antigo continua válido sem elas; o limite de tamanho é um `check` no banco. Migration `add_book_details`.
+- O RLS não muda: todo usuário logado lê, só a bibliotecária escreve. O formulário da bibliotecária ainda não preenche esses campos (entram por SQL).
+- A disponibilidade continua calculada, nunca guardada. A função `book_availability()` devolve, por livro ativo, `open_loans`, `has_active_reservation` e `next_due_at` (a menor data de devolução entre os empréstimos em aberto). Só contagens e datas, nunca quem pegou o livro; só executa quem está logado com perfil ativo.
+
 ## Dados de teste
 
 O arquivo `supabase/seed.sql` cria 20 livros (códigos `T-001` a `T-020`) com títulos, autores e categorias **iguais aos das telas do Figma**, e, se já existir um aluno cadastrado, 3 empréstimos de exemplo (um em dia, um devolvido e um atrasado). Os livros são reais; os empréstimos e as pessoas são fictícios.

@@ -1,23 +1,10 @@
 import Link from "next/link";
 import { ArrowLeft, BookOpen, Info } from "lucide-react";
-import { formatBrazilDate } from "@/domain/books/book-rules";
+import { catalogRows, formatBrazilDate } from "@/domain/books/book-rules";
 import type { BookDetail } from "@/types/book";
 import { SituationBadge } from "./SituationBadge";
 
 const DISABLED_BUTTON = "h-11 cursor-not-allowed rounded-md px-5 text-sm font-medium opacity-60";
-
-// Linhas de catálogo: só entram as que o livro tem.
-function catalogRows(book: BookDetail): Array<[string, string]> {
-  const rows: Array<[string, string | number | null]> = [
-    ["Código", book.code],
-    ["ISBN", book.isbn],
-    ["Editora", book.publisher],
-    ["Ano", book.publicationYear],
-    ["Localização", book.shelfLocation],
-    ["CDD", book.cdd],
-  ];
-  return rows.filter((row): row is [string, string | number] => row[1] !== null).map(([label, value]) => [label, String(value)]);
-}
 
 // Página de detalhe do livro (Figma, card 0111): capa, dados do catálogo, situação e exemplares. Só desenha:
 // a página carrega o livro. Reservar e entrar na fila (card 0115) ficam desativados até o fluxo existir.
