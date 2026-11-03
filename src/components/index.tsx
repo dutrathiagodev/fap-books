@@ -6,6 +6,7 @@ import { BookSearchBar } from "./BookSearchBar";
 import { BooksTable } from "./BooksTable";
 import { Button } from "./Button";
 import { EmptyState } from "./EmptyState";
+import { FilterMenu } from "./FilterMenu";
 import { LoadingState } from "./LoadingState";
 import { LoginForm } from "./LoginForm";
 import { Logo } from "./Logo";
@@ -23,6 +24,7 @@ export {
   BooksTable,
   Button,
   EmptyState,
+  FilterMenu,
   LoadingState,
   LoginForm,
   Logo,
