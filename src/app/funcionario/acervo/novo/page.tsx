@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
-import { AppShell, BookFormFields, LoadingState, PageHeader } from "@/components";
+import { AppShell, BookCoverUpload, BookFormFields, LoadingState, PageHeader } from "@/components";
 import { requireRole } from "@/lib/require-role";
 
 // A página lê quem está logado, por isso fica dentro do Suspense.
@@ -25,8 +25,15 @@ async function NovoLivroContent() {
         }
       />
 
-      <section className="max-w-3xl rounded-lg border border-line bg-surface p-4 shadow-sm md:p-6">
-        <BookFormFields />
+      <section className="max-w-5xl rounded-lg border border-line bg-surface p-4 shadow-sm md:p-6">
+        <div className="grid grid-cols-1 items-start gap-6 md:grid-cols-[minmax(0,1fr)_13.5rem]">
+          <div className="md:col-start-2 md:row-start-1">
+            <BookCoverUpload />
+          </div>
+          <div className="md:col-start-1 md:row-start-1">
+            <BookFormFields />
+          </div>
+        </div>
       </section>
     </AppShell>
   );
