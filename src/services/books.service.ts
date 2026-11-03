@@ -40,6 +40,16 @@ function sortedCategories(rows: { category: string | null }[]): string[] {
   return [...new Set(rows.map((row) => row.category as string))].sort((a, b) => a.localeCompare(b, "pt-BR"));
 }
 
+type ServerClient = Awaited<ReturnType<typeof createSupabaseServerClient>>;
+
+// Categorias do acervo. A categoria que vem do endereço só pode ir para a consulta se estiver nesta lista: texto
+// desconhecido (inclusive de ataque) nunca chega ao banco.
+async function loadCategories(supabase: ServerClient): Promise<string[]> {
+  const { data, error } = await supabase.from("books").select("category").not("category", "is", null);
+  if (error) throw new Error("Não foi possível carregar as categorias.");
+  return sortedCategories(data);
+}
+
 // Uma linha de book_availability: só contagens por livro, nunca quem pegou ou reservou.
 interface ShelfRow {
   book_id: string;
@@ -110,6 +120,9 @@ export async function searchBooks(
 export async function countBookSituations(filters: BookListFilters): Promise<SituationCounts> {
   await connection();
   const supabase = await createSupabaseServerClient();
+  if (filters.category && !(await loadCategories(supabase)).includes(filters.category)) {
+    return { available: 0, unavailable: 0, reserved: 0 };
+  }
 
   let booksQuery = supabase.from("books").select("id, quantity, status");
   const term = cleanSearchTerm(filters.query);
@@ -142,6 +155,10 @@ export async function countBookSituations(filters: BookListFilters): Promise<Sit
 export async function listBooks(filters: BookListFilters): Promise<BookListResult> {
   await connection();
   const supabase = await createSupabaseServerClient();
+  const categories = await loadCategories(supabase);
+  if (filters.category && !categories.includes(filters.category)) {
+    return { books: [], total: 0, page: 1, pageSize: BOOKS_PAGE_SIZE, categories };
+  }
 
   const from = (filters.page - 1) * BOOKS_PAGE_SIZE;
   let query = supabase
@@ -163,7 +180,7 @@ export async function listBooks(filters: BookListFilters): Promise<BookListResul
   if (error || !data) throw new Error("Não foi possível carregar o acervo.");
 
   const ids = data.map((row) => row.id);
-  const [loans, reservations, pedagogical, categories] = await Promise.all([
+  const [loans, reservations, pedagogical] = await Promise.all([
     ids.length ? supabase.from("loans").select("book_id, returned_at").in("book_id", ids) : { data: [], error: null },
     ids.length
       ? supabase.from("reservations").select("book_id, status").in("book_id", ids)
@@ -171,9 +188,8 @@ export async function listBooks(filters: BookListFilters): Promise<BookListResul
     ids.length
       ? supabase.from("pedagogical_reservation_books").select("book_id").in("book_id", ids)
       : { data: [], error: null },
-    supabase.from("books").select("category").not("category", "is", null),
   ]);
-  if (loans.error || reservations.error || pedagogical.error || categories.error) {
+  if (loans.error || reservations.error || pedagogical.error) {
     throw new Error("Não foi possível carregar o acervo.");
   }
 
@@ -202,7 +218,7 @@ export async function listBooks(filters: BookListFilters): Promise<BookListResul
     hasHistory: withHistory.has(row.id),
   }));
 
-  return { books, total: count ?? 0, page: filters.page, pageSize: BOOKS_PAGE_SIZE, categories: sortedCategories(categories.data ?? []) };
+  return { books, total: count ?? 0, page: filters.page, pageSize: BOOKS_PAGE_SIZE, categories };
 }
 
 // Exclui o livro. O banco recusa se ele tem histórico (FK), e o RLS recusa quem não é bibliotecária.
