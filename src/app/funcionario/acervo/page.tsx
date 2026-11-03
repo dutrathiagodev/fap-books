@@ -1,8 +1,8 @@
 import { Suspense } from "react";
 import Link from "next/link";
 import { Info, Search } from "lucide-react";
-import { AppShell, BooksTable, EmptyState, LoadingState, PageHeader } from "@/components";
-import { booksHref, pageNumbers, parseBookFilters, type SituationCounts } from "@/domain/books/book-rules";
+import { AppShell, BooksTable, EmptyState, LoadingState, PageHeader, Pagination } from "@/components";
+import { booksHref, parseBookFilters, type SituationCounts } from "@/domain/books/book-rules";
 import { requireRole } from "@/lib/require-role";
 import { countBookSituations, listBooks } from "@/services/books.service";
 import { deleteBookAction, inactivateBookAction } from "./actions";
@@ -109,43 +109,13 @@ async function AcervoContent({ searchParams }: { searchParams: SearchParams }) {
       ) : (
         <>
           <BooksTable books={books} onDelete={deleteBookAction} onInactivate={inactivateBookAction} />
-          <nav aria-label="Páginas do acervo" className="mt-4 flex flex-wrap items-center justify-between gap-3 text-sm">
-            <span className="text-ink-muted">
-              Mostrando {first}-{first + books.length - 1} de {total} livros cadastrados
-            </span>
-            <span className="flex items-center gap-2">
-              {page > 1 && (
-                <Link href={booksHref({ ...filters, page: page - 1 })} className="rounded-md border border-line-strong px-3 py-1.5 hover:bg-subtle">
-                  Anterior
-                </Link>
-              )}
-              {pageNumbers(page, pages).map((item, index) =>
-                item === "…" ? (
-                  <span key={`gap-${index}`} aria-hidden className="px-1 text-ink-muted">
-                    …
-                  </span>
-                ) : item === page ? (
-                  <span key={item} aria-current="page" className="flex size-9 items-center justify-center rounded-md bg-brand font-medium text-on-brand">
-                    {item}
-                  </span>
-                ) : (
-                  <Link
-                    key={item}
-                    href={booksHref({ ...filters, page: item })}
-                    aria-label={`Ir para a página ${item}`}
-                    className="flex size-9 items-center justify-center rounded-md border border-line-strong hover:bg-subtle"
-                  >
-                    {item}
-                  </Link>
-                ),
-              )}
-              {page < pages && (
-                <Link href={booksHref({ ...filters, page: page + 1 })} className="rounded-md border border-line-strong px-3 py-1.5 hover:bg-subtle">
-                  Próxima
-                </Link>
-              )}
-            </span>
-          </nav>
+          <Pagination
+            page={page}
+            pages={pages}
+            summary={`Mostrando ${first}-${first + books.length - 1} de ${total} livros cadastrados`}
+            label="Páginas do acervo"
+            hrefFor={(target) => booksHref({ ...filters, page: target })}
+          />
         </>
       )}
 

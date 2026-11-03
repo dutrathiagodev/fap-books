@@ -37,6 +37,8 @@ describe("decideRoute", () => {
   it("deixa cada perfil abrir a própria área, inclusive subpáginas", () => {
     expect(decideRoute("/aluno", "student")).toEqual({ action: "allow" });
     expect(decideRoute("/professor/reservas", "teacher")).toEqual({ action: "allow" });
+    expect(decideRoute("/aluno/livros", "student")).toEqual({ action: "allow" });
+    expect(decideRoute("/professor/livros", "teacher")).toEqual({ action: "allow" });
     expect(decideRoute("/funcionario/livros/novo", "librarian")).toEqual({ action: "allow" });
   });
 
@@ -44,6 +46,8 @@ describe("decideRoute", () => {
     expect(decideRoute("/funcionario", "student")).toEqual({ action: "redirect", to: "/aluno" });
     expect(decideRoute("/funcionario", "teacher")).toEqual({ action: "redirect", to: "/professor" });
     expect(decideRoute("/aluno", "librarian")).toEqual({ action: "redirect", to: "/funcionario" });
+    expect(decideRoute("/aluno/livros", "teacher")).toEqual({ action: "redirect", to: "/professor" });
+    expect(decideRoute("/professor/livros", "student")).toEqual({ action: "redirect", to: "/aluno" });
   });
 
   it("manda quem já está logado do /login e da raiz para a própria área", () => {

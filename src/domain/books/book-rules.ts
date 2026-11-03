@@ -1,35 +1,24 @@
-import type { BookAvailabilityFilter, BookListFilters, BookStatus, BookStatusFilter } from "@/types/book";
-
-export type BookAvailability = "available" | "unavailable" | "inactive";
+import type { BookAvailabilityFilter, BookListFilters, BookSituation, BookStatus, BookStatusFilter } from "@/types/book";
 
 // Exemplares na estante: a disponibilidade não é guardada, é calculada (total menos empréstimos em aberto).
 export function availableCopies(quantity: number, openLoans: number): number {
   return Math.max(0, quantity - openLoans);
 }
 
-export function bookAvailability(book: { quantity: number; openLoans: number; status: BookStatus }): BookAvailability {
-  if (book.status === "inactive") return "inactive";
-  return availableCopies(book.quantity, book.openLoans) > 0 ? "available" : "unavailable";
-}
-
-// Reservado = ainda há exemplar na estante, mas ele está guardado para uma reserva ativa (aguardando ou pronta).
-export type BookSituation = BookAvailability | "reserved";
-
+// Situação do título na estante. Emprestado (unavailable) = nenhum exemplar livre. Reservado = ainda há exemplar
+// livre, mas ele está guardado para uma reserva ativa (aguardando ou pronta).
 export function bookSituation(book: {
   quantity: number;
   openLoans: number;
   status: BookStatus;
   hasActiveReservation: boolean;
 }): BookSituation {
-  const availability = bookAvailability(book);
-  return availability === "available" && book.hasActiveReservation ? "reserved" : availability;
+  if (book.status === "inactive") return "inactive";
+  if (availableCopies(book.quantity, book.openLoans) === 0) return "unavailable";
+  return book.hasActiveReservation ? "reserved" : "available";
 }
 
-export interface SituationCounts {
-  available: number;
-  unavailable: number;
-  reserved: number;
-}
+export type SituationCounts = Record<Exclude<BookSituation, "inactive">, number>;
 
 // Contadores do topo do acervo. Livro inativo não entra em nenhum dos três.
 export function countSituations(books: Parameters<typeof bookSituation>[0][]): SituationCounts {
@@ -41,10 +30,12 @@ export function countSituations(books: Parameters<typeof bookSituation>[0][]): S
   return counts;
 }
 
-// Tira da busca os caracteres que têm função no filtro do banco (vírgula, parênteses, curinga, aspas).
+// Deixa na busca só letras, números, espaço, ponto e hífen. O resto vira espaço, inclusive o que tem função no filtro
+// do banco (vírgula, parênteses, curinga, aspas) e sinais de comando SQL. Hífens repetidos viram um só.
 export function cleanSearchTerm(raw: string): string {
   return raw
-    .replace(/[,()*%\\:"']/g, " ")
+    .replace(/[^\p{L}\p{N}\s.-]/gu, " ")
+    .replace(/-{2,}/g, "-")
     .replace(/\s+/g, " ")
     .trim()
     .slice(0, 80);
@@ -90,35 +81,37 @@ export interface BookSearchState {
   availability: BookAvailabilityFilter;
 }
 
-const AVAILABILITY_PARAM: Record<Exclude<BookAvailabilityFilter, "all">, string> = {
-  available: "disponivel",
-  borrowed: "emprestado",
-  reserved: "reservado",
-};
+const AVAILABILITY_FILTERS = ["available", "unavailable", "reserved"] as const;
 
-// Lê o STATUS do endereço (?situacao=disponivel|emprestado|reservado). Valor estranho vale "todos".
+// Lê o STATUS do endereço (?situacao=available|unavailable|reserved). Só aceita valor da lista; o resto vale "todos".
 export function parseAvailabilityFilter(params: RawParams): BookAvailabilityFilter {
   const value = first(params.situacao);
-  const found = (Object.keys(AVAILABILITY_PARAM) as Array<keyof typeof AVAILABILITY_PARAM>).find(
-    (key) => AVAILABILITY_PARAM[key] === value,
-  );
-  return found ?? "all";
+  return AVAILABILITY_FILTERS.find((option) => option === value) ?? "all";
 }
 
-// Monta o endereço de uma pesquisa mantendo só o que tem valor. Mudar a busca volta para a primeira página
+// Monta o endereço de uma pesquisa mantendo só o que tem valor. Sem `page`, a busca volta para a primeira página
 // (o endereço não leva ?pagina=).
-export function bookSearchHref(basePath: string, state: Partial<BookSearchState>): string {
+export function bookSearchHref(basePath: string, state: Partial<BookSearchState> & { page?: number }): string {
   const search = new URLSearchParams();
   if (state.query) search.set("q", state.query);
   if (state.category) search.set("categoria", state.category);
-  if (state.availability && state.availability !== "all") search.set("situacao", AVAILABILITY_PARAM[state.availability]);
+  if (state.availability && state.availability !== "all") search.set("situacao", state.availability);
+  if (state.page && state.page > 1) search.set("pagina", String(state.page));
   const text = search.toString();
   return text ? `${basePath}?${text}` : basePath;
 }
 
-// Valor do ?situacao= de cada opção (o formulário de busca guarda o STATUS ativo num campo escondido).
-export function availabilityParam(availability: Exclude<BookAvailabilityFilter, "all">): string {
-  return AVAILABILITY_PARAM[availability];
+// Aplica o STATUS escolhido e devolve só a página pedida. Se a página passar do fim, vale a última.
+export function paginateBySituation<T extends { situation: BookSituation }>(
+  items: T[],
+  availability: BookAvailabilityFilter,
+  page: number,
+  pageSize: number,
+): { items: T[]; total: number; page: number } {
+  const matching = availability === "all" ? items : items.filter((item) => item.situation === availability);
+  const lastPage = Math.max(1, Math.ceil(matching.length / pageSize));
+  const current = Math.min(page, lastPage);
+  return { items: matching.slice((current - 1) * pageSize, current * pageSize), total: matching.length, page: current };
 }
 
 export type PageItem = number | "…";
