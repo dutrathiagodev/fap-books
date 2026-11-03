@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { availableCopies, bookSituation, cleanSearchTerm, confirmsTitle, isUuid, parseBookFilters } from "./book-rules";
+import { availableCopies, bookSituation, cleanSearchTerm, confirmsTitle, isUuid, pageNumbers, parseBookFilters } from "./book-rules";
 
 describe("availableCopies (limites)", () => {
   it("sem empréstimo devolve todos os exemplares", () => {
@@ -72,5 +72,11 @@ describe("parseBookFilters (repetido)", () => {
 describe("parseBookFilters (categoria)", () => {
   it("categoria é aparada e cortada em 60 caracteres", () => {
     expect(parseBookFilters({ categoria: `  ${"a".repeat(80)}  ` }).category).toBe("a".repeat(60));
+  });
+});
+
+describe("pageNumbers (uma página)", () => {
+  it("com uma página só mostra o 1", () => {
+    expect(pageNumbers(1, 1)).toEqual([1]);
   });
 });
