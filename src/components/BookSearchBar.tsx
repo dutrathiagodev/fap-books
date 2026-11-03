@@ -25,6 +25,7 @@ const STATUS_OPTIONS: Array<{ value: BookAvailabilityFilter; label: string }> = 
 ];
 
 const SORT_OPTIONS: Array<{ value: BookSort; label: string }> = [
+  { value: "relevance", label: "Mais relevantes" },
   { value: "title", label: "Título (A–Z)" },
   { value: "author", label: "Autor (A–Z)" },
   { value: "available", label: "Disponíveis primeiro" },
@@ -63,7 +64,7 @@ export function BookSearchBar({ basePath, query, category, availability, sort, c
         {/* Buscar mantém os filtros ativos; sem ?pagina=, a busca volta para a primeira página. */}
         {category && <input type="hidden" name="categoria" value={category} />}
         {availability !== "all" && <input type="hidden" name="situacao" value={availability} />}
-        {sort !== "title" && <input type="hidden" name="ordem" value={sort} />}
+        {sort !== "relevance" && <input type="hidden" name="ordem" value={sort} />}
         <button
           type="submit"
           className={`h-11 shrink-0 cursor-pointer rounded-md bg-brand px-5 text-sm font-medium text-on-brand hover:bg-brand-hover ${FOCUS}`}
