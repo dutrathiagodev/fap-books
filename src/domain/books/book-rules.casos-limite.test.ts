@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { availableCopies, bookSituation, cleanSearchTerm, confirmsTitle, formatBrazilDate, isUuid, pageNumbers, parseBookFilters, parseBookSort, sortBooks } from "./book-rules";
+import { availableCopies, bookSituation, booksHref, cleanSearchTerm, confirmsTitle, formatBrazilDate, isUuid, pageNumbers, parseBookFilters, parseBookSort, sortBooks } from "./book-rules";
 
 describe("availableCopies (limites)", () => {
   it("sem empréstimo devolve todos os exemplares", () => {
@@ -102,5 +102,11 @@ describe("parseBookSort (repetido)", () => {
 describe("formatBrazilDate (meio do dia)", () => {
   it("meio-dia UTC fica no mesmo dia em Brasília", () => {
     expect(formatBrazilDate("2026-11-03T12:00:00Z")).toBe("03/11/2026");
+  });
+});
+
+describe("booksHref (vazio)", () => {
+  it("sem filtros devolve só o caminho", () => {
+    expect(booksHref({})).toBe("/funcionario/acervo");
   });
 });
