@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 import Link from "next/link";
-import { bookSearchHref, parseAvailabilityFilter, parseBookFilters } from "@/domain/books/book-rules";
+import { bookSearchHref, parseAvailabilityFilter, parseBookFilters, parseBookSort } from "@/domain/books/book-rules";
 import { requireRole } from "@/lib/require-role";
 import { searchBooks } from "@/services/books.service";
 import type { UserRole } from "@/types/profile";
@@ -29,7 +29,8 @@ async function BookSearchContent({ role, basePath, searchParams }: BookSearchPag
   const params = await searchParams;
   const filters = parseBookFilters(params);
   const availability = parseAvailabilityFilter(params);
-  const { books, total, page, pageSize, categories } = await searchBooks(filters, availability);
+  const sort = parseBookSort(params);
+  const { books, total, page, pageSize, categories } = await searchBooks(filters, availability, sort);
   const pages = Math.max(1, Math.ceil(total / pageSize));
   const first = (page - 1) * pageSize + 1;
 
@@ -45,6 +46,7 @@ async function BookSearchContent({ role, basePath, searchParams }: BookSearchPag
         query={filters.query}
         category={filters.category}
         availability={availability}
+        sort={sort}
         categories={categories}
         total={total}
       />
@@ -74,7 +76,7 @@ async function BookSearchContent({ role, basePath, searchParams }: BookSearchPag
             summary={`Mostrando ${first}-${first + books.length - 1} de ${total.toLocaleString("pt-BR")} livros`}
             label="Páginas da pesquisa"
             hrefFor={(target) =>
-              bookSearchHref(basePath, { query: filters.query, category: filters.category, availability, page: target })
+              bookSearchHref(basePath, { query: filters.query, category: filters.category, availability, sort, page: target })
             }
           />
         </>

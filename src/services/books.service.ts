@@ -6,6 +6,8 @@ import {
   cleanSearchTerm,
   countSituations,
   paginateBySituation,
+  sortBooks,
+  type BookSort,
   type SituationCounts,
 } from "@/domain/books/book-rules";
 import type {
@@ -55,6 +57,8 @@ interface ShelfRow {
   book_id: string;
   open_loans: number;
   has_active_reservation: boolean;
+  // Ausente enquanto a migration da data de devolução não foi aplicada.
+  next_due_at?: string | null;
 }
 
 // Pesquisa de alunos e professores (Figma, card 0108): só livros ativos. O RLS esconde os empréstimos dos outros,
@@ -63,6 +67,7 @@ interface ShelfRow {
 export async function searchBooks(
   filters: Pick<BookListFilters, "query" | "category" | "page">,
   availability: BookAvailabilityFilter,
+  sort: BookSort,
 ): Promise<BookSearchResult> {
   await connection();
   const supabase = await createSupabaseServerClient();
@@ -70,8 +75,7 @@ export async function searchBooks(
   let booksQuery = supabase
     .from("books")
     .select("id, title, author, category, code, quantity, cover_url")
-    .eq("status", "active")
-    .order("title");
+    .eq("status", "active");
   const term = cleanSearchTerm(filters.query);
   if (term) booksQuery = booksQuery.or(searchClause(term));
 
@@ -102,10 +106,11 @@ export async function searchBooks(
         hasActiveReservation: state?.has_active_reservation ?? false,
       }),
       freeCopies: availableCopies(book.quantity, openLoans),
+      nextDueAt: state?.next_due_at ?? null,
     };
   });
 
-  const result = paginateBySituation(found, availability, filters.page, SEARCH_PAGE_SIZE);
+  const result = paginateBySituation(sortBooks(found, sort), availability, filters.page, SEARCH_PAGE_SIZE);
   return {
     books: result.items,
     total: result.total,

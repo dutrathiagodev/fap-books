@@ -7,11 +7,14 @@ import {
   bookSituation,
   confirmsTitle,
   countSituations,
+  formatBrazilDate,
   isUuid,
   pageNumbers,
   paginateBySituation,
   parseAvailabilityFilter,
   parseBookFilters,
+  parseBookSort,
+  sortBooks,
 } from "./book-rules";
 
 describe("availableCopies", () => {
@@ -123,6 +126,10 @@ describe("bookSearchHref", () => {
     );
     expect(bookSearchHref("/aluno/livros", { category: "Saúde" })).toBe("/aluno/livros?categoria=Sa%C3%BAde");
   });
+  it("leva a ordem só quando não é a padrão (título)", () => {
+    expect(bookSearchHref("/aluno/livros", { sort: "title" })).toBe("/aluno/livros");
+    expect(bookSearchHref("/aluno/livros", { query: "dom", sort: "author" })).toBe("/aluno/livros?q=dom&ordem=author");
+  });
   it("só leva a página quando passa da primeira", () => {
     expect(bookSearchHref("/aluno/livros", { query: "dom", page: 1 })).toBe("/aluno/livros?q=dom");
     expect(bookSearchHref("/aluno/livros", { query: "dom", page: 3 })).toBe("/aluno/livros?q=dom&pagina=3");
@@ -191,5 +198,48 @@ describe("booksHref", () => {
   it("só leva os filtros com valor", () => {
     expect(booksHref({})).toBe("/funcionario/acervo");
     expect(booksHref({ query: "dom", status: "active", page: 2 })).toBe("/funcionario/acervo?q=dom&status=active&pagina=2");
+  });
+});
+
+describe("parseBookSort", () => {
+  it("lê as três ordens e trata o resto como título", () => {
+    expect(parseBookSort({ ordem: "author" })).toBe("author");
+    expect(parseBookSort({ ordem: "available" })).toBe("available");
+    expect(parseBookSort({ ordem: ["title", "x"] })).toBe("title");
+    expect(parseBookSort({ ordem: "x" })).toBe("title");
+    expect(parseBookSort({ ordem: "constructor" })).toBe("title");
+    expect(parseBookSort({})).toBe("title");
+  });
+});
+
+describe("sortBooks", () => {
+  const livros = [
+    { title: "Zoologia", author: "Ana", situation: "unavailable" as const },
+    { title: "Álgebra", author: "Zélia", situation: "available" as const },
+    { title: "Biologia", author: "Ana", situation: "reserved" as const },
+    { title: "Cálculo", author: "Mário", situation: "available" as const },
+  ];
+
+  it("por título, com acento no lugar certo", () => {
+    expect(sortBooks(livros, "title").map((l) => l.title)).toEqual(["Álgebra", "Biologia", "Cálculo", "Zoologia"]);
+  });
+  it("por autor, e o empate sai pelo título", () => {
+    expect(sortBooks(livros, "author").map((l) => l.title)).toEqual(["Biologia", "Zoologia", "Cálculo", "Álgebra"]);
+  });
+  it("disponíveis primeiro, depois reservados e emprestados", () => {
+    expect(sortBooks(livros, "available").map((l) => l.title)).toEqual(["Álgebra", "Cálculo", "Biologia", "Zoologia"]);
+  });
+  it("não altera a lista recebida", () => {
+    const copia = livros.map((l) => l.title);
+    sortBooks(livros, "author");
+    expect(livros.map((l) => l.title)).toEqual(copia);
+  });
+});
+
+describe("formatBrazilDate", () => {
+  it("usa o horário de Brasília, não o do servidor", () => {
+    expect(formatBrazilDate("2026-11-10T14:00:00Z")).toBe("10/11/2026");
+    // 23h59 em Brasília já é o dia seguinte em UTC.
+    expect(formatBrazilDate("2026-11-10T02:59:00Z")).toBe("09/11/2026");
   });
 });

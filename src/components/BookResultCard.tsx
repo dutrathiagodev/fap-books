@@ -1,4 +1,5 @@
 import { BookOpen } from "lucide-react";
+import { formatBrazilDate } from "@/domain/books/book-rules";
 import type { BookSearchItem } from "@/types/book";
 import { SituationBadge } from "./SituationBadge";
 
@@ -32,6 +33,9 @@ export function BookResultCard({ book }: { book: BookSearchItem }) {
           <span>
             {book.freeCopies} {book.freeCopies === 1 ? "exemplar" : "exemplares"}
           </span>
+        )}
+        {book.situation === "unavailable" && book.nextDueAt && (
+          <span>Devolução prevista: {formatBrazilDate(book.nextDueAt)}</span>
         )}
       </p>
       <button
