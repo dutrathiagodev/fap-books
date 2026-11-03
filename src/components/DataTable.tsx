@@ -33,7 +33,7 @@ export function DataTable<Row>({ columns, rows, rowKey, emptyLabel = "Nenhum reg
 
       <div className={`hidden overflow-hidden rounded-lg border bg-surface md:block ${frame}`}>
         <table className="w-full text-left text-sm">
-          <thead className="bg-subtle text-ink-muted">
+          <thead className="bg-subtle text-ink">
             <tr>
               {columns.map((column) => (
                 <th key={column.key} scope="col" className="px-4 py-3 font-medium">
