@@ -138,6 +138,13 @@ Scripts em `scripts/` e workflows em `.github/workflows/`. Os testes de lógica 
 - **Acervo (`0114`):** paginação com números, categoria em etiqueta, contadores de disponíveis, emprestados e reservados, e o status Reservado na tabela (PRs 119 a 123).
 - **Em aberto:** a barra de busca da pesquisa de livros (`0109`, PR 122) e a página que a usa (`0110`).
 
+## 10h. Pesquisa de livros e detalhe do livro (02 e 03/11/2026)
+
+- **Pesquisa (`0109` e `0110`, PRs 122 e 129):** `/aluno/livros` e `/professor/livros` com busca, filtros de categoria e status, ordenação (título, autor ou disponíveis primeiro), grade de 3 por 2 e paginação com números. O aluno não enxerga empréstimos dos outros (RLS), então a situação do livro vem da função `book_availability()` do banco, que devolve só contagens e a menor data de devolução prevista (PR 131).
+- **Segurança:** o texto do endereço só vai ao banco se for conhecido (lista fixa, UUID ou categoria existente no acervo); a busca aceita só letras, números, espaço, ponto e hífen. Isso vale na pesquisa e no acervo da bibliotecária (PR 130).
+- **Detalhe do livro (`0111`, PR 132):** capa, categoria, situação, exemplares livres, devolução prevista, sinopse e dados do catálogo, para aluno e professor. Migration `add_book_details` com colunas opcionais (`isbn`, `publisher`, `publication_year`, `description`, `shelf_location`, `cdd`). Decidido: a lista de exemplares do Figma entra como resumo (X de N livres), sem tabela de exemplares, para não mexer nos empréstimos (`0118` e `0115`). Reservar e lista de espera ficam desativados até o `0115`.
+- **Fluxo:** PR de tarefa sempre para a `develop`; a `main` só recebe o PR `develop` → `main`. O workflow `entrega-main.yml` falha se o PR para a `main` vier de outra branch (vale como trava quando o check `so-da-develop` for obrigatório no ruleset).
+
 ## 11. Entregas
 
 - PRs de `#3` a `#23`, todos mergeados (o `#23` levou a logo, o seed e o login para a `main`). O fluxo é: card, branch `FAP/<número>`, PR para a `develop` e entrega na `main` por PR com bypass do dono.
