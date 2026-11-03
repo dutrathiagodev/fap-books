@@ -74,11 +74,17 @@ export function parseBookFilters(params: RawParams): BookListFilters {
   };
 }
 
-// Estado da barra de busca da pesquisa de livros (Figma, card 0109): texto, categoria e STATUS.
+const BOOK_SORTS = ["title", "author", "available"] as const;
+
+// Ordem dos resultados da pesquisa: título (padrão), autor ou disponíveis primeiro.
+export type BookSort = (typeof BOOK_SORTS)[number];
+
+// Estado da barra de busca da pesquisa de livros (Figma, card 0109): texto, categoria, STATUS e ordem.
 export interface BookSearchState {
   query: string;
   category: string;
   availability: BookAvailabilityFilter;
+  sort: BookSort;
 }
 
 const AVAILABILITY_FILTERS = ["available", "unavailable", "reserved"] as const;
@@ -89,6 +95,32 @@ export function parseAvailabilityFilter(params: RawParams): BookAvailabilityFilt
   return AVAILABILITY_FILTERS.find((option) => option === value) ?? "all";
 }
 
+// Lê a ordem do endereço (?ordem=title|author|available). Só aceita valor da lista; o resto vale título.
+export function parseBookSort(params: RawParams): BookSort {
+  const value = first(params.ordem);
+  return BOOK_SORTS.find((option) => option === value) ?? "title";
+}
+
+const SITUATION_RANK: Record<BookSituation, number> = { available: 0, reserved: 1, unavailable: 2, inactive: 3 };
+
+// Ordena os resultados. Em "available" os livros com exemplar livre vêm primeiro; em toda ordem, o empate sai pelo título.
+export function sortBooks<T extends { title: string; author: string; situation: BookSituation }>(
+  items: T[],
+  sort: BookSort,
+): T[] {
+  const byText = (a: string, b: string) => a.localeCompare(b, "pt-BR");
+  return [...items].sort((a, b) => {
+    if (sort === "author") return byText(a.author, b.author) || byText(a.title, b.title);
+    if (sort === "available") return SITUATION_RANK[a.situation] - SITUATION_RANK[b.situation] || byText(a.title, b.title);
+    return byText(a.title, b.title);
+  });
+}
+
+// Data no fuso de Brasília: o servidor roda em UTC, e uma devolução prevista para a noite de um dia cairia no dia seguinte.
+export function formatBrazilDate(iso: string): string {
+  return new Date(iso).toLocaleDateString("pt-BR", { timeZone: "America/Sao_Paulo" });
+}
+
 // Monta o endereço de uma pesquisa mantendo só o que tem valor. Sem `page`, a busca volta para a primeira página
 // (o endereço não leva ?pagina=).
 export function bookSearchHref(basePath: string, state: Partial<BookSearchState> & { page?: number }): string {
@@ -96,6 +128,7 @@ export function bookSearchHref(basePath: string, state: Partial<BookSearchState>
   if (state.query) search.set("q", state.query);
   if (state.category) search.set("categoria", state.category);
   if (state.availability && state.availability !== "all") search.set("situacao", state.availability);
+  if (state.sort && state.sort !== "title") search.set("ordem", state.sort);
   if (state.page && state.page > 1) search.set("pagina", String(state.page));
   const text = search.toString();
   return text ? `${basePath}?${text}` : basePath;

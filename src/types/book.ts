@@ -38,6 +38,8 @@ export interface BookSearchItem {
   situation: BookSituation;
   // Exemplares na estante agora.
   freeCopies: number;
+  // Menor data de devolução prevista entre os empréstimos em aberto (ISO); vazio se não há empréstimo ou a coluna não existe.
+  nextDueAt: string | null;
 }
 
 export interface BookSearchResult {
