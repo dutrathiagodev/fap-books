@@ -127,8 +127,9 @@ describe("bookSearchHref", () => {
     );
     expect(bookSearchHref("/aluno/livros", { category: "Saúde" })).toBe("/aluno/livros?categoria=Sa%C3%BAde");
   });
-  it("leva a ordem só quando não é a padrão (título)", () => {
-    expect(bookSearchHref("/aluno/livros", { sort: "title" })).toBe("/aluno/livros");
+  it("leva a ordem só quando não é a padrão (mais relevantes)", () => {
+    expect(bookSearchHref("/aluno/livros", { sort: "relevance" })).toBe("/aluno/livros");
+    expect(bookSearchHref("/aluno/livros", { sort: "title" })).toBe("/aluno/livros?ordem=title");
     expect(bookSearchHref("/aluno/livros", { query: "dom", sort: "author" })).toBe("/aluno/livros?q=dom&ordem=author");
   });
   it("só leva a página quando passa da primeira", () => {
@@ -203,13 +204,14 @@ describe("booksHref", () => {
 });
 
 describe("parseBookSort", () => {
-  it("lê as três ordens e trata o resto como título", () => {
+  it("lê as quatro ordens e trata o resto como mais relevantes", () => {
     expect(parseBookSort({ ordem: "author" })).toBe("author");
+    expect(parseBookSort({ ordem: "relevance" })).toBe("relevance");
     expect(parseBookSort({ ordem: "available" })).toBe("available");
     expect(parseBookSort({ ordem: ["title", "x"] })).toBe("title");
-    expect(parseBookSort({ ordem: "x" })).toBe("title");
-    expect(parseBookSort({ ordem: "constructor" })).toBe("title");
-    expect(parseBookSort({})).toBe("title");
+    expect(parseBookSort({ ordem: "x" })).toBe("relevance");
+    expect(parseBookSort({ ordem: "constructor" })).toBe("relevance");
+    expect(parseBookSort({})).toBe("relevance");
   });
 });
 
@@ -229,6 +231,26 @@ describe("sortBooks", () => {
   });
   it("disponíveis primeiro, depois reservados e emprestados", () => {
     expect(sortBooks(livros, "available").map((l) => l.title)).toEqual(["Álgebra", "Cálculo", "Biologia", "Zoologia"]);
+  });
+  it("mais relevantes sem busca fica por título", () => {
+    expect(sortBooks(livros, "relevance").map((l) => l.title)).toEqual(["Álgebra", "Biologia", "Cálculo", "Zoologia"]);
+  });
+  it("mais relevantes põe título igual, depois começo, palavra, trecho e autor, sem ligar para acento", () => {
+    const achados = [
+      { title: "Teoria dos Jogos", author: "Fiani", situation: "available" as const },
+      { title: "Introdução à Teoria", author: "Souza", situation: "available" as const },
+      { title: "Prática", author: "Ana Teoria", situation: "available" as const },
+      { title: "Teoria", author: "Lima", situation: "available" as const },
+      { title: "Metateoria", author: "Costa", situation: "available" as const },
+    ];
+    expect(sortBooks(achados, "relevance", "teoria").map((l) => l.title)).toEqual([
+      "Teoria",
+      "Teoria dos Jogos",
+      "Introdução à Teoria",
+      "Metateoria",
+      "Prática",
+    ]);
+    expect(sortBooks(achados, "relevance", "INTRODUCAO")[0].title).toBe("Introdução à Teoria");
   });
   it("não altera a lista recebida", () => {
     const copia = livros.map((l) => l.title);

@@ -38,7 +38,7 @@ export function BookResultCard({ book, basePath }: { book: BookSearchItem; baseP
           </span>
         )}
         {book.situation === "unavailable" && book.nextDueAt && (
-          <span>Devolução prevista: {formatBrazilDate(book.nextDueAt)}</span>
+          <span>prev. {formatBrazilDate(book.nextDueAt)}</span>
         )}
       </p>
       <Link
