@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  catalogRows,
   availableCopies,
   bookSearchHref,
   booksHref,
@@ -241,5 +242,22 @@ describe("formatBrazilDate", () => {
     expect(formatBrazilDate("2026-11-10T14:00:00Z")).toBe("10/11/2026");
     // 23h59 em Brasília já é o dia seguinte em UTC.
     expect(formatBrazilDate("2026-11-10T02:59:00Z")).toBe("09/11/2026");
+  });
+});
+
+describe("catalogRows", () => {
+  const empty = { code: "T-001", isbn: null, publisher: null, publicationYear: null, shelfLocation: null, cdd: null };
+
+  it("livro sem dados de catálogo mostra só o código", () => {
+    expect(catalogRows(empty)).toEqual([["Código", "T-001"]]);
+  });
+
+  it("mostra só as linhas preenchidas, na ordem do frame, com o ano como texto", () => {
+    expect(catalogRows({ ...empty, isbn: "978-85-209-1000-0", publicationYear: 1956, cdd: "869.3" })).toEqual([
+      ["Código", "T-001"],
+      ["ISBN", "978-85-209-1000-0"],
+      ["Ano", "1956"],
+      ["CDD", "869.3"],
+    ]);
   });
 });

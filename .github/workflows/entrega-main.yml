@@ -1,0 +1,21 @@
+name: Entrega na main
+
+# A main só recebe a entrega que sai da develop. PR de tarefa (FAP/<card>) vai para a develop.
+# Para valer, marcar o check "so-da-develop" como obrigatório no ruleset da main.
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  so-da-develop:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Conferir a branch de origem
+        env:
+          ORIGEM: ${{ github.head_ref }}
+        run: |
+          if [ "$ORIGEM" != "develop" ]; then
+            echo "PR para a main só pode vir da develop (veio de: $ORIGEM). Abra o PR da tarefa para a develop."
+            exit 1
+          fi
