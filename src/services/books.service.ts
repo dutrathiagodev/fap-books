@@ -113,7 +113,7 @@ export async function searchBooks(
     };
   });
 
-  const result = paginateBySituation(sortBooks(found, sort), availability, filters.page, SEARCH_PAGE_SIZE);
+  const result = paginateBySituation(sortBooks(found, sort, term), availability, filters.page, SEARCH_PAGE_SIZE);
   return {
     books: result.items,
     total: result.total,
