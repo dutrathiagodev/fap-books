@@ -74,9 +74,9 @@ export function parseBookFilters(params: RawParams): BookListFilters {
   };
 }
 
-const BOOK_SORTS = ["title", "author", "available"] as const;
+const BOOK_SORTS = ["relevance", "title", "author", "available"] as const;
 
-// Ordem dos resultados da pesquisa: título (padrão), autor ou disponíveis primeiro.
+// Ordem dos resultados da pesquisa: mais relevantes (padrão), título, autor ou disponíveis primeiro.
 export type BookSort = (typeof BOOK_SORTS)[number];
 
 // Estado da barra de busca da pesquisa de livros (Figma, card 0109): texto, categoria, STATUS e ordem.
@@ -95,21 +95,41 @@ export function parseAvailabilityFilter(params: RawParams): BookAvailabilityFilt
   return AVAILABILITY_FILTERS.find((option) => option === value) ?? "all";
 }
 
-// Lê a ordem do endereço (?ordem=title|author|available). Só aceita valor da lista; o resto vale título.
+// Lê a ordem do endereço (?ordem=relevance|title|author|available). Só aceita valor da lista; o resto vale "mais relevantes".
 export function parseBookSort(params: RawParams): BookSort {
   const value = first(params.ordem);
-  return BOOK_SORTS.find((option) => option === value) ?? "title";
+  return BOOK_SORTS.find((option) => option === value) ?? "relevance";
 }
 
 const SITUATION_RANK: Record<BookSituation, number> = { available: 0, reserved: 1, unavailable: 2, inactive: 3 };
 
-// Ordena os resultados. Em "available" os livros com exemplar livre vêm primeiro; em toda ordem, o empate sai pelo título.
+// Texto sem acento e em minúsculas, para comparar a busca com título e autor.
+function fold(text: string): string {
+  return text.normalize("NFD").replace(/\p{M}/gu, "").toLowerCase();
+}
+
+// Posição na relevância (menor = mais relevante): título igual à busca, título que começa com ela, título com uma
+// palavra que começa com ela, título que a contém, autor que a contém e, por fim, o que casou só por código ou ISBN.
+function relevanceRank(item: { title: string; author: string }, term: string): number {
+  const title = fold(item.title);
+  if (title === term) return 0;
+  if (title.startsWith(term)) return 1;
+  if (title.split(/\s+/).some((word) => word.startsWith(term))) return 2;
+  if (title.includes(term)) return 3;
+  return fold(item.author).includes(term) ? 4 : 5;
+}
+
+// Ordena os resultados. Em "relevance" vale a busca (sem busca, fica por título); em "available" os livros com exemplar
+// livre vêm primeiro. Em toda ordem, o empate sai pelo título.
 export function sortBooks<T extends { title: string; author: string; situation: BookSituation }>(
   items: T[],
   sort: BookSort,
+  query = "",
 ): T[] {
   const byText = (a: string, b: string) => a.localeCompare(b, "pt-BR");
+  const term = fold(query.trim());
   return [...items].sort((a, b) => {
+    if (sort === "relevance" && term) return relevanceRank(a, term) - relevanceRank(b, term) || byText(a.title, b.title);
     if (sort === "author") return byText(a.author, b.author) || byText(a.title, b.title);
     if (sort === "available") return SITUATION_RANK[a.situation] - SITUATION_RANK[b.situation] || byText(a.title, b.title);
     return byText(a.title, b.title);
@@ -128,7 +148,7 @@ export function bookSearchHref(basePath: string, state: Partial<BookSearchState>
   if (state.query) search.set("q", state.query);
   if (state.category) search.set("categoria", state.category);
   if (state.availability && state.availability !== "all") search.set("situacao", state.availability);
-  if (state.sort && state.sort !== "title") search.set("ordem", state.sort);
+  if (state.sort && state.sort !== "relevance") search.set("ordem", state.sort);
   if (state.page && state.page > 1) search.set("pagina", String(state.page));
   const text = search.toString();
   return text ? `${basePath}?${text}` : basePath;
