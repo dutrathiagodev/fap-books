@@ -34,12 +34,24 @@ export interface BookSearchItem {
   author: string;
   category: string | null;
   code: string;
+  isbn: string | null;
   coverUrl: string | null;
   situation: BookSituation;
   // Exemplares na estante agora.
   freeCopies: number;
   // Menor data de devolução prevista entre os empréstimos em aberto (ISO); vazio se não há empréstimo ou a coluna não existe.
   nextDueAt: string | null;
+}
+
+// Página de detalhe do livro (Figma, card 0111). Os dados de catálogo são opcionais: livro antigo pode não tê-los.
+export interface BookDetail extends BookSearchItem {
+  publisher: string | null;
+  publicationYear: number | null;
+  description: string | null;
+  shelfLocation: string | null;
+  cdd: string | null;
+  // Total de exemplares do título (a situação e os exemplares livres já vêm de BookSearchItem).
+  quantity: number;
 }
 
 export interface BookSearchResult {

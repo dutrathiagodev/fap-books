@@ -2,6 +2,7 @@ import { connection } from "next/server";
 import { createSupabaseServerClient } from "@/lib/supabase/server-client";
 import {
   availableCopies,
+  isUuid,
   bookSituation,
   cleanSearchTerm,
   countSituations,
@@ -13,6 +14,7 @@ import {
 import type {
   BookActionResult,
   BookAvailabilityFilter,
+  BookDetail,
   BookListFilters,
   BookListItem,
   BookListResult,
@@ -32,9 +34,9 @@ const ACTIVE_RESERVATION_STATUSES = ["waiting", "ready"];
 // Código do PostgREST para página além do fim da lista.
 const RANGE_NOT_SATISFIABLE = "PGRST103";
 
-// Filtro de busca por título, autor ou código. A listagem e os contadores usam o mesmo, para os números baterem.
+// Filtro de busca por título, autor, código ou ISBN. A listagem e os contadores usam o mesmo, para os números baterem.
 function searchClause(term: string): string {
-  return `title.ilike.%${term}%,author.ilike.%${term}%,code.ilike.%${term}%`;
+  return `title.ilike.%${term}%,author.ilike.%${term}%,code.ilike.%${term}%,isbn.ilike.%${term}%`;
 }
 
 // Categorias sem repetir, em ordem alfabética (viram as opções do filtro).
@@ -74,7 +76,7 @@ export async function searchBooks(
 
   let booksQuery = supabase
     .from("books")
-    .select("id, title, author, category, code, quantity, cover_url")
+    .select("id, title, author, category, code, isbn, quantity, cover_url")
     .eq("status", "active");
   const term = cleanSearchTerm(filters.query);
   if (term) booksQuery = booksQuery.or(searchClause(term));
@@ -98,6 +100,7 @@ export async function searchBooks(
       author: book.author,
       category: book.category,
       code: book.code,
+      isbn: book.isbn,
       coverUrl: book.cover_url,
       situation: bookSituation({
         quantity: book.quantity,
@@ -117,6 +120,55 @@ export async function searchBooks(
     page: result.page,
     pageSize: SEARCH_PAGE_SIZE,
     categories: sortedCategories(categories.data),
+  };
+}
+
+// Detalhe de um livro ativo. O id vem do endereço: só consulta o banco se for um UUID. Devolve null se não existe ou
+// está inativo (o RLS libera a leitura a quem está logado; a situação vem da função book_availability).
+export async function getBookDetail(id: string): Promise<BookDetail | null> {
+  if (!isUuid(id)) return null;
+  await connection();
+  const supabase = await createSupabaseServerClient();
+
+  const [book, shelf] = await Promise.all([
+    supabase
+      .from("books")
+      .select(
+        "id, title, author, category, code, quantity, cover_url, isbn, publisher, publication_year, description, shelf_location, cdd",
+      )
+      .eq("id", id)
+      .eq("status", "active")
+      .maybeSingle(),
+    supabase.rpc("book_availability"),
+  ]);
+  if (book.error || shelf.error) throw new Error("Não foi possível carregar o livro.");
+  if (!book.data) return null;
+
+  const row = book.data;
+  const state = (shelf.data as ShelfRow[]).find((item) => item.book_id === row.id);
+  const openLoans = state?.open_loans ?? 0;
+  return {
+    id: row.id,
+    title: row.title,
+    author: row.author,
+    category: row.category,
+    code: row.code,
+    isbn: row.isbn,
+    coverUrl: row.cover_url,
+    situation: bookSituation({
+      quantity: row.quantity,
+      status: "active",
+      openLoans,
+      hasActiveReservation: state?.has_active_reservation ?? false,
+    }),
+    freeCopies: availableCopies(row.quantity, openLoans),
+    nextDueAt: state?.next_due_at ?? null,
+    publisher: row.publisher,
+    publicationYear: row.publication_year,
+    description: row.description,
+    shelfLocation: row.shelf_location,
+    cdd: row.cdd,
+    quantity: row.quantity,
   };
 }
 

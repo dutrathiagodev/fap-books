@@ -66,7 +66,7 @@ async function BookSearchContent({ role, basePath, searchParams }: BookSearchPag
           <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {books.map((book) => (
               <li key={book.id}>
-                <BookResultCard book={book} />
+                <BookResultCard book={book} basePath={basePath} />
               </li>
             ))}
           </ul>
