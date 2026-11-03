@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import Link from "next/link";
 import { Info, Search } from "lucide-react";
-import { AppShell, BooksTable, EmptyState, LoadingState, PageHeader, Pagination } from "@/components";
+import { AppShell, BooksTable, EmptyState, FilterMenu, LoadingState, PageHeader, Pagination } from "@/components";
 import { booksHref, parseBookFilters, type SituationCounts } from "@/domain/books/book-rules";
 import { requireRole } from "@/lib/require-role";
 import { countBookSituations, listBooks } from "@/services/books.service";
@@ -11,6 +11,12 @@ type SearchParams = Promise<Record<string, string | string[] | undefined>>;
 
 const FIELD =
   "h-11 rounded-md border border-line-strong bg-surface px-3 text-sm outline-offset-2 focus-visible:outline-2 focus-visible:outline-focus";
+
+const STATUS_OPTIONS = [
+  { value: "all", label: "Todos os status" },
+  { value: "active", label: "Ativos" },
+  { value: "inactive", label: "Inativos" },
+] as const;
 
 // Contadores ao lado do total (Figma, card 0113): a cor do ponto combina com a do status da linha.
 const SITUATION_COUNTERS: { key: keyof SituationCounts; dot: string; one: string; many: string }[] = [
@@ -40,6 +46,9 @@ async function AcervoContent({ searchParams }: { searchParams: SearchParams }) {
       />
 
       <form method="get" action="/funcionario/acervo" className="mb-4 flex flex-wrap items-end gap-3">
+        {/* Buscar (ou Enter no campo) mantém a categoria e o status escolhidos. */}
+        {filters.category && <input type="hidden" name="categoria" value={filters.category} />}
+        {filters.status !== "all" && <input type="hidden" name="status" value={filters.status} />}
         <label className="flex min-w-60 flex-1 flex-col gap-1 text-sm font-medium">
           Buscar
           <span className="relative">
@@ -53,30 +62,32 @@ async function AcervoContent({ searchParams }: { searchParams: SearchParams }) {
             />
           </span>
         </label>
-        <label className="flex flex-col gap-1 text-sm font-medium">
-          Categoria
-          <select name="categoria" defaultValue={filters.category} className={`${FIELD} font-normal`}>
-            <option value="">Todas as categorias</option>
-            {categories.map((category) => (
-              <option key={category} value={category}>
-                {category}
-              </option>
-            ))}
-          </select>
-        </label>
-        <label className="flex flex-col gap-1 text-sm font-medium">
-          Status
-          <select name="status" defaultValue={filters.status} className={`${FIELD} font-normal`}>
-            <option value="all">Todos os status</option>
-            <option value="active">Ativos</option>
-            <option value="inactive">Inativos</option>
-          </select>
-        </label>
+        <FilterMenu
+          label="Categoria"
+          value={filters.category || "Todas as categorias"}
+          options={[
+            { label: "Todas as categorias", category: "" },
+            ...categories.map((category) => ({ label: category, category })),
+          ].map((option) => ({
+            label: option.label,
+            href: booksHref({ ...filters, category: option.category, page: 1 }),
+            active: filters.category === option.category,
+          }))}
+        />
+        <FilterMenu
+          label="Status"
+          value={STATUS_OPTIONS.find((option) => option.value === filters.status)?.label ?? "Todos os status"}
+          options={STATUS_OPTIONS.map((option) => ({
+            label: option.label,
+            href: booksHref({ ...filters, status: option.value, page: 1 }),
+            active: filters.status === option.value,
+          }))}
+        />
         <button
           type="submit"
           className="h-11 cursor-pointer rounded-md bg-brand px-5 text-sm font-medium text-on-brand hover:bg-brand-hover"
         >
-          Filtrar
+          Buscar
         </button>
       </form>
 
