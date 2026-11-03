@@ -62,3 +62,9 @@ describe("parseBookFilters (limite)", () => {
     expect(parseBookFilters({ pagina: "99999999" }).page).toBe(10000);
   });
 });
+
+describe("parseBookFilters (repetido)", () => {
+  it("com parâmetro repetido vale o primeiro", () => {
+    expect(parseBookFilters({ q: ["Dom", "Casmurro"] }).query).toBe("Dom");
+  });
+});
