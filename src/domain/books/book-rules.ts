@@ -174,3 +174,23 @@ export function booksHref(filters: Partial<BookListFilters>): string {
   const text = search.toString();
   return text ? `/funcionario/acervo?${text}` : "/funcionario/acervo";
 }
+
+// Linhas do "Dados do catálogo" da página de detalhe: só entram as que o livro tem.
+export function catalogRows(book: {
+  code: string;
+  isbn: string | null;
+  publisher: string | null;
+  publicationYear: number | null;
+  shelfLocation: string | null;
+  cdd: string | null;
+}): Array<[string, string]> {
+  const rows: Array<[string, string | number | null]> = [
+    ["Código", book.code],
+    ["ISBN", book.isbn],
+    ["Editora", book.publisher],
+    ["Ano", book.publicationYear],
+    ["Localização", book.shelfLocation],
+    ["CDD", book.cdd],
+  ];
+  return rows.filter((row): row is [string, string | number] => row[1] !== null).map(([label, value]) => [label, String(value)]);
+}
