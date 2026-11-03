@@ -23,6 +23,14 @@ Esta é uma **regra do projeto**: todo código que entra (de qualquer pessoa da 
 - **Mensagens de erro próprias**: nunca mostrar o erro bruto do banco ou do servidor.
 - **Dependências**: só as necessárias e conhecidas; rodar `npm audit` antes de uma release.
 
+### Alertas do Dependabot aceitos
+
+Regra: alerta em dependência que vai para produção se corrige na hora (`npm audit --omit=dev` precisa dar 0). Alerta só de ferramenta de desenvolvimento, sem correção compatível, pode ser aceito, desde que fique registrado aqui e o motivo no próprio alerta.
+
+| Alerta | Pacote | Onde entra | Decisão |
+| -- | -- | -- | -- |
+| #2 (GHSA-g3hv-75wg-m249, moderado 6,9) | `minimatch` < 11.0.1 | só no ESLint e nos plugins dele (`eslint`, `eslint-plugin-import`, `jsx-a11y`, `react`, `typescript-estree`); não está na produção (`npm ls minimatch --omit=dev` vazio) | **Aceito em 03/11/2026 (risco tolerável).** A falha pede um padrão de glob controlado por quem ataca; aqui os padrões vêm dos nossos próprios arquivos de configuração. Não há correção compatível: até o ESLint 10.14 pede `minimatch` ^10, e os plugins pedem ^3, e a versão 11 muda a forma de importar (forçar com `overrides` quebraria o lint). O `npm audit fix --force` instalaria o ESLint 4, o que também quebraria. **Rever** quando o ESLint, o `typescript-eslint` e os plugins atualizarem. |
+
 ## 3. Antes de abrir o PR
 
 Rode e confirme que passa:
