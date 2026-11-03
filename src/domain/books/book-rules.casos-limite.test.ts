@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { availableCopies, bookSituation, bookSearchHref, booksHref, cleanSearchTerm, confirmsTitle, formatBrazilDate, isUuid, pageNumbers, parseBookFilters, parseBookSort, sortBooks } from "./book-rules";
+import { availableCopies, bookSituation, bookSearchHref, booksHref, cleanSearchTerm, confirmsTitle, formatBrazilDate, isUuid, pageNumbers, paginateBySituation, parseBookFilters, parseBookSort, sortBooks } from "./book-rules";
 
 describe("availableCopies (limites)", () => {
   it("sem empréstimo devolve todos os exemplares", () => {
@@ -116,5 +116,12 @@ describe("bookSearchHref (completo)", () => {
     expect(
       bookSearchHref("/aluno/livros", { query: "dom", category: "Direito", availability: "reserved", sort: "author", page: 2 }),
     ).toBe("/aluno/livros?q=dom&categoria=Direito&situacao=reserved&ordem=author&pagina=2");
+  });
+});
+
+describe("paginateBySituation (página cheia)", () => {
+  it("seis livros com página de seis cabem em uma página", () => {
+    const items = Array.from({ length: 6 }, () => ({ situation: "available" as const }));
+    expect(paginateBySituation(items, "all", 1, 6)).toMatchObject({ total: 6, page: 1 });
   });
 });
