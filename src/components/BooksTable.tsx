@@ -1,20 +1,14 @@
 import { BookOpen } from "lucide-react";
-import { availableCopies, bookSituation, type BookSituation } from "@/domain/books/book-rules";
+import { availableCopies, bookSituation } from "@/domain/books/book-rules";
 import type { BookActionResult, BookListItem } from "@/types/book";
 import { BookRowActions } from "./BookRowActions";
+import { SituationBadge } from "./SituationBadge";
 
 interface BooksTableProps {
   books: BookListItem[];
   onDelete: (bookId: string) => Promise<BookActionResult>;
   onInactivate: (bookId: string) => Promise<BookActionResult>;
 }
-
-const STATUS: Record<BookSituation, { label: string; className: string }> = {
-  available: { label: "Disponível", className: "bg-success-100 text-success-700" },
-  unavailable: { label: "Emprestado", className: "bg-info-100 text-info-700" },
-  reserved: { label: "Reservado", className: "bg-warning-100 text-warning-700" },
-  inactive: { label: "Inativo", className: "bg-subtle text-ink-muted" },
-};
 
 // Tabela do acervo da bibliotecária (Figma, card 0113): título, autor, categoria, código, disponibilidade e ações.
 export function BooksTable({ books, onDelete, onInactivate }: BooksTableProps) {
@@ -34,7 +28,6 @@ export function BooksTable({ books, onDelete, onInactivate }: BooksTableProps) {
         </thead>
         <tbody>
           {books.map((book) => {
-            const status = STATUS[bookSituation(book)];
             return (
               <tr key={book.id} className="border-b border-line last:border-b-0">
                 <td className="px-4 py-3">
@@ -66,7 +59,7 @@ export function BooksTable({ books, onDelete, onInactivate }: BooksTableProps) {
                   {availableCopies(book.quantity, book.openLoans)} / {book.quantity}
                 </td>
                 <td className="px-4 py-3">
-                  <span className={`rounded-full px-2.5 py-1 text-xs font-medium ${status.className}`}>{status.label}</span>
+                  <SituationBadge situation={bookSituation(book)} />
                 </td>
                 <td className="px-4 py-3">
                   <BookRowActions book={book} onDelete={onDelete} onInactivate={onInactivate} />
