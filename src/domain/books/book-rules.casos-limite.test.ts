@@ -30,3 +30,9 @@ describe("cleanSearchTerm (hífens)", () => {
     expect(cleanSearchTerm("a---b")).toBe("a-b");
   });
 });
+
+describe("cleanSearchTerm (parênteses)", () => {
+  it("parênteses e aspas viram espaço e somem das pontas", () => {
+    expect(cleanSearchTerm('("livro")')).toBe("livro");
+  });
+});
