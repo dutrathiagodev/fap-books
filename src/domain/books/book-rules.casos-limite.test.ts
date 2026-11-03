@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { availableCopies, bookSituation, booksHref, cleanSearchTerm, confirmsTitle, formatBrazilDate, isUuid, pageNumbers, parseBookFilters, parseBookSort, sortBooks } from "./book-rules";
+import { availableCopies, bookSituation, bookSearchHref, booksHref, cleanSearchTerm, confirmsTitle, formatBrazilDate, isUuid, pageNumbers, parseBookFilters, parseBookSort, sortBooks } from "./book-rules";
 
 describe("availableCopies (limites)", () => {
   it("sem empréstimo devolve todos os exemplares", () => {
@@ -108,5 +108,13 @@ describe("formatBrazilDate (meio do dia)", () => {
 describe("booksHref (vazio)", () => {
   it("sem filtros devolve só o caminho", () => {
     expect(booksHref({})).toBe("/funcionario/acervo");
+  });
+});
+
+describe("bookSearchHref (completo)", () => {
+  it("leva busca, categoria, status, ordem e página juntos", () => {
+    expect(
+      bookSearchHref("/aluno/livros", { query: "dom", category: "Direito", availability: "reserved", sort: "author", page: 2 }),
+    ).toBe("/aluno/livros?q=dom&categoria=Direito&situacao=reserved&ordem=author&pagina=2");
   });
 });
