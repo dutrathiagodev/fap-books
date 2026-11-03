@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { availableCopies, bookSituation, cleanSearchTerm, confirmsTitle, isUuid } from "./book-rules";
+import { availableCopies, bookSituation, cleanSearchTerm, confirmsTitle, isUuid, parseBookFilters } from "./book-rules";
 
 describe("availableCopies (limites)", () => {
   it("sem empréstimo devolve todos os exemplares", () => {
@@ -48,5 +48,11 @@ describe("isUuid (formato)", () => {
     const id = "62564DF1-91B4-42EF-842F-2B3CA29184E5";
     expect(isUuid(id)).toBe(true);
     expect(isUuid(`${id} `)).toBe(false);
+  });
+});
+
+describe("parseBookFilters (página)", () => {
+  it("página com texto vale 1", () => {
+    expect(parseBookFilters({ pagina: "abc" }).page).toBe(1);
   });
 });
