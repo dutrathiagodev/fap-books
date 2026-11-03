@@ -56,3 +56,9 @@ describe("parseBookFilters (página)", () => {
     expect(parseBookFilters({ pagina: "abc" }).page).toBe(1);
   });
 });
+
+describe("parseBookFilters (limite)", () => {
+  it("página enorme é limitada a 10000", () => {
+    expect(parseBookFilters({ pagina: "99999999" }).page).toBe(10000);
+  });
+});
