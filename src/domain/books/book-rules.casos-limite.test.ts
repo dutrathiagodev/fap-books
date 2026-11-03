@@ -68,3 +68,9 @@ describe("parseBookFilters (repetido)", () => {
     expect(parseBookFilters({ q: ["Dom", "Casmurro"] }).query).toBe("Dom");
   });
 });
+
+describe("parseBookFilters (categoria)", () => {
+  it("categoria é aparada e cortada em 60 caracteres", () => {
+    expect(parseBookFilters({ categoria: `  ${"a".repeat(80)}  ` }).category).toBe("a".repeat(60));
+  });
+});
