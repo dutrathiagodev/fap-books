@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { availableCopies, bookSituation, cleanSearchTerm, confirmsTitle, isUuid, pageNumbers, parseBookFilters, parseBookSort, sortBooks } from "./book-rules";
+import { availableCopies, bookSituation, cleanSearchTerm, confirmsTitle, formatBrazilDate, isUuid, pageNumbers, parseBookFilters, parseBookSort, sortBooks } from "./book-rules";
 
 describe("availableCopies (limites)", () => {
   it("sem empréstimo devolve todos os exemplares", () => {
@@ -96,5 +96,11 @@ describe("sortBooks (vazio)", () => {
 describe("parseBookSort (repetido)", () => {
   it("com parâmetro repetido vale o primeiro", () => {
     expect(parseBookSort({ ordem: ["author", "title"] })).toBe("author");
+  });
+});
+
+describe("formatBrazilDate (meio do dia)", () => {
+  it("meio-dia UTC fica no mesmo dia em Brasília", () => {
+    expect(formatBrazilDate("2026-11-03T12:00:00Z")).toBe("03/11/2026");
   });
 });
