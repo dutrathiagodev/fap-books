@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { availableCopies, bookSituation, cleanSearchTerm, confirmsTitle } from "./book-rules";
+import { availableCopies, bookSituation, cleanSearchTerm, confirmsTitle, isUuid } from "./book-rules";
 
 describe("availableCopies (limites)", () => {
   it("sem empréstimo devolve todos os exemplares", () => {
@@ -40,5 +40,13 @@ describe("cleanSearchTerm (parênteses)", () => {
 describe("confirmsTitle (vazio)", () => {
   it("título vazio nunca libera a exclusão", () => {
     expect(confirmsTitle("", "")).toBe(false);
+  });
+});
+
+describe("isUuid (formato)", () => {
+  it("aceita maiúsculas e recusa espaço no fim", () => {
+    const id = "62564DF1-91B4-42EF-842F-2B3CA29184E5";
+    expect(isUuid(id)).toBe(true);
+    expect(isUuid(`${id} `)).toBe(false);
   });
 });
