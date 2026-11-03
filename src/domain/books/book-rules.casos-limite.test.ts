@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { availableCopies, bookSituation, cleanSearchTerm, confirmsTitle, isUuid, pageNumbers, parseBookFilters } from "./book-rules";
+import { availableCopies, bookSituation, cleanSearchTerm, confirmsTitle, isUuid, pageNumbers, parseBookFilters, sortBooks } from "./book-rules";
 
 describe("availableCopies (limites)", () => {
   it("sem empréstimo devolve todos os exemplares", () => {
@@ -84,5 +84,11 @@ describe("pageNumbers (uma página)", () => {
 describe("pageNumbers (meio)", () => {
   it("página 5 de 10 mostra extremos, vizinhas e reticências", () => {
     expect(pageNumbers(5, 10)).toEqual([1, "…", 4, 5, 6, "…", 10]);
+  });
+});
+
+describe("sortBooks (vazio)", () => {
+  it("lista vazia continua vazia em qualquer ordem", () => {
+    expect(sortBooks([], "author")).toEqual([]);
   });
 });
