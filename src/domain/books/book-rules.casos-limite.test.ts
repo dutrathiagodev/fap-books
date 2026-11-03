@@ -24,3 +24,9 @@ describe("cleanSearchTerm (vazio)", () => {
     expect(cleanSearchTerm("     ")).toBe("");
   });
 });
+
+describe("cleanSearchTerm (hífens)", () => {
+  it("hífens repetidos viram um só", () => {
+    expect(cleanSearchTerm("a---b")).toBe("a-b");
+  });
+});
