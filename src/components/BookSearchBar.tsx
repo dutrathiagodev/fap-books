@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Search } from "lucide-react";
-import { availabilityParam, bookSearchHref } from "@/domain/books/book-rules";
+import { bookSearchHref } from "@/domain/books/book-rules";
 import type { BookAvailabilityFilter } from "@/types/book";
 
 interface BookSearchBarProps {
@@ -19,7 +19,7 @@ interface BookSearchBarProps {
 const STATUS_OPTIONS: Array<{ value: BookAvailabilityFilter; label: string }> = [
   { value: "all", label: "Todos" },
   { value: "available", label: "Disponível" },
-  { value: "borrowed", label: "Emprestado" },
+  { value: "unavailable", label: "Emprestado" },
   { value: "reserved", label: "Reservado" },
 ];
 
@@ -55,7 +55,7 @@ export function BookSearchBar({ basePath, query, category, availability, categor
         </span>
         {/* Buscar mantém os filtros ativos; sem ?pagina=, a busca volta para a primeira página. */}
         {category && <input type="hidden" name="categoria" value={category} />}
-        {availability !== "all" && <input type="hidden" name="situacao" value={availabilityParam(availability)} />}
+        {availability !== "all" && <input type="hidden" name="situacao" value={availability} />}
         <button
           type="submit"
           className={`h-11 shrink-0 cursor-pointer rounded-md bg-brand px-5 text-sm font-medium text-on-brand hover:bg-brand-hover ${FOCUS}`}
