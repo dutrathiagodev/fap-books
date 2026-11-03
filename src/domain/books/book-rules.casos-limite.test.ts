@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { availableCopies, bookSituation, cleanSearchTerm } from "./book-rules";
+import { availableCopies, bookSituation, cleanSearchTerm, confirmsTitle } from "./book-rules";
 
 describe("availableCopies (limites)", () => {
   it("sem empréstimo devolve todos os exemplares", () => {
@@ -34,5 +34,11 @@ describe("cleanSearchTerm (hífens)", () => {
 describe("cleanSearchTerm (parênteses)", () => {
   it("parênteses e aspas viram espaço e somem das pontas", () => {
     expect(cleanSearchTerm('("livro")')).toBe("livro");
+  });
+});
+
+describe("confirmsTitle (vazio)", () => {
+  it("título vazio nunca libera a exclusão", () => {
+    expect(confirmsTitle("", "")).toBe(false);
   });
 });
