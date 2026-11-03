@@ -20,9 +20,9 @@ describe("navItemsFor", () => {
     expect(labels).not.toContain("Início");
   });
 
-  it("só o início tem endereço no aluno e no professor; a funcionária também tem o acervo", () => {
-    expect(navItemsFor("student").filter((i) => i.href).map((i) => i.href)).toEqual(["/aluno"]);
-    expect(navItemsFor("teacher").filter((i) => i.href).map((i) => i.href)).toEqual(["/professor"]);
+  it("aluno e professor têm o início e a pesquisa de livros; a funcionária tem o painel e o acervo", () => {
+    expect(navItemsFor("student").filter((i) => i.href).map((i) => i.href)).toEqual(["/aluno", "/aluno/livros"]);
+    expect(navItemsFor("teacher").filter((i) => i.href).map((i) => i.href)).toEqual(["/professor", "/professor/livros"]);
     expect(navItemsFor("librarian").filter((i) => i.href).map((i) => i.href)).toEqual(["/funcionario", "/funcionario/acervo"]);
   });
 

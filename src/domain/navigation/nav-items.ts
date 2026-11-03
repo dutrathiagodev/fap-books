@@ -39,7 +39,7 @@ export function navItemsFor(role: UserRole): NavItem[] {
 
   const items: NavItem[] = [
     { key: "home", label: "Início", href: home },
-    { key: "books", label: "Buscar livros" },
+    { key: "books", label: "Buscar livros", href: `${home}/livros` },
     { key: "loans", label: "Meus empréstimos" },
     { key: "reservations", label: "Minhas reservas" },
     { key: "fines", label: "Multas" },
