@@ -1,5 +1,6 @@
 // Reexporta os componentes para importar assim: import { Button } from "@/components";
 import { AppShell } from "./AppShell";
+import { BookCoverUpload } from "./BookCoverUpload";
 import { BookFormFields } from "./BookFormFields";
 import { BookResultCard } from "./BookResultCard";
 import { BookRowActions } from "./BookRowActions";
@@ -19,6 +20,7 @@ import { UserPanel } from "./UserPanel";
 
 export {
   AppShell,
+  BookCoverUpload,
   BookFormFields,
   BookResultCard,
   BookRowActions,
