@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { availableCopies, bookSituation, cleanSearchTerm, confirmsTitle, isUuid, pageNumbers, parseBookFilters, sortBooks } from "./book-rules";
+import { availableCopies, bookSituation, cleanSearchTerm, confirmsTitle, isUuid, pageNumbers, parseBookFilters, parseBookSort, sortBooks } from "./book-rules";
 
 describe("availableCopies (limites)", () => {
   it("sem empréstimo devolve todos os exemplares", () => {
@@ -90,5 +90,11 @@ describe("pageNumbers (meio)", () => {
 describe("sortBooks (vazio)", () => {
   it("lista vazia continua vazia em qualquer ordem", () => {
     expect(sortBooks([], "author")).toEqual([]);
+  });
+});
+
+describe("parseBookSort (repetido)", () => {
+  it("com parâmetro repetido vale o primeiro", () => {
+    expect(parseBookSort({ ordem: ["author", "title"] })).toBe("author");
   });
 });
