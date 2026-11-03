@@ -1,10 +1,27 @@
 import { connection } from "next/server";
 import { createSupabaseServerClient } from "@/lib/supabase/server-client";
-import { cleanSearchTerm, countSituations, type SituationCounts } from "@/domain/books/book-rules";
-import type { BookActionResult, BookListFilters, BookListItem, BookListResult, BookStatus } from "@/types/book";
+import {
+  availableCopies,
+  bookSituation,
+  cleanSearchTerm,
+  countSituations,
+  paginateBySituation,
+  type SituationCounts,
+} from "@/domain/books/book-rules";
+import type {
+  BookActionResult,
+  BookAvailabilityFilter,
+  BookListFilters,
+  BookListItem,
+  BookListResult,
+  BookSearchResult,
+  BookStatus,
+} from "@/types/book";
 import { recordAudit } from "./audit.service";
 
 export const BOOKS_PAGE_SIZE = 10;
+// A pesquisa de alunos e professores mostra 3 colunas por 2 linhas (Figma, card 0108).
+export const SEARCH_PAGE_SIZE = 6;
 
 // Código do Postgres para "ainda é usado por outra tabela" (empréstimo, reserva ou reserva pedagógica).
 const FOREIGN_KEY_VIOLATION = "23503";
@@ -16,6 +33,76 @@ const RANGE_NOT_SATISFIABLE = "PGRST103";
 // Filtro de busca por título, autor ou código. A listagem e os contadores usam o mesmo, para os números baterem.
 function searchClause(term: string): string {
   return `title.ilike.%${term}%,author.ilike.%${term}%,code.ilike.%${term}%`;
+}
+
+// Categorias sem repetir, em ordem alfabética (viram as opções do filtro).
+function sortedCategories(rows: { category: string | null }[]): string[] {
+  return [...new Set(rows.map((row) => row.category as string))].sort((a, b) => a.localeCompare(b, "pt-BR"));
+}
+
+// Uma linha de book_availability: só contagens por livro, nunca quem pegou ou reservou.
+interface ShelfRow {
+  book_id: string;
+  open_loans: number;
+  has_active_reservation: boolean;
+}
+
+// Pesquisa de alunos e professores (Figma, card 0108): só livros ativos. O RLS esconde os empréstimos dos outros,
+// então a situação vem da função book_availability do banco. Lê até 1000 livros (limite padrão do PostgREST);
+// acima disso, trocar por paginação no banco.
+export async function searchBooks(
+  filters: Pick<BookListFilters, "query" | "category" | "page">,
+  availability: BookAvailabilityFilter,
+): Promise<BookSearchResult> {
+  await connection();
+  const supabase = await createSupabaseServerClient();
+
+  let booksQuery = supabase
+    .from("books")
+    .select("id, title, author, category, code, quantity, cover_url")
+    .eq("status", "active")
+    .order("title");
+  const term = cleanSearchTerm(filters.query);
+  if (term) booksQuery = booksQuery.or(searchClause(term));
+
+  const [books, shelf, categories] = await Promise.all([
+    booksQuery,
+    supabase.rpc("book_availability"),
+    supabase.from("books").select("category").eq("status", "active").not("category", "is", null),
+  ]);
+  if (books.error || shelf.error || categories.error) throw new Error("Não foi possível pesquisar os livros.");
+
+  const shelfByBook = new Map((shelf.data as ShelfRow[]).map((row) => [row.book_id, row]));
+  // A categoria é filtrada aqui, na memória: o texto vindo do endereço não vai para a consulta ao banco.
+  const inCategory = books.data.filter((book) => !filters.category || book.category === filters.category);
+  const found = inCategory.map((book) => {
+    const state = shelfByBook.get(book.id);
+    const openLoans = state?.open_loans ?? 0;
+    return {
+      id: book.id,
+      title: book.title,
+      author: book.author,
+      category: book.category,
+      code: book.code,
+      coverUrl: book.cover_url,
+      situation: bookSituation({
+        quantity: book.quantity,
+        status: "active",
+        openLoans,
+        hasActiveReservation: state?.has_active_reservation ?? false,
+      }),
+      freeCopies: availableCopies(book.quantity, openLoans),
+    };
+  });
+
+  const result = paginateBySituation(found, availability, filters.page, SEARCH_PAGE_SIZE);
+  return {
+    books: result.items,
+    total: result.total,
+    page: result.page,
+    pageSize: SEARCH_PAGE_SIZE,
+    categories: sortedCategories(categories.data),
+  };
 }
 
 // Contadores do topo: quantos títulos do resultado do filtro (não só da página) estão disponíveis, emprestados ou reservados.
@@ -115,11 +202,7 @@ export async function listBooks(filters: BookListFilters): Promise<BookListResul
     hasHistory: withHistory.has(row.id),
   }));
 
-  const uniqueCategories = [...new Set((categories.data ?? []).map((row) => row.category as string))].sort((a, b) =>
-    a.localeCompare(b, "pt-BR"),
-  );
-
-  return { books, total: count ?? 0, page: filters.page, pageSize: BOOKS_PAGE_SIZE, categories: uniqueCategories };
+  return { books, total: count ?? 0, page: filters.page, pageSize: BOOKS_PAGE_SIZE, categories: sortedCategories(categories.data ?? []) };
 }
 
 // Exclui o livro. O banco recusa se ele tem histórico (FK), e o RLS recusa quem não é bibliotecária.
