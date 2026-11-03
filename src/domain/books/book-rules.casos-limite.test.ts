@@ -80,3 +80,9 @@ describe("pageNumbers (uma página)", () => {
     expect(pageNumbers(1, 1)).toEqual([1]);
   });
 });
+
+describe("pageNumbers (meio)", () => {
+  it("página 5 de 10 mostra extremos, vizinhas e reticências", () => {
+    expect(pageNumbers(5, 10)).toEqual([1, "…", 4, 5, 6, "…", 10]);
+  });
+});
