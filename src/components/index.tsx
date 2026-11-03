@@ -8,6 +8,7 @@ import { Button } from "./Button";
 import { EmptyState } from "./EmptyState";
 import { FilterMenu } from "./FilterMenu";
 import { LoadingState } from "./LoadingState";
+import { LoanSearch } from "./LoanSearch";
 import { LoginForm } from "./LoginForm";
 import { Logo } from "./Logo";
 import { PageHeader } from "./PageHeader";
@@ -26,6 +27,7 @@ export {
   EmptyState,
   FilterMenu,
   LoadingState,
+  LoanSearch,
   LoginForm,
   Logo,
   PageHeader,
