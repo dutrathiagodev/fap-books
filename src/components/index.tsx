@@ -5,6 +5,7 @@ import { BookRowActions } from "./BookRowActions";
 import { BookSearchBar } from "./BookSearchBar";
 import { BooksTable } from "./BooksTable";
 import { Button } from "./Button";
+import { DesignTokens } from "./DesignTokens";
 import { EmptyState } from "./EmptyState";
 import { FilterMenu } from "./FilterMenu";
 import { LoadingState } from "./LoadingState";
@@ -23,6 +24,7 @@ export {
   BookSearchBar,
   BooksTable,
   Button,
+  DesignTokens,
   EmptyState,
   FilterMenu,
   LoadingState,
