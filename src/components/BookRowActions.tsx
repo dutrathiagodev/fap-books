@@ -69,7 +69,7 @@ export function BookRowActions({ book, onDelete, onInactivate }: BookRowActionsP
       <dialog
         ref={dialog}
         aria-labelledby={`dialog-${book.id}`}
-        className="m-auto w-[min(92vw,26rem)] rounded-lg border border-line bg-surface p-6 text-ink shadow-lg backdrop:bg-ink/50"
+        className="m-auto w-[min(92vw,26rem)] rounded-lg border border-line bg-surface p-6 text-ink shadow-lg backdrop:bg-navy-950/40"
       >
         {book.hasHistory ? (
           <div className="flex flex-col gap-4">
