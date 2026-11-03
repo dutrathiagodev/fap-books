@@ -6,3 +6,9 @@ describe("availableCopies (limites)", () => {
     expect(availableCopies(3, 0)).toBe(3);
   });
 });
+
+describe("availableCopies (zero)", () => {
+  it("com quantidade zero não sobra exemplar", () => {
+    expect(availableCopies(0, 0)).toBe(0);
+  });
+});
