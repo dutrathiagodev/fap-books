@@ -1,7 +1,8 @@
 "use client";
 
-import { CircleAlert, Search } from "lucide-react";
+import { Search } from "lucide-react";
 import type { BookSituation } from "@/types/book";
+import { FieldError } from "./FieldError";
 import { SituationBadge } from "./SituationBadge";
 
 // Usuário já escolhido no balcão (frame 0129, passo Usuário).
@@ -128,7 +129,7 @@ function UserSlot({
           emptyLabel="Nenhum usuário encontrado."
         />
       )}
-      {user && error && <FieldError message={error} />}
+      {user && error && <FieldError message={error} className="mt-2" />}
     </article>
   );
 }
@@ -177,7 +178,7 @@ function BookSlot({
           emptyLabel="Nenhum livro encontrado."
         />
       )}
-      {book && error && <FieldError message={error} />}
+      {book && error && <FieldError message={error} className="mt-2" />}
     </article>
   );
 }
@@ -221,17 +222,8 @@ function SearchField({
           }`}
         />
       </span>
-      {error && <FieldError id={`${id}-error`} message={error} />}
+      {error && <FieldError id={`${id}-error`} message={error} className="mt-2" />}
       {showEmpty && <p className="mt-2 text-sm text-ink-muted">{emptyLabel}</p>}
     </div>
-  );
-}
-
-function FieldError({ id, message }: { id?: string; message: string }) {
-  return (
-    <p id={id} role="alert" className="mt-2 flex items-center gap-1 text-xs text-danger-700">
-      <CircleAlert size={12} strokeWidth={1.5} aria-hidden />
-      {message}
-    </p>
   );
 }

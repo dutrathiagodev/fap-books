@@ -1,9 +1,10 @@
 "use client";
 
 import { useState, useSyncExternalStore } from "react";
-import { ChevronDown, CircleAlert } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import { BOOK_AREAS, BOOK_CIRCULATION, EMPTY_BOOK_FORM, bookFormErrors } from "@/domain/books/book-form-rules";
 import type { BookFormField, BookFormValues } from "@/types/book";
+import { FieldError } from "./FieldError";
 
 export interface BookFormFieldsProps {
   // Valores controlados. Sem eles, o bloco começa vazio, como no frame de cadastro.
@@ -61,12 +62,7 @@ function Field({ id, label, required, error, className, children }: FieldProps) 
         )}
       </label>
       {children}
-      {error && (
-        <p id={`${id}-error`} role="alert" className="flex items-start gap-1 text-xs text-danger-700">
-          <CircleAlert size={12} strokeWidth={1.5} aria-hidden className="mt-0.5 shrink-0" />
-          {error}
-        </p>
-      )}
+      {error && <FieldError id={`${id}-error`} message={error} />}
     </div>
   );
 }
