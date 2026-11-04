@@ -25,7 +25,7 @@ async function NovoLivroContent() {
         }
       />
 
-      <section className="max-w-3xl rounded-lg border border-line bg-surface p-4 shadow-sm md:p-6">
+      <section className="max-w-3xl rounded-lg border border-line bg-surface p-4 shadow-sm md:p-7">
         <BookFormFields />
       </section>
     </AppShell>
