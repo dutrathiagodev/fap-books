@@ -8,6 +8,7 @@ import { BookSearchBar } from "./BookSearchBar";
 import { BooksTable } from "./BooksTable";
 import { Button } from "./Button";
 import { EmptyState } from "./EmptyState";
+import { FieldError } from "./FieldError";
 import { FilterMenu } from "./FilterMenu";
 import { LoadingState } from "./LoadingState";
 import { LoginForm } from "./LoginForm";
@@ -28,6 +29,7 @@ export {
   BooksTable,
   Button,
   EmptyState,
+  FieldError,
   FilterMenu,
   LoadingState,
   LoginForm,
