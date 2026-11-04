@@ -114,9 +114,9 @@ export function Modal({
         >
           <X size={16} strokeWidth={1.5} aria-hidden />
         </button>
-        {description && <p className="mt-2 text-sm text-ink-muted">{description}</p>}
+        {description && <p className="mt-4 text-sm text-ink-muted">{description}</p>}
         {children}
-        <div className="mt-6 flex flex-wrap justify-end gap-2">
+        <div className="mt-4 flex flex-wrap justify-end gap-3">
           <Button text={cancelLabel} variant="secondary" fullWidth={false} onClick={onClose} />
           <Button text={confirmLabel} variant={confirmVariant} fullWidth={false} onClick={onConfirm} />
         </div>
