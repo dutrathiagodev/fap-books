@@ -12,6 +12,7 @@ import { EmptyState } from "./EmptyState";
 import { FieldError } from "./FieldError";
 import { FilterMenu } from "./FilterMenu";
 import { LoadingState } from "./LoadingState";
+import { LoanSearch } from "./LoanSearch";
 import { LoginForm } from "./LoginForm";
 import { Logo } from "./Logo";
 import { Modal } from "./Modal";
@@ -36,6 +37,7 @@ export {
   FieldError,
   FilterMenu,
   LoadingState,
+  LoanSearch,
   LoginForm,
   Logo,
   Modal,
