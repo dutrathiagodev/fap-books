@@ -3,6 +3,7 @@
 import { Search } from "lucide-react";
 import type { BookSituation } from "@/types/book";
 import { FieldError } from "./FieldError";
+import { TextField } from "./TextField";
 import { SituationBadge } from "./SituationBadge";
 
 // Usuário já escolhido no balcão (frame 0129, passo Usuário).
@@ -40,8 +41,6 @@ export interface LoanSearchProps {
   book: LoanBookCard | null;
   bookError?: string;
 }
-
-const FOCUS = "outline-offset-2 focus-visible:outline-2 focus-visible:outline-focus";
 
 // Busca de usuário e de livro do balcão (Figma, card 0130, frame 0129).
 // Só desenha: a página busca e entrega o cartão, o vazio ou o erro.
@@ -204,25 +203,18 @@ function SearchField({
 
   return (
     <div className="mt-3">
-      <label htmlFor={id} className="sr-only">
-        {label}
-      </label>
-      <span className="relative block">
-        <Search size={18} strokeWidth={1.5} aria-hidden className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-muted" />
-        <input
-          id={id}
-          type="search"
-          value={value}
-          placeholder={placeholder}
-          aria-invalid={error ? true : undefined}
-          aria-describedby={error ? `${id}-error` : undefined}
-          onChange={(event) => onChange(event.target.value)}
-          className={`h-11 w-full rounded-md border bg-surface pl-10 pr-3 text-base ${FOCUS} ${
-            error ? "border-danger-700" : "border-line"
-          }`}
-        />
-      </span>
-      {error && <FieldError id={`${id}-error`} message={error} className="mt-2" />}
+      <TextField
+        id={id}
+        name={id}
+        label={label}
+        hideLabel
+        type="search"
+        placeholder={placeholder}
+        value={value}
+        error={error}
+        leadingIcon={Search}
+        onChange={onChange}
+      />
       {showEmpty && <p className="mt-2 text-sm text-ink-muted">{emptyLabel}</p>}
     </div>
   );

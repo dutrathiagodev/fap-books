@@ -9,11 +9,13 @@ export interface ModalProps {
   open: boolean;
   title: string;
   description?: string;
-  confirmLabel: string;
+  // Sem confirmLabel, o modal só informa e mostra o botão de fechar (cancelLabel).
+  confirmLabel?: string;
+  confirmDisabled?: boolean;
   cancelLabel?: string;
   // O frame usa o navy. "danger" fica para a ação destrutiva do design system.
   confirmVariant?: "primary" | "danger";
-  onConfirm: () => void;
+  onConfirm?: () => void;
   onClose: () => void;
   // Exclusão não fecha no clique fora nem no Esc. O X continua fechando.
   destructive?: boolean;
@@ -26,6 +28,7 @@ export function Modal({
   title,
   description,
   confirmLabel,
+  confirmDisabled = false,
   cancelLabel = "Cancelar",
   confirmVariant = "primary",
   onConfirm,
@@ -115,10 +118,12 @@ export function Modal({
           <X size={16} strokeWidth={1.5} aria-hidden />
         </button>
         {description && <p className="mt-4 text-sm text-ink-muted">{description}</p>}
-        {children}
+        {children && <div className="mt-4">{children}</div>}
         <div className="mt-4 flex flex-wrap justify-end gap-3">
           <Button text={cancelLabel} variant="secondary" fullWidth={false} onClick={onClose} />
-          <Button text={confirmLabel} variant={confirmVariant} fullWidth={false} onClick={onConfirm} />
+          {confirmLabel && (
+            <Button text={confirmLabel} variant={confirmVariant} fullWidth={false} disabled={confirmDisabled} onClick={onConfirm} />
+          )}
         </div>
       </div>
     </div>
