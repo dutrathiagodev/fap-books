@@ -49,3 +49,14 @@ export function coverError(file: CoverProbe): string | null {
   if (!isCoverRatio(file.width, file.height)) return "A imagem precisa estar na proporção 2:3.";
   return null;
 }
+
+// Nome do arquivo de uma capa guardada no bucket book-covers, a partir do endereço público salvo em books.cover_url.
+// Devolve null se o endereço não for do bucket ou se o nome fugir do padrão (sem pasta, sem "..").
+export function coverPathFromUrl(url: string | null): string | null {
+  if (!url) return null;
+  const marker = "/storage/v1/object/public/book-covers/";
+  const start = url.indexOf(marker);
+  if (start === -1) return null;
+  const name = url.slice(start + marker.length).split(/[?#]/)[0];
+  return /^[\w-]+\.(jpg|jpeg|png|webp)$/i.test(name) ? name : null;
+}

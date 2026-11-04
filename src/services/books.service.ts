@@ -27,7 +27,9 @@ import type {
   NewBookRow,
 } from "@/types/book";
 import { quantityBelowOpenLoans, toBookFormValues } from "@/domain/books/book-form-rules";
+import { coverPathFromUrl } from "@/domain/books/cover-rules";
 import { recordAudit } from "./audit.service";
+import { removeBookCover } from "./book-cover.service";
 
 export const BOOKS_PAGE_SIZE = 10;
 // A pesquisa de alunos e professores mostra 3 colunas por 2 linhas (Figma, card 0108).
@@ -350,12 +352,15 @@ export async function updateBook(id: string, row: BookUpdateRow, actorId: string
 // Exclui o livro. O banco recusa se ele tem histórico (FK), e o RLS recusa quem não é bibliotecária.
 export async function deleteBook(bookId: string, actorId: string): Promise<BookActionResult> {
   const supabase = await createSupabaseServerClient();
-  const { data, error } = await supabase.from("books").delete().eq("id", bookId).select("id");
+  const { data, error } = await supabase.from("books").delete().eq("id", bookId).select("id, cover_url");
 
   if (error) return { ok: false, reason: error.code === FOREIGN_KEY_VIOLATION ? "has_history" : "error" };
   if (!data || data.length === 0) return { ok: false, reason: "not_found" };
 
   await recordAudit({ actorId, action: "book_deleted", entity: "books", entityId: bookId });
+  // O livro já saiu do acervo: a capa dele não pode ficar solta no Storage. Se a remoção falhar, só vai para o log.
+  const coverPath = coverPathFromUrl(data[0].cover_url);
+  if (coverPath) await removeBookCover(coverPath);
   return { ok: true };
 }
 

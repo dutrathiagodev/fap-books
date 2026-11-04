@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { coverError, isCoverRatio } from "./cover-rules";
+import { coverError, coverPathFromUrl, isCoverRatio } from "./cover-rules";
 
 const ok = { type: "image/jpeg", size: 180_000, width: 600, height: 900 };
 
@@ -35,5 +35,28 @@ describe("coverError: dimensões máximas", () => {
     const base = { type: "image/jpeg", size: 180_000 };
     expect(coverError({ ...base, width: 4000, height: 6000 })).toBeNull();
     expect(coverError({ ...base, width: 4002, height: 6003 })).toMatch(/4000×6000/);
+  });
+});
+
+describe("coverPathFromUrl", () => {
+  const base = "https://exemplo.supabase.co/storage/v1/object/public/book-covers/";
+
+  it("devolve o nome do arquivo do bucket", () => {
+    expect(coverPathFromUrl(`${base}0e80ee6c-9c34-4900-9b2c-d26ff1ca3c48.jpg`)).toBe("0e80ee6c-9c34-4900-9b2c-d26ff1ca3c48.jpg");
+    expect(coverPathFromUrl(`${base}T-001.png?v=2`)).toBe("T-001.png");
+  });
+
+  it("sem endereço ou de outro bucket, não tem o que apagar", () => {
+    expect(coverPathFromUrl(null)).toBeNull();
+    expect(coverPathFromUrl("")).toBeNull();
+    expect(coverPathFromUrl("https://exemplo.supabase.co/storage/v1/object/public/outro-bucket/a.jpg")).toBeNull();
+    expect(coverPathFromUrl("https://site.com/capa.jpg")).toBeNull();
+  });
+
+  it("recusa pasta, caminho com .. e extensão fora do padrão", () => {
+    expect(coverPathFromUrl(`${base}pasta/a.jpg`)).toBeNull();
+    expect(coverPathFromUrl(`${base}../a.jpg`)).toBeNull();
+    expect(coverPathFromUrl(`${base}a.svg`)).toBeNull();
+    expect(coverPathFromUrl(`${base}a`)).toBeNull();
   });
 });
