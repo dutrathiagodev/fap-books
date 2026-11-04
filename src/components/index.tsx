@@ -1,5 +1,6 @@
 // Reexporta os componentes para importar assim: import { Button } from "@/components";
 import { AppShell } from "./AppShell";
+import { BookCreateForm } from "./BookCreateForm";
 import { BookFormSave } from "./BookFormSave";
 import { BookCoverUpload } from "./BookCoverUpload";
 import { BookFormFields } from "./BookFormFields";
@@ -27,6 +28,7 @@ import { UserPanel } from "./UserPanel";
 
 export {
   AppShell,
+  BookCreateForm,
   BookFormSave,
   BookCoverUpload,
   BookFormFields,
