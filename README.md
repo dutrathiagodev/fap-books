@@ -16,7 +16,7 @@
 ![Supabase](https://img.shields.io/badge/Supabase-PostgreSQL-3ECF8E?logo=supabase&logoColor=white)
 ![Vercel](https://img.shields.io/badge/Vercel-deploy-000000?logo=vercel&logoColor=white)
 
-![Tela de login do FAP Books](docs/images/tela-principal.png)
+![Página inicial do FAP Books](docs/images/pagina-inicial.png)
 
 </div>
 
@@ -34,6 +34,21 @@ O produto reúne, em um só lugar, uma área de consulta ao acervo (para alunos 
 | Design no Figma | [FAP BOOKS - Gestão para Biblioteca](https://www.figma.com/design/xOr6nlx1EqLMYmSJLh4sHI/FAP-BOOKS---Gestao-para-Biblioteca) |
 | Requisitos do produto | [`docs/prd.md`](docs/prd.md) (PRD v0.3, documento vivo) |
 | Fluxo de telas de design | [`docs/design/fluxo-de-telas.md`](docs/design/fluxo-de-telas.md) |
+
+## Estado atual
+
+O projeto está em **MVP em desenvolvimento** (versão `0.5.0`). O que já funciona na `develop`:
+
+| | Área | O que já existe |
+| -- | -- | -- |
+| 🏠 | **Página inicial** | Landing pública com apresentação, perfis, recursos, acervo e contato |
+| 🔐 | **Login e perfis** | Entrada com Supabase Auth e área própria para aluno, professor e funcionário, com permissões por perfil (RLS em toda tabela) |
+| 🔎 | **Pesquisa de livros** | Busca por título, autor, ISBN ou assunto, com filtros de categoria e disponibilidade, para aluno e professor |
+| 📚 | **Acervo da bibliotecária** | Listagem com busca e filtros, exclusão (com confirmação pelo nome) e inativação de livro com histórico |
+| 📝 | **Formulário de livro** | Campos, validações e feedback de salvar no front; a gravação segura no banco e o upload de capa estão em andamento |
+| 🎨 | **Design system** | Tokens, tema e componentes base (botão, campo, tabela, modal) usados pelas telas |
+
+Em andamento: gravação e edição de livro, upload seguro de capa e buscas do balcão de empréstimo. Empréstimos, devoluções, reservas, multas e relatórios seguem no [backlog](docs/backlog/epicos-features-historias.md).
 
 ## Módulos
 
@@ -54,7 +69,7 @@ Ficam **fora do escopo** por enquanto: venda e compra de livros, controle financ
 | | Camada | Tecnologia |
 | -- | -- | -- |
 | 🖥️ | Frontend | React com [Next.js](https://nextjs.org) e Tailwind CSS |
-| ⚙️ | Backend | Node.js |
+| ⚙️ | Backend | Server Actions e rotas do Next.js (Node.js), com serviços e regras de domínio em `src/` |
 | 🗄️ | Banco de dados | PostgreSQL, via [Supabase](https://supabase.com) |
 | 🔐 | Autenticação | Supabase Auth, com permissões por perfil |
 | 🐙 | Repositório | GitHub |
@@ -74,9 +89,11 @@ Abra [http://localhost:3000](http://localhost:3000) no navegador.
 Outros comandos:
 
 ```bash
-npm run lint    # verifica o código
-npm run build   # gera a build de produção
-npm run start   # serve a build de produção
+npm run lint       # verifica o código
+npm test           # roda os testes (vitest)
+npm run typecheck  # confere os tipos (TypeScript)
+npm run build      # gera a build de produção
+npm run start      # serve a build de produção
 ```
 
 Variáveis de ambiente ficam em um `.env.local` e **nunca** vão para o repositório.
