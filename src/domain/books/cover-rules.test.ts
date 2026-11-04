@@ -29,3 +29,11 @@ describe("isCoverRatio", () => {
     expect(isCoverRatio(0, 900)).toBe(false);
   });
 });
+
+describe("coverError: dimensões máximas", () => {
+  it("recusa acima de 4000×6000 e aceita o limite", () => {
+    const base = { type: "image/jpeg", size: 180_000 };
+    expect(coverError({ ...base, width: 4000, height: 6000 })).toBeNull();
+    expect(coverError({ ...base, width: 4002, height: 6003 })).toMatch(/4000×6000/);
+  });
+});
