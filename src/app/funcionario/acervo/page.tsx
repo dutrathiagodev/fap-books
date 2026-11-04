@@ -43,6 +43,14 @@ async function AcervoContent({ searchParams }: { searchParams: SearchParams }) {
         title="Acervo de livros"
         breadcrumbs={[{ label: "Gestão bibliotecária" }, { label: "Acervo" }]}
         description="Gerencie o catálogo, os exemplares e a disponibilidade da biblioteca."
+        action={
+          <Link
+            href="/funcionario/acervo/novo"
+            className="inline-flex h-11 items-center rounded-md bg-brand px-5 text-sm font-medium text-on-brand hover:bg-brand-hover"
+          >
+            Novo livro
+          </Link>
+        }
       />
 
       <form method="get" action="/funcionario/acervo" className="mb-4 flex flex-wrap items-end gap-3">
