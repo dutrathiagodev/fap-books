@@ -8,7 +8,7 @@ import { FieldError } from "./FieldError";
 export interface BookCoverUploadProps {
   // Capa já salva. Sem ela, o bloco mostra o quadro vazio do frame.
   previewUrl?: string | null;
-  // Erro vindo de fora (o envio ao Storage entra no card do salvar).
+  // Erro vindo de fora (a conferência do servidor ao salvar).
   error?: string;
   disabled?: boolean;
   onChange?: (file: File | null) => void;
@@ -56,7 +56,7 @@ export function BookCoverUpload({ previewUrl = null, error: externalError, disab
     if (!file || disabled) return;
     try {
       const image = await readImage(file);
-      // file.type vem da extensão. Nada é enviado daqui: a conferência dos bytes fica no card do salvar.
+      // file.type vem da extensão: aqui é só um aviso rápido. O servidor confere os bytes de novo ao salvar.
       const message = coverError({ type: file.type, size: file.size, width: image.width, height: image.height });
       if (message) {
         URL.revokeObjectURL(image.url);

@@ -107,6 +107,8 @@ export interface NewBookRow {
   status: BookStatus;
   publisher: string | null;
   edition: string | null;
+  // Endereço público da capa já enviada ao Storage.
+  cover_url?: string | null;
 }
 
 // Linha atualizada ao editar: o status (ativo ou inativo) não muda por aqui.
@@ -128,4 +130,5 @@ export type BookUpdateResult =
 export type BookCreateResult =
   | { ok: true; id: string }
   | { ok: false; reason: "invalid"; errors: Partial<Record<BookFormField, string>> }
+  | { ok: false; reason: "invalid_cover"; message: string }
   | { ok: false; reason: "duplicate_code" | "error" };
