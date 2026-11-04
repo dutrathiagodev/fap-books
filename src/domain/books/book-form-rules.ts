@@ -1,4 +1,4 @@
-import type { BookFormField, BookFormValues } from "@/types/book";
+import type { BookFormField, BookFormValues, NewBookRow } from "@/types/book";
 
 // As sete áreas dos filtros do Figma (cards 0108, 0113 e 0117). O banco guarda o texto livre.
 export const BOOK_AREAS = [
@@ -98,4 +98,36 @@ export function bookFormErrors(
   if (values.edition.trim().length > LIMIT.edition) errors.edition = "A edição é longa demais.";
 
   return errors;
+}
+
+const FORM_FIELDS = Object.keys(EMPTY_BOOK_FORM) as BookFormField[];
+
+// O que chega a uma Server Action é qualquer coisa que o cliente mandou: só segue se todos os campos forem texto.
+export function parseBookForm(input: unknown): BookFormValues | null {
+  if (typeof input !== "object" || input === null) return null;
+  const record = input as Record<string, unknown>;
+  const values = {} as BookFormValues;
+  for (const field of FORM_FIELDS) {
+    const value = record[field];
+    if (typeof value !== "string") return null;
+    values[field] = value;
+  }
+  return values;
+}
+
+// Linha de public.books para um formulário já validado. O código de chamada vira o código único do livro; o ISBN
+// é guardado só com dígitos; o status "Circulação geral" é o livro ativo.
+export function toBookRow(values: BookFormValues): NewBookRow {
+  const isbn = digits(values.isbn);
+  return {
+    title: values.title.trim(),
+    author: values.authors.trim(),
+    category: values.category,
+    code: values.callNumber.trim(),
+    isbn: isbn || null,
+    quantity: Number(values.quantity.trim()),
+    status: "active",
+    publisher: values.publisher.trim() || null,
+    edition: values.edition.trim() || null,
+  };
 }
