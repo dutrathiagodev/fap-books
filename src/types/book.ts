@@ -109,6 +109,22 @@ export interface NewBookRow {
   edition: string | null;
 }
 
+// Linha atualizada ao editar: o status (ativo ou inativo) não muda por aqui.
+export type BookUpdateRow = Omit<NewBookRow, "status">;
+
+// Livro carregado para edição: os campos do formulário e os exemplares emprestados agora.
+export interface BookEditData {
+  id: string;
+  values: BookFormValues;
+  openLoans: number;
+}
+
+export type BookUpdateResult =
+  | { ok: true }
+  | { ok: false; reason: "invalid"; errors: Partial<Record<BookFormField, string>> }
+  | { ok: false; reason: "quantity_below_loans"; openLoans: number }
+  | { ok: false; reason: "duplicate_code" | "not_found" | "error" };
+
 export type BookCreateResult =
   | { ok: true; id: string }
   | { ok: false; reason: "invalid"; errors: Partial<Record<BookFormField, string>> }

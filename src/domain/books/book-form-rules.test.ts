@@ -6,7 +6,10 @@ import {
   bookFormErrors,
   isBookFormEmpty,
   parseBookForm,
+  quantityBelowOpenLoans,
+  toBookFormValues,
   toBookRow,
+  toBookUpdate,
 } from "./book-form-rules";
 
 const filled = {
@@ -96,5 +99,48 @@ describe("toBookRow", () => {
     expect(row.isbn).toBeNull();
     expect(row.publisher).toBeNull();
     expect(row.edition).toBeNull();
+  });
+});
+
+describe("toBookUpdate", () => {
+  it("é a linha do cadastro sem o status, para não reativar livro inativo", () => {
+    const { status, ...rest } = toBookRow(filled);
+    expect(status).toBe("active");
+    expect(toBookUpdate(filled)).toEqual(rest);
+    expect(toBookUpdate(filled)).not.toHaveProperty("status");
+  });
+});
+
+describe("toBookFormValues", () => {
+  it("devolve os campos do formulário e troca nulos por texto vazio", () => {
+    const values = toBookFormValues({
+      title: "Tratado",
+      author: "Guyton",
+      category: null,
+      code: "612.01 G993t",
+      isbn: null,
+      quantity: 3,
+      publisher: null,
+      edition: "13ª edição",
+    });
+    expect(values).toEqual({
+      ...EMPTY_BOOK_FORM,
+      title: "Tratado",
+      authors: "Guyton",
+      callNumber: "612.01 G993t",
+      quantity: "3",
+      edition: "13ª edição",
+    });
+  });
+  it("o que sai do banco passa nas regras do formulário", () => {
+    expect(bookFormErrors(toBookFormValues({ ...toBookUpdate(filled), category: filled.category, code: "X1" }))).toEqual({});
+  });
+});
+
+describe("quantityBelowOpenLoans", () => {
+  it("só recusa quantidade menor que os empréstimos em aberto", () => {
+    expect(quantityBelowOpenLoans(1, 2)).toBe(true);
+    expect(quantityBelowOpenLoans(2, 2)).toBe(false);
+    expect(quantityBelowOpenLoans(5, 0)).toBe(false);
   });
 });

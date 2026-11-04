@@ -1,4 +1,4 @@
-import type { BookFormField, BookFormValues, NewBookRow } from "@/types/book";
+import type { BookFormField, BookFormValues, BookUpdateRow, NewBookRow } from "@/types/book";
 
 // As sete áreas dos filtros do Figma (cards 0108, 0113 e 0117). O banco guarda o texto livre.
 export const BOOK_AREAS = [
@@ -118,6 +118,11 @@ export function parseBookForm(input: unknown): BookFormValues | null {
 // Linha de public.books para um formulário já validado. O código de chamada vira o código único do livro; o ISBN
 // é guardado só com dígitos; o status "Circulação geral" é o livro ativo.
 export function toBookRow(values: BookFormValues): NewBookRow {
+  return { ...toBookUpdate(values), status: "active" };
+}
+
+// Mesma linha sem o status: editar um livro inativo não o reativa.
+export function toBookUpdate(values: BookFormValues): BookUpdateRow {
   const isbn = digits(values.isbn);
   return {
     title: values.title.trim(),
@@ -126,8 +131,36 @@ export function toBookRow(values: BookFormValues): NewBookRow {
     code: values.callNumber.trim(),
     isbn: isbn || null,
     quantity: Number(values.quantity.trim()),
-    status: "active",
     publisher: values.publisher.trim() || null,
     edition: values.edition.trim() || null,
   };
+}
+
+// Linha de public.books de volta para os campos do formulário de edição.
+export function toBookFormValues(row: {
+  title: string;
+  author: string;
+  category: string | null;
+  code: string;
+  isbn: string | null;
+  quantity: number;
+  publisher: string | null;
+  edition: string | null;
+}): BookFormValues {
+  return {
+    title: row.title,
+    authors: row.author,
+    category: row.category ?? "",
+    callNumber: row.code,
+    isbn: row.isbn ?? "",
+    quantity: String(row.quantity),
+    circulation: BOOK_CIRCULATION[0],
+    publisher: row.publisher ?? "",
+    edition: row.edition ?? "",
+  };
+}
+
+// Não dá para ter menos exemplares do que os que estão emprestados agora.
+export function quantityBelowOpenLoans(quantity: number, openLoans: number): boolean {
+  return quantity < openLoans;
 }
