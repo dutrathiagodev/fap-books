@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState, useTransition } from "react";
 import { Eye, Pencil, Trash2 } from "lucide-react";
 import { confirmsTitle } from "@/domain/books/book-rules";
@@ -23,7 +24,7 @@ const ERROR_TEXT: Record<"has_history" | "not_found" | "error", string> = {
   error: "Não foi possível concluir agora. Tente de novo.",
 };
 
-// Ações da linha do acervo (Figma, card 0113): ver e editar chegam nos cards 0116 e 0117;
+// Ações da linha do acervo (Figma, card 0113): ver chega no card 0116 e editar leva ao formulário (0120);
 // excluir abre a confirmação com o nome do livro, ou o aviso de histórico (só inativar).
 export function BookRowActions({ book, onDelete, onInactivate }: BookRowActionsProps) {
   const [isOpen, setIsOpen] = useState(false);
@@ -65,9 +66,9 @@ export function BookRowActions({ book, onDelete, onInactivate }: BookRowActionsP
       <button type="button" disabled title="Ver detalhes (em breve)" aria-label={`Ver ${book.title}`} className={`${ICON_BUTTON} cursor-not-allowed text-ink-muted opacity-50`}>
         <Eye size={16} aria-hidden />
       </button>
-      <button type="button" disabled title="Editar (em breve)" aria-label={`Editar ${book.title}`} className={`${ICON_BUTTON} cursor-not-allowed text-ink-muted opacity-50`}>
+      <Link href={`/funcionario/acervo/${book.id}/editar`} title="Editar" aria-label={`Editar ${book.title}`} className={`${ICON_BUTTON} text-ink-muted hover:bg-subtle`}>
         <Pencil size={16} aria-hidden />
-      </button>
+      </Link>
       <button
         type="button"
         onClick={open}
