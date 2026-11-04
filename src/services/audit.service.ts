@@ -1,6 +1,6 @@
 import { createSupabaseServerClient } from "@/lib/supabase/server-client";
 
-export type AuditAction = "book_deleted" | "book_inactivated";
+export type AuditAction = "book_created" | "book_deleted" | "book_inactivated";
 
 // Registra quem fez o quê. O banco só aceita ações conhecidas e "details" só com ids (LGPD, FAP-0011).
 // Se a gravação falhar, a ação já feita não é desfeita: o erro fica no log do servidor.

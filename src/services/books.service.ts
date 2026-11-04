@@ -14,12 +14,14 @@ import {
 import type {
   BookActionResult,
   BookAvailabilityFilter,
+  BookCreateResult,
   BookDetail,
   BookListFilters,
   BookListItem,
   BookListResult,
   BookSearchResult,
   BookStatus,
+  NewBookRow,
 } from "@/types/book";
 import { recordAudit } from "./audit.service";
 
@@ -31,6 +33,8 @@ export const SEARCH_PAGE_SIZE = 6;
 const FOREIGN_KEY_VIOLATION = "23503";
 // Reserva que ainda guarda um exemplar: aguardando ou pronta para retirada (as outras já foram atendidas ou canceladas).
 const ACTIVE_RESERVATION_STATUSES = ["waiting", "ready"];
+// Código do Postgres para "já existe": o código do livro é único.
+const UNIQUE_VIOLATION = "23505";
 // Código do PostgREST para página além do fim da lista.
 const RANGE_NOT_SATISFIABLE = "PGRST103";
 
@@ -276,6 +280,18 @@ export async function listBooks(filters: BookListFilters): Promise<BookListResul
   }));
 
   return { books, total: count ?? 0, page: filters.page, pageSize: BOOKS_PAGE_SIZE, categories };
+}
+
+// Grava o livro novo. A linha já foi validada no servidor; o banco confere de novo (check, unique e RLS).
+// O erro do banco nunca sai daqui: vira um motivo conhecido.
+export async function createBook(row: NewBookRow, actorId: string): Promise<BookCreateResult> {
+  const supabase = await createSupabaseServerClient();
+  const { data, error } = await supabase.from("books").insert(row).select("id").single();
+
+  if (error) return { ok: false, reason: error.code === UNIQUE_VIOLATION ? "duplicate_code" : "error" };
+
+  await recordAudit({ actorId, action: "book_created", entity: "books", entityId: data.id });
+  return { ok: true, id: data.id };
 }
 
 // Exclui o livro. O banco recusa se ele tem histórico (FK), e o RLS recusa quem não é bibliotecária.
