@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { CircleAlert, ImagePlus } from "lucide-react";
-import { coverError } from "@/domain/books/cover-rules";
+import { COVER_MIME_TYPES, coverError } from "@/domain/books/cover-rules";
 
 export interface BookCoverUploadProps {
   // Capa já salva. Sem ela, o bloco mostra o quadro vazio do frame.
@@ -55,6 +55,7 @@ export function BookCoverUpload({ previewUrl = null, error: externalError, disab
     if (!file || disabled) return;
     try {
       const image = await readImage(file);
+      // file.type vem da extensão. Nada é enviado daqui: a conferência dos bytes fica no card do salvar.
       const message = coverError({ type: file.type, size: file.size, width: image.width, height: image.height });
       if (message) {
         URL.revokeObjectURL(image.url);
@@ -135,7 +136,7 @@ export function BookCoverUpload({ previewUrl = null, error: externalError, disab
         id="book-cover"
         name="cover"
         type="file"
-        accept="image/jpeg,image/png,image/webp"
+        accept={COVER_MIME_TYPES.join(",")}
         disabled={disabled}
         aria-label="Capa do exemplar"
         aria-invalid={Boolean(error)}

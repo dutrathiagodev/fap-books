@@ -1,4 +1,7 @@
-// Regras da capa (Figma, card 0117; bucket book-covers: JPG, PNG ou WebP, até 2 MB, no mínimo 600×900).
+// Regras da capa (Figma, card 0117). JPG, PNG e WebP, até 2 MB, no mínimo 600×900, proporção 2:3.
+// Esta lista tem de ser a mesma de allowed_mime_types do bucket book-covers. Se mudar aqui, mudar o bucket também.
+// O envio ainda não existe. No card do salvar o servidor confere os bytes (tipo real), o tamanho e os pixels;
+// o bucket limita o tamanho e os tipos, a política é por pasta, e o EXIF sai antes de servir.
 
 export const COVER_MIME_TYPES = ["image/jpeg", "image/png", "image/webp"] as const;
 
