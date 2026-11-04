@@ -35,16 +35,55 @@ export function Modal({
 }: ModalProps) {
   const titleId = useId();
   const panelRef = useRef<HTMLDivElement>(null);
+  const onCloseRef = useRef(onClose);
+
+  useEffect(() => {
+    onCloseRef.current = onClose;
+  }, [onClose]);
 
   useEffect(() => {
     if (!open) return;
-    function onKey(event: KeyboardEvent) {
-      if (event.key === "Escape" && !destructive) onClose();
+    const panel = panelRef.current;
+    const opener = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+
+    function focusables(): HTMLElement[] {
+      if (!panel) return [];
+      return [...panel.querySelectorAll<HTMLElement>("a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled])")];
     }
+
+    const first = focusables()[0];
+    (first ?? panel)?.focus();
+
+    function onKey(event: KeyboardEvent) {
+      if (event.key === "Escape" && !destructive) {
+        event.preventDefault();
+        onCloseRef.current();
+        return;
+      }
+      if (event.key !== "Tab" || !panel) return;
+      const items = focusables();
+      if (items.length === 0) {
+        event.preventDefault();
+        panel.focus();
+        return;
+      }
+      const index = items.indexOf(document.activeElement as HTMLElement);
+      const last = items.length - 1;
+      if (event.shiftKey && index <= 0) {
+        event.preventDefault();
+        items[last]?.focus();
+      } else if (!event.shiftKey && (index === -1 || index === last)) {
+        event.preventDefault();
+        items[0]?.focus();
+      }
+    }
+
     document.addEventListener("keydown", onKey);
-    panelRef.current?.focus();
-    return () => document.removeEventListener("keydown", onKey);
-  }, [open, destructive, onClose]);
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      opener?.focus();
+    };
+  }, [open, destructive]);
 
   if (!open) return null;
 

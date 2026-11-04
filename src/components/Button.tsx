@@ -26,7 +26,8 @@ const VARIANTS = {
   light: "h-12 rounded-md bg-white px-6 text-navy-900 hover:bg-navy-50",
   secondary: "h-12 rounded-md bg-btn-soft px-6 text-brand hover:bg-btn-soft-hover",
   danger: "h-12 rounded-md border border-danger-700 bg-danger-100 px-6 text-danger-700",
-  text: "text-link hover:underline",
+  // 32 px, como o botão de ícone da linha (a linha do frame tem 56 px). Os preenchidos continuam em 48 px.
+  text: "h-8 rounded-md px-2 text-link hover:underline",
 } as const;
 
 // Botão do FAP Books (Figma, card 0098: 48 px de altura, cantos de 8 px).
