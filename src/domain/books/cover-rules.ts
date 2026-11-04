@@ -1,7 +1,7 @@
 // Regras da capa (Figma, card 0117). JPG, PNG e WebP, até 2 MB, no mínimo 600×900, proporção 2:3.
 // Esta lista tem de ser a mesma de allowed_mime_types do bucket book-covers. Se mudar aqui, mudar o bucket também.
-// O envio ainda não existe. No card do salvar o servidor confere os bytes (tipo real), o tamanho e os pixels;
-// o bucket limita o tamanho e os tipos, a política é por pasta, e o EXIF sai antes de servir.
+// O navegador só avisa cedo. A conferência que vale é a do servidor (cover-image.ts): bytes (tipo real), tamanho e pixels,
+// com o EXIF removido antes de enviar ao bucket book-covers.
 
 export const COVER_MIME_TYPES = ["image/jpeg", "image/png", "image/webp"] as const;
 
@@ -10,6 +10,11 @@ export const COVER_MAX_BYTES = 2 * 1024 * 1024;
 export const COVER_MIN_WIDTH = 600;
 
 export const COVER_MIN_HEIGHT = 900;
+
+// Teto das dimensões declaradas no cabeçalho: uma imagem gigante e leve (bomba de descompressão) travaria o navegador de quem abrir a capa.
+export const COVER_MAX_WIDTH = 4000;
+
+export const COVER_MAX_HEIGHT = 6000;
 
 const COVER_RATIO = 2 / 3;
 
@@ -37,6 +42,9 @@ export function coverError(file: CoverProbe): string | null {
   if (file.size > COVER_MAX_BYTES) return "A imagem passa de 2 MB.";
   if (file.width < COVER_MIN_WIDTH || file.height < COVER_MIN_HEIGHT) {
     return "A imagem precisa ter pelo menos 600×900 px.";
+  }
+  if (file.width > COVER_MAX_WIDTH || file.height > COVER_MAX_HEIGHT) {
+    return "A imagem pode ter no máximo 4000×6000 px.";
   }
   if (!isCoverRatio(file.width, file.height)) return "A imagem precisa estar na proporção 2:3.";
   return null;
