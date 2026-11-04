@@ -28,6 +28,9 @@ export const EMPTY_BOOK_FORM: BookFormValues = {
 
 const LIMIT = { title: 200, authors: 200, callNumber: 40, publisher: 120, edition: 80 } as const;
 
+// O frame do 0117 não limita a quantidade. O teto evita um número absurdo e está registrado no PR.
+const MAX_COPIES = 9999;
+
 function digits(value: string): string {
   return value.replace(/\D/g, "");
 }
@@ -81,8 +84,10 @@ export function bookFormErrors(
   const quantity = values.quantity.trim();
   const copies = Number(quantity);
   if (!quantity) errors.quantity = "Informe a quantidade de exemplares.";
-  else if (!/^\d+$/.test(quantity) || !Number.isInteger(copies) || copies < 1 || copies > 9999) {
+  else if (!/^\d+$/.test(quantity) || !Number.isInteger(copies) || copies < 1) {
     errors.quantity = "Informe um número inteiro a partir de 1.";
+  } else if (copies > MAX_COPIES) {
+    errors.quantity = "Informe no máximo 9999 exemplares.";
   }
 
   if (values.circulation && !circulations.includes(values.circulation)) {

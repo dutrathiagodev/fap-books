@@ -40,6 +40,8 @@ describe("bookFormErrors", () => {
     expect(bookFormErrors({ ...filled, quantity: "0" }).quantity).toMatch(/inteiro/);
     expect(bookFormErrors({ ...filled, quantity: "2,5" }).quantity).toMatch(/inteiro/);
     expect(bookFormErrors({ ...filled, quantity: "3" }).quantity).toBeUndefined();
+    expect(bookFormErrors({ ...filled, quantity: "9999" }).quantity).toBeUndefined();
+    expect(bookFormErrors({ ...filled, quantity: "10000" }).quantity).toBe("Informe no máximo 9999 exemplares.");
   });
   it("aceita ISBN-13 com hífen e recusa um código curto", () => {
     expect(bookFormErrors({ ...filled, isbn: "" }).isbn).toBeUndefined();
