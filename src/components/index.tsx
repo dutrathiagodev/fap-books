@@ -7,6 +7,7 @@ import { BookRowActions } from "./BookRowActions";
 import { BookSearchBar } from "./BookSearchBar";
 import { BooksTable } from "./BooksTable";
 import { Button } from "./Button";
+import { DesignTokens } from "./DesignTokens";
 import { DataTable } from "./DataTable";
 import { EmptyState } from "./EmptyState";
 import { FieldError } from "./FieldError";
@@ -32,6 +33,7 @@ export {
   BookSearchBar,
   BooksTable,
   Button,
+  DesignTokens,
   DataTable,
   EmptyState,
   FieldError,
