@@ -172,6 +172,8 @@ begin
   perform pg_temp.say('bibliotecária cadastra livro com edição', ed = '13ª edição (2021)');
   denied:=false; begin insert into public.books (title,author,code) values ('Outro','Autor','612.01 G993t'); exception when others then denied:=true; end;
   perform pg_temp.say('código de livro repetido é recusado', denied);
+  denied:=false; begin insert into public.books (title,author,code) values ('Outro','Autor','612.01 g993T'); exception when others then denied:=true; end;
+  perform pg_temp.say('código repetido só na caixa (maiúscula/minúscula) também é recusado', denied);
   denied:=false; begin insert into public.books (title,author,code,edition) values ('Longo','Autor','L-1',repeat('x',81)); exception when others then denied:=true; end;
   perform pg_temp.say('edição com mais de 80 caracteres é recusada', denied);
   perform pg_temp.as_user(A1);
