@@ -197,3 +197,18 @@ begin
   denied:=false; begin insert into public.books (title,author,code,edition) values ('Aluno','Autor','A-1','1ª'); exception when others then denied:=true; end;
   perform pg_temp.say('aluno NÃO cadastra livro', denied);
 end $$;
+
+-- consulta de usuário no balcão (card 0130): auditoria "profile_viewed"
+do $$
+declare A1 text:='00000000-0000-0000-0000-000000000001'; L1 text:='00000000-0000-0000-0000-000000000004';
+        denied boolean;
+begin
+  perform pg_temp.as_user(L1);
+  denied:=false; begin insert into public.audit_logs(actor_id,action,entity,entity_id,details) values (L1::uuid,'profile_viewed','profiles',A1::uuid,jsonb_build_object('profile_id',A1)); exception when others then denied:=true; end;
+  perform pg_temp.say('bibliotecária registra a consulta de um perfil', not denied);
+  denied:=false; begin insert into public.audit_logs(actor_id,action,entity,details) values (L1::uuid,'profile_viewed','profiles','{"nome":"Maria"}'); exception when others then denied:=true; end;
+  perform pg_temp.say('consulta de perfil NÃO aceita nome nos detalhes (só ids)', denied);
+  perform pg_temp.as_user(A1);
+  denied:=false; begin insert into public.audit_logs(actor_id,action,entity,entity_id) values (A1::uuid,'profile_viewed','profiles',L1::uuid); exception when others then denied:=true; end;
+  perform pg_temp.say('aluno NÃO registra consulta de perfil', denied);
+end $$;

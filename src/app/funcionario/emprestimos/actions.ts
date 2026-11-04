@@ -10,12 +10,12 @@ export type LookupResult<T> = { ok: true; items: T[] } | { ok: false; reason: "t
 
 // As duas consultas conferem de novo quem está logado (Server Action é uma porta pública): só a bibliotecária.
 export async function searchUsersAction(rawTerm: string): Promise<LookupResult<LoanUserCard>> {
-  await requireRole("librarian");
+  const profile = await requireRole("librarian");
   const parsed = parseLookupTerm(String(rawTerm));
   if (!parsed.ok) return parsed;
 
   try {
-    return { ok: true, items: await searchUsers(parsed.term) };
+    return { ok: true, items: await searchUsers(parsed.term, profile.id) };
   } catch {
     return { ok: false, reason: "error" };
   }

@@ -1,5 +1,6 @@
 import { connection } from "next/server";
 import { createSupabaseServerClient } from "@/lib/supabase/server-client";
+import { recordAudit } from "./audit.service";
 import { bookSituation } from "@/domain/books/book-rules";
 import { escapeLike, LOOKUP_MAX_RESULTS, toLoanUserCard, type LoanUserRow } from "@/domain/loans/loan-lookup-rules";
 import type { LoanBookCard, LoanUserCard } from "@/components/LoanSearch";
@@ -19,7 +20,7 @@ type ProfileRow = LoanUserRow & { id: string };
 
 // Usuários ativos pelo nome (contém) ou pela matrícula (começa com). Só a bibliotecária enxerga todos os perfis (RLS).
 // Devolve só o que o cartão mostra: sem e-mail e sem id.
-export async function searchUsers(term: string): Promise<LoanUserCard[]> {
+export async function searchUsers(term: string, actorId: string): Promise<LoanUserCard[]> {
   await connection();
   const supabase = await createSupabaseServerClient();
   const pattern = escapeLike(term);
@@ -43,6 +44,9 @@ export async function searchUsers(term: string): Promise<LoanUserCard[]> {
   ]);
   const users = found.sort((a, b) => a.full_name.localeCompare(b.full_name, "pt-BR")).slice(0, LOOKUP_MAX_RESULTS);
   if (users.length === 0) return [];
+
+  // Dado pessoal consultado: fica registrado quem viu cada perfil (sem o termo digitado, só ids).
+  await Promise.all(users.map((user) => recordAudit({ actorId, action: "profile_viewed", entity: "profiles", entityId: user.id })));
 
   const ids = users.map((user) => user.id);
   const [loans, fines] = await Promise.all([
