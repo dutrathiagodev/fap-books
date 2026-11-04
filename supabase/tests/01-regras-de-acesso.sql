@@ -176,3 +176,24 @@ begin
   perform pg_temp.as_user(A2); select count(*) into c from public.profiles where registration = '2024001';
   perform pg_temp.say('aluno NÃO descobre a matrícula de outra pessoa', c = 0);
 end $$;
+
+-- cadastro de livro (card 0118): edição opcional e código único
+do $$
+declare A1 text:='00000000-0000-0000-0000-000000000001'; L1 text:='00000000-0000-0000-0000-000000000004';
+        denied boolean; ed text;
+begin
+  perform pg_temp.as_user(L1);
+  insert into public.books (title,author,category,code,isbn,quantity,status,publisher,edition)
+    values ('Tratado de Fisiologia Médica','John E. Hall','Saúde','612.01 G993t','9788535287615',1,'active','Elsevier','13ª edição (2021)');
+  select edition into ed from public.books where code = '612.01 G993t';
+  perform pg_temp.say('bibliotecária cadastra livro com edição', ed = '13ª edição (2021)');
+  denied:=false; begin insert into public.books (title,author,code) values ('Outro','Autor','612.01 G993t'); exception when others then denied:=true; end;
+  perform pg_temp.say('código de livro repetido é recusado', denied);
+  denied:=false; begin insert into public.books (title,author,code) values ('Outro','Autor','612.01 g993T'); exception when others then denied:=true; end;
+  perform pg_temp.say('código repetido só na caixa (maiúscula/minúscula) também é recusado', denied);
+  denied:=false; begin insert into public.books (title,author,code,edition) values ('Longo','Autor','L-1',repeat('x',81)); exception when others then denied:=true; end;
+  perform pg_temp.say('edição com mais de 80 caracteres é recusada', denied);
+  perform pg_temp.as_user(A1);
+  denied:=false; begin insert into public.books (title,author,code,edition) values ('Aluno','Autor','A-1','1ª'); exception when others then denied:=true; end;
+  perform pg_temp.say('aluno NÃO cadastra livro', denied);
+end $$;
