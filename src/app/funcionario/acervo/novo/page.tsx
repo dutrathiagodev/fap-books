@@ -25,8 +25,8 @@ async function NovoLivroContent() {
         }
       />
 
-      <section className="max-w-5xl rounded-lg border border-line bg-surface p-4 shadow-sm md:p-6">
-        <div className="grid grid-cols-1 items-start gap-6 md:grid-cols-[minmax(0,1fr)_13.5rem]">
+      <section className="max-w-5xl rounded-lg border border-line bg-surface p-4 shadow-sm md:p-7">
+        <div className="grid grid-cols-1 items-start gap-6 md:grid-cols-[minmax(0,1fr)_16.25rem] md:gap-8">
           <div className="md:col-start-2 md:row-start-1">
             <BookCoverUpload />
           </div>
