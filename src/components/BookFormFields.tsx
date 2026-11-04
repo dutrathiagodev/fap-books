@@ -280,11 +280,6 @@ export function BookFormFields({
           />
         </Field>
       </div>
-
-      <p className="mt-4 text-xs text-ink-muted">
-        <span aria-hidden>* </span>
-        Campos de preenchimento obrigatório
-      </p>
     </fieldset>
   );
 }
