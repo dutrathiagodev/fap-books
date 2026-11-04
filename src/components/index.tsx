@@ -10,6 +10,7 @@ import { Button } from "./Button";
 import { DesignTokens } from "./DesignTokens";
 import { DataTable } from "./DataTable";
 import { EmptyState } from "./EmptyState";
+import { FieldError } from "./FieldError";
 import { FilterMenu } from "./FilterMenu";
 import { LoadingState } from "./LoadingState";
 import { LoanSearch } from "./LoanSearch";
@@ -35,6 +36,7 @@ export {
   DesignTokens,
   DataTable,
   EmptyState,
+  FieldError,
   FilterMenu,
   LoadingState,
   LoanSearch,

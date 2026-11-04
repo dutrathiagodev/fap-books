@@ -1,5 +1,6 @@
 import { CircleAlert } from "lucide-react";
 import type { ReactNode } from "react";
+import { FieldError } from "./FieldError";
 
 export interface DataTableColumn<Row> {
   key: string;
@@ -24,12 +25,7 @@ export function DataTable<Row>({ columns, rows, rowKey, emptyLabel = "Nenhum reg
 
   return (
     <div>
-      {error && rows.length > 0 && (
-        <p role="alert" className="mb-3 flex items-start gap-1 text-xs text-danger-700">
-          <CircleAlert size={12} strokeWidth={1.5} aria-hidden className="mt-0.5 shrink-0" />
-          {error}
-        </p>
-      )}
+      {error && rows.length > 0 && <FieldError message={error} className="mb-3" />}
 
       <div className={`hidden overflow-hidden rounded-lg border bg-surface md:block ${frame}`}>
         <table className="w-full text-left text-sm">
