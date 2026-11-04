@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { CircleAlert, ImagePlus } from "lucide-react";
+import { ImagePlus } from "lucide-react";
 import { COVER_MIME_TYPES, coverError } from "@/domain/books/cover-rules";
+import { FieldError } from "./FieldError";
 
 export interface BookCoverUploadProps {
   // Capa já salva. Sem ela, o bloco mostra o quadro vazio do frame.
@@ -145,12 +146,7 @@ export function BookCoverUpload({ previewUrl = null, error: externalError, disab
         onChange={(event) => void accept(event.target.files?.[0])}
       />
 
-      {error && (
-        <p id="book-cover-error" role="alert" className="mt-2 flex items-start gap-1 text-xs text-danger-700">
-          <CircleAlert size={12} strokeWidth={1.5} aria-hidden className="mt-0.5 shrink-0" />
-          {error}
-        </p>
-      )}
+      {error && <FieldError id="book-cover-error" message={error} className="mt-2" />}
     </div>
   );
 }

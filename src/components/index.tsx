@@ -9,6 +9,7 @@ import { BooksTable } from "./BooksTable";
 import { Button } from "./Button";
 import { DataTable } from "./DataTable";
 import { EmptyState } from "./EmptyState";
+import { FieldError } from "./FieldError";
 import { FilterMenu } from "./FilterMenu";
 import { LoadingState } from "./LoadingState";
 import { LoanSearch } from "./LoanSearch";
@@ -33,6 +34,7 @@ export {
   Button,
   DataTable,
   EmptyState,
+  FieldError,
   FilterMenu,
   LoadingState,
   LoanSearch,
