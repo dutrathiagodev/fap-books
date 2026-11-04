@@ -19,7 +19,9 @@ export function BookCreateForm({ onCreate }: { onCreate: (formData: FormData) =>
   const [status, setStatus] = useState<BookSaveStatus>("idle");
   const [error, setError] = useState<string | undefined>();
   const [cover, setCover] = useState<File | null>(null);
-  const [coverKey, setCoverKey] = useState(0);
+  // Chave nova depois de salvar: recria a capa e os campos. Sem ela os campos guardam o "já mexeu" e o formulário limpo
+  // aparece com todos os erros de campo obrigatório.
+  const [formKey, setFormKey] = useState(0);
   const [coverError, setCoverError] = useState<string | undefined>();
   const [fieldErrors, setFieldErrors] = useState<Partial<Record<BookFormField, string>>>({});
   const [pending, startTransition] = useTransition();
@@ -47,7 +49,7 @@ export function BookCreateForm({ onCreate }: { onCreate: (formData: FormData) =>
         if (result.ok) {
           setValues(EMPTY_BOOK_FORM);
           setCover(null);
-          setCoverKey((key) => key + 1);
+          setFormKey((key) => key + 1);
           setError(undefined);
           setStatus("success");
         } else {
@@ -80,10 +82,10 @@ export function BookCreateForm({ onCreate }: { onCreate: (formData: FormData) =>
       <div className="grid grid-cols-1 items-start gap-6 md:grid-cols-[minmax(0,1fr)_16.25rem] md:gap-8">
         <div className="md:col-start-2 md:row-start-1">
           {/* A chave zera a prévia depois de salvar. */}
-          <BookCoverUpload key={coverKey} disabled={pending} error={coverError} onChange={changeCover} />
+          <BookCoverUpload key={formKey} disabled={pending} error={coverError} onChange={changeCover} />
         </div>
         <div className="md:col-start-1 md:row-start-1">
-          <BookFormFields values={values} errors={fieldErrors} disabled={pending} onChange={change} />
+          <BookFormFields key={formKey} values={values} errors={fieldErrors} disabled={pending} onChange={change} />
         </div>
       </div>
     </BookFormSave>
