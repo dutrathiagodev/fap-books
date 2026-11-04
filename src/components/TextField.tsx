@@ -1,8 +1,8 @@
 "use client";
 
 import type { LucideIcon } from "lucide-react";
-import { CircleAlert } from "lucide-react";
 import type { ReactNode } from "react";
+import { FieldError } from "./FieldError";
 
 export interface TextFieldProps {
   id: string;
@@ -80,10 +80,7 @@ export function TextField({
         {trailing && <div className="absolute top-1/2 right-1 -translate-y-1/2">{trailing}</div>}
       </div>
       {error ? (
-        <p id={`${id}-error`} role="alert" className="flex items-start gap-1 text-xs text-danger-700">
-          <CircleAlert size={12} strokeWidth={1.5} aria-hidden className="mt-0.5 shrink-0" />
-          {error}
-        </p>
+        <FieldError id={`${id}-error`} message={error} />
       ) : (
         hint && (
           <p id={`${id}-hint`} className="text-xs text-ink-muted">
