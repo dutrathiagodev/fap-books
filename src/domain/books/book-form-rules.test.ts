@@ -1,5 +1,13 @@
 import { describe, expect, it } from "vitest";
-import { BOOK_AREAS, BOOK_CIRCULATION, EMPTY_BOOK_FORM, bookFormErrors, isBookFormEmpty } from "./book-form-rules";
+import {
+  BOOK_AREAS,
+  BOOK_CIRCULATION,
+  EMPTY_BOOK_FORM,
+  bookFormErrors,
+  isBookFormEmpty,
+  parseBookForm,
+  toBookRow,
+} from "./book-form-rules";
 
 const filled = {
   ...EMPTY_BOOK_FORM,
@@ -54,5 +62,39 @@ describe("bookFormErrors", () => {
   it("as áreas e a circulação do frame estão na lista", () => {
     expect(BOOK_AREAS).toContain("Saúde");
     expect(BOOK_CIRCULATION).toContain("Circulação geral");
+  });
+});
+
+describe("parseBookForm", () => {
+  it("aceita o formulário completo", () => {
+    expect(parseBookForm(filled)).toEqual(filled);
+  });
+  it("recusa o que não é objeto ou tem campo que não é texto", () => {
+    expect(parseBookForm(null)).toBeNull();
+    expect(parseBookForm("x")).toBeNull();
+    expect(parseBookForm({ ...filled, quantity: 1 })).toBeNull();
+    expect(parseBookForm({ ...filled, title: undefined })).toBeNull();
+  });
+});
+
+describe("toBookRow", () => {
+  it("mapeia o formulário para as colunas de books", () => {
+    expect(toBookRow({ ...filled, title: "  Tratado  ", quantity: " 3 " })).toEqual({
+      title: "Tratado",
+      author: "John E. Hall, Arthur C. Guyton",
+      category: "Saúde",
+      code: "612.01 G993t",
+      isbn: "9788535287615",
+      quantity: 3,
+      status: "active",
+      publisher: "Elsevier",
+      edition: "13ª edição (2021)",
+    });
+  });
+  it("deixa nulos os opcionais em branco", () => {
+    const row = toBookRow({ ...filled, isbn: " ", publisher: "", edition: "" });
+    expect(row.isbn).toBeNull();
+    expect(row.publisher).toBeNull();
+    expect(row.edition).toBeNull();
   });
 });

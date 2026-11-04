@@ -95,3 +95,21 @@ export interface BookFormValues {
 }
 
 export type BookFormField = keyof BookFormValues;
+
+// Linha gravada em public.books ao cadastrar um livro.
+export interface NewBookRow {
+  title: string;
+  author: string;
+  category: string;
+  code: string;
+  isbn: string | null;
+  quantity: number;
+  status: BookStatus;
+  publisher: string | null;
+  edition: string | null;
+}
+
+export type BookCreateResult =
+  | { ok: true; id: string }
+  | { ok: false; reason: "invalid"; errors: Partial<Record<BookFormField, string>> }
+  | { ok: false; reason: "duplicate_code" | "error" };
