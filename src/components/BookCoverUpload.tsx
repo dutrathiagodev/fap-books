@@ -29,7 +29,7 @@ function readImage(file: File): Promise<{ width: number; height: number; url: st
   });
 }
 
-// Upload da capa (Figma, card 0117). No computador, a caixa tracejada fica à direita; no celular, a miniatura fica ao lado do texto.
+// Upload da capa (Figma, card 0117). No computador, a caixa tracejada (260×260, raio 12) fica à direita; no celular, a miniatura fica ao lado do texto.
 export function BookCoverUpload({ previewUrl = null, error: externalError, disabled = false, onChange }: BookCoverUploadProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const ownedUrl = useRef<string | null>(null);
@@ -76,8 +76,8 @@ export function BookCoverUpload({ previewUrl = null, error: externalError, disab
     if (!disabled) inputRef.current?.click();
   }
 
-  const zone = `flex flex-col items-center justify-center gap-2 rounded-md border border-dashed bg-subtle text-center ${
-    preview ? "overflow-hidden" : "p-3"
+  const zone = `flex flex-col items-center justify-center gap-2 rounded-md border border-dashed bg-subtle text-center md:gap-2.5 md:rounded-lg ${
+    preview ? "overflow-hidden" : "p-3 md:p-5"
   } ${error ? "border-danger-700" : dragOver ? "border-focus bg-selected" : "border-navy-300"}`;
 
   return (
@@ -85,7 +85,7 @@ export function BookCoverUpload({ previewUrl = null, error: externalError, disab
       <p className="mb-1 hidden text-sm font-medium md:block">Capa do exemplar (opcional)</p>
       <div className="flex items-center gap-3 md:block">
         <div
-          className={`${zone} size-20 shrink-0 md:h-56 md:w-full`}
+          className={`${zone} size-20 shrink-0 md:size-auto md:h-[260px] md:w-full`}
           onDragOver={(event) => {
             event.preventDefault();
             if (!disabled) setDragOver(true);
