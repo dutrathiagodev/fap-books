@@ -80,3 +80,18 @@ export interface BookListResult {
 export type BookActionResult =
   | { ok: true }
   | { ok: false; reason: "has_history" | "not_found" | "error" };
+
+// Campos do formulário de cadastro (Figma, card 0117). Texto puro: a validação fica no domínio.
+export interface BookFormValues {
+  title: string;
+  authors: string;
+  category: string;
+  callNumber: string;
+  isbn: string;
+  quantity: string;
+  circulation: string;
+  publisher: string;
+  edition: string;
+}
+
+export type BookFormField = keyof BookFormValues;
