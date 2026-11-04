@@ -170,8 +170,8 @@ function BookSlot({
       ) : (
         <SearchField
           id={id}
-          label="Buscar livro por título ou tombo"
-          placeholder="Título ou tombo"
+          label="Buscar livro por título, autor, ISBN ou tombo"
+          placeholder="Buscar livro por título, autor, ISBN ou tombo"
           value={query}
           onChange={onQueryChange}
           error={error}
@@ -217,7 +217,7 @@ function SearchField({
           aria-invalid={error ? true : undefined}
           aria-describedby={error ? `${id}-error` : undefined}
           onChange={(event) => onChange(event.target.value)}
-          className={`h-12 w-full rounded-md border bg-surface pl-10 pr-3 text-base ${FOCUS} ${
+          className={`h-11 w-full rounded-md border bg-surface pl-10 pr-3 text-base ${FOCUS} ${
             error ? "border-danger-700" : "border-line"
           }`}
         />
