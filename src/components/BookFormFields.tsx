@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useSyncExternalStore } from "react";
 import { ChevronDown, CircleAlert } from "lucide-react";
 import { BOOK_AREAS, BOOK_CIRCULATION, EMPTY_BOOK_FORM, bookFormErrors } from "@/domain/books/book-form-rules";
 import type { BookFormField, BookFormValues } from "@/types/book";
@@ -14,6 +14,22 @@ export interface BookFormFieldsProps {
   errors?: Partial<Record<BookFormField, string>>;
   disabled?: boolean;
   onChange?: (values: BookFormValues) => void;
+}
+
+const NARROW_QUERY = "(max-width: 767px)";
+
+function subscribeNarrow(onChange: () => void): () => void {
+  const query = window.matchMedia(NARROW_QUERY);
+  query.addEventListener("change", onChange);
+  return () => query.removeEventListener("change", onChange);
+}
+
+function useNarrowScreen(): boolean {
+  return useSyncExternalStore(
+    subscribeNarrow,
+    () => window.matchMedia(NARROW_QUERY).matches,
+    () => false,
+  );
 }
 
 const CONTROL =
@@ -69,6 +85,7 @@ export function BookFormFields({
   const values = controlled ?? internal;
   const computed = bookFormErrors(values, areas, circulations);
   const noAreas = areas.length === 0;
+  const narrow = useNarrowScreen();
 
   function shownError(field: BookFormField): string | undefined {
     if (externalErrors?.[field]) return externalErrors[field];
@@ -120,7 +137,7 @@ export function BookFormFields({
             type="text"
             required
             value={values.authors}
-            placeholder="Ex.: John E. Hall, Arthur C. Guyton"
+            placeholder={narrow ? "Ex.: John E. Hall" : "Ex.: John E. Hall, Arthur C. Guyton"}
             aria-invalid={Boolean(shownError("authors"))}
             aria-describedby={shownError("authors") ? "book-authors-error" : undefined}
             onBlur={() => touch("authors")}
@@ -207,32 +224,34 @@ export function BookFormFields({
           />
         </Field>
 
-        <Field id="book-circulation" label="Status inicial do acervo" error={shownError("circulation")}>
-          <span className="relative">
-            <select
-              id="book-circulation"
-              name="circulation"
-              value={values.circulation}
-              aria-invalid={Boolean(shownError("circulation"))}
-              aria-describedby={shownError("circulation") ? "book-circulation-error" : undefined}
-              onBlur={() => touch("circulation")}
-              onChange={(event) => update("circulation", event.target.value)}
-              className={`${controlClass(Boolean(shownError("circulation")))} appearance-none pr-10`}
-            >
-              {circulations.map((option) => (
-                <option key={option} value={option}>
-                  {option}
-                </option>
-              ))}
-            </select>
-            <ChevronDown
-              size={16}
-              strokeWidth={1.5}
-              aria-hidden
-              className="pointer-events-none absolute top-1/2 right-3 -translate-y-1/2 text-ink-muted"
-            />
-          </span>
-        </Field>
+        <div className="max-md:hidden">
+          <Field id="book-circulation" label="Status inicial do acervo" error={shownError("circulation")}>
+            <span className="relative">
+              <select
+                id="book-circulation"
+                name="circulation"
+                value={values.circulation}
+                aria-invalid={Boolean(shownError("circulation"))}
+                aria-describedby={shownError("circulation") ? "book-circulation-error" : undefined}
+                onBlur={() => touch("circulation")}
+                onChange={(event) => update("circulation", event.target.value)}
+                className={`${controlClass(Boolean(shownError("circulation")))} appearance-none pr-10`}
+              >
+                {circulations.map((option) => (
+                  <option key={option} value={option}>
+                    {option}
+                  </option>
+                ))}
+              </select>
+              <ChevronDown
+                size={16}
+                strokeWidth={1.5}
+                aria-hidden
+                className="pointer-events-none absolute top-1/2 right-3 -translate-y-1/2 text-ink-muted"
+              />
+            </span>
+          </Field>
+        </div>
 
         <Field id="book-publisher" label="Editora" error={shownError("publisher")}>
           <input
