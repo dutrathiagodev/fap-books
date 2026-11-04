@@ -72,6 +72,7 @@ function Field({ id, label, required, error, className, children }: FieldProps) 
 }
 
 // Campos e validações do cadastro de livro (Figma, card 0117). No computador, pares em duas colunas; no celular, uma.
+// Espaço entre linhas medido no frame: 90 px de uma linha à outra no computador e 86 px no celular (rótulo 20 + 4 + campo 44 + respiro).
 export function BookFormFields({
   values: controlled,
   areas = BOOK_AREAS,
@@ -113,7 +114,7 @@ export function BookFormFields({
         </p>
       )}
 
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+      <div className="grid grid-cols-1 gap-x-4 gap-y-[18px] md:grid-cols-2 md:gap-y-[22px]">
         <Field id="book-title" label="Título do livro" required error={shownError("title")} className="md:col-span-2">
           <input
             id="book-title"
