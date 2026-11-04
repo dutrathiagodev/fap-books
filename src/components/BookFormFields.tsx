@@ -5,6 +5,7 @@ import { ChevronDown } from "lucide-react";
 import { BOOK_AREAS, BOOK_CIRCULATION, EMPTY_BOOK_FORM, bookFormErrors } from "@/domain/books/book-form-rules";
 import type { BookFormField, BookFormValues } from "@/types/book";
 import { FieldError } from "./FieldError";
+import { TextField } from "./TextField";
 
 export interface BookFormFieldsProps {
   // Valores controlados. Sem eles, o bloco começa vazio, como no frame de cadastro.
@@ -34,7 +35,7 @@ function useNarrowScreen(): boolean {
 }
 
 const CONTROL =
-  "h-11 w-full rounded-md border bg-surface px-4 text-base text-ink outline-offset-2 placeholder:text-ink-muted focus-visible:outline-2 focus-visible:outline-focus disabled:cursor-not-allowed disabled:opacity-50";
+  "h-10 w-full rounded-md border bg-surface px-4 text-base text-ink outline-offset-2 placeholder:text-ink-muted focus-visible:outline-2 focus-visible:outline-focus disabled:cursor-not-allowed disabled:opacity-50";
 
 function controlClass(invalid: boolean): string {
   return `${CONTROL} ${invalid ? "border-danger-700" : "border-line focus-visible:border-focus"}`;
@@ -51,8 +52,8 @@ interface FieldProps {
 
 function Field({ id, label, required, error, className, children }: FieldProps) {
   return (
-    <div className={`flex flex-col gap-1 ${className ?? ""}`}>
-      <label htmlFor={id} className="text-sm font-medium text-ink">
+    <div className={`flex flex-col gap-2 ${className ?? ""}`}>
+      <label htmlFor={id} className="text-sm leading-6 font-medium text-ink">
         {label}
         {required && (
           <span aria-hidden>
@@ -68,7 +69,7 @@ function Field({ id, label, required, error, className, children }: FieldProps) 
 }
 
 // Campos e validações do cadastro de livro (Figma, card 0117). No computador, pares em duas colunas; no celular, uma.
-// Espaço entre linhas medido no frame: 90 px de uma linha à outra no computador e 86 px no celular (rótulo 20 + 4 + campo 44 + respiro).
+// Campos do design system: rótulo 24 + 8 + campo 40. Distância de uma linha à outra: 90 px no computador e 86 px no celular, como no frame.
 export function BookFormFields({
   values: controlled,
   areas = BOOK_AREAS,
@@ -110,38 +111,31 @@ export function BookFormFields({
         </p>
       )}
 
-      <div className="grid grid-cols-1 gap-x-4 gap-y-[18px] md:grid-cols-2 md:gap-y-[22px]">
-        <Field id="book-title" label="Título do livro" required error={shownError("title")} className="md:col-span-2">
-          <input
-            id="book-title"
-            name="title"
-            type="text"
-            required
-            value={values.title}
-            placeholder="Ex.: Tratado de Fisiologia Médica"
-            aria-invalid={Boolean(shownError("title"))}
-            aria-describedby={shownError("title") ? "book-title-error" : undefined}
-            onBlur={() => touch("title")}
-            onChange={(event) => update("title", event.target.value)}
-            className={controlClass(Boolean(shownError("title")))}
-          />
-        </Field>
+      <div className="grid grid-cols-1 gap-x-4 gap-y-3.5 md:grid-cols-2 md:gap-y-[18px]">
+        <TextField
+          id="book-title"
+          name="title"
+          label="Título do livro"
+          required
+          placeholder="Ex.: Tratado de Fisiologia Médica"
+          value={values.title}
+          error={shownError("title")}
+          onBlur={() => touch("title")}
+          onChange={(value) => update("title", value)}
+          className="md:col-span-2"
+        />
 
-        <Field id="book-authors" label="Autor(es)" required error={shownError("authors")}>
-          <input
-            id="book-authors"
-            name="authors"
-            type="text"
-            required
-            value={values.authors}
-            placeholder={narrow ? "Ex.: John E. Hall" : "Ex.: John E. Hall, Arthur C. Guyton"}
-            aria-invalid={Boolean(shownError("authors"))}
-            aria-describedby={shownError("authors") ? "book-authors-error" : undefined}
-            onBlur={() => touch("authors")}
-            onChange={(event) => update("authors", event.target.value)}
-            className={controlClass(Boolean(shownError("authors")))}
-          />
-        </Field>
+        <TextField
+          id="book-authors"
+          name="authors"
+          label="Autor(es)"
+          required
+          placeholder={narrow ? "Ex.: John E. Hall" : "Ex.: John E. Hall, Arthur C. Guyton"}
+          value={values.authors}
+          error={shownError("authors")}
+          onBlur={() => touch("authors")}
+          onChange={(value) => update("authors", value)}
+        />
 
         <Field id="book-category" label="Categoria" required error={shownError("category")}>
           <span className="relative">
@@ -173,53 +167,41 @@ export function BookFormFields({
           </span>
         </Field>
 
-        <Field id="book-call-number" label="Código de chamada (CDD)" required error={shownError("callNumber")}>
-          <input
-            id="book-call-number"
-            name="callNumber"
-            type="text"
-            required
-            value={values.callNumber}
-            placeholder="Ex.: 612.01 G993t"
-            aria-invalid={Boolean(shownError("callNumber"))}
-            aria-describedby={shownError("callNumber") ? "book-call-number-error" : undefined}
-            onBlur={() => touch("callNumber")}
-            onChange={(event) => update("callNumber", event.target.value)}
-            className={controlClass(Boolean(shownError("callNumber")))}
-          />
-        </Field>
+        <TextField
+          id="book-call-number"
+          name="callNumber"
+          label="Código de chamada (CDD)"
+          required
+          placeholder="Ex.: 612.01 G993t"
+          value={values.callNumber}
+          error={shownError("callNumber")}
+          onBlur={() => touch("callNumber")}
+          onChange={(value) => update("callNumber", value)}
+        />
 
-        <Field id="book-isbn" label="ISBN-13" error={shownError("isbn")}>
-          <input
-            id="book-isbn"
-            name="isbn"
-            type="text"
-            inputMode="numeric"
-            value={values.isbn}
-            placeholder="Ex.: 978-85-352-8761-5"
-            aria-invalid={Boolean(shownError("isbn"))}
-            aria-describedby={shownError("isbn") ? "book-isbn-error" : undefined}
-            onBlur={() => touch("isbn")}
-            onChange={(event) => update("isbn", event.target.value)}
-            className={controlClass(Boolean(shownError("isbn")))}
-          />
-        </Field>
+        <TextField
+          id="book-isbn"
+          name="isbn"
+          label="ISBN-13"
+          placeholder="Ex.: 978-85-352-8761-5"
+          inputMode="numeric"
+          value={values.isbn}
+          error={shownError("isbn")}
+          onBlur={() => touch("isbn")}
+          onChange={(value) => update("isbn", value)}
+        />
 
-        <Field id="book-quantity" label="Quantidade de exemplares" required error={shownError("quantity")}>
-          <input
-            id="book-quantity"
-            name="quantity"
-            type="text"
-            inputMode="numeric"
-            required
-            value={values.quantity}
-            aria-invalid={Boolean(shownError("quantity"))}
-            aria-describedby={shownError("quantity") ? "book-quantity-error" : undefined}
-            onBlur={() => touch("quantity")}
-            onChange={(event) => update("quantity", event.target.value)}
-            className={controlClass(Boolean(shownError("quantity")))}
-          />
-        </Field>
+        <TextField
+          id="book-quantity"
+          name="quantity"
+          label="Quantidade de exemplares"
+          required
+          inputMode="numeric"
+          value={values.quantity}
+          error={shownError("quantity")}
+          onBlur={() => touch("quantity")}
+          onChange={(value) => update("quantity", value)}
+        />
 
         <div className="max-md:hidden">
           <Field id="book-circulation" label="Status inicial do acervo" error={shownError("circulation")}>
@@ -250,35 +232,27 @@ export function BookFormFields({
           </Field>
         </div>
 
-        <Field id="book-publisher" label="Editora" error={shownError("publisher")}>
-          <input
-            id="book-publisher"
-            name="publisher"
-            type="text"
-            value={values.publisher}
-            placeholder="Ex.: Elsevier"
-            aria-invalid={Boolean(shownError("publisher"))}
-            aria-describedby={shownError("publisher") ? "book-publisher-error" : undefined}
-            onBlur={() => touch("publisher")}
-            onChange={(event) => update("publisher", event.target.value)}
-            className={controlClass(Boolean(shownError("publisher")))}
-          />
-        </Field>
+        <TextField
+          id="book-publisher"
+          name="publisher"
+          label="Editora"
+          placeholder="Ex.: Elsevier"
+          value={values.publisher}
+          error={shownError("publisher")}
+          onBlur={() => touch("publisher")}
+          onChange={(value) => update("publisher", value)}
+        />
 
-        <Field id="book-edition" label="Edição / ano" error={shownError("edition")}>
-          <input
-            id="book-edition"
-            name="edition"
-            type="text"
-            value={values.edition}
-            placeholder="Ex.: 13ª edição (2021)"
-            aria-invalid={Boolean(shownError("edition"))}
-            aria-describedby={shownError("edition") ? "book-edition-error" : undefined}
-            onBlur={() => touch("edition")}
-            onChange={(event) => update("edition", event.target.value)}
-            className={controlClass(Boolean(shownError("edition")))}
-          />
-        </Field>
+        <TextField
+          id="book-edition"
+          name="edition"
+          label="Edição / ano"
+          placeholder="Ex.: 13ª edição (2021)"
+          value={values.edition}
+          error={shownError("edition")}
+          onBlur={() => touch("edition")}
+          onChange={(value) => update("edition", value)}
+        />
       </div>
     </fieldset>
   );

@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ChevronDown, Search } from "lucide-react";
 import { bookSearchHref, type BookSort } from "@/domain/books/book-rules";
 import type { BookAvailabilityFilter } from "@/types/book";
+import { TextField } from "./TextField";
 
 interface BookSearchBarProps {
   // Rota da pesquisa (ex.: "/aluno/livros"): a busca e os filtros apontam para ela.
@@ -46,28 +47,26 @@ export function BookSearchBar({ basePath, query, category, availability, sort, c
   return (
     <div className="mb-6 flex flex-col gap-4 rounded-lg border border-line bg-surface p-4">
       <form method="get" action={basePath} role="search" aria-label="Pesquisar livros" className="flex gap-3">
-        <label htmlFor="book-search" className="sr-only">
-          Buscar por título, autor, ISBN ou assunto
-        </label>
-        <span className="relative block min-w-0 flex-1">
-          <Search size={18} aria-hidden className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-muted" />
-          <input
+        <div className="min-w-0 flex-1">
+          <TextField
             id="book-search"
-            type="search"
             name="q"
+            label="Buscar por título, autor, ISBN ou assunto"
+            hideLabel
+            type="search"
             defaultValue={query}
             maxLength={80}
             placeholder="Busque por título, autor, ISBN ou assunto"
-            className={`h-11 w-full rounded-md border border-line-strong bg-surface pl-10 pr-3 text-sm ${FOCUS}`}
+            leadingIcon={Search}
           />
-        </span>
+        </div>
         {/* Buscar mantém os filtros ativos; sem ?pagina=, a busca volta para a primeira página. */}
         {category && <input type="hidden" name="categoria" value={category} />}
         {availability !== "all" && <input type="hidden" name="situacao" value={availability} />}
         {sort !== "relevance" && <input type="hidden" name="ordem" value={sort} />}
         <button
           type="submit"
-          className={`h-11 shrink-0 cursor-pointer rounded-md bg-brand px-5 text-sm font-medium text-on-brand hover:bg-brand-hover ${FOCUS}`}
+          className={`h-10 shrink-0 cursor-pointer rounded-md bg-brand px-5 text-sm font-medium text-on-brand hover:bg-brand-hover ${FOCUS}`}
         >
           Buscar
         </button>
