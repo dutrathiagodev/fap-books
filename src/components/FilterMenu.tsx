@@ -29,7 +29,7 @@ export function FilterMenu({ label, value, options }: FilterMenuProps) {
     <div className="flex flex-col gap-1 text-sm font-medium">
       <span>{label}</span>
       <details ref={menu} className="group relative">
-        <summary className="flex h-11 min-w-48 cursor-pointer list-none items-center justify-between gap-3 rounded-md border border-line-strong bg-surface px-3 text-sm font-normal outline-offset-2 hover:bg-subtle focus-visible:outline-2 focus-visible:outline-focus">
+        <summary className="flex h-10 min-w-48 cursor-pointer list-none items-center justify-between gap-3 rounded-md border border-line-strong bg-surface px-3 text-sm font-normal outline-offset-2 hover:bg-subtle focus-visible:outline-2 focus-visible:outline-focus">
           {value}
           <ChevronDown size={16} aria-hidden className="text-ink-muted transition-transform group-open:rotate-180" />
         </summary>
