@@ -158,4 +158,21 @@ begin
   denied:=false; begin delete from public.books where code = 'C-001'; exception when others then denied:=true; end;
   update public.books set status = 'inactive' where code = 'C-001'; get diagnostics c = row_count;
   perform pg_temp.say('aluno NÃO exclui nem inativa livro', c = 0);
+  -- matrícula dos perfis (card 0130)
+  perform pg_temp.as_user(L1);
+  update public.profiles set registration = '2024001', course = 'Sistemas de Informação' where id = A1::uuid; get diagnostics c = row_count;
+  perform pg_temp.say('bibliotecária grava a matrícula de um aluno', c = 1);
+  select count(*) into c from public.profiles where registration = '2024001' or full_name ilike '%Aluno Um%';
+  perform pg_temp.say('bibliotecária encontra o perfil pela matrícula ou pelo nome', c = 1);
+  denied:=false; begin update public.profiles set registration = '2024001' where id = A2::uuid; exception when others then denied:=true; end;
+  perform pg_temp.say('matrícula repetida é recusada', denied);
+  denied:=false; begin update public.profiles set registration = '20 24%' where id = A2::uuid; exception when others then denied:=true; end;
+  perform pg_temp.say('matrícula com espaço ou curinga é recusada', denied);
+  update public.profiles set registration = null where id = A2::uuid; get diagnostics c = row_count;
+  perform pg_temp.say('perfis sem matrícula continuam valendo (nulo repetido é aceito)', c = 1);
+  perform pg_temp.as_user(A1);
+  update public.profiles set registration = 'HACK123' where id = A1::uuid; get diagnostics c = row_count;
+  perform pg_temp.say('aluno NÃO altera a própria matrícula', c = 0);
+  perform pg_temp.as_user(A2); select count(*) into c from public.profiles where registration = '2024001';
+  perform pg_temp.say('aluno NÃO descobre a matrícula de outra pessoa', c = 0);
 end $$;
