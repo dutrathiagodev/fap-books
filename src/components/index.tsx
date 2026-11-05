@@ -3,6 +3,7 @@ import { AppShell } from "./AppShell";
 import { BookCreateForm } from "./BookCreateForm";
 import { BookEditForm } from "./BookEditForm";
 import { BookFormSave } from "./BookFormSave";
+import { BookCover } from "./BookCover";
 import { BookCoverUpload } from "./BookCoverUpload";
 import { BookFormFields } from "./BookFormFields";
 import { BookResultCard } from "./BookResultCard";
@@ -25,6 +26,7 @@ import { Pagination } from "./Pagination";
 import { Skeleton } from "./Skeleton";
 import { SituationBadge } from "./SituationBadge";
 import { TextField } from "./TextField";
+import { TextLink } from "./TextLink";
 import { UserPanel } from "./UserPanel";
 
 export {
@@ -32,6 +34,7 @@ export {
   BookCreateForm,
   BookEditForm,
   BookFormSave,
+  BookCover,
   BookCoverUpload,
   BookFormFields,
   BookResultCard,
@@ -54,5 +57,6 @@ export {
   Skeleton,
   SituationBadge,
   TextField,
+  TextLink,
   UserPanel,
 };

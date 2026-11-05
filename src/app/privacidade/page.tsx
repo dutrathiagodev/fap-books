@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { ShieldCheck } from "lucide-react";
+import { TextLink } from "@/components/TextLink";
 import { LOGIN_PATH } from "@/domain/access/access-rules";
 
 export const metadata: Metadata = { title: "Aviso de privacidade | FAP Books" };
@@ -38,9 +38,9 @@ export default function PrivacidadePage() {
           <br />
           Respondemos em até 15 dias.
         </p>
-        <Link href={LOGIN_PATH} className="mt-2 text-sm font-medium text-link underline">
+        <TextLink href={LOGIN_PATH} className="mt-2">
           Voltar ao login
-        </Link>
+        </TextLink>
       </article>
     </main>
   );

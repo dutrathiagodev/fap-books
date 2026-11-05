@@ -3,13 +3,20 @@
 import { TriangleAlert } from "lucide-react";
 import { EmptyState } from "./EmptyState";
 
+interface PageErrorProps {
+  error: Error;
+  reset: () => void;
+  // Cada área pode dizer o que não abriu (ex.: "o acervo").
+  title?: string;
+}
+
 // Tela de erro de uma rota: o que deu errado em uma frase e um jeito de tentar de novo.
-export function PageError({ reset }: { error: Error; reset: () => void }) {
+export function PageError({ reset, title = "Não foi possível abrir esta página" }: PageErrorProps) {
   return (
     <main className="mx-auto max-w-xl p-6">
       <EmptyState
         icon={TriangleAlert}
-        title="Não foi possível abrir esta página"
+        title={title}
         description="Tente de novo em instantes. Se continuar, avise a equipe do sistema."
         action={
           <button
