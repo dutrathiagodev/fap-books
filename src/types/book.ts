@@ -102,6 +102,8 @@ export interface NewBookRow {
   author: string;
   category: string;
   code: string;
+  // Só a classificação (CDD) do código de chamada, sem a notação do autor.
+  cdd: string | null;
   isbn: string | null;
   quantity: number;
   status: BookStatus;
