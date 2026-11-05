@@ -1,0 +1,32 @@
+name: Sem coautor de ferramenta
+
+# Reprova o PR se algum commit novo traz "Co-authored-by" do Cursor ou do Claude (ou autor com esses nomes).
+# Assim a lista de contribuidores do GitHub fica só com as pessoas da equipe.
+# Dica: no Cursor, desligar a atribuição de commit nas configurações; ou apagar a linha antes de commitar.
+on:
+  pull_request:
+    branches: [develop, main]
+
+jobs:
+  sem-coautor-de-ia:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Procurar coautor ou autor de ferramenta nos commits do PR
+        env:
+          BASE: ${{ github.event.pull_request.base.sha }}
+          HEAD: ${{ github.event.pull_request.head.sha }}
+        run: |
+          PADRAO='cursor|claude|anthropic'
+          RUIM=$(git log "$BASE..$HEAD" --format='%H%n%an <%ae>%n%cn <%ce>%n%B%n--fim--' \
+            | grep -iE "^(co-authored-by:.*($PADRAO)|.*($PADRAO).*<.*>)" || true)
+          if [ -n "$RUIM" ]; then
+            echo "Commits com coautor ou autor de ferramenta (Cursor/Claude):"
+            echo "$RUIM"
+            echo "Remova a linha Co-authored-by do commit (git commit --amend ou rebase) e envie de novo."
+            exit 1
+          fi
+          echo "Nenhum coautor de ferramenta nos commits do PR."
