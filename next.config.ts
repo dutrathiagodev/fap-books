@@ -24,6 +24,8 @@ const nextConfig: NextConfig = {
   async headers() {
     return [{ source: "/:path*", headers: cabecalhosDeSeguranca }];
   },
+  // A capa do livro (até 2 MB) segue junto do formulário; o padrão de 1 MB recusaria. A sobra é do multipart.
+  experimental: { serverActions: { bodySizeLimit: "3mb" } },
   cacheComponents: true,
   partialPrefetching: true,
   turbopack: {

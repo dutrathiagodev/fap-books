@@ -158,4 +158,57 @@ begin
   denied:=false; begin delete from public.books where code = 'C-001'; exception when others then denied:=true; end;
   update public.books set status = 'inactive' where code = 'C-001'; get diagnostics c = row_count;
   perform pg_temp.say('aluno NÃO exclui nem inativa livro', c = 0);
+  -- matrícula dos perfis (card 0130)
+  perform pg_temp.as_user(L1);
+  update public.profiles set registration = '2024001', course = 'Sistemas de Informação' where id = A1::uuid; get diagnostics c = row_count;
+  perform pg_temp.say('bibliotecária grava a matrícula de um aluno', c = 1);
+  select count(*) into c from public.profiles where registration = '2024001' or full_name ilike '%Aluno Um%';
+  perform pg_temp.say('bibliotecária encontra o perfil pela matrícula ou pelo nome', c = 1);
+  denied:=false; begin update public.profiles set registration = '2024001' where id = A2::uuid; exception when others then denied:=true; end;
+  perform pg_temp.say('matrícula repetida é recusada', denied);
+  denied:=false; begin update public.profiles set registration = '20 24%' where id = A2::uuid; exception when others then denied:=true; end;
+  perform pg_temp.say('matrícula com espaço ou curinga é recusada', denied);
+  update public.profiles set registration = null where id = A2::uuid; get diagnostics c = row_count;
+  perform pg_temp.say('perfis sem matrícula continuam valendo (nulo repetido é aceito)', c = 1);
+  perform pg_temp.as_user(A1);
+  update public.profiles set registration = 'HACK123' where id = A1::uuid; get diagnostics c = row_count;
+  perform pg_temp.say('aluno NÃO altera a própria matrícula', c = 0);
+  perform pg_temp.as_user(A2); select count(*) into c from public.profiles where registration = '2024001';
+  perform pg_temp.say('aluno NÃO descobre a matrícula de outra pessoa', c = 0);
+end $$;
+
+-- cadastro de livro (card 0118): edição opcional e código único
+do $$
+declare A1 text:='00000000-0000-0000-0000-000000000001'; L1 text:='00000000-0000-0000-0000-000000000004';
+        denied boolean; ed text;
+begin
+  perform pg_temp.as_user(L1);
+  insert into public.books (title,author,category,code,isbn,quantity,status,publisher,edition)
+    values ('Tratado de Fisiologia Médica','John E. Hall','Saúde','612.01 G993t','9788535287615',1,'active','Elsevier','13ª edição (2021)');
+  select edition into ed from public.books where code = '612.01 G993t';
+  perform pg_temp.say('bibliotecária cadastra livro com edição', ed = '13ª edição (2021)');
+  denied:=false; begin insert into public.books (title,author,code) values ('Outro','Autor','612.01 G993t'); exception when others then denied:=true; end;
+  perform pg_temp.say('código de livro repetido é recusado', denied);
+  denied:=false; begin insert into public.books (title,author,code) values ('Outro','Autor','612.01 g993T'); exception when others then denied:=true; end;
+  perform pg_temp.say('código repetido só na caixa (maiúscula/minúscula) também é recusado', denied);
+  denied:=false; begin insert into public.books (title,author,code,edition) values ('Longo','Autor','L-1',repeat('x',81)); exception when others then denied:=true; end;
+  perform pg_temp.say('edição com mais de 80 caracteres é recusada', denied);
+  perform pg_temp.as_user(A1);
+  denied:=false; begin insert into public.books (title,author,code,edition) values ('Aluno','Autor','A-1','1ª'); exception when others then denied:=true; end;
+  perform pg_temp.say('aluno NÃO cadastra livro', denied);
+end $$;
+
+-- consulta de usuário no balcão (card 0130): auditoria "profile_viewed"
+do $$
+declare A1 text:='00000000-0000-0000-0000-000000000001'; L1 text:='00000000-0000-0000-0000-000000000004';
+        denied boolean;
+begin
+  perform pg_temp.as_user(L1);
+  denied:=false; begin insert into public.audit_logs(actor_id,action,entity,entity_id,details) values (L1::uuid,'profile_viewed','profiles',A1::uuid,jsonb_build_object('profile_id',A1)); exception when others then denied:=true; end;
+  perform pg_temp.say('bibliotecária registra a consulta de um perfil', not denied);
+  denied:=false; begin insert into public.audit_logs(actor_id,action,entity,details) values (L1::uuid,'profile_viewed','profiles','{"nome":"Maria"}'); exception when others then denied:=true; end;
+  perform pg_temp.say('consulta de perfil NÃO aceita nome nos detalhes (só ids)', denied);
+  perform pg_temp.as_user(A1);
+  denied:=false; begin insert into public.audit_logs(actor_id,action,entity,entity_id) values (A1::uuid,'profile_viewed','profiles',L1::uuid); exception when others then denied:=true; end;
+  perform pg_temp.say('aluno NÃO registra consulta de perfil', denied);
 end $$;

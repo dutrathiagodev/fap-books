@@ -14,14 +14,22 @@ import {
 import type {
   BookActionResult,
   BookAvailabilityFilter,
+  BookCreateResult,
   BookDetail,
+  BookEditData,
   BookListFilters,
   BookListItem,
   BookListResult,
   BookSearchResult,
   BookStatus,
+  BookUpdateResult,
+  BookUpdateRow,
+  NewBookRow,
 } from "@/types/book";
+import { quantityBelowOpenLoans, toBookFormValues } from "@/domain/books/book-form-rules";
+import { coverPathFromUrl } from "@/domain/books/cover-rules";
 import { recordAudit } from "./audit.service";
+import { removeBookCover } from "./book-cover.service";
 
 export const BOOKS_PAGE_SIZE = 10;
 // A pesquisa de alunos e professores mostra 3 colunas por 2 linhas (Figma, card 0108).
@@ -31,6 +39,8 @@ export const SEARCH_PAGE_SIZE = 6;
 const FOREIGN_KEY_VIOLATION = "23503";
 // Reserva que ainda guarda um exemplar: aguardando ou pronta para retirada (as outras já foram atendidas ou canceladas).
 const ACTIVE_RESERVATION_STATUSES = ["waiting", "ready"];
+// Código do Postgres para "já existe": o código do livro é único.
+const UNIQUE_VIOLATION = "23505";
 // Código do PostgREST para página além do fim da lista.
 const RANGE_NOT_SATISFIABLE = "PGRST103";
 
@@ -278,15 +288,79 @@ export async function listBooks(filters: BookListFilters): Promise<BookListResul
   return { books, total: count ?? 0, page: filters.page, pageSize: BOOKS_PAGE_SIZE, categories };
 }
 
+// Grava o livro novo. A linha já foi validada no servidor; o banco confere de novo (check, unique e RLS).
+// O erro do banco nunca sai daqui: vira um motivo conhecido.
+export async function createBook(row: NewBookRow, actorId: string): Promise<BookCreateResult> {
+  const supabase = await createSupabaseServerClient();
+  const { data, error } = await supabase.from("books").insert(row).select("id").single();
+
+  if (error) return { ok: false, reason: error.code === UNIQUE_VIOLATION ? "duplicate_code" : "error" };
+
+  await recordAudit({ actorId, action: "book_created", entity: "books", entityId: data.id });
+  return { ok: true, id: data.id };
+}
+
+// Exemplares emprestados agora (empréstimos sem devolução). null se a consulta falhar.
+async function countOpenLoans(supabase: ServerClient, bookId: string): Promise<number | null> {
+  const { count, error } = await supabase
+    .from("loans")
+    .select("id", { count: "exact", head: true })
+    .eq("book_id", bookId)
+    .is("returned_at", null);
+  return error ? null : (count ?? 0);
+}
+
+// Livro para o formulário de edição (ativo ou inativo). O id vem do endereço: só consulta se for UUID.
+// Devolve null se não existe.
+export async function getBookForEdit(id: string): Promise<BookEditData | null> {
+  if (!isUuid(id)) return null;
+  await connection();
+  const supabase = await createSupabaseServerClient();
+
+  const [book, openLoans] = await Promise.all([
+    supabase
+      .from("books")
+      .select("id, title, author, category, code, isbn, quantity, publisher, edition")
+      .eq("id", id)
+      .maybeSingle(),
+    countOpenLoans(supabase, id),
+  ]);
+  if (book.error || openLoans === null) throw new Error("Não foi possível carregar o livro.");
+  if (!book.data) return null;
+
+  return { id: book.data.id, values: toBookFormValues(book.data), openLoans };
+}
+
+// Atualiza o livro. A linha já foi validada no servidor; o banco confere de novo (check, unique e RLS).
+// Recusa quantidade menor que os empréstimos em aberto. O erro do banco nunca sai daqui.
+export async function updateBook(id: string, row: BookUpdateRow, actorId: string): Promise<BookUpdateResult> {
+  if (!isUuid(id)) return { ok: false, reason: "not_found" };
+  const supabase = await createSupabaseServerClient();
+
+  const openLoans = await countOpenLoans(supabase, id);
+  if (openLoans === null) return { ok: false, reason: "error" };
+  if (quantityBelowOpenLoans(row.quantity, openLoans)) return { ok: false, reason: "quantity_below_loans", openLoans };
+
+  const { data, error } = await supabase.from("books").update(row).eq("id", id).select("id");
+  if (error) return { ok: false, reason: error.code === UNIQUE_VIOLATION ? "duplicate_code" : "error" };
+  if (!data || data.length === 0) return { ok: false, reason: "not_found" };
+
+  await recordAudit({ actorId, action: "book_updated", entity: "books", entityId: id });
+  return { ok: true };
+}
+
 // Exclui o livro. O banco recusa se ele tem histórico (FK), e o RLS recusa quem não é bibliotecária.
 export async function deleteBook(bookId: string, actorId: string): Promise<BookActionResult> {
   const supabase = await createSupabaseServerClient();
-  const { data, error } = await supabase.from("books").delete().eq("id", bookId).select("id");
+  const { data, error } = await supabase.from("books").delete().eq("id", bookId).select("id, cover_url");
 
   if (error) return { ok: false, reason: error.code === FOREIGN_KEY_VIOLATION ? "has_history" : "error" };
   if (!data || data.length === 0) return { ok: false, reason: "not_found" };
 
   await recordAudit({ actorId, action: "book_deleted", entity: "books", entityId: bookId });
+  // O livro já saiu do acervo: a capa dele não pode ficar solta no Storage. Se a remoção falhar, só vai para o log.
+  const coverPath = coverPathFromUrl(data[0].cover_url);
+  if (coverPath) await removeBookCover(coverPath);
   return { ok: true };
 }
 

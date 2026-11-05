@@ -80,3 +80,55 @@ export interface BookListResult {
 export type BookActionResult =
   | { ok: true }
   | { ok: false; reason: "has_history" | "not_found" | "error" };
+
+// Campos do formulário de cadastro (Figma, card 0117). Texto puro: a validação fica no domínio.
+export interface BookFormValues {
+  title: string;
+  authors: string;
+  category: string;
+  callNumber: string;
+  isbn: string;
+  quantity: string;
+  circulation: string;
+  publisher: string;
+  edition: string;
+}
+
+export type BookFormField = keyof BookFormValues;
+
+// Linha gravada em public.books ao cadastrar um livro.
+export interface NewBookRow {
+  title: string;
+  author: string;
+  category: string;
+  code: string;
+  isbn: string | null;
+  quantity: number;
+  status: BookStatus;
+  publisher: string | null;
+  edition: string | null;
+  // Endereço público da capa já enviada ao Storage.
+  cover_url?: string | null;
+}
+
+// Linha atualizada ao editar: o status (ativo ou inativo) não muda por aqui.
+export type BookUpdateRow = Omit<NewBookRow, "status">;
+
+// Livro carregado para edição: os campos do formulário e os exemplares emprestados agora.
+export interface BookEditData {
+  id: string;
+  values: BookFormValues;
+  openLoans: number;
+}
+
+export type BookUpdateResult =
+  | { ok: true }
+  | { ok: false; reason: "invalid"; errors: Partial<Record<BookFormField, string>> }
+  | { ok: false; reason: "quantity_below_loans"; openLoans: number }
+  | { ok: false; reason: "duplicate_code" | "not_found" | "error" };
+
+export type BookCreateResult =
+  | { ok: true; id: string }
+  | { ok: false; reason: "invalid"; errors: Partial<Record<BookFormField, string>> }
+  | { ok: false; reason: "invalid_cover"; message: string }
+  | { ok: false; reason: "duplicate_code" | "error" };

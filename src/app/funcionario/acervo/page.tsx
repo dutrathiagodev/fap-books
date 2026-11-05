@@ -1,16 +1,13 @@
 import { Suspense } from "react";
 import Link from "next/link";
 import { Info, Search } from "lucide-react";
-import { AppShell, BooksTable, EmptyState, FilterMenu, LoadingState, PageHeader, Pagination } from "@/components";
+import { AppShell, BooksTable, EmptyState, FilterMenu, LoadingState, PageHeader, Pagination, TextField } from "@/components";
 import { booksHref, parseBookFilters, type SituationCounts } from "@/domain/books/book-rules";
 import { requireRole } from "@/lib/require-role";
 import { countBookSituations, listBooks } from "@/services/books.service";
 import { deleteBookAction, inactivateBookAction } from "./actions";
 
 type SearchParams = Promise<Record<string, string | string[] | undefined>>;
-
-const FIELD =
-  "h-11 rounded-md border border-line-strong bg-surface px-3 text-sm outline-offset-2 focus-visible:outline-2 focus-visible:outline-focus";
 
 const STATUS_OPTIONS = [
   { value: "all", label: "Todos os status" },
@@ -43,25 +40,30 @@ async function AcervoContent({ searchParams }: { searchParams: SearchParams }) {
         title="Acervo de livros"
         breadcrumbs={[{ label: "Gestão bibliotecária" }, { label: "Acervo" }]}
         description="Gerencie o catálogo, os exemplares e a disponibilidade da biblioteca."
+        action={
+          <Link
+            href="/funcionario/acervo/novo"
+            className="inline-flex h-11 items-center rounded-md bg-brand px-5 text-sm font-medium text-on-brand hover:bg-brand-hover"
+          >
+            Novo livro
+          </Link>
+        }
       />
 
       <form method="get" action="/funcionario/acervo" className="mb-4 flex flex-wrap items-end gap-3">
         {/* Buscar (ou Enter no campo) mantém a categoria e o status escolhidos. */}
         {filters.category && <input type="hidden" name="categoria" value={filters.category} />}
         {filters.status !== "all" && <input type="hidden" name="status" value={filters.status} />}
-        <label className="flex min-w-60 flex-1 flex-col gap-1 text-sm font-medium">
-          Buscar
-          <span className="relative">
-            <Search size={16} aria-hidden className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-muted" />
-            <input
-              type="search"
-              name="q"
-              defaultValue={filters.query}
-              placeholder="Título, autor ou código"
-              className={`${FIELD} w-full pl-9 font-normal`}
-            />
-          </span>
-        </label>
+        <TextField
+          id="acervo-busca"
+          name="q"
+          label="Buscar"
+          type="search"
+          defaultValue={filters.query}
+          placeholder="Título, autor ou código"
+          leadingIcon={Search}
+          className="min-w-60 flex-1"
+        />
         <FilterMenu
           label="Categoria"
           value={filters.category || "Todas as categorias"}
