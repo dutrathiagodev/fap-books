@@ -10,7 +10,16 @@ const DISABLED_BUTTON = "h-11 cursor-not-allowed rounded-md px-5 text-sm font-me
 
 // Página de detalhe do livro (Figma, card 0111): capa, dados do catálogo, situação e exemplares. Só desenha:
 // a página carrega o livro. Reservar e entrar na fila (card 0115) ficam desativados até o fluxo existir.
-export function BookDetailView({ book, backHref }: { book: BookDetail; backHref: string }) {
+export function BookDetailView({
+  book,
+  backHref,
+  canReserve = true,
+}: {
+  book: BookDetail;
+  backHref: string;
+  // A bibliotecária só consulta: sem os botões de reserva.
+  canReserve?: boolean;
+}) {
   return (
     <div className="flex flex-col gap-8">
       <Link href={backHref} className="inline-flex items-center gap-2 text-sm text-link hover:underline">
@@ -51,18 +60,22 @@ export function BookDetailView({ book, backHref }: { book: BookDetail; backHref:
 
           {book.description && <p className="max-w-prose leading-relaxed">{book.description}</p>}
 
-          <div className="flex flex-wrap gap-3">
-            <button type="button" disabled title="Em breve" className={`${DISABLED_BUTTON} bg-brand text-on-brand`}>
-              Solicitar reserva
-            </button>
-            <button type="button" disabled title="Em breve" className={`${DISABLED_BUTTON} border border-line-strong`}>
-              Entrar na lista de espera
-            </button>
-          </div>
-          <p className="flex items-center gap-2 text-xs text-ink-muted">
-            <Info size={14} aria-hidden />
-            Prazo padrão de 7 dias corridos e máximo de 3 livros por usuário.
-          </p>
+          {canReserve && (
+            <>
+              <div className="flex flex-wrap gap-3">
+                <button type="button" disabled title="Em breve" className={`${DISABLED_BUTTON} bg-brand text-on-brand`}>
+                  Solicitar reserva
+                </button>
+                <button type="button" disabled title="Em breve" className={`${DISABLED_BUTTON} border border-line-strong`}>
+                  Entrar na lista de espera
+                </button>
+              </div>
+              <p className="flex items-center gap-2 text-xs text-ink-muted">
+                <Info size={14} aria-hidden />
+                Prazo padrão de 7 dias corridos e máximo de 3 livros por usuário.
+              </p>
+            </>
+          )}
         </div>
       </div>
 

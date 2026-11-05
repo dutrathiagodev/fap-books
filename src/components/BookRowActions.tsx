@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState, useTransition } from "react";
-import { Eye, Pencil, Trash2 } from "lucide-react";
+import { Archive, Eye, Pencil, Trash2 } from "lucide-react";
 import { ACERVO_PATH } from "@/domain/access/access-rules";
 import { confirmsTitle } from "@/domain/books/book-rules";
 import type { BookActionResult, BookListItem } from "@/types/book";
@@ -25,8 +25,9 @@ const ERROR_TEXT: Record<"has_history" | "not_found" | "error", string> = {
   error: "Não foi possível concluir agora. Tente de novo.",
 };
 
-// Ações da linha do acervo (Figma, card 0113): ver chega no card 0116 e editar leva ao formulário (0120);
-// excluir abre a confirmação com o nome do livro, ou o aviso de histórico (só inativar).
+// Ações da linha do acervo (Figma, card 0113): ver abre o detalhe e editar leva ao formulário (0120). Livro sem
+// histórico tem o excluir, que pede o nome do livro; livro com histórico tem o excluir desabilitado (com a dica) e o
+// inativar no lugar, que o tira do acervo ativo e mantém o histórico.
 export function BookRowActions({ book, onDelete, onInactivate }: BookRowActionsProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [typed, setTyped] = useState("");
@@ -34,15 +35,13 @@ export function BookRowActions({ book, onDelete, onInactivate }: BookRowActionsP
   const [pending, start] = useTransition();
   const alreadyInactive = book.status === "inactive";
 
-  const title = !book.hasHistory ? "Excluir livro?" : alreadyInactive ? "Este livro já está inativo" : "Este livro tem histórico";
-  const description = !book.hasHistory
-    ? `Você vai excluir "${book.title}" definitivamente. Esta ação não pode ser desfeita.`
-    : alreadyInactive
-      ? `"${book.title}" tem histórico e não pode ser excluído. Ele já está fora do acervo ativo e o histórico é mantido.`
-      : `"${book.title}" tem empréstimos ou reservas no histórico e não pode ser excluído. Você pode inativá-lo: ele sai do acervo ativo e o histórico é mantido.`;
-  const confirmLabel = !book.hasHistory
-    ? pending ? "Excluindo..." : "Excluir livro"
-    : alreadyInactive ? undefined : pending ? "Inativando..." : "Inativar livro";
+  const title = book.hasHistory ? "Este livro tem histórico" : "Excluir livro?";
+  const description = book.hasHistory
+    ? `"${book.title}" tem empréstimos ou reservas no histórico e não pode ser excluído. Você pode inativá-lo: ele sai do acervo ativo e o histórico é mantido.`
+    : `Você vai excluir "${book.title}" definitivamente. Esta ação não pode ser desfeita.`;
+  const confirmLabel = book.hasHistory
+    ? pending ? "Inativando..." : "Inativar livro"
+    : pending ? "Excluindo..." : "Excluir livro";
 
   function open() {
     setTyped("");
@@ -64,28 +63,53 @@ export function BookRowActions({ book, onDelete, onInactivate }: BookRowActionsP
 
   return (
     <div className="flex items-center gap-2">
-      <button type="button" disabled title="Ver detalhes (em breve)" aria-label={`Ver ${book.title}`} className={`${ICON_BUTTON} cursor-not-allowed text-ink-muted opacity-50`}>
+      <Link href={`${ACERVO_PATH}/${book.id}`} title="Ver detalhes" aria-label={`Ver ${book.title}`} className={`${ICON_BUTTON} text-ink-muted hover:bg-subtle`}>
         <Eye size={16} aria-hidden />
-      </button>
+      </Link>
       <Link href={`${ACERVO_PATH}/${book.id}/editar`} title="Editar" aria-label={`Editar ${book.title}`} className={`${ICON_BUTTON} text-ink-muted hover:bg-subtle`}>
         <Pencil size={16} aria-hidden />
       </Link>
-      <button
-        type="button"
-        onClick={open}
-        title="Excluir"
-        aria-label={`Excluir ${book.title}`}
-        className={`${ICON_BUTTON} cursor-pointer border-danger-100 bg-danger-100 text-danger-700 hover:bg-danger-700 hover:text-white`}
-      >
-        <Trash2 size={16} aria-hidden />
-      </button>
+      {book.hasHistory ? (
+        <>
+          <button
+            type="button"
+            disabled
+            title="Livro com histórico: use Inativar"
+            aria-label={`Excluir ${book.title} (livro com histórico: use Inativar)`}
+            className={`${ICON_BUTTON} cursor-not-allowed border-danger-100 bg-danger-100 text-danger-700 opacity-50`}
+          >
+            <Trash2 size={16} aria-hidden />
+          </button>
+          {!alreadyInactive && (
+            <button
+              type="button"
+              onClick={open}
+              title="Inativar"
+              aria-label={`Inativar ${book.title}`}
+              className={`${ICON_BUTTON} cursor-pointer text-ink-muted hover:bg-subtle`}
+            >
+              <Archive size={16} aria-hidden />
+            </button>
+          )}
+        </>
+      ) : (
+        <button
+          type="button"
+          onClick={open}
+          title="Excluir"
+          aria-label={`Excluir ${book.title}`}
+          className={`${ICON_BUTTON} cursor-pointer border-danger-100 bg-danger-100 text-danger-700 hover:bg-danger-700 hover:text-white`}
+        >
+          <Trash2 size={16} aria-hidden />
+        </button>
+      )}
 
       <Modal
         open={isOpen}
         destructive
         title={title}
         description={description}
-        cancelLabel={book.hasHistory && alreadyInactive ? "Fechar" : "Cancelar"}
+        cancelLabel="Cancelar"
         confirmLabel={confirmLabel}
         confirmVariant={book.hasHistory ? "primary" : "danger"}
         confirmDisabled={pending || (!book.hasHistory && !confirmsTitle(typed, book.title))}

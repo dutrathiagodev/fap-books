@@ -114,24 +114,23 @@ export async function searchBooks(
   };
 }
 
-// Detalhe de um livro ativo. O id vem do endereço: só consulta o banco se for um UUID. Devolve null se não existe ou
-// está inativo (o RLS libera a leitura a quem está logado; a situação vem da função book_availability).
-export async function getBookDetail(id: string): Promise<BookDetail | null> {
+// Detalhe de um livro. O id vem do endereço: só consulta o banco se for um UUID. Devolve null se não existe ou
+// está inativo (exceto para a bibliotecária, includeInactive) (o RLS libera a leitura a quem está logado; a situação vem da função book_availability).
+export async function getBookDetail(id: string, includeInactive = false): Promise<BookDetail | null> {
   if (!isUuid(id)) return null;
   await connection();
   const supabase = await createSupabaseServerClient();
 
-  const [book, shelf] = await Promise.all([
-    supabase
-      .from("books")
-      .select(
-        "id, title, author, category, code, quantity, cover_url, isbn, publisher, publication_year, description, shelf_location, cdd",
-      )
-      .eq("id", id)
-      .eq("status", "active")
-      .maybeSingle(),
-    supabase.rpc("book_availability"),
-  ]);
+  // A bibliotecária também abre o livro inativo (ele continua na listagem do acervo); aluno e professor só veem o ativo.
+  let bookQuery = supabase
+    .from("books")
+    .select(
+      "id, title, author, category, code, quantity, cover_url, isbn, publisher, publication_year, description, shelf_location, cdd, status",
+    )
+    .eq("id", id);
+  if (!includeInactive) bookQuery = bookQuery.eq("status", "active");
+
+  const [book, shelf] = await Promise.all([bookQuery.maybeSingle(), supabase.rpc("book_availability")]);
   if (book.error || shelf.error) throw new Error("Não foi possível carregar o livro.");
   if (!book.data) return null;
 
@@ -145,6 +144,7 @@ export async function getBookDetail(id: string): Promise<BookDetail | null> {
     isbn: row.isbn,
     coverUrl: row.cover_url,
     ...shelfStatus(row.quantity, shelfByBook(shelf.data as ShelfRow[]).get(row.id)),
+    ...(row.status === "inactive" ? { situation: "inactive" as const } : {}),
     publisher: row.publisher,
     publicationYear: row.publication_year,
     description: row.description,

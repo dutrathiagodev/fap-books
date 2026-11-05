@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Info, Search } from "lucide-react";
+import { FileUp, Info, Search } from "lucide-react";
 import { BooksTable, EmptyState, FilterMenu, PageHeader, Pagination, TextField, TextLink } from "@/components";
 import { RolePage } from "@/components/RolePage";
 import { ACERVO_PATH } from "@/domain/access/access-rules";
@@ -41,12 +41,21 @@ async function AcervoContent({ searchParams }: { searchParams: SearchParams }) {
         breadcrumbs={[{ label: "Gestão bibliotecária" }, { label: "Acervo" }]}
         description="Gerencie o catálogo, os exemplares e a disponibilidade da biblioteca."
         action={
-          <Link
-            href={`${ACERVO_PATH}/novo`}
-            className="inline-flex h-11 items-center rounded-md bg-brand px-5 text-sm font-medium text-on-brand hover:bg-brand-hover"
-          >
-            Novo livro
-          </Link>
+          <div className="flex flex-wrap gap-3">
+            <Link
+              href={`${ACERVO_PATH}/novo?aba=importar`}
+              className="inline-flex h-11 items-center gap-2 rounded-md border border-line bg-surface px-4 text-sm font-medium text-brand hover:bg-subtle focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
+            >
+              <FileUp size={16} strokeWidth={1.5} aria-hidden />
+              Importar planilha
+            </Link>
+            <Link
+              href={`${ACERVO_PATH}/novo`}
+              className="inline-flex h-11 items-center rounded-md bg-brand px-5 text-sm font-medium text-on-brand hover:bg-brand-hover"
+            >
+              Novo livro
+            </Link>
+          </div>
         }
       />
 
