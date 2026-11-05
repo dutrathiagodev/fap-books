@@ -1,6 +1,6 @@
 -- Migration: inscritos na newsletter da landing page (card 0195/0198).
 -- LGPD: a base legal é o consentimento da própria pessoa, registrado com data e versão do texto.
--- Regras: docs/arquitetura.md (RLS em toda tabela, grant mínimo) e docs/database/lgpd.md.
+-- Regras: docs/architecture/supabase.spec.md (RLS em toda tabela, grant mínimo) e docs/database/lgpd.md.
 
 create table public.newsletter_subscribers (
   id uuid primary key default gen_random_uuid(),

@@ -1,5 +1,5 @@
 -- Migration: cria os perfis de usuário (aluno, professor, funcionário) e as funções de permissão.
--- Regras: docs/arquitetura.md (RLS em toda tabela, grant mínimo, policies por perfil).
+-- Regras: docs/architecture/supabase.spec.md (RLS em toda tabela, grant mínimo, policies por perfil).
 
 -- Os três perfis do PRD (seção 4).
 create type public.user_role as enum ('student', 'teacher', 'librarian');
