@@ -17,6 +17,12 @@ const FAILURE_TEXT: Record<Exclude<Extract<BookImportResult, { ok: false }>["rea
   error: "Não foi possível importar agora. Tente novamente.",
 };
 
+// Cores do resumo: pastel no claro e fundo translúcido com texto claro no escuro, como os selos de status.
+const SUMMARY_WARNING =
+  "border-warning-700 bg-warning-100 text-warning-700 dark:border-amber-400/40 dark:bg-amber-400/10 dark:text-amber-300";
+const SUMMARY_SUCCESS =
+  "border-success-700 bg-success-100 text-success-700 dark:border-green-400/40 dark:bg-green-400/10 dark:text-green-300";
+
 // O modelo vai num endereço data:, sem rota nem arquivo no servidor. O BOM faz o Excel abrir os acentos certos.
 const TEMPLATE_HREF = `data:text/csv;charset=utf-8,${encodeURIComponent(`﻿${IMPORT_TEMPLATE}`)}`;
 
@@ -84,7 +90,7 @@ export function BookImportForm({ onImport }: BookImportFormProps) {
       {result?.ok && (
         <section
           role="status"
-          className={`mt-6 rounded-md border px-4 py-3 text-sm ${result.errors.length > 0 ? "border-warning-700 bg-warning-100 text-warning-700" : "border-success-700 bg-success-100 text-success-700"}`}
+          className={`mt-6 rounded-md border px-4 py-3 text-sm ${result.errors.length > 0 ? SUMMARY_WARNING : SUMMARY_SUCCESS}`}
         >
           <p className="flex items-center gap-2 font-medium">
             {result.errors.length > 0 ? <CircleAlert size={16} aria-hidden /> : <CircleCheck size={16} aria-hidden />}
@@ -121,7 +127,7 @@ export function BookImportForm({ onImport }: BookImportFormProps) {
       )}
 
       {result && !result.ok && (
-        <p role="alert" className="mt-6 flex items-start gap-2 rounded-md border border-danger-700 bg-danger-100 px-3 py-2 text-sm text-danger-700">
+        <p role="alert" className="mt-6 flex items-start gap-2 rounded-md border border-danger-700 bg-danger-100 px-3 py-2 text-sm text-danger-700 dark:border-red-400/40 dark:bg-red-400/10 dark:text-red-300">
           <CircleAlert size={16} strokeWidth={1.5} aria-hidden className="mt-0.5 shrink-0" />
           {result.reason === "missing_columns"
             ? `Faltam colunas na planilha: ${result.missing.join(", ")}. Use a planilha modelo.`
