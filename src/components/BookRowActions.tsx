@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState, useTransition } from "react";
 import { Eye, Pencil, Trash2 } from "lucide-react";
+import { ACERVO_PATH } from "@/domain/access/access-rules";
 import { confirmsTitle } from "@/domain/books/book-rules";
 import type { BookActionResult, BookListItem } from "@/types/book";
 import { Modal } from "./Modal";
@@ -66,7 +67,7 @@ export function BookRowActions({ book, onDelete, onInactivate }: BookRowActionsP
       <button type="button" disabled title="Ver detalhes (em breve)" aria-label={`Ver ${book.title}`} className={`${ICON_BUTTON} cursor-not-allowed text-ink-muted opacity-50`}>
         <Eye size={16} aria-hidden />
       </button>
-      <Link href={`/funcionario/acervo/${book.id}/editar`} title="Editar" aria-label={`Editar ${book.title}`} className={`${ICON_BUTTON} text-ink-muted hover:bg-subtle`}>
+      <Link href={`${ACERVO_PATH}/${book.id}/editar`} title="Editar" aria-label={`Editar ${book.title}`} className={`${ICON_BUTTON} text-ink-muted hover:bg-subtle`}>
         <Pencil size={16} aria-hidden />
       </Link>
       <button

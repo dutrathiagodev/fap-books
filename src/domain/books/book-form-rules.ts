@@ -26,6 +26,13 @@ export const EMPTY_BOOK_FORM: BookFormValues = {
   edition: "",
 };
 
+// Mensagens do resultado do salvamento, iguais no cadastro e na edição (a edição acrescenta "not_found").
+export const BOOK_FORM_MESSAGES = {
+  duplicate_code: "Já existe um livro com esse código de chamada.",
+  invalid: "Confira os campos destacados.",
+  error: "Não foi possível salvar o livro. Tente novamente.",
+} as const;
+
 const LIMIT = { title: 200, authors: 200, callNumber: 40, publisher: 120, edition: 80 } as const;
 
 // O frame do 0117 não limita a quantidade. O teto evita um número absurdo e está registrado no PR.

@@ -1,4 +1,4 @@
-import { ROLE_HOME } from "../access/access-rules";
+import { ACERVO_PATH, ROLE_HOME } from "../access/access-rules";
 import type { UserRole } from "@/types/profile";
 
 export type NavKey =
@@ -27,7 +27,7 @@ export function navItemsFor(role: UserRole): NavItem[] {
   if (role === "librarian") {
     return [
       { key: "home", label: "Painel", href: home },
-      { key: "books", label: "Acervo", href: "/funcionario/acervo" },
+      { key: "books", label: "Acervo", href: ACERVO_PATH },
       { key: "users", label: "Usuários" },
       { key: "loans", label: "Empréstimos" },
       { key: "pedagogical", label: "Reservas pedagógicas" },

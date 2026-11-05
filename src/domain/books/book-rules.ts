@@ -1,3 +1,4 @@
+import { ACERVO_PATH } from "../access/access-rules";
 import type { BookAvailabilityFilter, BookListFilters, BookSituation, BookStatus, BookStatusFilter } from "@/types/book";
 
 // Exemplares na estante: a disponibilidade não é guardada, é calculada (total menos empréstimos em aberto).
@@ -192,7 +193,7 @@ export function booksHref(filters: Partial<BookListFilters>): string {
   if (filters.status && filters.status !== "all") search.set("status", filters.status);
   if (filters.page && filters.page > 1) search.set("pagina", String(filters.page));
   const text = search.toString();
-  return text ? `/funcionario/acervo?${text}` : "/funcionario/acervo";
+  return text ? `${ACERVO_PATH}?${text}` : ACERVO_PATH;
 }
 
 // Linhas do "Dados do catálogo" da página de detalhe: só entram as que o livro tem.

@@ -7,7 +7,13 @@ export const ROLE_HOME: Record<UserRole, string> = {
   librarian: "/funcionario",
 };
 
+// Rótulo de cada perfil na tela (menu do usuário e resultado da busca do balcão).
+export const ROLE_LABELS: Record<UserRole, string> = { student: "Aluno", teacher: "Professor", librarian: "Funcionário" };
+
 export const LOGIN_PATH = "/login";
+
+// Listagem do acervo da bibliotecária: base dos endereços de novo/editar, filtros e revalidação.
+export const ACERVO_PATH = "/funcionario/acervo";
 
 // Boas-vindas do celular (Figma, card 0221): qualquer pessoa abre; no computador a própria tela leva ao login.
 export const WELCOME_PATH = "/boas-vindas";

@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { ACERVO_PATH } from "@/domain/access/access-rules";
 import { bookFormErrors, parseBookForm, toBookRow } from "@/domain/books/book-form-rules";
 import { inspectCover, type CleanCover } from "@/domain/books/cover-image";
 import { COVER_MAX_BYTES } from "@/domain/books/cover-rules";
@@ -44,7 +45,7 @@ export async function createBookAction(formData: FormData): Promise<BookCreateRe
   if (cover && !stored) return { ok: false, reason: "error" };
 
   const result = await createBook({ ...toBookRow(values), cover_url: stored?.url ?? null }, profile.id);
-  if (result.ok) revalidatePath("/funcionario/acervo");
+  if (result.ok) revalidatePath(ACERVO_PATH);
   // O livro não foi gravado: a capa enviada não pode ficar solta no Storage.
   else if (stored) await removeBookCover(stored.path);
   return result;

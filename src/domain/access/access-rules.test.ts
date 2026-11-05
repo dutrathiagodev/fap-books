@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { decideRoute } from "./access-rules";
+import { ACERVO_PATH, ROLE_LABELS, decideRoute } from "./access-rules";
 
 describe("decideRoute", () => {
   it("manda quem não está logado para /login", () => {
@@ -57,5 +57,18 @@ describe("decideRoute", () => {
 
   it("não confunde áreas com o mesmo começo de nome", () => {
     expect(decideRoute("/alunos-extra", "student")).toEqual({ action: "redirect", to: "/aluno" });
+  });
+});
+
+// A listagem do acervo fica dentro da área da bibliotecária: o proxy libera o caminho só para ela.
+describe("ACERVO_PATH e ROLE_LABELS", () => {
+  it("o acervo fica na área da funcionária", () => {
+    expect(ACERVO_PATH).toBe("/funcionario/acervo");
+    expect(decideRoute(ACERVO_PATH, "librarian")).toEqual({ action: "allow" });
+    expect(decideRoute(ACERVO_PATH, "student")).toEqual({ action: "redirect", to: "/aluno" });
+  });
+
+  it("tem um rótulo para cada perfil", () => {
+    expect(ROLE_LABELS).toEqual({ student: "Aluno", teacher: "Professor", librarian: "Funcionário" });
   });
 });

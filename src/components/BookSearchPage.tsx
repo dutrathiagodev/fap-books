@@ -1,4 +1,5 @@
 import { bookSearchHref, parseAvailabilityFilter, parseBookFilters, parseBookSort } from "@/domain/books/book-rules";
+import { formatNumber } from "@/domain/format";
 import { searchBooks } from "@/services/books.service";
 import type { UserRole } from "@/types/profile";
 import { BookResultCard } from "./BookResultCard";
@@ -68,7 +69,7 @@ export function BookSearchPage({ role, basePath, searchParams }: BookSearchPageP
                 <Pagination
                   page={page}
                   pages={pages}
-                  summary={`Mostrando ${first}-${first + books.length - 1} de ${total.toLocaleString("pt-BR")} livros`}
+                  summary={`Mostrando ${first}-${first + books.length - 1} de ${formatNumber(total)} livros`}
                   label="Páginas da pesquisa"
                   hrefFor={(target) =>
                     bookSearchHref(basePath, {

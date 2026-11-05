@@ -25,6 +25,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { logout } from "@/app/actions/auth";
+import { ROLE_LABELS } from "@/domain/access/access-rules";
 import { isActive, navItemsFor, type NavItem } from "@/domain/navigation/nav-items";
 import type { Profile, UserRole } from "@/types/profile";
 import { Logo } from "./Logo";
@@ -35,12 +36,6 @@ interface AppShellProps {
   noticeCount?: number;
   children: React.ReactNode;
 }
-
-const ROLE_LABEL: Record<UserRole, string> = {
-  student: "Aluno",
-  teacher: "Professor",
-  librarian: "Funcionário",
-};
 
 function iconFor(item: NavItem, role: UserRole): LucideIcon {
   switch (item.key) {
@@ -193,7 +188,7 @@ function UserMenu({ profile }: { profile: Profile }) {
         </span>
         <span className="hidden min-w-0 text-left sm:block">
           <span className="block max-w-40 truncate text-sm font-medium">{profile.fullName}</span>
-          <span className="block text-xs text-ink-muted">{ROLE_LABEL[profile.role]}</span>
+          <span className="block text-xs text-ink-muted">{ROLE_LABELS[profile.role]}</span>
         </span>
         <ChevronDown size={16} aria-hidden className="text-ink-muted" />
       </button>

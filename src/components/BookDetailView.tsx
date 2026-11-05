@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowLeft, BookOpen, Info } from "lucide-react";
 import { catalogRows, formatBrazilDate } from "@/domain/books/book-rules";
+import { plural } from "@/domain/format";
 import type { BookDetail } from "@/types/book";
 import { BookCover } from "./BookCover";
 import { SituationBadge } from "./SituationBadge";
@@ -41,7 +42,7 @@ export function BookDetailView({ book, backHref }: { book: BookDetail; backHref:
           <p className="flex flex-wrap items-center gap-3 text-sm text-ink-muted">
             <SituationBadge situation={book.situation} />
             <span>
-              {book.freeCopies} de {book.quantity} {book.quantity === 1 ? "exemplar livre" : "exemplares livres"}
+              {book.freeCopies} de {book.quantity} {plural(book.quantity, "exemplar livre", "exemplares livres")}
             </span>
             {book.situation === "unavailable" && book.nextDueAt && (
               <span>Devolução prevista: {formatBrazilDate(book.nextDueAt)}</span>

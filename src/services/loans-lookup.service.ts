@@ -1,7 +1,7 @@
 import { connection } from "next/server";
 import { createSupabaseServerClient } from "@/lib/supabase/server-client";
 import { recordAudit } from "./audit.service";
-import { bookSituation } from "@/domain/books/book-rules";
+import { shelfByBook, shelfStatus, type ShelfRow } from "./book-shelf";
 import { escapeLike, LOOKUP_MAX_RESULTS, toLoanUserCard, type LoanUserRow } from "@/domain/loans/loan-lookup-rules";
 import type { LoanBookCard, LoanUserCard } from "@/components/LoanSearch";
 
@@ -64,13 +64,6 @@ export async function searchUsers(term: string, actorId: string): Promise<LoanUs
   );
 }
 
-// Uma linha de book_availability: só contagens por livro, nunca quem pegou ou reservou.
-interface ShelfRow {
-  book_id: string;
-  open_loans: number;
-  has_active_reservation: boolean;
-}
-
 interface BookRow {
   id: string;
   title: string;
@@ -109,21 +102,13 @@ export async function searchBooksForLoan(term: string): Promise<LoanBookCard[]> 
 
   const shelf = await supabase.rpc("book_availability");
   if (shelf.error) throw new Error("Não foi possível consultar a situação dos livros.");
-  const shelfByBook = new Map((shelf.data as ShelfRow[]).map((row) => [row.book_id, row]));
+  const shelfRows = shelfByBook(shelf.data as ShelfRow[]);
 
-  return books.map((book) => {
-    const state = shelfByBook.get(book.id);
-    return {
-      title: book.title,
-      author: book.author,
-      code: book.code,
-      coverUrl: book.cover_url,
-      situation: bookSituation({
-        quantity: book.quantity,
-        status: "active",
-        openLoans: state?.open_loans ?? 0,
-        hasActiveReservation: state?.has_active_reservation ?? false,
-      }),
-    };
-  });
+  return books.map((book) => ({
+    title: book.title,
+    author: book.author,
+    code: book.code,
+    coverUrl: book.cover_url,
+    situation: shelfStatus(book.quantity, shelfRows.get(book.id)).situation,
+  }));
 }

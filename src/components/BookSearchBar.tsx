@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ChevronDown, Search } from "lucide-react";
 import { bookSearchHref, type BookSort } from "@/domain/books/book-rules";
+import { formatNumber, plural } from "@/domain/format";
 import type { BookAvailabilityFilter } from "@/types/book";
 import { TextField } from "./TextField";
 
@@ -122,7 +123,7 @@ export function BookSearchBar({ basePath, query, category, availability, sort, c
           <div className="flex items-center gap-3">
             {total !== undefined && (
               <p className="text-xs text-ink-muted" role="status">
-                {total.toLocaleString("pt-BR")} {total === 1 ? "resultado" : "resultados"}
+                {formatNumber(total)} {plural(total, "resultado", "resultados")}
               </p>
             )}
             <details className="relative">

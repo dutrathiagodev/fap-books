@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { ArrowLeft, Check, CircleAlert, CircleCheck } from "lucide-react";
+import { ACERVO_PATH } from "@/domain/access/access-rules";
 import { EmptyState } from "./EmptyState";
 import { PageHeader } from "./PageHeader";
 
@@ -49,7 +50,7 @@ export function BookFormSave({
   error = "Não foi possível salvar o livro.",
   successMessage,
   empty = false,
-  cancelHref = "/funcionario/acervo",
+  cancelHref = ACERVO_PATH,
   onSave,
   onCancel,
   children,
