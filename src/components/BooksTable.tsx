@@ -1,6 +1,7 @@
 import { BookOpen } from "lucide-react";
 import { availableCopies, bookSituation } from "@/domain/books/book-rules";
 import type { BookActionResult, BookListItem } from "@/types/book";
+import { BookCover } from "./BookCover";
 import { BookRowActions } from "./BookRowActions";
 import { DataTable, type DataTableColumn } from "./DataTable";
 import { SituationBadge } from "./SituationBadge";
@@ -20,15 +21,17 @@ export function BooksTable({ books, onDelete, onInactivate }: BooksTableProps) {
       header: "Título e edição",
       cell: (book) => (
         <div className="flex items-center gap-3">
-          {book.coverUrl ? (
-            // Capa do Storage do Supabase: imagem simples, sem passar pelo otimizador do Next.
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={book.coverUrl} alt="" width={32} height={44} className="h-11 w-8 shrink-0 rounded-sm object-cover" />
-          ) : (
-            <span aria-hidden className="flex h-11 w-8 shrink-0 items-center justify-center rounded-sm bg-selected text-brand">
-              <BookOpen size={16} />
-            </span>
-          )}
+          <BookCover
+            url={book.coverUrl}
+            width={32}
+            height={44}
+            className="h-11 w-8 shrink-0 rounded-sm object-cover"
+            fallback={
+              <span aria-hidden className="flex h-11 w-8 shrink-0 items-center justify-center rounded-sm bg-selected text-brand">
+                <BookOpen size={16} />
+              </span>
+            }
+          />
           <span className="font-medium">{book.title}</span>
         </div>
       ),

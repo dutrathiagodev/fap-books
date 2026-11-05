@@ -1,17 +1,6 @@
-import { Suspense } from "react";
-import { LoadingState, UserPanel } from "@/components";
-import { requireRole } from "@/lib/require-role";
-
-// A página lê quem está logado (dado que muda por pessoa), por isso fica dentro do Suspense.
-async function FuncionarioContent() {
-  const profile = await requireRole("librarian");
-  return <UserPanel title="Área da funcionária" profile={profile} />;
-}
+import { RolePage } from "@/components/RolePage";
+import { UserPanel } from "@/components";
 
 export default function FuncionarioPage() {
-  return (
-    <Suspense fallback={<LoadingState />}>
-      <FuncionarioContent />
-    </Suspense>
-  );
+  return <RolePage role="librarian">{(profile) => <UserPanel title="Área da funcionária" profile={profile} />}</RolePage>;
 }

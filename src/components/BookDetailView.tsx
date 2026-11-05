@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ArrowLeft, BookOpen, Info } from "lucide-react";
 import { catalogRows, formatBrazilDate } from "@/domain/books/book-rules";
 import type { BookDetail } from "@/types/book";
+import { BookCover } from "./BookCover";
 import { SituationBadge } from "./SituationBadge";
 
 const DISABLED_BUTTON = "h-11 cursor-not-allowed rounded-md px-5 text-sm font-medium opacity-60";
@@ -18,13 +19,12 @@ export function BookDetailView({ book, backHref }: { book: BookDetail; backHref:
 
       <div className="grid gap-8 md:grid-cols-[18rem_1fr]">
         <div className="flex h-80 items-center justify-center rounded-lg bg-selected md:h-96">
-          {book.coverUrl ? (
-            // Capa do Storage do Supabase: imagem simples, sem passar pelo otimizador do Next.
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={book.coverUrl} alt={`Capa de ${book.title}`} className="h-72 w-auto rounded-md shadow-md md:h-80" />
-          ) : (
-            <BookOpen aria-hidden size={56} className="text-brand" />
-          )}
+          <BookCover
+            url={book.coverUrl}
+            alt={`Capa de ${book.title}`}
+            className="h-72 w-auto rounded-md shadow-md md:h-80"
+            fallback={<BookOpen aria-hidden size={56} className="text-brand" />}
+          />
         </div>
 
         <div className="flex flex-col gap-4">

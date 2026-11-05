@@ -1,9 +1,8 @@
-import { Suspense } from "react";
 import Link from "next/link";
 import { Info, Search } from "lucide-react";
-import { AppShell, BooksTable, EmptyState, FilterMenu, LoadingState, PageHeader, Pagination, TextField } from "@/components";
+import { BooksTable, EmptyState, FilterMenu, PageHeader, Pagination, TextField, TextLink } from "@/components";
+import { RolePage } from "@/components/RolePage";
 import { booksHref, parseBookFilters, type SituationCounts } from "@/domain/books/book-rules";
-import { requireRole } from "@/lib/require-role";
 import { countBookSituations, listBooks } from "@/services/books.service";
 import { deleteBookAction, inactivateBookAction } from "./actions";
 
@@ -22,9 +21,8 @@ const SITUATION_COUNTERS: { key: keyof SituationCounts; dot: string; one: string
   { key: "reserved", dot: "bg-warning-700", one: "reservado", many: "reservados" },
 ];
 
-// A listagem lê quem está logado e os filtros do endereço (dados da requisição), por isso fica dentro do Suspense.
+// A listagem lê os filtros do endereço (dado da requisição), por isso roda dentro do Suspense do RolePage.
 async function AcervoContent({ searchParams }: { searchParams: SearchParams }) {
-  const profile = await requireRole("librarian");
   const filters = parseBookFilters(await searchParams);
   const [{ books, total, page, pageSize, categories }, situations] = await Promise.all([
     listBooks(filters),
@@ -35,7 +33,7 @@ async function AcervoContent({ searchParams }: { searchParams: SearchParams }) {
   const first = total === 0 ? 0 : (page - 1) * pageSize + 1;
 
   return (
-    <AppShell profile={profile}>
+    <>
       <PageHeader
         title="Acervo de livros"
         breadcrumbs={[{ label: "Gestão bibliotecária" }, { label: "Acervo" }]}
@@ -113,9 +111,7 @@ async function AcervoContent({ searchParams }: { searchParams: SearchParams }) {
           }
           action={
             hasFilter ? (
-              <Link href="/funcionario/acervo" className="text-sm font-medium text-link underline">
-                Limpar filtros
-              </Link>
+              <TextLink href="/funcionario/acervo">Limpar filtros</TextLink>
             ) : undefined
           }
         />
@@ -142,14 +138,12 @@ async function AcervoContent({ searchParams }: { searchParams: SearchParams }) {
           </span>
         </p>
       </aside>
-    </AppShell>
+    </>
   );
 }
 
 export default function AcervoPage({ searchParams }: { searchParams: SearchParams }) {
   return (
-    <Suspense fallback={<LoadingState />}>
-      <AcervoContent searchParams={searchParams} />
-    </Suspense>
+    <RolePage role="librarian">{() => <AcervoContent searchParams={searchParams} />}</RolePage>
   );
 }
