@@ -7,14 +7,14 @@ export const COVER_MIME_TYPES = ["image/jpeg", "image/png", "image/webp"] as con
 
 export const COVER_MAX_BYTES = 2 * 1024 * 1024;
 
-export const COVER_MIN_WIDTH = 600;
+const COVER_MIN_WIDTH = 600;
 
-export const COVER_MIN_HEIGHT = 900;
+const COVER_MIN_HEIGHT = 900;
 
 // Teto das dimensões declaradas no cabeçalho: uma imagem gigante e leve (bomba de descompressão) travaria o navegador de quem abrir a capa.
-export const COVER_MAX_WIDTH = 4000;
+const COVER_MAX_WIDTH = 4000;
 
-export const COVER_MAX_HEIGHT = 6000;
+const COVER_MAX_HEIGHT = 6000;
 
 const COVER_RATIO = 2 / 3;
 

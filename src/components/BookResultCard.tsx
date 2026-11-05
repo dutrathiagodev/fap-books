@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { BookOpen } from "lucide-react";
 import { formatBrazilDate } from "@/domain/books/book-rules";
+import { plural } from "@/domain/format";
 import type { BookSearchItem } from "@/types/book";
 import { BookCover } from "./BookCover";
 import { SituationBadge } from "./SituationBadge";
@@ -33,7 +34,7 @@ export function BookResultCard({ book, basePath }: { book: BookSearchItem; baseP
         <SituationBadge situation={book.situation} />
         {book.freeCopies > 0 && (
           <span>
-            {book.freeCopies} {book.freeCopies === 1 ? "exemplar" : "exemplares"}
+            {book.freeCopies} {plural(book.freeCopies, "exemplar", "exemplares")}
           </span>
         )}
         {book.situation === "unavailable" && book.nextDueAt && (

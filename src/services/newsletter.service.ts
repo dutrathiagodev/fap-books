@@ -1,5 +1,6 @@
 import { createSupabaseServerClient } from "@/lib/supabase/server-client";
 import { CONSENT_TEXT_VERSION, type NewsletterSubscription } from "@/domain/newsletter/newsletter-rules";
+import { UNIQUE_VIOLATION } from "./postgres-codes";
 
 export type AddSubscriberResult = "added" | "already_subscribed" | "failed";
 
@@ -14,8 +15,8 @@ export async function addSubscriber({ email, fullName }: NewsletterSubscription)
       .insert({ email, full_name: fullName, consent_text_version: CONSENT_TEXT_VERSION });
 
     if (!error) return "added";
-    // 23505 = violação de unicidade (e-mail já inscrito).
-    return error.code === "23505" ? "already_subscribed" : "failed";
+    // Violação de unicidade = e-mail já inscrito.
+    return error.code === UNIQUE_VIOLATION ? "already_subscribed" : "failed";
   } catch {
     // Sem .env ou banco fora do ar: a tela mostra uma mensagem própria, nunca o erro bruto.
     return "failed";

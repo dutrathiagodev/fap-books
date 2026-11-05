@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   BOOK_AREAS,
+  BOOK_FORM_MESSAGES,
   BOOK_CIRCULATION,
   EMPTY_BOOK_FORM,
   bookFormErrors,
@@ -156,5 +157,11 @@ describe("quantityBelowOpenLoans", () => {
     expect(quantityBelowOpenLoans(1, 2)).toBe(true);
     expect(quantityBelowOpenLoans(2, 2)).toBe(false);
     expect(quantityBelowOpenLoans(5, 0)).toBe(false);
+  });
+});
+
+describe("BOOK_FORM_MESSAGES", () => {
+  it("tem as mensagens comuns ao cadastro e à edição", () => {
+    expect(Object.keys(BOOK_FORM_MESSAGES).sort()).toEqual(["duplicate_code", "error", "invalid"]);
   });
 });
