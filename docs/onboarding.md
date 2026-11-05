@@ -94,7 +94,7 @@ Os três devem terminar sem erro. É o mesmo que o CI faz em todo Pull Request.
 
 ## 8. Seu primeiro dia
 
-1. Leia o [Guia do aluno](architecture/guia-do-aluno.md).
+1. Leia a [Arquitetura](arquitetura.md) e o [PRD](prd.md).
 2. Veja o card que está com você no Trello.
 3. Antes de começar, crie a branch com o número do card:
    ```bash
@@ -102,7 +102,27 @@ Os três devem terminar sem erro. É o mesmo que o CI faz em todo Pull Request.
    git pull
    git switch -c FAP/<número-do-card>
    ```
-4. Ao terminar, siga o [Guia de qualidade](architecture/qualidade.md) e abra o PR para a `develop`.
+4. Ao terminar, siga a [Qualidade de software](qualidade-de-software.md) e abra o PR para a `develop`.
+
+## Onde está cada coisa
+
+| O quê | Onde |
+| -- | -- |
+| Código | GitHub: `dutrathiagodev/fap-books` |
+| Tarefas | Trello: quadro **FAP Books** (cards `[FAP - 0001]`) |
+| Telas | Figma: **FAP BOOKS - Gestão para Biblioteca** |
+| Banco e login | Supabase: projeto `fap-books` (São Paulo) |
+| Documentos | pasta `docs/` (índice em [README.md](README.md)) |
+
+## Como o trabalho flui
+
+`Card no Trello → branch FAP/<número> → commits → PR para a develop → revisão → merge`
+
+- O código vai sempre para a `develop`, por PR. A `main` é protegida e só recebe código por PR feito pelo responsável.
+- Commits começam com `feat:`, `fix:`, `docs:`, `chore:` ou `ci:`.
+- O Trello se move sozinho: In Progress te marca como responsável, abrir o PR leva o card para Awaiting PR, e o merge leva para Awaiting Build. As automações rodam a cada 10 minutos.
+- Design primeiro: tela ou bloco sem frame no Figma é desenhado antes de ser codado ([fluxo de telas](design/fluxo-de-telas.md)).
+- Pergunte antes de criar repositório, pasta ou tecnologia nova.
 
 ## Problemas comuns
 

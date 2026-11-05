@@ -1,17 +1,13 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { EMPTY_BOOK_FORM, bookFormErrors } from "@/domain/books/book-form-rules";
+import { BOOK_FORM_MESSAGES, EMPTY_BOOK_FORM, bookFormErrors } from "@/domain/books/book-form-rules";
 import type { BookCreateResult, BookFormField, BookFormValues } from "@/types/book";
 import { BookCoverUpload } from "./BookCoverUpload";
 import { BookFormFields } from "./BookFormFields";
 import { BookFormSave, type BookSaveStatus } from "./BookFormSave";
 
-const MESSAGES = {
-  duplicate_code: "Já existe um livro com esse código de chamada.",
-  invalid: "Confira os campos destacados.",
-  error: "Não foi possível salvar o livro. Tente novamente.",
-} as const;
+const MESSAGES = BOOK_FORM_MESSAGES;
 
 // Cadastro de livro (Figma, card 0117) ligado à gravação. A ação roda no servidor, que valida tudo de novo.
 export function BookCreateForm({ onCreate }: { onCreate: (formData: FormData) => Promise<BookCreateResult> }) {

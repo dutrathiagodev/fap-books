@@ -1,9 +1,7 @@
 import { connection } from "next/server";
 import { createSupabaseServerClient } from "@/lib/supabase/server-client";
 import {
-  availableCopies,
   isUuid,
-  bookSituation,
   cleanSearchTerm,
   countSituations,
   paginateBySituation,
@@ -30,23 +28,26 @@ import { quantityBelowOpenLoans, toBookFormValues } from "@/domain/books/book-fo
 import { coverPathFromUrl } from "@/domain/books/cover-rules";
 import { recordAudit } from "./audit.service";
 import { removeBookCover } from "./book-cover.service";
+import { shelfByBook, shelfStatus, type ShelfRow } from "./book-shelf";
+import { FOREIGN_KEY_VIOLATION, RANGE_NOT_SATISFIABLE, UNIQUE_VIOLATION } from "./postgres-codes";
 
-export const BOOKS_PAGE_SIZE = 10;
+const BOOKS_PAGE_SIZE = 10;
 // A pesquisa de alunos e professores mostra 3 colunas por 2 linhas (Figma, card 0108).
-export const SEARCH_PAGE_SIZE = 6;
+const SEARCH_PAGE_SIZE = 6;
 
-// Código do Postgres para "ainda é usado por outra tabela" (empréstimo, reserva ou reserva pedagógica).
-const FOREIGN_KEY_VIOLATION = "23503";
 // Reserva que ainda guarda um exemplar: aguardando ou pronta para retirada (as outras já foram atendidas ou canceladas).
 const ACTIVE_RESERVATION_STATUSES = ["waiting", "ready"];
-// Código do Postgres para "já existe": o código do livro é único.
-const UNIQUE_VIOLATION = "23505";
-// Código do PostgREST para página além do fim da lista.
-const RANGE_NOT_SATISFIABLE = "PGRST103";
 
 // Filtro de busca por título, autor, código ou ISBN. A listagem e os contadores usam o mesmo, para os números baterem.
 function searchClause(term: string): string {
   return `title.ilike.%${term}%,author.ilike.%${term}%,code.ilike.%${term}%,isbn.ilike.%${term}%`;
+}
+
+// Quantos empréstimos em aberto cada livro tem, a partir das linhas de empréstimo (uma por exemplar emprestado).
+function countByBook(loans: { book_id: string }[]): Map<string, number> {
+  const counts = new Map<string, number>();
+  for (const loan of loans) counts.set(loan.book_id, (counts.get(loan.book_id) ?? 0) + 1);
+  return counts;
 }
 
 // Categorias sem repetir, em ordem alfabética (viram as opções do filtro).
@@ -62,15 +63,6 @@ async function loadCategories(supabase: ServerClient): Promise<string[]> {
   const { data, error } = await supabase.from("books").select("category").not("category", "is", null);
   if (error) throw new Error("Não foi possível carregar as categorias.");
   return sortedCategories(data);
-}
-
-// Uma linha de book_availability: só contagens por livro, nunca quem pegou ou reservou.
-interface ShelfRow {
-  book_id: string;
-  open_loans: number;
-  has_active_reservation: boolean;
-  // Ausente enquanto a migration da data de devolução não foi aplicada.
-  next_due_at?: string | null;
 }
 
 // Pesquisa de alunos e professores (Figma, card 0108): só livros ativos. O RLS esconde os empréstimos dos outros,
@@ -98,30 +90,19 @@ export async function searchBooks(
   ]);
   if (books.error || shelf.error || categories.error) throw new Error("Não foi possível pesquisar os livros.");
 
-  const shelfByBook = new Map((shelf.data as ShelfRow[]).map((row) => [row.book_id, row]));
+  const shelfRows = shelfByBook(shelf.data as ShelfRow[]);
   // A categoria é filtrada aqui, na memória: o texto vindo do endereço não vai para a consulta ao banco.
   const inCategory = books.data.filter((book) => !filters.category || book.category === filters.category);
-  const found = inCategory.map((book) => {
-    const state = shelfByBook.get(book.id);
-    const openLoans = state?.open_loans ?? 0;
-    return {
-      id: book.id,
-      title: book.title,
-      author: book.author,
-      category: book.category,
-      code: book.code,
-      isbn: book.isbn,
-      coverUrl: book.cover_url,
-      situation: bookSituation({
-        quantity: book.quantity,
-        status: "active",
-        openLoans,
-        hasActiveReservation: state?.has_active_reservation ?? false,
-      }),
-      freeCopies: availableCopies(book.quantity, openLoans),
-      nextDueAt: state?.next_due_at ?? null,
-    };
-  });
+  const found = inCategory.map((book) => ({
+    id: book.id,
+    title: book.title,
+    author: book.author,
+    category: book.category,
+    code: book.code,
+    isbn: book.isbn,
+    coverUrl: book.cover_url,
+    ...shelfStatus(book.quantity, shelfRows.get(book.id)),
+  }));
 
   const result = paginateBySituation(sortBooks(found, sort, term), availability, filters.page, SEARCH_PAGE_SIZE);
   return {
@@ -155,8 +136,6 @@ export async function getBookDetail(id: string): Promise<BookDetail | null> {
   if (!book.data) return null;
 
   const row = book.data;
-  const state = (shelf.data as ShelfRow[]).find((item) => item.book_id === row.id);
-  const openLoans = state?.open_loans ?? 0;
   return {
     id: row.id,
     title: row.title,
@@ -165,14 +144,7 @@ export async function getBookDetail(id: string): Promise<BookDetail | null> {
     code: row.code,
     isbn: row.isbn,
     coverUrl: row.cover_url,
-    situation: bookSituation({
-      quantity: row.quantity,
-      status: "active",
-      openLoans,
-      hasActiveReservation: state?.has_active_reservation ?? false,
-    }),
-    freeCopies: availableCopies(row.quantity, openLoans),
-    nextDueAt: state?.next_due_at ?? null,
+    ...shelfStatus(row.quantity, shelfByBook(shelf.data as ShelfRow[]).get(row.id)),
     publisher: row.publisher,
     publicationYear: row.publication_year,
     description: row.description,
@@ -204,8 +176,7 @@ export async function countBookSituations(filters: BookListFilters): Promise<Sit
   ]);
   if (books.error || loans.error || reservations.error) throw new Error("Não foi possível contar o acervo.");
 
-  const openLoans = new Map<string, number>();
-  for (const loan of loans.data) openLoans.set(loan.book_id, (openLoans.get(loan.book_id) ?? 0) + 1);
+  const openLoans = countByBook(loans.data);
   const reserved = new Set(reservations.data.map((reservation) => reservation.book_id));
 
   return countSituations(
@@ -260,12 +231,9 @@ export async function listBooks(filters: BookListFilters): Promise<BookListResul
     throw new Error("Não foi possível carregar o acervo.");
   }
 
-  const openLoans = new Map<string, number>();
+  const openLoans = countByBook((loans.data ?? []).filter((loan) => loan.returned_at === null));
   const withHistory = new Set<string>();
-  for (const loan of loans.data ?? []) {
-    withHistory.add(loan.book_id);
-    if (loan.returned_at === null) openLoans.set(loan.book_id, (openLoans.get(loan.book_id) ?? 0) + 1);
-  }
+  for (const loan of loans.data ?? []) withHistory.add(loan.book_id);
   for (const row of [...(reservations.data ?? []), ...(pedagogical.data ?? [])]) withHistory.add(row.book_id);
   const withActiveReservation = new Set(
     (reservations.data ?? []).filter((row) => ACTIVE_RESERVATION_STATUSES.includes(row.status)).map((row) => row.book_id),

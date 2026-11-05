@@ -2,6 +2,7 @@
 
 import { Search } from "lucide-react";
 import type { BookSituation } from "@/types/book";
+import { BookCover } from "./BookCover";
 import { FieldError } from "./FieldError";
 import { TextField } from "./TextField";
 import { SituationBadge } from "./SituationBadge";
@@ -151,13 +152,11 @@ function BookSlot({
       <p className="text-xs text-ink-muted">Livro</p>
       {book ? (
         <div className="mt-3 flex items-center gap-3">
-          {book.coverUrl ? (
-            // Capa do Storage: imagem simples, sem o otimizador do Next.
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={book.coverUrl} alt="" className="h-14 w-10 shrink-0 rounded-sm object-cover" />
-          ) : (
-            <span className="h-14 w-10 shrink-0 rounded-sm bg-selected" />
-          )}
+          <BookCover
+            url={book.coverUrl}
+            className="h-14 w-10 shrink-0 rounded-sm object-cover"
+            fallback={<span className="h-14 w-10 shrink-0 rounded-sm bg-selected" />}
+          />
           <div className="min-w-0 flex-1">
             <p className="text-sm font-medium text-ink">{book.title}</p>
             <p className="text-sm text-ink-muted">

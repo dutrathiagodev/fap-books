@@ -18,7 +18,7 @@ Telas soltas, uma para cada pessoa, não têm conexão: cada uma usa componentes
 
 Telas já em Awaiting PR ou em andamento (0105, 0121, 0129, 0135) continuam com quem estava; o fluxo prossegue a partir delas.
 
-Depois de desenhada, cada tela ganha a sua **especificação final** em `docs/design/telas/` (uma pasta por tela, uma seção por arquivo), que é o que o código segue.
+O desenho final fica no Figma (página `🖥️ UI web`), que é o que o código segue.
 
 ## 3. Regras para manter a sequência
 
@@ -34,7 +34,7 @@ Depois de desenhada, cada tela ganha a sua **especificação final** em `docs/de
 
 ## 4. Regras visuais (valem para toda tela)
 
-- Siga `docs/design/stitch/DESIGN.md` (fonte de verdade visual). Nada de valores fora dele.
+- Siga o [design system](README.md) e o Figma (fonte de verdade visual). Nada de valores fora deles.
 - Fundo branco, tema claro. Cards com borda `#C0D3ED` e cantos de 12 px; botões e campos com 8 px; grade de 4 px.
 - Títulos em Lora SemiBold (H1 36 px nas páginas internas), todo o resto em Inter (corpo 16, botões e menus 14 Medium, legenda 12).
 - Um único botão primário navy `#032B5E` por área. Texto secundário `#6B6B6B`, nunca `#8C8C8C`.

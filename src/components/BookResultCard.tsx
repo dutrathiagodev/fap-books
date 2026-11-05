@@ -1,7 +1,9 @@
 import Link from "next/link";
 import { BookOpen } from "lucide-react";
 import { formatBrazilDate } from "@/domain/books/book-rules";
+import { plural } from "@/domain/format";
 import type { BookSearchItem } from "@/types/book";
+import { BookCover } from "./BookCover";
 import { SituationBadge } from "./SituationBadge";
 
 // Cartão de livro da pesquisa (Figma, card 0108): capa, categoria, título, autor, situação e "Ver detalhes".
@@ -10,13 +12,11 @@ export function BookResultCard({ book, basePath }: { book: BookSearchItem; baseP
   return (
     <article className="flex h-full flex-col gap-3 rounded-lg border border-line bg-surface p-4">
       <div className="relative flex h-44 items-center justify-center rounded-lg bg-selected">
-        {book.coverUrl ? (
-          // Capa do Storage do Supabase: imagem simples, sem passar pelo otimizador do Next.
-          // eslint-disable-next-line @next/next/no-img-element
-          <img src={book.coverUrl} alt="" className="h-36 w-auto rounded-md shadow-md" />
-        ) : (
-          <BookOpen aria-hidden size={40} className="text-brand" />
-        )}
+        <BookCover
+          url={book.coverUrl}
+          className="h-36 w-auto rounded-md shadow-md"
+          fallback={<BookOpen aria-hidden size={40} className="text-brand" />}
+        />
         {book.category && (
           <span className="absolute left-2 top-2 rounded-full bg-surface px-2.5 py-0.5 text-xs font-medium text-brand">
             {book.category}
@@ -34,7 +34,7 @@ export function BookResultCard({ book, basePath }: { book: BookSearchItem; baseP
         <SituationBadge situation={book.situation} />
         {book.freeCopies > 0 && (
           <span>
-            {book.freeCopies} {book.freeCopies === 1 ? "exemplar" : "exemplares"}
+            {book.freeCopies} {plural(book.freeCopies, "exemplar", "exemplares")}
           </span>
         )}
         {book.situation === "unavailable" && book.nextDueAt && (

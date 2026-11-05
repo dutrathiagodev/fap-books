@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Gera a base de uma feature no Nível 1 (estrutura do professor): types, service, componente e rota.
-# Regras em docs/architecture/frontend.spec.md
+# Regras em docs/arquitetura.md
 # Uso: scripts/arch/create-feature-web.sh <feature-em-kebab-case> [EntidadeNoSingular]
 # Exemplo: scripts/arch/create-feature-web.sh books Book
 # Variável opcional: ROOT=<pasta do projeto> (padrão: raiz do repositório)

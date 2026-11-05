@@ -1,13 +1,15 @@
 import type { LoanUserCard } from "@/components/LoanSearch";
+import { ROLE_LABELS } from "../access/access-rules";
+import { formatNumber } from "../format";
 import type { UserRole } from "@/types/profile";
 
 // Limites da consulta do balcão: termo curto demais traria a lista inteira; termo longo demais é abuso.
-export const LOOKUP_MIN_LENGTH = 2;
+const LOOKUP_MIN_LENGTH = 2;
 export const LOOKUP_MAX_LENGTH = 60;
 export const LOOKUP_MAX_RESULTS = 5;
 
 // Limite de livros ao mesmo tempo (PRD, RF-14). Formandos podem 4, mas o banco ainda não guarda quem é formando.
-export const LOAN_LIMIT = 3;
+const LOAN_LIMIT = 3;
 
 export type LookupTerm = { ok: true; term: string } | { ok: false; reason: "term_too_short" };
 
@@ -27,8 +29,6 @@ export function escapeLike(term: string): string {
   return term.replace(/[\\%_]/g, "\\$&");
 }
 
-const ROLE_LABELS: Record<UserRole, string> = { student: "Aluno", teacher: "Professor", librarian: "Funcionário" };
-
 // Inicial do primeiro nome e do último sobrenome, em maiúsculas (ex.: "Maria da Silva" vira "MS").
 export function initialsOf(fullName: string): string {
   const words = fullName.trim().split(/\s+/).filter(Boolean);
@@ -39,7 +39,7 @@ export function initialsOf(fullName: string): string {
 
 // "R$ 8,00" a partir de centavos.
 function formatReais(cents: number): string {
-  return `R$ ${(cents / 100).toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+  return `R$ ${formatNumber(cents / 100, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 }
 
 export interface LoanUserRow {

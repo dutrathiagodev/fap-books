@@ -48,7 +48,7 @@ O projeto está em **MVP em desenvolvimento** (versão `0.5.0`). O que já funci
 | 📝 | **Formulário de livro** | Campos, validações e feedback de salvar no front; a gravação segura no banco e o upload de capa estão em andamento |
 | 🎨 | **Design system** | Tokens, tema e componentes base (botão, campo, tabela, modal) usados pelas telas |
 
-Em andamento: gravação e edição de livro, upload seguro de capa e buscas do balcão de empréstimo. Empréstimos, devoluções, reservas, multas e relatórios seguem no [backlog](docs/backlog/epicos-features-historias.md).
+Em andamento: gravação e edição de livro, upload seguro de capa e buscas do balcão de empréstimo. Empréstimos, devoluções, reservas, multas e relatórios seguem no quadro do Trello.
 
 ## Módulos
 
@@ -141,14 +141,12 @@ As automações rodam a cada 10 minutos e precisam dos secrets `TRELLO_KEY` e `T
 | | Documento | Conteúdo |
 | -- | -- | -- |
 | 🚀 | [`docs/onboarding.md`](docs/onboarding.md) | **Configuração de ambiente:** o que instalar e como rodar o projeto no seu notebook |
-| 📘 | [`docs/tutorial-do-grupo.md`](docs/tutorial-do-grupo.md) | Resumo para o grupo: onde está cada coisa e como trabalhar |
-| 📚 | [`docs/guias/`](docs/guias/README.md) | Guias de estudo: React, Next.js, Tailwind, Supabase e NestJS, com código explicado e dicas |
+| 🏛️ | [`docs/arquitetura.md`](docs/arquitetura.md) | Onde fica cada coisa no código, regras de dependência, como criar uma feature e regras do Supabase/RLS |
 | 📄 | [`docs/prd.md`](docs/prd.md) | **PRD: documento base do projeto.** É a ideia central, e pode mudar com o tempo; as mudanças ficam registradas no histórico dele |
-| 🗺️ | [`docs/backlog/epicos-features-historias.md`](docs/backlog/epicos-features-historias.md) | Backlog completo: 8 épicos, 25 features e 47 histórias, com critérios de aceite |
-| 🧩 | [`docs/backlog/design-telas.json`](docs/backlog/design-telas.json) | Cards de design e de construção de cada tela |
 | ✅ | [`docs/qualidade-de-software.md`](docs/qualidade-de-software.md) | **Regra de qualidade:** código limpo, fácil de entender e seguro, com o checklist de todo PR |
 | 🎨 | [`docs/design/README.md`](docs/design/README.md) | Design system: fontes, cores, cantos, ícones e tokens |
-| 🧭 | [`docs/historico-conversa.md`](docs/historico-conversa.md) | Histórico da configuração inicial do projeto |
+| 🗄️ | [`docs/database/`](docs/database) | Modelo de dados, LGPD e backup do banco |
+| 🗂️ | [`docs/README.md`](docs/README.md) | Índice de toda a documentação |
 
 O desenho das telas é feito no [Figma](https://www.figma.com/design/xOr6nlx1EqLMYmSJLh4sHI/FAP-BOOKS---Gestao-para-Biblioteca?node-id=2292-11299), página **🖥️ UI web**. Cores, fontes, cantos e ícones estão em [`docs/design/README.md`](docs/design/README.md).
 

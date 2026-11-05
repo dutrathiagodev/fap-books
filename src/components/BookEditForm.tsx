@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { bookFormErrors } from "@/domain/books/book-form-rules";
+import { BOOK_FORM_MESSAGES, bookFormErrors } from "@/domain/books/book-form-rules";
 import type { BookEditData, BookFormField, BookFormValues, BookUpdateResult } from "@/types/book";
 import { BookCoverUpload } from "./BookCoverUpload";
 import { BookFormFields } from "./BookFormFields";
@@ -10,10 +10,8 @@ import { BookFormSave, type BookSaveStatus } from "./BookFormSave";
 type FieldErrors = Partial<Record<BookFormField, string>>;
 
 const MESSAGES = {
-  duplicate_code: "Já existe um livro com esse código de chamada.",
-  invalid: "Confira os campos destacados.",
+  ...BOOK_FORM_MESSAGES,
   not_found: "Não encontramos este livro. Volte ao acervo e tente de novo.",
-  error: "Não foi possível salvar o livro. Tente novamente.",
 } as const;
 
 // Edição de livro (mesmo layout do cadastro, card 0117) ligada à gravação. O servidor valida tudo de novo.

@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { ACERVO_PATH } from "@/domain/access/access-rules";
 import { bookFormErrors, parseBookForm, toBookUpdate } from "@/domain/books/book-form-rules";
 import { requireRole } from "@/lib/require-role";
 import { updateBook } from "@/services/books.service";
@@ -17,6 +18,6 @@ export async function updateBookAction(id: string, input: unknown): Promise<Book
 
   // O id também vem do navegador: updateBook só aceita UUID.
   const result = await updateBook(String(id), toBookUpdate(values), profile.id);
-  if (result.ok) revalidatePath("/funcionario/acervo");
+  if (result.ok) revalidatePath(ACERVO_PATH);
   return result;
 }
