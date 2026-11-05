@@ -3,12 +3,13 @@
 import { revalidatePath } from "next/cache";
 import { ACERVO_PATH } from "@/domain/access/access-rules";
 import { bookFormErrors, parseBookForm, toBookRow } from "@/domain/books/book-form-rules";
+import { IMPORT_MAX_BYTES, importRowError, parseBookImport } from "@/domain/books/book-import";
 import { inspectCover, type CleanCover } from "@/domain/books/cover-image";
 import { COVER_MAX_BYTES } from "@/domain/books/cover-rules";
 import { requireRole } from "@/lib/require-role";
 import { removeBookCover, uploadBookCover } from "@/services/book-cover.service";
 import { createBook } from "@/services/books.service";
-import type { BookCreateResult } from "@/types/book";
+import type { BookCreateResult, BookImportResult, BookImportRowError } from "@/types/book";
 
 function parseValues(formData: FormData): unknown {
   const raw = formData.get("values");
@@ -49,4 +50,34 @@ export async function createBookAction(formData: FormData): Promise<BookCreateRe
   // O livro não foi gravado: a capa enviada não pode ficar solta no Storage.
   else if (stored) await removeBookCover(stored.path);
   return result;
+}
+
+// Importação em lote (card 0117, aba "Importar planilha"). Confere quem está logado, o tamanho do arquivo e cada linha
+// com as mesmas regras do formulário. As linhas boas são gravadas uma a uma (cada livro vai para a auditoria e um código
+// repetido recusa só aquela linha); as ruins voltam com a linha e o motivo, para corrigir e reenviar.
+export async function importBooksAction(formData: FormData): Promise<BookImportResult> {
+  const profile = await requireRole("librarian");
+
+  const file = formData.get("planilha");
+  if (!(file instanceof File) || file.size === 0) return { ok: false, reason: "no_file" };
+  if (file.size > IMPORT_MAX_BYTES) return { ok: false, reason: "too_big" };
+
+  const parsed = parseBookImport(await file.text());
+  if (!parsed.ok) return parsed;
+
+  const errors: BookImportRowError[] = [];
+  let imported = 0;
+  for (const { line, values } of parsed.rows) {
+    const problem = importRowError(values);
+    if (problem) {
+      errors.push({ line, message: problem });
+      continue;
+    }
+    const result = await createBook(toBookRow(values), profile.id);
+    if (result.ok) imported++;
+    else errors.push({ line, message: result.reason === "duplicate_code" ? "Já existe um livro com esse código de chamada." : "Não foi possível gravar esta linha." });
+  }
+
+  if (imported > 0) revalidatePath(ACERVO_PATH);
+  return { ok: true, imported, errors };
 }

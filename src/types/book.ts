@@ -129,6 +129,18 @@ export type BookUpdateResult =
   | { ok: false; reason: "quantity_below_loans"; openLoans: number }
   | { ok: false; reason: "duplicate_code" | "not_found" | "error" };
 
+// Linha da planilha que não entrou, com o motivo (a linha conta o cabeçalho como 1).
+export interface BookImportRowError {
+  line: number;
+  message: string;
+}
+
+// Resultado da importação em lote (Figma, card 0117): as linhas boas entram e as ruins voltam com o motivo.
+export type BookImportResult =
+  | { ok: true; imported: number; errors: BookImportRowError[] }
+  | { ok: false; reason: "no_file" | "too_big" | "empty" | "too_many_rows" | "error" }
+  | { ok: false; reason: "missing_columns"; missing: string[] };
+
 export type BookCreateResult =
   | { ok: true; id: string }
   | { ok: false; reason: "invalid"; errors: Partial<Record<BookFormField, string>> }

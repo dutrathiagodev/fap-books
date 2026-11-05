@@ -9,8 +9,14 @@ import { BookFormSave, type BookSaveStatus } from "./BookFormSave";
 
 const MESSAGES = BOOK_FORM_MESSAGES;
 
+interface BookCreateFormProps {
+  onCreate: (formData: FormData) => Promise<BookCreateResult>;
+  // Abas do cadastro, que a página entrega (o formulário não conhece a rota).
+  tabs?: React.ReactNode;
+}
+
 // Cadastro de livro (Figma, card 0117) ligado à gravação. A ação roda no servidor, que valida tudo de novo.
-export function BookCreateForm({ onCreate }: { onCreate: (formData: FormData) => Promise<BookCreateResult> }) {
+export function BookCreateForm({ onCreate, tabs }: BookCreateFormProps) {
   const [values, setValues] = useState<BookFormValues>(EMPTY_BOOK_FORM);
   const [status, setStatus] = useState<BookSaveStatus>("idle");
   const [error, setError] = useState<string | undefined>();
@@ -74,7 +80,7 @@ export function BookCreateForm({ onCreate }: { onCreate: (formData: FormData) =>
   }
 
   return (
-    <BookFormSave mode="create" status={pending ? "saving" : status} error={error} onSave={save}>
+    <BookFormSave mode="create" status={pending ? "saving" : status} error={error} onSave={save} tabs={tabs}>
       <div className="grid grid-cols-1 items-start gap-6 md:grid-cols-[minmax(0,1fr)_16.25rem] md:gap-8">
         <div className="md:col-start-2 md:row-start-1">
           {/* A chave zera a prévia depois de salvar. */}

@@ -17,6 +17,8 @@ interface BookSearchBarProps {
   categories: string[];
   // Total de resultados da busca; sem ele a contagem não aparece.
   total?: number;
+  // No visual editorial do aluno a busca mora no topo da página: aqui ficam só os filtros, sem o cartão em volta.
+  hideSearch?: boolean;
 }
 
 const STATUS_OPTIONS: Array<{ value: BookAvailabilityFilter; label: string }> = [
@@ -44,34 +46,36 @@ const LABEL = "w-20 shrink-0 text-xs font-medium uppercase tracking-wide text-in
 // STATUS (todos, disponível, emprestado, reservado). Só desenha: a página lê o endereço, chama o service e passa os
 // valores. Sem JavaScript no cliente: a busca é um formulário GET e cada filtro é um link, então o endereço guarda
 // a pesquisa e dá para copiar.
-export function BookSearchBar({ basePath, query, category, availability, sort, categories, total }: BookSearchBarProps) {
+export function BookSearchBar({ basePath, query, category, availability, sort, categories, total, hideSearch = false }: BookSearchBarProps) {
   return (
-    <div className="mb-6 flex flex-col gap-4 rounded-lg border border-line bg-surface p-4">
-      <form method="get" action={basePath} role="search" aria-label="Pesquisar livros" className="flex gap-3">
-        <div className="min-w-0 flex-1">
-          <TextField
-            id="book-search"
-            name="q"
-            label="Buscar por título, autor, ISBN ou assunto"
-            hideLabel
-            type="search"
-            defaultValue={query}
-            maxLength={80}
-            placeholder="Busque por título, autor, ISBN ou assunto"
-            leadingIcon={Search}
-          />
-        </div>
-        {/* Buscar mantém os filtros ativos; sem ?pagina=, a busca volta para a primeira página. */}
-        {category && <input type="hidden" name="categoria" value={category} />}
-        {availability !== "all" && <input type="hidden" name="situacao" value={availability} />}
-        {sort !== "relevance" && <input type="hidden" name="ordem" value={sort} />}
-        <button
-          type="submit"
-          className={`h-10 shrink-0 cursor-pointer rounded-md bg-brand px-5 text-sm font-medium text-on-brand hover:bg-brand-hover ${FOCUS}`}
-        >
-          Buscar
-        </button>
-      </form>
+    <div className={`mb-6 flex flex-col gap-4 ${hideSearch ? "" : "rounded-lg border border-line bg-surface p-4"}`}>
+      {!hideSearch && (
+        <form method="get" action={basePath} role="search" aria-label="Pesquisar livros" className="flex gap-3">
+          <div className="min-w-0 flex-1">
+            <TextField
+              id="book-search"
+              name="q"
+              label="Buscar por título, autor, ISBN ou assunto"
+              hideLabel
+              type="search"
+              defaultValue={query}
+              maxLength={80}
+              placeholder="Busque por título, autor, ISBN ou assunto"
+              leadingIcon={Search}
+            />
+          </div>
+          {/* Buscar mantém os filtros ativos; sem ?pagina=, a busca volta para a primeira página. */}
+          {category && <input type="hidden" name="categoria" value={category} />}
+          {availability !== "all" && <input type="hidden" name="situacao" value={availability} />}
+          {sort !== "relevance" && <input type="hidden" name="ordem" value={sort} />}
+          <button
+            type="submit"
+            className={`h-10 shrink-0 cursor-pointer rounded-md bg-brand px-5 text-sm font-medium text-on-brand hover:bg-brand-hover ${FOCUS}`}
+          >
+            Buscar
+          </button>
+        </form>
+      )}
 
       <div className="flex flex-col gap-3">
         <nav aria-label="Categoria" className="flex flex-col gap-2 sm:flex-row sm:items-center">

@@ -118,6 +118,48 @@ function MenuList({
   );
 }
 
+// Iniciais do nome para o avatar (ex.: "Maria Santos" vira "MS").
+function initialsOf(fullName: string): string {
+  return fullName
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part.charAt(0).toUpperCase())
+    .join("");
+}
+
+// Quem está logado e o botão de sair, no rodapé do menu lateral (Figma, menu lateral).
+function SidebarUser({ profile, wide }: { profile: Profile; wide: boolean }) {
+  return (
+    <div
+      className={`mx-3 mb-4 flex items-center gap-3 rounded-lg bg-navy-800/60 p-2 ${wide ? "" : "flex-col"}`}
+    >
+      <span
+        aria-hidden
+        className="flex size-9 shrink-0 items-center justify-center rounded-full bg-navy-700 text-sm font-medium text-white"
+      >
+        {initialsOf(profile.fullName)}
+      </span>
+      {wide && (
+        <span className="min-w-0 flex-1">
+          <span className="block truncate text-sm font-medium text-white">{profile.fullName}</span>
+          <span className="block truncate text-xs text-navy-200">{ROLE_LABELS[profile.role]}</span>
+        </span>
+      )}
+      <form action={logout}>
+        <button
+          type="submit"
+          aria-label="Sair"
+          title="Sair"
+          className="flex size-9 cursor-pointer items-center justify-center rounded-md text-white hover:bg-navy-800 focus-visible:outline-2 focus-visible:outline-white"
+        >
+          <LogOut size={18} aria-hidden />
+        </button>
+      </form>
+    </div>
+  );
+}
+
 // Botão de recolher/abrir o menu: fica no topo do próprio menu, ao lado da logo (Figma, menu lateral).
 function SidebarToggle({ collapsed, onClick }: { collapsed: boolean; onClick: () => void }) {
   return (
@@ -214,6 +256,48 @@ function UserMenu({ profile }: { profile: Profile }) {
   );
 }
 
+// Menu horizontal do aluno (Figma, card 0108, visual editorial): no lugar do menu lateral, só no computador. O início
+// fica de fora (a logo leva a ele) e os rótulos são os do frame.
+const TOP_NAV_LABELS: Partial<Record<NavItem["key"], string>> = { books: "Acervo", reservations: "Reservas" };
+
+function TopNav({ items, role, pathname }: { items: NavItem[]; role: UserRole; pathname: string }) {
+  return (
+    <nav aria-label="Menu principal" className="ml-6 hidden items-center gap-1 md:flex">
+      {items
+        .filter((item) => item.key !== "home")
+        .map((item) => {
+          const Icon = iconFor(item, role);
+          const label = TOP_NAV_LABELS[item.key] ?? item.label;
+          const content = (
+            <>
+              <Icon size={16} strokeWidth={1.5} aria-hidden className="shrink-0" />
+              {label}
+            </>
+          );
+          const base = "flex h-10 items-center gap-2 rounded-md px-3 text-sm font-medium outline-offset-2 focus-visible:outline-2 focus-visible:outline-focus";
+          if (!item.href) {
+            return (
+              <span key={item.key} aria-disabled="true" title="Em breve" className={`${base} cursor-not-allowed text-ink-muted opacity-60`}>
+                {content}
+              </span>
+            );
+          }
+          const active = isActive(item, pathname);
+          return (
+            <Link
+              key={item.key}
+              href={item.href}
+              aria-current={active ? "page" : undefined}
+              className={`${base} ${active ? "bg-brand text-on-brand" : "text-ink hover:bg-subtle"}`}
+            >
+              {content}
+            </Link>
+          );
+        })}
+    </nav>
+  );
+}
+
 // Molde de todas as telas logadas (Figma, card 0101): menu lateral navy por perfil, cabeçalho com sino
 // e menu do usuário, e gaveta no celular.
 export function AppShell({ profile, noticeCount = 0, children }: AppShellProps) {
@@ -221,6 +305,8 @@ export function AppShell({ profile, noticeCount = 0, children }: AppShellProps) 
   const [drawer, setDrawer] = useState(false);
   const pathname = usePathname();
   const items = navItemsFor(profile.role);
+  // O aluno usa o menu horizontal no computador (Figma, card 0108); professor e funcionário, o lateral.
+  const topNav = profile.role === "student";
 
   // A gaveta fecha com Escape.
   useEffect(() => {
@@ -236,7 +322,7 @@ export function AppShell({ profile, noticeCount = 0, children }: AppShellProps) 
     <div className="flex min-h-screen flex-1">
       {/* Menu lateral (computador) */}
       <aside
-        className={`hidden shrink-0 flex-col bg-side transition-[width] md:flex ${collapsed ? "w-[68px]" : "w-60"}`}
+        className={`sticky top-0 hidden h-screen shrink-0 flex-col self-start bg-side transition-[width] ${topNav ? "" : "md:flex"} ${collapsed ? "w-[68px]" : "w-60"}`}
       >
         {collapsed ? (
           <div className="flex flex-col items-center gap-3 px-2 py-4">
@@ -251,6 +337,7 @@ export function AppShell({ profile, noticeCount = 0, children }: AppShellProps) 
         )}
         <div aria-hidden className="mx-4 border-t border-white/10" />
         <MenuList items={items} role={profile.role} pathname={pathname} wide={!collapsed} />
+        <SidebarUser profile={profile} wide={!collapsed} />
       </aside>
 
       {/* Menu em gaveta (celular) */}
@@ -282,6 +369,7 @@ export function AppShell({ profile, noticeCount = 0, children }: AppShellProps) 
               wide
               onNavigate={() => setDrawer(false)}
             />
+            <SidebarUser profile={profile} wide />
           </aside>
         </div>
       )}
@@ -296,9 +384,12 @@ export function AppShell({ profile, noticeCount = 0, children }: AppShellProps) 
           >
             <Menu size={20} aria-hidden />
           </button>
-          <div className="md:hidden">
-            <Logo width={80} />
+          <div className={topNav ? undefined : "md:hidden"}>
+            <Link href={items[0]?.href ?? "/"} aria-label="Início">
+              <Logo width={80} />
+            </Link>
           </div>
+          {topNav && <TopNav items={items} role={profile.role} pathname={pathname} />}
 
           <div className="ml-auto flex items-center gap-3">
             <NoticeBell count={noticeCount} />

@@ -18,6 +18,7 @@ import type {
   BookListFilters,
   BookListItem,
   BookListResult,
+  BookSearchItem,
   BookSearchResult,
   BookStatus,
   BookUpdateResult,
@@ -32,8 +33,8 @@ import { shelfByBook, shelfStatus, type ShelfRow } from "./book-shelf";
 import { FOREIGN_KEY_VIOLATION, RANGE_NOT_SATISFIABLE, UNIQUE_VIOLATION } from "./postgres-codes";
 
 const BOOKS_PAGE_SIZE = 10;
-// A pesquisa de alunos e professores mostra 3 colunas por 2 linhas (Figma, card 0108).
-const SEARCH_PAGE_SIZE = 6;
+// A pesquisa de alunos e professores mostra 12 livros por página: fecha as linhas da grade de 3 (professor) e de 4 colunas (aluno).
+const SEARCH_PAGE_SIZE = 12;
 
 // Reserva que ainda guarda um exemplar: aguardando ou pronta para retirada (as outras já foram atendidas ou canceladas).
 const ACTIVE_RESERVATION_STATUSES = ["waiting", "ready"];
@@ -65,6 +66,53 @@ async function loadCategories(supabase: ServerClient): Promise<string[]> {
   return sortedCategories(data);
 }
 
+type SearchBookRow = {
+  id: string;
+  title: string;
+  author: string;
+  category: string | null;
+  code: string;
+  isbn: string | null;
+  quantity: number;
+  cover_url: string | null;
+};
+
+// Livro da pesquisa: os dados do catálogo mais a situação na estante (book_availability).
+function toSearchItem(book: SearchBookRow, shelfRows: ReturnType<typeof shelfByBook>): BookSearchItem {
+  return {
+    id: book.id,
+    title: book.title,
+    author: book.author,
+    category: book.category,
+    code: book.code,
+    isbn: book.isbn,
+    coverUrl: book.cover_url,
+    ...shelfStatus(book.quantity, shelfRows.get(book.id)),
+  };
+}
+
+// Livros ativos mais recentes (Figma, card 0108: destaque e "Novidades no acervo" da pesquisa do aluno).
+// Só entram livros com capa, que é o que o desenho mostra; sem capa o espaço ficaria vazio.
+export async function listNewArrivals(limit: number): Promise<BookSearchItem[]> {
+  await connection();
+  const supabase = await createSupabaseServerClient();
+
+  const [books, shelf] = await Promise.all([
+    supabase
+      .from("books")
+      .select("id, title, author, category, code, isbn, quantity, cover_url")
+      .eq("status", "active")
+      .not("cover_url", "is", null)
+      .order("created_at", { ascending: false })
+      .limit(limit),
+    supabase.rpc("book_availability"),
+  ]);
+  if (books.error || shelf.error) throw new Error("Não foi possível carregar as novidades.");
+
+  const shelfRows = shelfByBook(shelf.data as ShelfRow[]);
+  return books.data.map((book) => toSearchItem(book, shelfRows));
+}
+
 // Pesquisa de alunos e professores (Figma, card 0108): só livros ativos. O RLS esconde os empréstimos dos outros,
 // então a situação vem da função book_availability do banco. Lê até 1000 livros (limite padrão do PostgREST);
 // acima disso, trocar por paginação no banco.
@@ -93,16 +141,7 @@ export async function searchBooks(
   const shelfRows = shelfByBook(shelf.data as ShelfRow[]);
   // A categoria é filtrada aqui, na memória: o texto vindo do endereço não vai para a consulta ao banco.
   const inCategory = books.data.filter((book) => !filters.category || book.category === filters.category);
-  const found = inCategory.map((book) => ({
-    id: book.id,
-    title: book.title,
-    author: book.author,
-    category: book.category,
-    code: book.code,
-    isbn: book.isbn,
-    coverUrl: book.cover_url,
-    ...shelfStatus(book.quantity, shelfRows.get(book.id)),
-  }));
+  const found = inCategory.map((book) => toSearchItem(book, shelfRows));
 
   const result = paginateBySituation(sortBooks(found, sort, term), availability, filters.page, SEARCH_PAGE_SIZE);
   return {
@@ -114,24 +153,23 @@ export async function searchBooks(
   };
 }
 
-// Detalhe de um livro ativo. O id vem do endereço: só consulta o banco se for um UUID. Devolve null se não existe ou
-// está inativo (o RLS libera a leitura a quem está logado; a situação vem da função book_availability).
-export async function getBookDetail(id: string): Promise<BookDetail | null> {
+// Detalhe de um livro. O id vem do endereço: só consulta o banco se for um UUID. Devolve null se não existe ou
+// está inativo (exceto para a bibliotecária, includeInactive) (o RLS libera a leitura a quem está logado; a situação vem da função book_availability).
+export async function getBookDetail(id: string, includeInactive = false): Promise<BookDetail | null> {
   if (!isUuid(id)) return null;
   await connection();
   const supabase = await createSupabaseServerClient();
 
-  const [book, shelf] = await Promise.all([
-    supabase
-      .from("books")
-      .select(
-        "id, title, author, category, code, quantity, cover_url, isbn, publisher, publication_year, description, shelf_location, cdd",
-      )
-      .eq("id", id)
-      .eq("status", "active")
-      .maybeSingle(),
-    supabase.rpc("book_availability"),
-  ]);
+  // A bibliotecária também abre o livro inativo (ele continua na listagem do acervo); aluno e professor só veem o ativo.
+  let bookQuery = supabase
+    .from("books")
+    .select(
+      "id, title, author, category, code, quantity, cover_url, isbn, publisher, publication_year, description, shelf_location, cdd, status",
+    )
+    .eq("id", id);
+  if (!includeInactive) bookQuery = bookQuery.eq("status", "active");
+
+  const [book, shelf] = await Promise.all([bookQuery.maybeSingle(), supabase.rpc("book_availability")]);
   if (book.error || shelf.error) throw new Error("Não foi possível carregar o livro.");
   if (!book.data) return null;
 
@@ -145,6 +183,7 @@ export async function getBookDetail(id: string): Promise<BookDetail | null> {
     isbn: row.isbn,
     coverUrl: row.cover_url,
     ...shelfStatus(row.quantity, shelfByBook(shelf.data as ShelfRow[]).get(row.id)),
+    ...(row.status === "inactive" ? { situation: "inactive" as const } : {}),
     publisher: row.publisher,
     publicationYear: row.publication_year,
     description: row.description,
