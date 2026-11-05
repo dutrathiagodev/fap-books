@@ -37,18 +37,18 @@ O produto reúne, em um só lugar, uma área de consulta ao acervo (para alunos 
 
 ## Estado atual
 
-O projeto está em **MVP em desenvolvimento** (versão `0.5.0`). O que já funciona na `develop`:
+O projeto está em **MVP em desenvolvimento** (versão `0.6.0`). O que já funciona na `develop`:
 
 | | Área | O que já existe |
 | -- | -- | -- |
 | 🏠 | **Página inicial** | Landing pública com apresentação, perfis, recursos, acervo e contato |
 | 🔐 | **Login e perfis** | Entrada com Supabase Auth e área própria para aluno, professor e funcionário, com permissões por perfil (RLS em toda tabela) |
 | 🔎 | **Pesquisa de livros** | Busca por título, autor, ISBN ou assunto, com filtros de categoria e disponibilidade, para aluno e professor |
-| 📚 | **Acervo da bibliotecária** | Listagem com busca e filtros, exclusão (com confirmação pelo nome) e inativação de livro com histórico |
-| 📝 | **Formulário de livro** | Campos, validações e feedback de salvar no front; a gravação segura no banco e o upload de capa estão em andamento |
+| 📚 | **Acervo da bibliotecária** | Listagem com busca e filtros, detalhe do livro, exclusão (com confirmação pelo nome) e inativação de livro com histórico, e importação de livros por planilha `.csv` |
+| 📝 | **Cadastro e edição de livro** | Formulário com validações, gravação segura no banco, upload de capa e aba de importação por planilha |
 | 🎨 | **Design system** | Tokens, tema e componentes base (botão, campo, tabela, modal) usados pelas telas |
 
-Em andamento: gravação e edição de livro, upload seguro de capa e buscas do balcão de empréstimo. Empréstimos, devoluções, reservas, multas e relatórios seguem no quadro do Trello.
+Em andamento: o registro de empréstimo no balcão (as buscas de usuário e livro já existem). Empréstimos, devoluções, reservas, multas e relatórios seguem no quadro do Trello.
 
 ## Módulos
 
