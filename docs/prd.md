@@ -4,7 +4,7 @@ Sistema de gestão e empréstimo de livros da Biblioteca da Faculdade Adventista
 
 > **Este é o documento base do projeto.** O PRD é a ideia central do FAP Books e deve ser seguido. Ele é um **documento vivo**: pode mudar com o tempo, mas toda mudança passa por Pull Request e é registrada no [Histórico de mudanças](#histórico-de-mudanças) no fim deste arquivo.
 >
-> Conteúdo da versão 0.3 transcrito do `FAP_Books_PRD.pdf`. O backlog (épicos, features e histórias) vem deste documento: [backlog/epicos-features-historias.md](backlog/epicos-features-historias.md).
+> Conteúdo da versão 0.3 transcrito do `FAP_Books_PRD.pdf`. O backlog (épicos, features e histórias) vem deste documento e vive nos cards do Trello.
 
 | | |
 | -- | -- |
@@ -19,7 +19,7 @@ Sistema de gestão e empréstimo de livros da Biblioteca da Faculdade Adventista
 
 1. Crie o card da mudança no Trello e a branch `FAP/<número do card>`.
 2. Altere o texto e **acrescente uma linha** no [Histórico de mudanças](#histórico-de-mudanças): data, o que mudou, por quê e o card.
-3. Se a mudança alterar o backlog, atualize os cards do Trello e o [backlog](backlog/epicos-features-historias.md).
+3. Se a mudança alterar o backlog, atualize os cards do Trello.
 4. Abra o PR para a `develop`. O time revisa antes do merge.
 
 Não apague o que foi decidido antes: marque como substituído e registre no histórico.
@@ -262,7 +262,7 @@ Padrão de design (telas, componentes e fluxos) definido no [Figma](https://www.
 | **Repositório** | GitHub |
 | **Gestão de projeto** | Trello |
 
-> Veja o [Histórico de mudanças](#histórico-de-mudanças): a decisão posterior sobre o backend (Next.js + Supabase por enquanto) está registrada lá e detalhada em [architecture/README.md](architecture/README.md).
+> Veja o [Histórico de mudanças](#histórico-de-mudanças): a decisão posterior sobre o backend (Next.js + Supabase por enquanto) está registrada lá e detalhada em [arquitetura.md](arquitetura.md).
 
 ## 12. Equipe e Papéis
 
@@ -302,4 +302,4 @@ Este PRD deve ser tratado como documento vivo: à medida que decisões forem tom
 | Data | Versão | Mudança | Motivo | Card |
 | -- | -- | -- | -- | -- |
 | 2026-10-08 | 0.3 | PRD trazido do PDF para o repositório em Markdown, sem alterar o conteúdo | Ter o documento base versionado junto do código | FAP - 0178 |
-| 2026-10-08 | 0.3 | **Decisão posterior à seção 11:** o backend fica em **Next.js (Server Actions) + Supabase** nesta fase. O "Node.js" da stack será avaliado depois, e o NestJS está adiado | O time está começando e nunca teve aula de backend e banco; menos peças. Detalhes em [architecture/README.md](architecture/README.md) | FAP - 0171 |
+| 2026-10-08 | 0.3 | **Decisão posterior à seção 11:** o backend fica em **Next.js (Server Actions) + Supabase** nesta fase. O "Node.js" da stack será avaliado depois, e o NestJS está adiado | O time está começando e nunca teve aula de backend e banco; menos peças. Detalhes em [arquitetura.md](arquitetura.md) | FAP - 0171 |
