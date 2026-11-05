@@ -168,6 +168,8 @@ begin
   perform pg_temp.say('matrícula repetida é recusada', denied);
   denied:=false; begin update public.profiles set registration = '20 24%' where id = A2::uuid; exception when others then denied:=true; end;
   perform pg_temp.say('matrícula com espaço ou curinga é recusada', denied);
+  denied:=false; begin update public.profiles set registration = 'AB2428' where id = A2::uuid; exception when others then denied:=true; end;
+  perform pg_temp.say('matrícula com letra é recusada (o RA é só número)', denied);
   update public.profiles set registration = null where id = A2::uuid; get diagnostics c = row_count;
   perform pg_temp.say('perfis sem matrícula continuam valendo (nulo repetido é aceito)', c = 1);
   perform pg_temp.as_user(A1);
