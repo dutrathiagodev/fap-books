@@ -256,6 +256,48 @@ function UserMenu({ profile }: { profile: Profile }) {
   );
 }
 
+// Menu horizontal do aluno (Figma, card 0108, visual editorial): no lugar do menu lateral, só no computador. O início
+// fica de fora (a logo leva a ele) e os rótulos são os do frame.
+const TOP_NAV_LABELS: Partial<Record<NavItem["key"], string>> = { books: "Acervo", reservations: "Reservas" };
+
+function TopNav({ items, role, pathname }: { items: NavItem[]; role: UserRole; pathname: string }) {
+  return (
+    <nav aria-label="Menu principal" className="ml-6 hidden items-center gap-1 md:flex">
+      {items
+        .filter((item) => item.key !== "home")
+        .map((item) => {
+          const Icon = iconFor(item, role);
+          const label = TOP_NAV_LABELS[item.key] ?? item.label;
+          const content = (
+            <>
+              <Icon size={16} strokeWidth={1.5} aria-hidden className="shrink-0" />
+              {label}
+            </>
+          );
+          const base = "flex h-10 items-center gap-2 rounded-md px-3 text-sm font-medium outline-offset-2 focus-visible:outline-2 focus-visible:outline-focus";
+          if (!item.href) {
+            return (
+              <span key={item.key} aria-disabled="true" title="Em breve" className={`${base} cursor-not-allowed text-ink-muted opacity-60`}>
+                {content}
+              </span>
+            );
+          }
+          const active = isActive(item, pathname);
+          return (
+            <Link
+              key={item.key}
+              href={item.href}
+              aria-current={active ? "page" : undefined}
+              className={`${base} ${active ? "bg-brand text-on-brand" : "text-ink hover:bg-subtle"}`}
+            >
+              {content}
+            </Link>
+          );
+        })}
+    </nav>
+  );
+}
+
 // Molde de todas as telas logadas (Figma, card 0101): menu lateral navy por perfil, cabeçalho com sino
 // e menu do usuário, e gaveta no celular.
 export function AppShell({ profile, noticeCount = 0, children }: AppShellProps) {
@@ -263,6 +305,8 @@ export function AppShell({ profile, noticeCount = 0, children }: AppShellProps) 
   const [drawer, setDrawer] = useState(false);
   const pathname = usePathname();
   const items = navItemsFor(profile.role);
+  // O aluno usa o menu horizontal no computador (Figma, card 0108); professor e funcionário, o lateral.
+  const topNav = profile.role === "student";
 
   // A gaveta fecha com Escape.
   useEffect(() => {
@@ -278,7 +322,7 @@ export function AppShell({ profile, noticeCount = 0, children }: AppShellProps) 
     <div className="flex min-h-screen flex-1">
       {/* Menu lateral (computador) */}
       <aside
-        className={`sticky top-0 hidden h-screen shrink-0 flex-col self-start bg-side transition-[width] md:flex ${collapsed ? "w-[68px]" : "w-60"}`}
+        className={`sticky top-0 hidden h-screen shrink-0 flex-col self-start bg-side transition-[width] ${topNav ? "" : "md:flex"} ${collapsed ? "w-[68px]" : "w-60"}`}
       >
         {collapsed ? (
           <div className="flex flex-col items-center gap-3 px-2 py-4">
@@ -340,9 +384,12 @@ export function AppShell({ profile, noticeCount = 0, children }: AppShellProps) 
           >
             <Menu size={20} aria-hidden />
           </button>
-          <div className="md:hidden">
-            <Logo width={80} />
+          <div className={topNav ? undefined : "md:hidden"}>
+            <Link href={items[0]?.href ?? "/"} aria-label="Início">
+              <Logo width={80} />
+            </Link>
           </div>
+          {topNav && <TopNav items={items} role={profile.role} pathname={pathname} />}
 
           <div className="ml-auto flex items-center gap-3">
             <NoticeBell count={noticeCount} />
