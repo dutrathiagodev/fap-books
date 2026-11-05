@@ -8,6 +8,7 @@ import {
   parseBookForm,
   quantityBelowOpenLoans,
   toBookFormValues,
+  cddFromCallNumber,
   toBookRow,
   toBookUpdate,
 } from "./book-form-rules";
@@ -87,6 +88,7 @@ describe("toBookRow", () => {
       author: "John E. Hall, Arthur C. Guyton",
       category: "Saúde",
       code: "612.01 G993t",
+      cdd: "612.01",
       isbn: "9788535287615",
       quantity: 3,
       status: "active",
@@ -99,6 +101,18 @@ describe("toBookRow", () => {
     expect(row.isbn).toBeNull();
     expect(row.publisher).toBeNull();
     expect(row.edition).toBeNull();
+  });
+});
+
+describe("cddFromCallNumber", () => {
+  it("guarda só a classificação do código de chamada", () => {
+    expect(cddFromCallNumber("612.01 G993t")).toBe("612.01");
+    expect(cddFromCallNumber(" 004 S697e ")).toBe("004");
+    expect(cddFromCallNumber("004.6")).toBe("004.6");
+  });
+  it("não inventa CDD quando o código não começa com número", () => {
+    expect(cddFromCallNumber("G993t")).toBeNull();
+    expect(cddFromCallNumber("12 abc")).toBeNull();
   });
 });
 

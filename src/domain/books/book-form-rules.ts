@@ -115,6 +115,12 @@ export function parseBookForm(input: unknown): BookFormValues | null {
   return values;
 }
 
+// O código de chamada junta a CDD (assunto) e a notação do autor, como "612.01 G993t". Só a parte da CDD vai
+// para books.cdd; sem número no começo não há CDD para guardar.
+export function cddFromCallNumber(callNumber: string): string | null {
+  return /^\d{3}(?:\.\d+)?/.exec(callNumber.trim())?.[0] ?? null;
+}
+
 // Linha de public.books para um formulário já validado. O código de chamada vira o código único do livro; o ISBN
 // é guardado só com dígitos; o status "Circulação geral" é o livro ativo.
 export function toBookRow(values: BookFormValues): NewBookRow {
@@ -129,6 +135,7 @@ export function toBookUpdate(values: BookFormValues): BookUpdateRow {
     author: values.authors.trim(),
     category: values.category,
     code: values.callNumber.trim(),
+    cdd: cddFromCallNumber(values.callNumber),
     isbn: isbn || null,
     quantity: Number(values.quantity.trim()),
     publisher: values.publisher.trim() || null,
