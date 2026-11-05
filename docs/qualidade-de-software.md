@@ -39,6 +39,13 @@ Rode e confirme que passa:
 npm run typecheck
 npm run lint
 npm test
+npm run build
 ```
 
-E marque o checklist do modelo de PR (`.github/pull_request_template.md`). Quem revisa confere os mesmos pontos e pode pedir ajuste: qualidade e segurança não são opcionais.
+Se algum falhar, não abra o PR: leia a mensagem, corrija e rode de novo. O CI roda os mesmos quatro passos.
+
+O que testar: o que, se quebrar, dá prejuízo. As regras do negócio (limite de 3 itens, prazo de 7 dias, multa de R$ 1,00 por dia, reserva pedagógica de até 30 dias), com um teste do caso certo e um do caso que deve falhar; e a segurança do banco (o aluno lê só o dele). Os testes ficam ao lado do código, em `*.test.ts` (Vitest).
+
+PR bom: pequeno (uma ideia), com título e descrição claros (o que mudou, por quê, como testar), branch `FAP/<número do card>`, commits com `feat:`, `fix:`, `docs:`, `chore:` ou `ci:`, sem `console.log`, código comentado ou arquivo fora da tarefa. Teste a tela em desktop e celular.
+
+E marque o checklist do modelo de PR (`.github/pull_request_template.md`). Quem revisa confere os mesmos pontos e pode pedir ajuste: qualidade e segurança não são opcionais. Perguntas da revisão: entendi o que o código faz? Está na camada certa ([arquitetura](arquitetura.md))? Tem teste da regra? Se o banco mudou, tem migration, RLS e `grant`? Algum nome pode ser mais claro?

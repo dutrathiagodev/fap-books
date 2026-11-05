@@ -17,7 +17,7 @@ FILE="$DIR/$(date -u +%Y%m%d%H%M%S)_${NAME}.sql"
 
 cat > "$FILE" <<'EOF'
 -- Migration: descreva a mudança em uma frase.
--- Regras (docs/architecture/supabase.spec.md):
+-- Regras (docs/arquitetura.md):
 --   * nunca edite uma migration já aplicada; crie outra
 --   * toda tabela nova liga o RLS, tem grant mínimo e policies por perfil
 
@@ -38,4 +38,4 @@ cat > "$FILE" <<'EOF'
 EOF
 
 echo "Migration criada: ${FILE#"$ROOT"/}"
-echo "Confira o checklist em docs/architecture/supabase.spec.md antes de abrir o PR."
+echo "Confira o checklist em docs/arquitetura.md antes de abrir o PR."

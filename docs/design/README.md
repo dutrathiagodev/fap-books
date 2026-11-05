@@ -24,7 +24,7 @@ O design system vive no **Figma** (arquivo "FAP BOOKS - Gestão para Biblioteca"
 - **Código:** `src/app/globals.css` (tokens), `src/app/layout.tsx` (fontes) e `src/components` (componentes).
 - **Fluxo de telas:** [fluxo-de-telas.md](fluxo-de-telas.md) (quem desenha o quê, em que ordem, e como manter a sequência).
 - **Valores em arquivo:** `docs/design/tokens/` (`cores-v2.json`, `cores-escuro-v2.json`, `espacamento.json`, `raios.json`).
-- **Como usar as classes:** [guia de Tailwind](../guias/tailwind.md), seção 3.
+- **Como usar as classes:** use as classes prontas dos tokens (`bg-brand`, `text-ink`, `rounded-md`), nunca valores soltos; elas vêm de `src/app/globals.css`.
 
 ## Como usar um ícone
 
@@ -49,7 +49,7 @@ import { BookOpen } from "lucide-react";
 - **Falta desenhar:** telas do Igor (0126, 0135, 0138, 0140) e da Julia (0157, 0147). Depois delas vem a revisão final do Figma (0209), que também cobre a versão escura dessas telas.
 - **Código:** `AppShell` segue o layout base aprovado no Figma (card `0101`): menu lateral navy por perfil, cabeçalho de 72 px com sino e menu do usuário, gaveta no celular e `PageHeader` (cards `0102` e `0103`). Os estados vazio, carregamento e esqueleto (card `0104`) vieram depois do desenho. O login usa os tokens (card `0013`). Itens de menu sem tela aparecem desativados até o card da tela ser entregue.
 - **Regra do time:** design primeiro, código depois. Bloco ou tela sem frame no Figma é desenhado antes de ser construído.
-- **Referências:** [wireframes](referencias/) e o [guia visual do Stitch](stitch/DESIGN.md) com o [prompt](stitch/prompt-stitch.md).
+- **Referências:** [wireframes](referencias/).
 
 ## O que falta
 
@@ -57,6 +57,3 @@ import { BookOpen } from "lucide-react";
 - Igualar a largura do menu lateral das telas 0108 e 0213 (256 px) à das outras (272 px).
 - Trocar o fundo azul claro das capas de livros (degradê) nas telas escuras.
 
-## Especificação final das telas
-
-Cada tela de design tem uma pasta com uma seção por arquivo (contexto, perfil, conteúdo, estados, regras, visual, layouts, componentes, referência e critério): veja [`telas/README.md`](telas/README.md). As convenções de nome estão em [`telas/convencoes.md`](telas/convencoes.md).
