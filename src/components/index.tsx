@@ -3,6 +3,8 @@ import { AppShell } from "./AppShell";
 import { BookCreateForm } from "./BookCreateForm";
 import { BookEditForm } from "./BookEditForm";
 import { BookFormSave } from "./BookFormSave";
+import { BookFormTabs } from "./BookFormTabs";
+import { BookImportPage } from "./BookImportPage";
 import { BookCover } from "./BookCover";
 import { BookCoverUpload } from "./BookCoverUpload";
 import { BookFormFields } from "./BookFormFields";
@@ -34,6 +36,8 @@ export {
   BookCreateForm,
   BookEditForm,
   BookFormSave,
+  BookFormTabs,
+  BookImportPage,
   BookCover,
   BookCoverUpload,
   BookFormFields,

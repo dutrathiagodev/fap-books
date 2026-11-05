@@ -20,6 +20,8 @@ export interface BookFormSaveProps {
   cancelHref?: string;
   onSave?: () => void;
   onCancel?: () => void;
+  // Abas do cadastro (formulário manual e importação), logo abaixo do cabeçalho. A edição não usa.
+  tabs?: React.ReactNode;
   children?: React.ReactNode;
 }
 
@@ -53,6 +55,7 @@ export function BookFormSave({
   cancelHref = ACERVO_PATH,
   onSave,
   onCancel,
+  tabs,
   children,
 }: BookFormSaveProps) {
   const copy = COPY[mode];
@@ -75,6 +78,7 @@ export function BookFormSave({
           </Link>
         }
       />
+      {tabs}
 
       {empty ? (
         <EmptyState title="Nenhum livro para editar." description="Esse livro não está no acervo." />
