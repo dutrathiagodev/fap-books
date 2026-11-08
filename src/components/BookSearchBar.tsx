@@ -142,7 +142,7 @@ export function BookSearchBar({ basePath, query, category, availability, sort, c
                     <Link
                       href={bookSearchHref(basePath, { query, category, availability, sort: option.value })}
                       aria-current={option.value === sort ? "true" : undefined}
-                      className={`block rounded px-3 py-2 text-xs hover:bg-subtle ${option.value === sort ? "font-medium text-brand" : ""}`}
+                      className={`block rounded px-3 py-2 text-xs hover:bg-subtle ${FOCUS} ${option.value === sort ? "font-medium text-brand" : ""}`}
                     >
                       {option.label}
                     </Link>
