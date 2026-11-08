@@ -28,6 +28,7 @@ import type {
 import { quantityBelowOpenLoans, toBookFormValues } from "@/domain/books/book-form-rules";
 import { coverPathFromUrl } from "@/domain/books/cover-rules";
 import { recordAudit } from "./audit.service";
+import { getCachedCategories } from "./catalog-cache.service";
 import { removeBookCover } from "./book-cover.service";
 import { shelfByBook, shelfStatus, type ShelfRow } from "./book-shelf";
 import { FOREIGN_KEY_VIOLATION, RANGE_NOT_SATISFIABLE, UNIQUE_VIOLATION } from "./postgres-codes";
@@ -60,10 +61,18 @@ type ServerClient = Awaited<ReturnType<typeof createSupabaseServerClient>>;
 
 // Categorias do acervo. A categoria que vem do endereço só pode ir para a consulta se estiver nesta lista: texto
 // desconhecido (inclusive de ataque) nunca chega ao banco.
-async function loadCategories(supabase: ServerClient): Promise<string[]> {
-  const { data, error } = await supabase.from("books").select("category").not("category", "is", null);
-  if (error) throw new Error("Não foi possível carregar as categorias.");
-  return sortedCategories(data);
+// Vem do cache compartilhado (igual para todo mundo, renovado quando o acervo muda). Se o cache falhar (por exemplo,
+// a função do banco ainda não foi aplicada), cai para a leitura direta com a sessão da pessoa.
+async function loadCategories(supabase: ServerClient, activeOnly = false): Promise<string[]> {
+  try {
+    return await getCachedCategories(activeOnly);
+  } catch {
+    let query = supabase.from("books").select("category").not("category", "is", null);
+    if (activeOnly) query = query.eq("status", "active");
+    const { data, error } = await query;
+    if (error) throw new Error("Não foi possível carregar as categorias.");
+    return sortedCategories(data);
+  }
 }
 
 type SearchBookRow = {
@@ -134,9 +143,9 @@ export async function searchBooks(
   const [books, shelf, categories] = await Promise.all([
     booksQuery,
     supabase.rpc("book_availability"),
-    supabase.from("books").select("category").eq("status", "active").not("category", "is", null),
+    loadCategories(supabase, true),
   ]);
-  if (books.error || shelf.error || categories.error) throw new Error("Não foi possível pesquisar os livros.");
+  if (books.error || shelf.error) throw new Error("Não foi possível pesquisar os livros.");
 
   const shelfRows = shelfByBook(shelf.data as ShelfRow[]);
   // A categoria é filtrada aqui, na memória: o texto vindo do endereço não vai para a consulta ao banco.
@@ -149,7 +158,7 @@ export async function searchBooks(
     total: result.total,
     page: result.page,
     pageSize: SEARCH_PAGE_SIZE,
-    categories: sortedCategories(categories.data),
+    categories,
   };
 }
 

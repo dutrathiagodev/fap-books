@@ -1,0 +1,37 @@
+name: Multas por atraso
+
+# Todo dia às 03:30 (horário de Brasília) e quando alguém clicar em "Run workflow".
+# Calcula a multa dos empréstimos atrasados (RF-22) fora da leitura das telas. É idempotente: rodar de novo não
+# muda nada, multa paga nunca é alterada e cada execução trata no máximo 500 empréstimos.
+# Usa o mesmo segredo do backup (SUPABASE_DB_URL): nenhum segredo novo. Veja docs/infra-e-plano-gratuito.md.
+# O agendamento só roda a partir da branch padrão (main).
+on:
+  schedule:
+    - cron: '30 6 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: multas-atrasos
+  cancel-in-progress: false
+
+jobs:
+  multas:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Conferir o segredo
+        env:
+          SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+        run: |
+          [ -n "$SUPABASE_DB_URL" ] || { echo "::error::Falta o segredo SUPABASE_DB_URL (veja docs/database/backup.md)"; exit 1; }
+
+      - name: Calcular as multas
+        env:
+          SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+        run: |
+          psql "$SUPABASE_DB_URL" --no-psqlrc -v ON_ERROR_STOP=1 -f scripts/agendadas/multas-por-atraso.sql | tee -a "$GITHUB_STEP_SUMMARY"
