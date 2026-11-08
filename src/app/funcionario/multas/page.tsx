@@ -6,6 +6,9 @@ import { FILTER_LABELS, FINES_PATH, fineHref, fineSummary, parseFineFilters } fr
 import { listFines } from "@/services/fines.service";
 import type { FineFilter } from "@/types/fine";
 import { FinesDesk } from "./FinesDesk";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = { title: "Controle de multas | FAP Books" };
 
 type SearchParams = Promise<Record<string, string | string[] | undefined>>;
 
@@ -53,7 +56,7 @@ async function MultasContent({ searchParams }: { searchParams: SearchParams }) {
             hideLabel
             type="search"
             defaultValue={filters.query}
-            placeholder="Buscar por nome ou matrícula do usuário"
+            placeholder="Nome ou matrícula"
             leadingIcon={Search}
             className="min-w-0 flex-1"
           />

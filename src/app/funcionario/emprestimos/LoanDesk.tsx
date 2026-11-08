@@ -193,7 +193,7 @@ export function LoanDesk() {
       ) : (
         <LoanAlert tone="info">{preview?.notice ?? "Limite de 3 livros por usuário (4 para formandos). Prazo padrão de 7 dias."}</LoanAlert>
       )}
-      <div className="grid items-start gap-4 lg:grid-cols-[minmax(0,1fr)_320px]">
+      <div className="grid items-start gap-4 lg:grid-cols-[minmax(0,1fr)_380px]">
         <LoanSearch
           userQuery={users.query}
           onUserQueryChange={users.change}

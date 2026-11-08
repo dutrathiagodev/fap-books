@@ -1,6 +1,9 @@
 import { BookCreateForm, BookFormTabs, BookImportPage } from "@/components";
 import { RolePage } from "@/components/RolePage";
 import { createBookAction, importBooksAction } from "./actions";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = { title: "Cadastro de livro | FAP Books" };
 
 type SearchParams = Promise<Record<string, string | string[] | undefined>>;
 
