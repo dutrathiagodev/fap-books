@@ -44,7 +44,7 @@ O projeto está em **MVP em desenvolvimento** (versão `0.6.0`). O que já funci
 | 🏠 | **Página inicial** | Landing pública com apresentação, perfis, recursos, acervo e contato |
 | 🔐 | **Login e perfis** | Entrada com Supabase Auth e área própria para aluno, professor e funcionário, com permissões por perfil (RLS em toda tabela) |
 | 🔎 | **Pesquisa de livros** | Busca por título, autor, ISBN ou assunto, com filtros de categoria e disponibilidade, para aluno e professor |
-| 📚 | **Acervo da bibliotecária** | Listagem com busca e filtros, detalhe do livro, exclusão (com confirmação pelo nome) e inativação de livro com histórico, e importação de livros por planilha `.csv` |
+| 📚 | **Acervo da bibliotecária** | Listagem com busca e filtros, detalhe do livro, exclusão (com confirmação pelo nome) e inativação de livro com histórico, e importação de livros por planilha `.csv` ou `.xlsx` (com modelo para baixar e erros por linha) |
 | 📝 | **Cadastro e edição de livro** | Formulário com validações, gravação segura no banco, upload de capa e aba de importação por planilha |
 | 🎨 | **Design system** | Tokens, tema e componentes base (botão, campo, tabela, modal) usados pelas telas |
 
@@ -143,6 +143,7 @@ As automações rodam a cada 10 minutos e precisam dos secrets `TRELLO_KEY` e `T
 | 🚀 | [`docs/onboarding.md`](docs/onboarding.md) | **Configuração de ambiente:** o que instalar e como rodar o projeto no seu notebook |
 | 🏛️ | [`docs/arquitetura.md`](docs/arquitetura.md) | Onde fica cada coisa no código, regras de dependência, como criar uma feature e regras do Supabase/RLS |
 | 📄 | [`docs/prd.md`](docs/prd.md) | **PRD: documento base do projeto.** É a ideia central, e pode mudar com o tempo; as mudanças ficam registradas no histórico dele |
+| 📥 | [`docs/importacao-de-planilha.md`](docs/importacao-de-planilha.md) | Importação de livros por `.csv` ou `.xlsx`: regras, segurança do arquivo e testes |
 | ✅ | [`docs/qualidade-de-software.md`](docs/qualidade-de-software.md) | **Regra de qualidade:** código limpo, fácil de entender e seguro, com o checklist de todo PR |
 | 🎨 | [`docs/design/README.md`](docs/design/README.md) | Design system: fontes, cores, cantos, ícones e tokens |
 | 🗄️ | [`docs/database/`](docs/database) | Modelo de dados, LGPD e backup do banco |
