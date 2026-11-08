@@ -2,6 +2,8 @@ import { ACERVO_PATH, ROLE_HOME } from "../access/access-rules";
 
 const USERS_PATH = "/funcionario/usuarios/novo";
 const LOANS_PATH = "/funcionario/emprestimos";
+const FINES_PATH = "/funcionario/multas";
+const HISTORY_PATH = "/funcionario/historico";
 import type { UserRole } from "@/types/profile";
 
 export type NavKey =
@@ -34,8 +36,8 @@ export function navItemsFor(role: UserRole): NavItem[] {
       { key: "users", label: "Usuários", href: USERS_PATH },
       { key: "loans", label: "Empréstimos", href: LOANS_PATH },
       { key: "pedagogical", label: "Reservas pedagógicas" },
-      { key: "fines", label: "Multas" },
-      { key: "history", label: "Histórico" },
+      { key: "fines", label: "Multas", href: FINES_PATH },
+      { key: "history", label: "Histórico", href: HISTORY_PATH },
       { key: "reports", label: "Relatórios" },
     ];
   }

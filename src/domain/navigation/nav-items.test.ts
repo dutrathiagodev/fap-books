@@ -21,10 +21,16 @@ describe("navItemsFor", () => {
     expect(labels).not.toContain("Início");
   });
 
-  it("aluno e professor têm a pesquisa de livros; a funcionária tem acervo, usuários e empréstimos", () => {
+  it("aluno e professor têm a pesquisa de livros; a funcionária tem acervo, usuários, empréstimos, multas e histórico", () => {
     expect(navItemsFor("student").filter((i) => i.href).map((i) => i.href)).toEqual(["/aluno/livros"]);
     expect(navItemsFor("teacher").filter((i) => i.href).map((i) => i.href)).toEqual(["/professor/livros"]);
-    expect(navItemsFor("librarian").filter((i) => i.href).map((i) => i.href)).toEqual(["/funcionario/acervo", "/funcionario/usuarios/novo", "/funcionario/emprestimos"]);
+    expect(navItemsFor("librarian").filter((i) => i.href).map((i) => i.href)).toEqual([
+      "/funcionario/acervo",
+      "/funcionario/usuarios/novo",
+      "/funcionario/emprestimos",
+      "/funcionario/multas",
+      "/funcionario/historico",
+    ]);
   });
 
   it("nenhum perfil repete item", () => {
