@@ -2,6 +2,9 @@ import { BookEditForm, BookFormSave } from "@/components";
 import { RolePage } from "@/components/RolePage";
 import { getBookForEdit } from "@/services/books.service";
 import { updateBookAction } from "./actions";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = { title: "Editar livro | FAP Books" };
 
 type PageParams = { params: Promise<{ id: string }> };
 

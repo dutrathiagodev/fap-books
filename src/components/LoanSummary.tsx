@@ -49,7 +49,7 @@ export function LoanSummary({
 
   return (
     <section className={`@container flex flex-col gap-3.5 rounded-lg border bg-surface p-5 ${error ? "border-danger-700" : "border-line"}`}>
-      <h2 className="text-base leading-6 font-semibold text-ink">{TITLE}</h2>
+      <h2 className="font-sans text-base leading-6 font-semibold text-ink">{TITLE}</h2>
       {error && <FieldError message={error} />}
       {filled ? (
         <>

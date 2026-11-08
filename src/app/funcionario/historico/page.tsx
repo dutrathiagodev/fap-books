@@ -18,6 +18,9 @@ import { getHistorySubject, listLoanHistory, searchHistoryCandidates } from "@/s
 import type { HistoryFilters } from "@/types/loan-history";
 import { HistoryCandidates } from "./HistoryCandidates";
 import { HistorySubjectCard } from "./HistorySubjectCard";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = { title: "Histórico de empréstimos | FAP Books" };
 
 type SearchParams = Promise<Record<string, string | string[] | undefined>>;
 

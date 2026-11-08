@@ -70,11 +70,11 @@ export function RenewDesk({ loans }: { loans: OpenLoanView[] }) {
   return (
     <div className="flex flex-col gap-4">
       {notice && <LoanAlert tone={notice.tone}>{notice.text}</LoanAlert>}
-      <div className="grid items-start gap-4 lg:grid-cols-[minmax(0,1fr)_320px]">
+      <div className="grid items-start gap-4 lg:grid-cols-[minmax(0,1fr)_380px]">
         <DataTable columns={columns} rows={loans} rowKey={(loan) => loan.id} />
 
         <section aria-labelledby="renew-title" className="flex min-w-0 flex-col gap-3.5 rounded-lg border border-line bg-surface p-5">
-          <h2 id="renew-title" className="text-base leading-6 font-semibold text-ink">Renovar empréstimo</h2>
+          <h2 id="renew-title" className="font-sans text-base leading-6 font-semibold text-ink">Renovar empréstimo</h2>
           {selected ? (
             <>
               {selected.renewBlocked && <LoanAlert tone="danger">{selected.renewBlocked}</LoanAlert>}

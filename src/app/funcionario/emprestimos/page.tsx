@@ -7,6 +7,9 @@ import { LoanDesk } from "./LoanDesk";
 import { LoanTabs, parseLoanTab } from "./LoanTabs";
 import { RenewDesk } from "./RenewDesk";
 import { ReturnList } from "./ReturnList";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = { title: "Registro de empréstimo | FAP Books" };
 
 const EMPRESTIMOS_PATH = "/funcionario/emprestimos";
 
