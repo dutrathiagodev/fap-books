@@ -20,6 +20,7 @@ import { FieldError } from "./FieldError";
 import { FilterMenu } from "./FilterMenu";
 import { LoadingState } from "./LoadingState";
 import { LoanSearch } from "./LoanSearch";
+import { LoanSummary } from "./LoanSummary";
 import { LoginForm } from "./LoginForm";
 import { Logo } from "./Logo";
 import { Modal } from "./Modal";
@@ -53,6 +54,7 @@ export {
   FilterMenu,
   LoadingState,
   LoanSearch,
+  LoanSummary,
   LoginForm,
   Logo,
   Modal,
