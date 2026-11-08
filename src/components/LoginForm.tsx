@@ -1,11 +1,13 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { useRouter } from "next/navigation";
 import { ChevronRight, Eye, EyeOff, Mail } from "lucide-react";
 import { createSupabaseBrowserClient } from "@/lib/supabase/browser-client";
 import { Button } from "./Button";
 import { TextField } from "./TextField";
+
+const subscribeNothing = () => () => {};
 
 // Formulário de login. O proxy.ts leva a pessoa para a área do perfil dela depois de entrar.
 export function LoginForm() {
@@ -14,6 +16,9 @@ export function LoginForm() {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
+  // Falso no servidor e verdadeiro só depois da hidratação. Antes disso o envio fica travado: sem o JavaScript
+  // do formulário, o navegador enviaria e-mail e senha pelo endereço da página (visíveis no histórico e nos logs).
+  const hydrated = useSyncExternalStore(subscribeNothing, () => true, () => false);
 
   // O Next guarda a tela de login escondida quando a pessoa entra. Ao sair e voltar, ela
   // reaparece com o estado antigo; por isso limpamos o formulário quando a tela é escondida.
@@ -80,7 +85,7 @@ export function LoginForm() {
           </button>
         }
       />
-      <Button type="submit" text={loading ? "Entrando..." : "Entrar no sistema"} icon={loading ? undefined : ChevronRight} disabled={loading} />
+      <Button type="submit" text={loading ? "Entrando..." : "Entrar no sistema"} icon={loading ? undefined : ChevronRight} disabled={loading || !hydrated} />
       <p role="alert" className="min-h-5 text-sm text-danger">
         {message}
       </p>
