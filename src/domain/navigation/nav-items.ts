@@ -1,4 +1,9 @@
 import { ACERVO_PATH, ROLE_HOME } from "../access/access-rules";
+
+const USERS_PATH = "/funcionario/usuarios/novo";
+const LOANS_PATH = "/funcionario/emprestimos";
+const FINES_PATH = "/funcionario/multas";
+const HISTORY_PATH = "/funcionario/historico";
 import type { UserRole } from "@/types/profile";
 
 export type NavKey =
@@ -20,25 +25,24 @@ export interface NavItem {
 }
 
 // Itens do menu por perfil, na ordem do Figma (card 0101).
-// Cada tela nova ganha o href quando o card dela for entregue.
+// Cada tela nova ganha o href quando o card dela for entregue. Sem item "Início": o endereço-base da área
+// redireciona ao acervo (o Painel da bibliotecária volta ao menu com o card 0097).
 export function navItemsFor(role: UserRole): NavItem[] {
   const home = ROLE_HOME[role];
 
   if (role === "librarian") {
     return [
-      { key: "home", label: "Painel", href: home },
       { key: "books", label: "Acervo", href: ACERVO_PATH },
-      { key: "users", label: "Usuários" },
-      { key: "loans", label: "Empréstimos" },
+      { key: "users", label: "Usuários", href: USERS_PATH },
+      { key: "loans", label: "Empréstimos", href: LOANS_PATH },
       { key: "pedagogical", label: "Reservas pedagógicas" },
-      { key: "fines", label: "Multas" },
-      { key: "history", label: "Histórico" },
+      { key: "fines", label: "Multas", href: FINES_PATH },
+      { key: "history", label: "Histórico", href: HISTORY_PATH },
       { key: "reports", label: "Relatórios" },
     ];
   }
 
   const items: NavItem[] = [
-    { key: "home", label: "Início", href: home },
     { key: "books", label: "Buscar livros", href: `${home}/livros` },
     { key: "loans", label: "Meus empréstimos" },
     { key: "reservations", label: "Minhas reservas" },

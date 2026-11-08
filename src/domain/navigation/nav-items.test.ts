@@ -2,28 +2,35 @@ import { describe, expect, it } from "vitest";
 import { isActive, navItemsFor } from "./nav-items";
 
 describe("navItemsFor", () => {
-  it("aluno tem 5 itens, começando por Início", () => {
+  it("aluno tem 4 itens, começando por Buscar livros (sem Início)", () => {
     const labels = navItemsFor("student").map((i) => i.label);
-    expect(labels).toEqual(["Início", "Buscar livros", "Meus empréstimos", "Minhas reservas", "Multas"]);
+    expect(labels).toEqual(["Buscar livros", "Meus empréstimos", "Minhas reservas", "Multas"]);
   });
 
   it("professor tem os itens do aluno mais Reserva pedagógica", () => {
     const labels = navItemsFor("teacher").map((i) => i.label);
-    expect(labels).toHaveLength(6);
+    expect(labels).toHaveLength(5);
     expect(labels.at(-1)).toBe("Reserva pedagógica");
   });
 
-  it("funcionário tem 8 itens, começando por Painel", () => {
+  it("funcionário tem 7 itens, começando por Acervo (o Painel volta com o card 0097)", () => {
     const labels = navItemsFor("librarian").map((i) => i.label);
-    expect(labels).toHaveLength(8);
-    expect(labels[0]).toBe("Painel");
+    expect(labels).toHaveLength(7);
+    expect(labels[0]).toBe("Acervo");
+    expect(labels).not.toContain("Painel");
     expect(labels).not.toContain("Início");
   });
 
-  it("aluno e professor têm o início e a pesquisa de livros; a funcionária tem o painel e o acervo", () => {
-    expect(navItemsFor("student").filter((i) => i.href).map((i) => i.href)).toEqual(["/aluno", "/aluno/livros"]);
-    expect(navItemsFor("teacher").filter((i) => i.href).map((i) => i.href)).toEqual(["/professor", "/professor/livros"]);
-    expect(navItemsFor("librarian").filter((i) => i.href).map((i) => i.href)).toEqual(["/funcionario", "/funcionario/acervo"]);
+  it("aluno e professor têm a pesquisa de livros; a funcionária tem acervo, usuários, empréstimos, multas e histórico", () => {
+    expect(navItemsFor("student").filter((i) => i.href).map((i) => i.href)).toEqual(["/aluno/livros"]);
+    expect(navItemsFor("teacher").filter((i) => i.href).map((i) => i.href)).toEqual(["/professor/livros"]);
+    expect(navItemsFor("librarian").filter((i) => i.href).map((i) => i.href)).toEqual([
+      "/funcionario/acervo",
+      "/funcionario/usuarios/novo",
+      "/funcionario/emprestimos",
+      "/funcionario/multas",
+      "/funcionario/historico",
+    ]);
   });
 
   it("nenhum perfil repete item", () => {
