@@ -7,6 +7,7 @@ import { IMPORT_MAX_BYTES, importRowError, parseBookImport } from "@/domain/book
 import { inspectCover, type CleanCover } from "@/domain/books/cover-image";
 import { COVER_MAX_BYTES } from "@/domain/books/cover-rules";
 import { requireRole } from "@/lib/require-role";
+import { invalidateCatalogCache } from "@/services/catalog-cache.service";
 import { removeBookCover, uploadBookCover } from "@/services/book-cover.service";
 import { createBook } from "@/services/books.service";
 import type { BookCreateResult, BookImportResult, BookImportRowError } from "@/types/book";
@@ -46,9 +47,13 @@ export async function createBookAction(formData: FormData): Promise<BookCreateRe
   if (cover && !stored) return { ok: false, reason: "error" };
 
   const result = await createBook({ ...toBookRow(values), cover_url: stored?.url ?? null }, profile.id);
-  if (result.ok) revalidatePath(ACERVO_PATH);
-  // O livro não foi gravado: a capa enviada não pode ficar solta no Storage.
-  else if (stored) await removeBookCover(stored.path);
+  if (result.ok) {
+    revalidatePath(ACERVO_PATH);
+    invalidateCatalogCache();
+  } else if (stored) {
+    // O livro não foi gravado: a capa enviada não pode ficar solta no Storage.
+    await removeBookCover(stored.path);
+  }
   return result;
 }
 
@@ -78,6 +83,9 @@ export async function importBooksAction(formData: FormData): Promise<BookImportR
     else errors.push({ line, message: result.reason === "duplicate_code" ? "Já existe um livro com esse código de chamada." : "Não foi possível gravar esta linha." });
   }
 
-  if (imported > 0) revalidatePath(ACERVO_PATH);
+  if (imported > 0) {
+    revalidatePath(ACERVO_PATH);
+    invalidateCatalogCache();
+  }
   return { ok: true, imported, errors };
 }

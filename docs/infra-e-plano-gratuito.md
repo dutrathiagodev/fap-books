@@ -1,0 +1,147 @@
+# Infraestrutura, cache e plano gratuito
+
+Cards `FAP - 0230`, `0231` e `0232` (origem: `0225`, System design). Este documento registra o que foi decidido, o que já protege o app, o que custa e o que ainda falta. Valores de limite dos planos mudam: **confirme nas páginas de preço da Supabase e da Vercel** antes de decidir com base neles.
+
+## 1. Cache e renderização (Next 16)
+
+O projeto usa `cacheComponents: true` e `partialPrefetching: true` (`next.config.ts`). Nas telas autenticadas, a parte fixa da página vai pronta e o dado de cada pessoa chega em seguida (transmitido por streaming).
+
+### Decisão: dado por usuário nunca entra em cache
+
+Toda leitura dos serviços usa o cliente do Supabase com os cookies da pessoa, porque o RLS decide o que ela vê (`books_select_logged_in` libera só quem está logado). Por isso:
+
+- `use cache` **não pode** envolver essas leituras: o cache é compartilhado entre pessoas e a função dentro dele não pode ler `cookies()`. Cachear daria o dado de uma pessoa para outra.
+- O `await connection()` que existe nos serviços é necessário: avisa o Next que a leitura é por requisição e evita que a build tente montar a página antes.
+
+### O que está em cache
+
+Só dado **igual para todo mundo**. A migration `20261108130000_public_book_categories.sql` cria `public_book_categories(p_active_only)`, que o `anon` pode executar e que devolve **só nomes de categoria** (nenhum título, código ou empréstimo; o `anon` continua sem ler a tabela `books`, testado).
+
+| Dado | Situação |
+| -- | -- |
+| Categorias do filtro | **Feito.** `getCachedCategories` (`src/services/catalog-cache.service.ts`) usa `use cache`, `cacheLife('hours')` e `cacheTag('catalogo')`, lendo com a chave pública. Todas as ações que mudam livros (criar, importar, editar, inativar, excluir) chamam `invalidateCatalogCache()` (`updateTag`) e a lista renova na hora |
+| Queda segura | Se o cache falhar (ex.: a migration ainda não foi aplicada no banco), `loadCategories` cai para a leitura direta com a sessão da pessoa. Nada quebra fora de ordem |
+| Contadores do acervo | **Não cacheados, de propósito.** Dependem do filtro e da situação do empréstimo (muda a cada devolução); o ganho vem da função SQL da frente A (uma consulta no banco, sem ler tabelas inteiras), não de cache |
+| Capas | Já cacheadas: o upload grava `cacheControl: 31536000` (1 ano) e o nome é um UUID que nunca se repete |
+| Números da página inicial | Texto fixo (`src/content/landing.ts`), prerenderizado |
+
+**Ordem de deploy:** aplique a migration antes do código para o cache valer; sem ela o app funciona pela queda segura.
+
+### Imagens de capa
+
+`BookCover` usa `<img>` simples (as capas vêm do Storage, que serve com cache longo). Agora leva `loading="lazy"` e `decoding="async"`: a capa fora da tela só baixa quando a pessoa rola até ela. Não foi usado `next/image` de propósito: o otimizador da Vercel tem cota própria no plano gratuito, e a capa já chega pequena (limite de 2 MB no envio). Se um dia as capas pesarem, a alternativa é a transformação de imagem do Supabase Storage (recurso pago).
+
+### First Load JS e streaming
+
+- `npx next analyze` abre o analisador de bundle do Turbopack (Next 16.1+) para ver o que pesa por rota.
+- O CI roda `scripts/orcamento-bundle.mjs` depois da build: soma o JavaScript do navegador (gzip) e falha se passar de **340 KB** no total ou **95 KB** em um arquivo (medido em 08/11/2026: 297 KB e 79 KB). Subiu de propósito? Aumente o teto no mesmo PR e explique.
+- Lighthouse no CI **não foi adicionado**: pede um app rodando com login e mais minutos de CI. Fica como evolução.
+- Streaming com esqueleto nas telas autenticadas segue como está; revisar onde cada `connection()` é necessário depende de as consultas virarem funções SQL (card 0225, lista 1).
+
+## 2. Limites, proteção e custo (plano gratuito)
+
+### Limites que importam
+
+| Recurso | Limite no plano gratuito | Alerta do projeto |
+| -- | -- | -- |
+| Banco (Supabase) | 500 MB | Falha do workflow *Saúde do Supabase* acima de 80% (400 MB) |
+| Arquivos / Storage (Supabase) | 1 GB | Falha do workflow acima de 80% (800 MB) |
+| Tráfego de saída (Supabase) | confirmar no painel (hoje 5 GB/mês) | Só no painel (Settings > Usage); não dá para medir pelo banco |
+| Inatividade | O projeto é **pausado após 7 dias sem uso** | Consulta de manutenção semanal no mesmo workflow |
+| Vercel (Hobby) | Banda, execuções e minutos de build com cota mensal; uso comercial não é permitido | Painel da Vercel > Usage |
+
+**Plano B:** se o banco ou os arquivos passarem de 80% e a limpeza não bastar (apagar capas órfãs, comprimir capas, reduzir retenção da auditoria), a saída é o plano Pro do Supabase (backup diário, sem pausa, mais espaço). A decisão e o custo são do dono do projeto.
+
+### O que já protege
+
+- RLS em todas as tabelas; aluno e professor só leem os próprios empréstimos e multas.
+- Validação no servidor antes de gravar; capa limitada a 2 MB; Server Actions com corpo máximo de 3 MB.
+- Cabeçalhos de segurança em todas as rotas (`next.config.ts`).
+- **Regra "nenhuma consulta sem limite"**: o teste `src/services/consultas-com-limite.test.ts` falha se uma leitura nova aparecer sem `.limit`, `.range`, `.single`, `.maybeSingle` ou `head: true`. Hoje existem leituras antigas sem limite (11, listadas no teste com um teto por arquivo). O teto **só pode diminuir**: conforme as consultas viram função SQL com paginação (card 0225, lista 1), reduza o número no teste.
+
+### Limite de tentativas por IP
+
+O que é real, por rota:
+
+| Rota | Proteção | Onde |
+| -- | -- | -- |
+| Pesquisa de livros (`?q=`) | 60 por minuto por IP; passou, a resposta é 429 com aviso em português e `Retry-After` | `src/proxy.ts` + `src/lib/rate-limit.ts` (testado) |
+| Inscrição na newsletter | 5 por 10 minutos por IP; passou, a tela mostra o aviso em português | `src/app/actions/newsletter.ts` |
+| Login | **Não passa pelo servidor do app**: `LoginForm` chama o Supabase Auth direto do navegador (`signInWithPassword`). O limite de tentativas é do **Supabase Auth** (Authentication > Rate Limits no painel, já ativo com padrões). Limitar no app exigiria mudar o login para uma Server Action, o que mexe na tela de login e não foi feito | Painel do Supabase |
+
+**Ressalva importante:** o limitador do app guarda a contagem na memória, e na Vercel cada instância tem a sua. Ele barra o abuso comum e não custa nada, mas **não é global**. A garantia global exige estado compartilhado: o WAF da Vercel (sem código) ou um serviço externo como o Upstash (conta e chave novas). Regra sugerida para o WAF, a aplicar pelo dono (muda a produção; confirmar no painel quantas regras o Hobby permite):
+
+```bash
+vercel firewall rules add "Limite de POST por IP" \
+  --condition '{"type":"method","op":"eq","value":"POST"}' \
+  --action rate_limit \
+  --rate-limit-window 60 \
+  --rate-limit-requests 20 \
+  --rate-limit-keys ip \
+  --rate-limit-action deny --yes
+```
+
+O IP vem do `x-forwarded-for`, que na Vercel é escrito pela plataforma. Fora dela todos dividem a chave "desconhecido" (lado seguro).
+
+### Retenção do `audit_logs`
+
+Decisão proposta: guardar **24 meses**. A tabela é imutável para o app (sem `update` nem `delete` para ninguém logado); só o banco com a conexão de administração apaga. O workflow *Saúde do Supabase* **conta** semanalmente os registros mais velhos que 24 meses e só **apaga** quando alguém roda o workflow à mão com `apagar_auditoria = sim`. Assim nada some sem um humano decidir. Quando houver muitos registros, a evolução é particionar por mês.
+
+## 3. Tarefas agendadas
+
+Todas usam o segredo que **já existe** (`SUPABASE_DB_URL`, o mesmo do backup). Nenhum segredo novo. O GitHub só dispara agendamentos a partir da `main`, e pausa os agendamentos de repositório sem atividade por 60 dias.
+
+| Workflow | Quando | O que faz | Idempotente? |
+| -- | -- | -- | -- |
+| `backup-banco.yml` | Todo dia 03:00 | Backup criptografado (já existia; ver `database/backup.md`) | Sim |
+| `multas-atrasos.yml` | Todo dia 03:30 | `scripts/agendadas/multas-por-atraso.sql`: multa de R$ 1,00 por dia de atraso (RF-22) | Sim |
+| `saude-supabase.yml` | Segunda 06:00 | Mantém o projeto ativo, mede banco e arquivos, conta auditoria antiga, lista consultas lentas | Sim (só lê; apagar é manual) |
+
+### Multa por atraso
+
+- Dias de atraso contados no calendário de Brasília; devolver no dia do prazo não gera multa.
+- Empréstimo **devolvido** com atraso: valor fechado. Empréstimo **em aberto** vencido: cresce um dia por dia.
+- Multa já **paga** (baixa da bibliotecária, RF-23) nunca é alterada.
+- No máximo 500 empréstimos por execução; o resto entra na próxima. Cada multa nova grava `fine_created` em `audit_logs`.
+- Testado num Postgres 17 descartável com as migrations do projeto: criou, não duplicou na segunda rodada, atualizou só a multa não paga e respeitou a paga.
+- A multa **nunca é calculada na leitura**. A tela deve só ler `fines`. Quando o registro de devolução (card 0132) for feito, ele também pode gravar a multa na hora; o job apenas corrige o que faltar.
+
+### Avisos de vencimento (RF-24): ainda não feito
+
+Não existe canal de envio (WhatsApp, e-mail) nem tabela de avisos no painel. Quando o dono definir o canal e a tabela, o aviso vira outra etapa do mesmo tipo de tarefa (consulta os empréstimos que vencem em até 2 dias ou já venceram e ainda não receberam aviso).
+
+### Observabilidade
+
+- Consultas lentas: o relatório semanal lê `pg_stat_statements` (ative em Database > Extensions se o workflow avisar que está desligada). **O repositório é público e o resumo do job também**: o texto das consultas vem normalizado (sem valores), mas não use isso para dado sensível.
+- Alertas do Supabase (`get_advisors`: índices que faltam, RLS): rodar no painel (Advisors) ou pelo assistente a cada semana. Fazer isso por workflow exigiria um token novo da API de gerenciamento, por isso ficou de fora.
+- Log de erros: o painel da Vercel (Logs) guarda os erros do servidor. Sentry exigiria conta e chave novas.
+
+## 4. Prova de carga
+
+`scripts/prova-de-carga.mjs` dispara usuários simultâneos contra uma rota e mede p50, p95 e p99. Meta do card 0225: **p95 abaixo de 500 ms e zero erro com 50 usuários** com 20 mil livros.
+
+```bash
+# 1. Banco LOCAL com os 20 mil livros de teste (nunca em produção):
+docker exec -i <container-do-banco> psql -U postgres -q < scripts/seed-carga.sql
+# 2. App em modo de produção:
+npm run build && npm start
+# 3. Rota pública não precisa de login; as do aluno precisam do cookie da sessão (copie do navegador):
+node scripts/prova-de-carga.mjs http://localhost:3000/ --usuarios 50 --segundos 20
+PROVA_COOKIE='sb-...-auth-token=...' node scripts/prova-de-carga.mjs http://localhost:3000/aluno/livros --usuarios 50
+# Limpar: delete from public.books where code like 'CARGA-%';
+```
+
+Travas: só aceita `localhost`; outro host exige `PROVA_HOSTS_PERMITIDOS` (decisão do dono); teto de 50 usuários e 60 segundos. Redirecionamento para `/login` conta como erro.
+
+**Ainda não foi rodada nos números oficiais**: a meta depende das funções SQL de busca paginada (card 0225, lista 1). Rodar antes dá o número de partida; rodar depois prova a melhoria.
+
+## 5. O que falta (decisões e dependências)
+
+| Item | Quem / depende de |
+| -- | -- |
+| Limite global por IP | Dono aplicar a regra do WAF no painel da Vercel e conferir o limite de tentativas do Supabase Auth |
+| Apagar auditoria antiga | Dono rodar o workflow à mão com `apagar_auditoria = sim` (a partir de 2028 haverá o que apagar) |
+| Avisos de vencimento (RF-24) | Dono definir canal e tabela de avisos |
+| Prova de carga com números oficiais | Funções de busca paginada |
+| `docs/architecture/system-design.md` (diagrama, estimativas, ADRs, plano de crescimento) | Fecha o 0232 depois das listas 1 e 2 do 0225; este documento é a base das partes de cache, limites e agendamento |
+| Lighthouse no CI | Evolução opcional |
