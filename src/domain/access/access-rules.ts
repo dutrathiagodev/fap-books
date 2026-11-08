@@ -7,6 +7,14 @@ export const ROLE_HOME: Record<UserRole, string> = {
   librarian: "/funcionario",
 };
 
+// Primeira tela de cada perfil depois do login: o acervo (a pessoa vai direto ao que usa; o endereço-base da área
+// só redireciona para cá). O painel da bibliotecária entra aqui quando o card 0097 for entregue.
+export const ROLE_LANDING: Record<UserRole, string> = {
+  student: "/aluno/livros",
+  teacher: "/professor/livros",
+  librarian: "/funcionario/acervo",
+};
+
 // Rótulo de cada perfil na tela (menu do usuário e resultado da busca do balcão).
 export const ROLE_LABELS: Record<UserRole, string> = { student: "Aluno", teacher: "Professor", librarian: "Funcionário" };
 

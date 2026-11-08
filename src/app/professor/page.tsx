@@ -1,6 +1,9 @@
-import { RolePage } from "@/components/RolePage";
-import { UserPanel } from "@/components";
+import { redirect } from "next/navigation";
+import { ROLE_LANDING } from "@/domain/access/access-rules";
 
+// O endereço-base da área não tem tela própria: quem entra vai direto ao acervo.
+// Não confere o perfil aqui: o proxy.ts já manda para /login quem não está logado e para a própria área quem é de
+// outro perfil, e a primeira tela (o acervo) confere de novo no servidor. Sem ler a sessão, a página continua estática.
 export default function ProfessorPage() {
-  return <RolePage role="teacher">{(profile) => <UserPanel title="Área do professor" profile={profile} />}</RolePage>;
+  redirect(ROLE_LANDING.teacher);
 }
