@@ -1,15 +1,12 @@
 import type { LoanUserCard } from "@/components/LoanSearch";
 import { ROLE_LABELS } from "../access/access-rules";
-import { formatNumber } from "../format";
+import { formatReais, loanLimitFor } from "./loan-rules";
 import type { UserRole } from "@/types/profile";
 
 // Limites da consulta do balcão: termo curto demais traria a lista inteira; termo longo demais é abuso.
 const LOOKUP_MIN_LENGTH = 2;
 export const LOOKUP_MAX_LENGTH = 60;
 export const LOOKUP_MAX_RESULTS = 5;
-
-// Limite de livros ao mesmo tempo (PRD, RF-14). Formandos podem 4, mas o banco ainda não guarda quem é formando.
-const LOAN_LIMIT = 3;
 
 export type LookupTerm = { ok: true; term: string } | { ok: false; reason: "term_too_short" };
 
@@ -37,21 +34,19 @@ export function initialsOf(fullName: string): string {
   return (words[0][0] + last).toLocaleUpperCase("pt-BR");
 }
 
-// "R$ 8,00" a partir de centavos.
-function formatReais(cents: number): string {
-  return `R$ ${formatNumber(cents / 100, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-}
-
 export interface LoanUserRow {
   full_name: string;
   role: UserRole;
   registration: string | null;
   course: string | null;
   job_title: string | null;
+  graduating?: boolean;
 }
 
 // Monta o cartão do usuário. Sem matrícula ou curso, o cartão mostra "—" (o frame sempre tem os três campos).
-export function toLoanUserCard(row: LoanUserRow, activeLoans: number, openFineCents: number): LoanUserCard {
+// Multa em aberto ou livro em atraso contam como pendência (RF-15): o selo concorda com o bloqueio do balcão.
+export function toLoanUserCard(row: LoanUserRow, activeLoans: number, openFineCents: number, overdueLoans = 0): LoanUserCard {
+  const pending = openFineCents > 0 || overdueLoans > 0;
   return {
     initials: initialsOf(row.full_name),
     name: row.full_name,
@@ -59,8 +54,13 @@ export function toLoanUserCard(row: LoanUserRow, activeLoans: number, openFineCe
     registration: row.registration ?? "—",
     detail: (row.role === "librarian" ? row.job_title : row.course) ?? "—",
     activeLoans,
-    loanLimit: LOAN_LIMIT,
-    pendingLabel: openFineCents > 0 ? `Multa em aberto: ${formatReais(openFineCents)}` : "Sem pendências",
-    pendingTone: openFineCents > 0 ? "danger" : "ok",
+    loanLimit: loanLimitFor(row.graduating),
+    pendingLabel:
+      openFineCents > 0
+        ? `Multa em aberto: ${formatReais(openFineCents)}`
+        : overdueLoans > 0
+          ? `Livro em atraso: ${overdueLoans}`
+          : "Sem pendências",
+    pendingTone: pending ? "danger" : "ok",
   };
 }

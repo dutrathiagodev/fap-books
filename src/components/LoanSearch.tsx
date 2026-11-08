@@ -1,6 +1,7 @@
 "use client";
 
 import { Search } from "lucide-react";
+import type { ReactNode } from "react";
 import type { BookSituation } from "@/types/book";
 import { BookCover } from "./BookCover";
 import { FieldError } from "./FieldError";
@@ -37,10 +38,13 @@ export interface LoanSearchProps {
   onUserQueryChange: (value: string) => void;
   user: LoanUserCard | null;
   userError?: string;
+  // Resultados da busca (a página desenha as opções clicáveis). Com opções, o "nenhum encontrado" não aparece.
+  userOptions?: ReactNode;
   bookQuery: string;
   onBookQueryChange: (value: string) => void;
   book: LoanBookCard | null;
   bookError?: string;
+  bookOptions?: ReactNode;
 }
 
 // Busca de usuário e de livro do balcão (Figma, card 0130, frame 0129).
@@ -51,10 +55,12 @@ export function LoanSearch({
   onUserQueryChange,
   user,
   userError,
+  userOptions,
   bookQuery,
   onBookQueryChange,
   book,
   bookError,
+  bookOptions,
 }: LoanSearchProps) {
   return (
     <div className="flex flex-col gap-4">
@@ -64,6 +70,7 @@ export function LoanSearch({
         onQueryChange={onUserQueryChange}
         user={user}
         error={userError}
+        options={userOptions}
       />
       <BookSlot
         id={`${idPrefix}-book`}
@@ -71,6 +78,7 @@ export function LoanSearch({
         onQueryChange={onBookQueryChange}
         book={book}
         error={bookError}
+        options={bookOptions}
       />
     </div>
   );
@@ -82,12 +90,14 @@ function UserSlot({
   onQueryChange,
   user,
   error,
+  options,
 }: {
   id: string;
   query: string;
   onQueryChange: (value: string) => void;
   user: LoanUserCard | null;
   error?: string;
+  options?: ReactNode;
 }) {
   const danger = Boolean(error) || user?.pendingTone === "danger";
 
@@ -127,6 +137,7 @@ function UserSlot({
           onChange={onQueryChange}
           error={error}
           emptyLabel="Nenhum usuário encontrado."
+          options={options}
         />
       )}
       {user && error && <FieldError message={error} className="mt-2" />}
@@ -140,12 +151,14 @@ function BookSlot({
   onQueryChange,
   book,
   error,
+  options,
 }: {
   id: string;
   query: string;
   onQueryChange: (value: string) => void;
   book: LoanBookCard | null;
   error?: string;
+  options?: ReactNode;
 }) {
   return (
     <article className={`rounded-lg border bg-surface p-4 ${error ? "border-danger-700" : "border-line"}`}>
@@ -174,6 +187,7 @@ function BookSlot({
           onChange={onQueryChange}
           error={error}
           emptyLabel="Nenhum livro encontrado."
+          options={options}
         />
       )}
       {book && error && <FieldError message={error} className="mt-2" />}
@@ -189,6 +203,7 @@ function SearchField({
   onChange,
   error,
   emptyLabel,
+  options,
 }: {
   id: string;
   label: string;
@@ -197,8 +212,9 @@ function SearchField({
   onChange: (value: string) => void;
   error?: string;
   emptyLabel: string;
+  options?: ReactNode;
 }) {
-  const showEmpty = value.trim().length > 0 && !error;
+  const showEmpty = value.trim().length > 0 && !error && !options;
 
   return (
     <div className="mt-3">
@@ -214,6 +230,7 @@ function SearchField({
         leadingIcon={Search}
         onChange={onChange}
       />
+      {options}
       {showEmpty && <p className="mt-2 text-sm text-ink-muted">{emptyLabel}</p>}
     </div>
   );

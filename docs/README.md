@@ -9,6 +9,7 @@
 | [database/modelo-de-dados.md](database/modelo-de-dados.md) | Tabelas do banco e como testar mudanças |
 | [database/lgpd.md](database/lgpd.md) | Dados pessoais e o que falta para a LGPD |
 | [database/backup.md](database/backup.md) | Backup diário do banco e como restaurar |
+| [infra-e-plano-gratuito.md](infra-e-plano-gratuito.md) | Cache, limites do plano gratuito, tarefas agendadas e prova de carga |
 | [design/README.md](design/README.md) | Design system: fontes, cores, cantos, ícones e tokens |
 | [design/fluxo-de-telas.md](design/fluxo-de-telas.md) | Ordem e responsáveis pelo desenho das telas |
 | [design/landing-animacoes.md](design/landing-animacoes.md) | Regras das animações da página inicial |
