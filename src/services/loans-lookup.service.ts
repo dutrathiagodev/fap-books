@@ -2,6 +2,7 @@ import { connection } from "next/server";
 import { createSupabaseServerClient } from "@/lib/supabase/server-client";
 import { recordAudit } from "./audit.service";
 import { shelfByBook, shelfStatus, type ShelfRow } from "./book-shelf";
+import { isOverdue } from "@/domain/loans/loan-rules";
 import { escapeLike, LOOKUP_MAX_RESULTS, toLoanUserCard, type LoanUserRow } from "@/domain/loans/loan-lookup-rules";
 import type { LoanBookCard, LoanUserCard } from "@/components/LoanSearch";
 
@@ -24,7 +25,7 @@ export async function searchUsers(term: string, actorId: string): Promise<LoanUs
   await connection();
   const supabase = await createSupabaseServerClient();
   const pattern = escapeLike(term);
-  const columns = "id, full_name, role, registration, course, job_title";
+  const columns = "id, full_name, role, registration, course, job_title, graduating";
 
   const found = await mergeById<ProfileRow>([
     supabase
@@ -50,18 +51,21 @@ export async function searchUsers(term: string, actorId: string): Promise<LoanUs
 
   const ids = users.map((user) => user.id);
   const [loans, fines] = await Promise.all([
-    supabase.from("loans").select("user_id").in("user_id", ids).is("returned_at", null),
+    supabase.from("loans").select("user_id, due_at").in("user_id", ids).is("returned_at", null),
     supabase.from("fines").select("user_id, amount_cents").in("user_id", ids).is("paid_at", null),
   ]);
   if (loans.error || fines.error) throw new Error("Não foi possível consultar os empréstimos do usuário.");
 
-  return users.map((user) =>
-    toLoanUserCard(
+  const now = new Date();
+  return users.map((user) => {
+    const userLoans = loans.data.filter((loan) => loan.user_id === user.id);
+    return toLoanUserCard(
       user,
-      loans.data.filter((loan) => loan.user_id === user.id).length,
+      userLoans.length,
       fines.data.filter((fine) => fine.user_id === user.id).reduce((sum, fine) => sum + fine.amount_cents, 0),
-    ),
-  );
+      userLoans.filter((loan) => isOverdue(new Date(loan.due_at), now)).length,
+    );
+  });
 }
 
 interface BookRow {
