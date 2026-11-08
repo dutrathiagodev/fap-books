@@ -70,7 +70,7 @@ O `.env.local` guarda as chaves do projeto e **nunca vai para o Git**.
    ```
    No Windows (PowerShell): `Copy-Item .env.example .env.local`
 2. Abra o `.env.local` no VS Code e preencha o `NEXT_PUBLIC_SUPABASE_ANON_KEY` com a **chave pública**. Ela está no card **Configuração de ambiente** do Trello (o quadro é privado para a equipe).
-3. Deixe `SUPABASE_SERVICE_ROLE_KEY` **em branco**. Essa é a chave secreta e fica só com quem mexe no banco.
+3. `SUPABASE_SERVICE_ROLE_KEY` é a chave secreta ("Secret key", `sb_secret_`, em Project Settings → API Keys). Ela só vale no servidor e nunca vai ao Git. O cadastro de usuários (`/funcionario/usuarios/novo`) precisa dela: peça ao dono do projeto. Sem ela o resto do sistema funciona, mas o cadastro de usuários mostra erro. Em produção ela é cadastrada nas variáveis de ambiente da Vercel.
 
 > **Regra de ouro:** chave, senha e token nunca vão para o Git, nem em mensagem, print ou e-mail. Se aparecer um por engano, avise o time na hora.
 
