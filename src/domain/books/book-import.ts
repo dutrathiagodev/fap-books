@@ -1,7 +1,9 @@
 import { BOOK_AREAS, BOOK_CIRCULATION, bookFormErrors } from "./book-form-rules";
 import type { BookFormValues } from "@/types/book";
 
-// Importação de livros por planilha .csv (Figma, card 0117, aba "Importar planilha").
+// Importação de livros por planilha .csv ou .xlsx (Figma, card 0117, aba "Importar planilha"; FAP-0022 e FAP-0233).
+// O .xlsx é só outra forma de entregar as mesmas linhas: depois de lido (book-import-xlsx.ts e xlsx-reader.service.ts)
+// passa pelo mesmo parser, com os mesmos limites e as mesmas regras do .csv.
 // Limites: o arquivo vem do navegador, então o tamanho e o número de linhas são conferidos antes de qualquer gravação.
 export const IMPORT_MAX_BYTES = 200 * 1024;
 export const IMPORT_MAX_ROWS = 100;
@@ -11,9 +13,14 @@ const COLUMNS = ["titulo", "autor", "categoria", "codigo", "quantidade", "isbn",
 const REQUIRED_COLUMNS = ["titulo", "autor", "categoria", "codigo", "quantidade"] as const;
 type Column = (typeof COLUMNS)[number];
 
-// Planilha modelo para baixar: cabeçalho e uma linha de exemplo. Ponto e vírgula, que o Excel brasileiro abre direto.
-export const IMPORT_TEMPLATE =
-  `${COLUMNS.join(";")}\n` + `Tratado de Fisiologia Médica;John E. Hall;Saúde;612.01 G993t;1;978-85-352-8761-5;Elsevier;13ª edição (2021)\n`;
+// Planilha modelo para baixar: cabeçalho e uma linha de exemplo, a mesma nos dois formatos.
+export const IMPORT_TEMPLATE_ROWS: string[][] = [
+  [...COLUMNS],
+  ["Tratado de Fisiologia Médica", "John E. Hall", "Saúde", "612.01 G993t", "1", "978-85-352-8761-5", "Elsevier", "13ª edição (2021)"],
+];
+
+// Modelo .csv: ponto e vírgula, que o Excel brasileiro abre direto.
+export const IMPORT_TEMPLATE = IMPORT_TEMPLATE_ROWS.map((row) => row.join(";")).join("\n") + "\n";
 
 export interface ImportRow {
   // Linha na planilha (o cabeçalho é a 1), para o aviso de erro apontar o lugar certo.
@@ -80,9 +87,15 @@ function matchArea(category: string): string {
   return BOOK_AREAS.find((area) => normalize(area) === normalize(category)) ?? category.trim();
 }
 
-// Transforma o texto da planilha em linhas de formulário. Linhas totalmente em branco são ignoradas.
+// Transforma o texto do .csv em linhas de formulário.
 export function parseBookImport(text: string): BookImportParse {
-  const [header, ...body] = parseCsv(text);
+  return parseBookRows(parseCsv(text));
+}
+
+// Transforma as linhas da planilha (primeira = cabeçalho), venham do .csv ou do .xlsx, em linhas de formulário.
+// Linhas totalmente em branco são ignoradas.
+export function parseBookRows(sheet: string[][]): BookImportParse {
+  const [header, ...body] = sheet;
   if (!header) return { ok: false, reason: "empty" };
 
   const index = new Map<string, number>();
