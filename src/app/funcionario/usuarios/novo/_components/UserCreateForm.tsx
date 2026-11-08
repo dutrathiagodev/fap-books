@@ -103,8 +103,8 @@ export function UserCreateForm({ onCreate, cancelHref = "/funcionario" }: UserCr
       />
 
       <div aria-busy={saving} className="max-w-6xl">
-        <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-[minmax(0,1fr)_18rem]">
-        <section className="flex flex-col gap-6 rounded-lg border border-line bg-surface p-4 shadow-sm md:p-7">
+        <div className="grid grid-cols-1 items-start gap-6 min-[1100px]:grid-cols-[minmax(0,1fr)_18rem]">
+        <section className="@container flex flex-col gap-6 rounded-lg border border-line bg-surface p-4 shadow-sm md:p-7">
           <ProfileSelector value={values.role} onChange={selectRole} disabled={saving} error={fieldErrors.role} />
 
           {/* A chave zera os campos depois de salvar. */}
