@@ -27,8 +27,15 @@ function situationText(book: BookSearchItem): string {
 }
 
 // Texto e ponto da situação do livro (usado no cartão do acervo e nas novidades).
-export function SituationLine({ book }: { book: BookSearchItem }) {
-  const { dot, text } = SITUATION[book.situation];
+const TINTED_TEXT: Partial<Record<BookSituation, string>> = {
+  available: "text-success-800 dark:text-green-300",
+  reserved: "text-ink dark:text-amber-300",
+};
+
+// "tinted": a linha fica sobre o fundo azul do destaque, onde o verde e o âmbar 700 não atingem 4,5:1.
+export function SituationLine({ book, tinted = false }: { book: BookSearchItem; tinted?: boolean }) {
+  const { dot } = SITUATION[book.situation];
+  const text = (tinted && TINTED_TEXT[book.situation]) || SITUATION[book.situation].text;
   return (
     <p className={`flex items-center gap-1.5 text-xs font-medium ${text}`}>
       <span aria-hidden className={`size-1.5 shrink-0 rounded-full ${dot}`} />
