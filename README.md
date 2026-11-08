@@ -37,7 +37,7 @@ O produto reúne, em um só lugar, uma área de consulta ao acervo (para alunos 
 
 ## Estado atual
 
-O projeto está em **MVP em desenvolvimento** (versão `0.6.0`). O que já funciona na `develop`:
+O projeto está em **MVP em desenvolvimento** (versão `0.7.0`). O que já funciona:
 
 | | Área | O que já existe |
 | -- | -- | -- |
@@ -46,9 +46,13 @@ O projeto está em **MVP em desenvolvimento** (versão `0.6.0`). O que já funci
 | 🔎 | **Pesquisa de livros** | Busca por título, autor, ISBN ou assunto, com filtros de categoria e disponibilidade, para aluno e professor |
 | 📚 | **Acervo da bibliotecária** | Listagem com busca e filtros, detalhe do livro, exclusão (com confirmação pelo nome) e inativação de livro com histórico, e importação de livros por planilha `.csv` ou `.xlsx` (com modelo para baixar e erros por linha) |
 | 📝 | **Cadastro e edição de livro** | Formulário com validações, gravação segura no banco, upload de capa e aba de importação por planilha |
+| 🔄 | **Balcão** | Registro de empréstimo em 5 passos, devolução (com multa de R$ 1,00 por dia de atraso) e renovação até 3 vezes, pelas funções do banco, com limite de 3 livros (4 para formandos) e proteção contra clique duplo |
+| 💵 | **Multas** | Lista com filtros e busca, baixa manual do pagamento presencial com autor e data |
+| 🧾 | **Histórico** | Empréstimos por usuário e por livro, com filtro por período e situação |
+| 👥 | **Usuários** | Cadastro de aluno, professor e funcionário por convite de e-mail: a pessoa define a própria senha em `/definir-senha` |
 | 🎨 | **Design system** | Tokens, tema e componentes base (botão, campo, tabela, modal) usados pelas telas |
 
-Em andamento: o registro de empréstimo no balcão (as buscas de usuário e livro já existem). Empréstimos, devoluções, reservas, multas e relatórios seguem no quadro do Trello.
+Em andamento: painel da bibliotecária, reserva pedagógica, avisos de prazo e relatórios (esperam o design); tudo segue no quadro do Trello.
 
 ## Módulos
 
