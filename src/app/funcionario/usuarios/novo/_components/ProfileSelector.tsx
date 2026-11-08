@@ -21,7 +21,7 @@ export function ProfileSelector({ value, onChange, disabled = false, error }: Pr
       <legend className="mb-2 text-sm leading-6 font-medium text-ink">
         Perfil do usuário <span aria-hidden>*</span>
       </legend>
-      <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
+      <div className="grid grid-cols-1 gap-3 @xl:grid-cols-3">
         {USER_ROLES.map((role) => {
           const Icon = ICONS[role];
           const card = USER_ROLE_CARDS[role];
@@ -29,7 +29,7 @@ export function ProfileSelector({ value, onChange, disabled = false, error }: Pr
           return (
             <label
               key={role}
-              className={`relative flex cursor-pointer items-center gap-3 rounded-lg border p-4 has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-focus has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-50 ${
+              className={`relative flex cursor-pointer items-center gap-3 rounded-lg border p-4 @xl:flex-col @xl:items-start has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-focus has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-50 ${
                 selected ? "border-brand bg-selected" : "border-line bg-surface hover:bg-subtle"
               }`}
             >
@@ -49,7 +49,7 @@ export function ProfileSelector({ value, onChange, disabled = false, error }: Pr
                 <span className="block text-xs text-ink-muted">{card.subtitle}</span>
               </span>
               {selected && (
-                <span className="ml-auto flex size-5 shrink-0 items-center justify-center rounded-full bg-brand text-on-brand">
+                <span className="ml-auto flex size-5 shrink-0 @xl:absolute @xl:top-3 @xl:right-3 @xl:ml-0 items-center justify-center rounded-full bg-brand text-on-brand">
                   <Check size={12} strokeWidth={2} aria-hidden />
                   <span className="sr-only">Selecionado</span>
                 </span>
