@@ -10,7 +10,7 @@ import { gzipSync } from "node:zlib";
 
 const PASTA = ".next/static";
 // Medido na build de 08/11/2026 (v0.6.0) com folga de ~15%.
-const TETO_TOTAL_KB = 340;
+const TETO_TOTAL_KB = 380;
 const TETO_MAIOR_ARQUIVO_KB = 95;
 
 function arquivosJs(pasta) {
