@@ -22,7 +22,18 @@ const cabecalhosDeSeguranca = [
 const nextConfig: NextConfig = {
   /* config options here */
   async headers() {
-    return [{ source: "/:path*", headers: cabecalhosDeSeguranca }];
+    return [
+      { source: "/:path*", headers: cabecalhosDeSeguranca },
+      // Definir a senha pelo convite (FAP-0087): o endereço carrega um token de uso único. Nada de cache, e o
+      // endereço não vai para outros sites no Referer.
+      {
+        source: "/definir-senha",
+        headers: [
+          { key: "Cache-Control", value: "private, no-store, max-age=0" },
+          { key: "Referrer-Policy", value: "no-referrer" },
+        ],
+      },
+    ];
   },
   // A capa do livro (até 2 MB) segue junto do formulário; o padrão de 1 MB recusaria. A sobra é do multipart.
   experimental: { serverActions: { bodySizeLimit: "3mb" } },

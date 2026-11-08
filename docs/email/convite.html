@@ -1,0 +1,35 @@
+<!-- E-mail de convite do FAP Books (Supabase Auth > Emails > Invite user).
+     Assunto: Você foi convidado para a biblioteca da FAP
+     Variáveis do Supabase usadas: {{ .RedirectTo }} e {{ .TokenHash }} (o link leva à página /definir-senha do app; o token só é gasto quando a pessoa envia a senha, veja docs/email/README.md). Tudo com estilo em linha (e-mail não lê CSS externo). -->
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#eef3fa;padding:32px 12px;font-family:Arial,Helvetica,sans-serif;">
+  <tr>
+    <td align="center">
+      <table role="presentation" width="560" cellpadding="0" cellspacing="0" style="max-width:560px;width:100%;background:#ffffff;border-radius:12px;overflow:hidden;border:1px solid #d6e3f5;">
+        <tr>
+          <td style="background:#032B5E;padding:24px 32px;color:#ffffff;font-size:22px;font-weight:bold;letter-spacing:1px;">
+            FAP BOOKS
+            <div style="font-size:13px;font-weight:normal;letter-spacing:0;color:#d6e3f5;margin-top:4px;">Biblioteca da Faculdade Adventista do Paraná</div>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:32px;color:#1a2433;font-size:16px;line-height:1.6;">
+            <h1 style="margin:0 0 16px;font-size:22px;color:#032B5E;">Você foi convidado(a)!</h1>
+            <p style="margin:0 0 16px;">A biblioteca da FAP criou o seu acesso ao sistema. Para começar, defina a sua senha pelo botão abaixo.</p>
+            <p style="margin:0 0 28px;">Com a sua conta você consulta o acervo, acompanha empréstimos, prazos e reservas.</p>
+            <p style="margin:0 0 28px;text-align:center;">
+              <a href="{{ .RedirectTo }}?token_hash={{ .TokenHash }}&type=invite" style="display:inline-block;background:#032B5E;color:#ffffff;text-decoration:none;font-weight:bold;padding:14px 28px;border-radius:8px;">Definir minha senha</a>
+            </p>
+            <p style="margin:0 0 8px;font-size:14px;color:#4a5568;">Se o botão não abrir, copie e cole este endereço no navegador:</p>
+            <p style="margin:0 0 24px;font-size:13px;word-break:break-all;"><a href="{{ .RedirectTo }}?token_hash={{ .TokenHash }}&type=invite" style="color:#0D3B6E;">{{ .RedirectTo }}?token_hash={{ .TokenHash }}&type=invite</a></p>
+            <p style="margin:0;font-size:14px;color:#4a5568;">O link vale por tempo limitado e só pode ser usado uma vez. Se você não esperava este convite, pode ignorar este e-mail.</p>
+          </td>
+        </tr>
+        <tr>
+          <td style="background:#f5f8fc;padding:16px 32px;font-size:12px;color:#6b7280;">
+            Seus dados são usados pela biblioteca e guardados por até 5 anos. Dúvidas? Procure a biblioteca da FAP.
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
