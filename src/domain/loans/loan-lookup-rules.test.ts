@@ -76,6 +76,12 @@ describe("toLoanUserCard", () => {
       pendingTone: "danger",
     });
   });
+  it("empréstimo em atraso também é pendência, no tom de perigo", () => {
+    expect(toLoanUserCard(student, 2, 0, 1)).toMatchObject({ pendingLabel: "Livro em atraso: 1", pendingTone: "danger" });
+  });
+  it("multa em aberto vem antes do atraso no texto", () => {
+    expect(toLoanUserCard(student, 2, 400, 1).pendingLabel).toBe("Multa em aberto: R$ 4,00");
+  });
   it("funcionário mostra o cargo, e dado faltando vira traço", () => {
     const librarian = { ...student, role: "librarian" as const, registration: null, course: null, job_title: "Chefe da biblioteca" };
     expect(toLoanUserCard(librarian, 0, 0)).toMatchObject({

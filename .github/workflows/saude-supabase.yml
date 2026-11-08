@@ -1,0 +1,43 @@
+name: Saúde do Supabase
+
+# Toda segunda às 06:00 (horário de Brasília) e quando alguém clicar em "Run workflow".
+# Mantém o projeto do plano gratuito ativo (ele pausa após 7 dias sem uso), mede banco e arquivos contra o limite
+# do plano (falha acima de 80% e o GitHub avisa por e-mail) e lista as consultas mais lentas.
+# Usa o mesmo segredo do backup (SUPABASE_DB_URL): nenhum segredo novo. Veja docs/infra-e-plano-gratuito.md.
+# O agendamento só roda a partir da branch padrão (main).
+on:
+  schedule:
+    - cron: '0 9 * * 1'
+  workflow_dispatch:
+    inputs:
+      apagar_auditoria:
+        description: 'Apagar os registros de auditoria acima da retenção de 24 meses? (sim ou nao)'
+        type: choice
+        options: ['nao', 'sim']
+        default: 'nao'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: saude-supabase
+  cancel-in-progress: false
+
+jobs:
+  saude:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Conferir o segredo
+        env:
+          SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+        run: |
+          [ -n "$SUPABASE_DB_URL" ] || { echo "::error::Falta o segredo SUPABASE_DB_URL (veja docs/database/backup.md)"; exit 1; }
+
+      - name: Medir, manter ativo e listar consultas lentas
+        env:
+          SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+          APAGAR_AUDITORIA: ${{ inputs.apagar_auditoria || 'nao' }}
+        run: scripts/agendadas/saude-supabase.sh

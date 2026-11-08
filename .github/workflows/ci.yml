@@ -29,3 +29,5 @@ jobs:
         run: npm run test
       - name: Build
         run: npm run build
+      - name: Orçamento de desempenho (tamanho do JavaScript)
+        run: node scripts/orcamento-bundle.mjs

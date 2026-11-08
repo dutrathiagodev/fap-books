@@ -2,15 +2,28 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 import { hasSupabaseEnv } from "@/lib/supabase/env";
 import { decideRoute } from "@/domain/access/access-rules";
+import { getClientIp, tooManyRequestsMessage } from "@/lib/rate-limit";
+import { searchLimiter } from "@/lib/request-limits";
 import type { UserRole } from "@/types/profile";
 
 // Proxy (no Next.js 16 é o antigo "middleware"): roda antes de cada página.
 // 1) Renova a sessão do Supabase para o usuário continuar logado.
 // 2) Protege as rotas por perfil: quem não está logado vai para /login e cada perfil só abre a própria área.
+// 3) Limita as pesquisas (?q=) por IP, antes de qualquer consulta ao banco (FAP-0231; veja src/lib/rate-limit.ts).
 // As páginas conferem o perfil de novo (getCurrentProfile): o proxy é a primeira porta, não a única.
 export async function proxy(request: NextRequest) {
   // Sem .env.local o projeto continua abrindo (útil no primeiro dia).
   if (!hasSupabaseEnv()) return NextResponse.next();
+
+  if (request.method === "GET" && request.nextUrl.searchParams.has("q")) {
+    const limit = searchLimiter.check(getClientIp(request.headers));
+    if (!limit.allowed) {
+      return new NextResponse(tooManyRequestsMessage(limit.retryAfterSeconds), {
+        status: 429,
+        headers: { "Content-Type": "text/plain; charset=utf-8", "Retry-After": String(limit.retryAfterSeconds) },
+      });
+    }
+  }
 
   let response = NextResponse.next({ request });
 

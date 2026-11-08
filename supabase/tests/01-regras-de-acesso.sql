@@ -53,13 +53,16 @@ begin
   denied:=false; begin insert into public.loans(book_id,user_id,due_at) values ('b0000000-0000-0000-0000-000000000001',A2::uuid, now()+interval '7 days'); exception when others then denied:=true; end;
   perform pg_temp.say('aluno NÃO registra empréstimo para si', denied);
 
-  -- reservas comuns
+  -- reservas comuns (só de livro sem exemplar livre: R-001 tem 1 exemplar e está com o professor)
+  perform pg_temp.as_user(L1);
+  insert into public.books (id,title,author,code,quantity) values ('b0000000-0000-0000-0000-0000000000a1','Livro emprestado','Autor','R-001',1);
+  insert into public.loans(book_id,user_id,due_at,created_by) values ('b0000000-0000-0000-0000-0000000000a1',T1::uuid, now()+interval '7 days', L1::uuid);
   perform pg_temp.as_user(A1);
-  insert into public.reservations(book_id,user_id) values ('b0000000-0000-0000-0000-000000000001',A1::uuid);
+  insert into public.reservations(book_id,user_id) values ('b0000000-0000-0000-0000-0000000000a1',A1::uuid);
   perform pg_temp.say('aluno reserva livro para si', true);
-  denied:=false; begin insert into public.reservations(book_id,user_id) values ('b0000000-0000-0000-0000-000000000001',A2::uuid); exception when others then denied:=true; end;
+  denied:=false; begin insert into public.reservations(book_id,user_id) values ('b0000000-0000-0000-0000-0000000000a1',A2::uuid); exception when others then denied:=true; end;
   perform pg_temp.say('aluno NÃO reserva em nome de outro', denied);
-  denied:=false; begin insert into public.reservations(book_id,user_id,status) values ('b0000000-0000-0000-0000-000000000001',A1::uuid,'ready'); exception when others then denied:=true; end;
+  denied:=false; begin insert into public.reservations(book_id,user_id,status) values ('b0000000-0000-0000-0000-0000000000a1',A1::uuid,'ready'); exception when others then denied:=true; end;
   perform pg_temp.say('aluno NÃO cria reserva já "pronta"', denied);
 
   -- reserva pedagógica
@@ -137,7 +140,7 @@ end $$;
 
 -- exclusão e inativação de livro (migration block_book_delete_with_history)
 do $$
-declare A1 text:='00000000-0000-0000-0000-000000000001'; L1 text:='00000000-0000-0000-0000-000000000004';
+declare A1 text:='00000000-0000-0000-0000-000000000001'; A2 text:='00000000-0000-0000-0000-000000000002'; L1 text:='00000000-0000-0000-0000-000000000004';
         denied boolean; c int;
 begin
   perform pg_temp.as_user(L1);
@@ -148,6 +151,7 @@ begin
   perform pg_temp.say('livro COM empréstimo NÃO pode ser excluído', denied);
   insert into public.books (id,title,author,code,quantity) values ('b0000000-0000-0000-0000-0000000000e2','Livro com reserva','Autor','E-002',1);
   perform set_config('role','postgres',true);
+  insert into public.loans(book_id,user_id,due_at) values ('b0000000-0000-0000-0000-0000000000e2','00000000-0000-0000-0000-000000000003', now()+interval '7 days');
   insert into public.reservations(book_id,user_id) values ('b0000000-0000-0000-0000-0000000000e2',A1::uuid);
   perform pg_temp.as_user(L1);
   denied:=false; begin delete from public.books where code = 'E-002'; exception when others then denied:=true; end;

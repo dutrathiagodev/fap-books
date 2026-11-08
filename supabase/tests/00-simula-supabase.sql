@@ -2,6 +2,9 @@
 -- NÃO rode no projeto real do Supabase. Veja docs/database/modelo-de-dados.md.
 create role anon nologin; create role authenticated nologin; create role service_role nologin bypassrls;
 create schema auth;
+-- Schema das extensões, como no Supabase (pg_trgm e unaccent da busca ficam aqui).
+create schema extensions;
+grant usage on schema extensions to anon, authenticated;
 -- auth.users e auth.identities com as mesmas colunas do Supabase (conferidas no projeto real em 2026-10-24),
 -- para o teste de backup e restauração ser fiel. confirmed_at e identities.email são colunas geradas, como no Supabase.
 create table auth.users (
