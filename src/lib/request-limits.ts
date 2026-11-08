@@ -8,3 +8,6 @@ export const searchLimiter = createRateLimiter({ limit: 60, windowMs: 60_000 });
 
 // Inscrição na newsletter: 5 por 10 minutos por IP. Ninguém se inscreve mais que isso; robôs sim.
 export const newsletterLimiter = createRateLimiter({ limit: 5, windowMs: 10 * 60_000 });
+
+// Definir a senha pelo convite: 10 envios por 10 minutos por IP. Sobra para errar a senha algumas vezes; chutar tokens não.
+export const definePasswordLimiter = createRateLimiter({ limit: 10, windowMs: 10 * 60_000 });

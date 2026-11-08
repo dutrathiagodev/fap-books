@@ -36,7 +36,10 @@ export const PRIVACY_PATH = "/privacidade";
 export const TERMS_PATH = "/termos";
 export const ACCESSIBILITY_PATH = "/acessibilidade";
 export const SUPPORT_PATH = "/suporte";
-const PUBLIC_INFO_PATHS = [PRIVACY_PATH, TERMS_PATH, ACCESSIBILITY_PATH, SUPPORT_PATH];
+// Definir a senha pelo link do convite (FAP-0087): a pessoa ainda não tem login, e quem já está logado (por exemplo a
+// funcionária testando o convite no mesmo navegador) também precisa conseguir abrir o link.
+export const DEFINE_PASSWORD_PATH = "/definir-senha";
+const PUBLIC_INFO_PATHS = [PRIVACY_PATH, TERMS_PATH, ACCESSIBILITY_PATH, SUPPORT_PATH, DEFINE_PASSWORD_PATH];
 
 export type RouteDecision =
   | { action: "allow" }

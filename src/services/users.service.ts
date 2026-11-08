@@ -1,6 +1,7 @@
 import { createSupabaseAdminClient } from "@/lib/supabase/admin-client";
 import { createSupabaseServerClient } from "@/lib/supabase/server-client";
 import { normalizeEmail, toProfileRow, type UserCreateResult, type UserFormValues } from "@/domain/users/user-form-rules";
+import { getInviteRedirectUrl } from "@/lib/site-url";
 import type { UserRole } from "@/types/profile";
 import { UNIQUE_VIOLATION } from "./postgres-codes";
 
@@ -29,6 +30,8 @@ export async function createUser(
   const admin = createSupabaseAdminClient();
   const invited = await admin.auth.admin.inviteUserByEmail(normalizeEmail(values.email), {
     data: { full_name: row.full_name },
+    // O e-mail leva a pessoa para /definir-senha (FAP-0087). A origem vem do ambiente e da lista de origens permitidas.
+    redirectTo: getInviteRedirectUrl(),
   });
   if (invited.error || !invited.data.user) {
     const code = invited.error?.code;
