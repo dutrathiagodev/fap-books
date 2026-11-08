@@ -34,7 +34,7 @@ Todas as tabelas têm RLS ligado e permissões mínimas. Conferido nas migration
 Pontos positivos:
 - O papel da pessoa nunca vem do que ela digita no cadastro (`handle_new_user` cria sempre como aluno).
 - As funções `is_librarian` e `is_teacher` têm `search_path` vazio e só usuário logado executa; considera só perfis ativos.
-- A chave secreta do Supabase (`SUPABASE_SERVICE_ROLE_KEY`) não é usada no código hoje, só a chave pública, que o RLS limita.
+- A chave secreta do Supabase (`SUPABASE_SERVICE_ROLE_KEY`) é usada só no servidor, no cadastro de usuários (`src/lib/supabase/admin-client.ts`, convite por e-mail), depois de conferir que quem pede é funcionária. Todo o resto usa a chave pública, que o RLS limita.
 - Empréstimos e multas usam `on delete restrict`: não se apaga uma pessoa que tem histórico, o que protege a rastreabilidade.
 
 ### Pontos a corrigir ou decidir
