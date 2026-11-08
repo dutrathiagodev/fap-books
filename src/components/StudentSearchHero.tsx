@@ -29,7 +29,7 @@ export function StudentSearchHero({ basePath, query, category, availability, sor
         <h1 id="hero-title" className="text-h1">
           Descubra o próximo livro
         </h1>
-        <p className="max-w-md text-base text-ink-muted">
+        <p className="max-w-md text-base text-ink/75">
           Pesquise por título, autor ou assunto e veja a disponibilidade em poucos cliques.
         </p>
         <form method="get" action={basePath} role="search" aria-label="Pesquisar livros" className="flex max-w-xl gap-2">
@@ -76,8 +76,8 @@ export function StudentSearchHero({ basePath, query, category, availability, sor
           />
           <span>
             <span className="block font-heading text-base font-bold leading-snug">{featured.title}</span>
-            <span className="mb-1 block text-sm text-ink-muted">{featured.author}</span>
-            <SituationLine book={featured} />
+            <span className="mb-1 block text-sm text-ink/75">{featured.author}</span>
+            <SituationLine book={featured} tinted />
           </span>
         </Link>
       )}

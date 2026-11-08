@@ -14,14 +14,14 @@ describe("BookCover", () => {
     const html = renderToStaticMarkup(
       createElement(BookCover, { url: "https://x/capa.jpg", width: 32, height: 44, className: "h-11 w-8", fallback }),
     );
-    expect(html).toContain('<img src="https://x/capa.jpg" alt="" width="32" height="44" class="h-11 w-8"/>');
+    expect(html).toContain('<img src="https://x/capa.jpg" alt="" width="32" height="44" loading="lazy" decoding="async" class="h-11 w-8"/>');
   });
 
   it("usa o texto alternativo quando a tela pede", () => {
     const html = renderToStaticMarkup(
       createElement(BookCover, { url: "https://x/capa.jpg", alt: "Capa de Dom Casmurro", className: "h-72", fallback }),
     );
-    expect(html).toContain('<img src="https://x/capa.jpg" alt="Capa de Dom Casmurro" class="h-72"/>');
+    expect(html).toContain('<img src="https://x/capa.jpg" alt="Capa de Dom Casmurro" loading="lazy" decoding="async" class="h-72"/>');
   });
 
   it.each([null, undefined, ""])("sem capa (%s) mostra só o espaço reservado", (url) => {

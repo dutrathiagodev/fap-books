@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { ACERVO_PATH } from "@/domain/access/access-rules";
 import { bookFormErrors, parseBookForm, toBookUpdate } from "@/domain/books/book-form-rules";
 import { requireRole } from "@/lib/require-role";
+import { invalidateCatalogCache } from "@/services/catalog-cache.service";
 import { updateBook } from "@/services/books.service";
 import type { BookUpdateResult } from "@/types/book";
 
@@ -18,6 +19,9 @@ export async function updateBookAction(id: string, input: unknown): Promise<Book
 
   // O id também vem do navegador: updateBook só aceita UUID.
   const result = await updateBook(String(id), toBookUpdate(values), profile.id);
-  if (result.ok) revalidatePath(ACERVO_PATH);
+  if (result.ok) {
+    revalidatePath(ACERVO_PATH);
+    invalidateCatalogCache();
+  }
   return result;
 }

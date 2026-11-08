@@ -7,6 +7,9 @@ import { booksHref, parseBookFilters, type SituationCounts } from "@/domain/book
 import { plural } from "@/domain/format";
 import { countBookSituations, listBooks } from "@/services/books.service";
 import { deleteBookAction, inactivateBookAction } from "./actions";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = { title: "Acervo | FAP Books" };
 
 type SearchParams = Promise<Record<string, string | string[] | undefined>>;
 

@@ -1,8 +1,11 @@
 import Image from "next/image";
+import type { Metadata } from "next";
 import Link from "next/link";
 import { Info, ShieldCheck } from "lucide-react";
 import { PRIVACY_PATH } from "@/domain/access/access-rules";
 import { LoginForm, Logo } from "@/components";
+
+export const metadata: Metadata = { title: "Entrar | FAP Books" };
 
 // Tela de login conforme o Figma (cards 0105 e 0219): painel navy com foto, as boas-vindas e o formulário só com e-mail e senha.
 // Fotos em public/fotos: biblioteca da FAP (desktop, uso autorizado pela FAP) e estante do Unsplash (celular, licença livre).

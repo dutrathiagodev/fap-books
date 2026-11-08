@@ -7,6 +7,14 @@ export const ROLE_HOME: Record<UserRole, string> = {
   librarian: "/funcionario",
 };
 
+// Primeira tela de cada perfil depois do login: o acervo (a pessoa vai direto ao que usa; o endereço-base da área
+// só redireciona para cá). O painel da bibliotecária entra aqui quando o card 0097 for entregue.
+export const ROLE_LANDING: Record<UserRole, string> = {
+  student: "/aluno/livros",
+  teacher: "/professor/livros",
+  librarian: "/funcionario/acervo",
+};
+
 // Rótulo de cada perfil na tela (menu do usuário e resultado da busca do balcão).
 export const ROLE_LABELS: Record<UserRole, string> = { student: "Aluno", teacher: "Professor", librarian: "Funcionário" };
 
@@ -28,7 +36,10 @@ export const PRIVACY_PATH = "/privacidade";
 export const TERMS_PATH = "/termos";
 export const ACCESSIBILITY_PATH = "/acessibilidade";
 export const SUPPORT_PATH = "/suporte";
-const PUBLIC_INFO_PATHS = [PRIVACY_PATH, TERMS_PATH, ACCESSIBILITY_PATH, SUPPORT_PATH];
+// Definir a senha pelo link do convite (FAP-0087): a pessoa ainda não tem login, e quem já está logado (por exemplo a
+// funcionária testando o convite no mesmo navegador) também precisa conseguir abrir o link.
+export const DEFINE_PASSWORD_PATH = "/definir-senha";
+const PUBLIC_INFO_PATHS = [PRIVACY_PATH, TERMS_PATH, ACCESSIBILITY_PATH, SUPPORT_PATH, DEFINE_PASSWORD_PATH];
 
 export type RouteDecision =
   | { action: "allow" }

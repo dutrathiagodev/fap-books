@@ -139,6 +139,8 @@ export interface BookImportRowError {
 export type BookImportResult =
   | { ok: true; imported: number; errors: BookImportRowError[] }
   | { ok: false; reason: "no_file" | "too_big" | "empty" | "too_many_rows" | "error" }
+  // Arquivo recusado antes de abrir: formato que não é .csv/.xlsx, planilha com macro ou arquivo que não é uma planilha.
+  | { ok: false; reason: "unsupported_type" | "macro" | "invalid_file" }
   | { ok: false; reason: "missing_columns"; missing: string[] };
 
 export type BookCreateResult =

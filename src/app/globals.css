@@ -29,6 +29,8 @@
   /* Estados: texto (700) e fundo (100) */
   --color-success-100: #dcfce7;
   --color-success-700: #15803d;
+  /* Texto de sucesso sobre fundo tintado de azul (700 fica em 4,1:1 sobre navy/100) */
+  --color-success-800: #166534;
   --color-warning-100: #fef3c7;
   --color-warning-700: #b45309;
   --color-danger-100: #fee2e2;
