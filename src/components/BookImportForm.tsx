@@ -4,13 +4,17 @@ import { useState, useTransition } from "react";
 import Link from "next/link";
 import { CircleAlert, CircleCheck, Download, FileSpreadsheet } from "lucide-react";
 import { ACERVO_PATH } from "@/domain/access/access-rules";
-import { IMPORT_MAX_BYTES, IMPORT_MAX_ROWS, IMPORT_TEMPLATE } from "@/domain/books/book-import";
+import { IMPORT_MAX_BYTES, IMPORT_MAX_ROWS, IMPORT_TEMPLATE, IMPORT_TEMPLATE_ROWS } from "@/domain/books/book-import";
+import { XLSX_MIME, buildXlsx } from "@/domain/books/xlsx-writer";
 import { plural } from "@/domain/format";
 import type { BookImportResult } from "@/types/book";
 import { TextLink } from "./TextLink";
 
 const FAILURE_TEXT: Record<Exclude<Extract<BookImportResult, { ok: false }>["reason"], "missing_columns">, string> = {
-  no_file: "Escolha um arquivo .csv para importar.",
+  no_file: "Escolha um arquivo .csv ou .xlsx para importar.",
+  unsupported_type: "Formato não aceito. Envie uma planilha .csv ou .xlsx.",
+  macro: "Planilhas com macro (.xlsm) não são aceitas. Salve como .xlsx comum ou .csv e envie de novo.",
+  invalid_file: "Não foi possível ler o arquivo. Confira se é uma planilha .csv ou .xlsx válida, salve de novo no Excel e envie.",
   too_big: `O arquivo passa de ${IMPORT_MAX_BYTES / 1024} KB. Divida a planilha em partes menores.`,
   empty: "A planilha não tem nenhum livro para importar.",
   too_many_rows: `A planilha tem mais de ${IMPORT_MAX_ROWS} livros. Envie em partes de até ${IMPORT_MAX_ROWS}.`,
@@ -24,14 +28,16 @@ const SUMMARY_SUCCESS =
   "border-success-700 bg-success-100 text-success-700 dark:border-green-400/40 dark:bg-green-400/10 dark:text-green-300";
 
 // O modelo vai num endereço data:, sem rota nem arquivo no servidor. O BOM faz o Excel abrir os acentos certos.
-const TEMPLATE_HREF = `data:text/csv;charset=utf-8,${encodeURIComponent(`﻿${IMPORT_TEMPLATE}`)}`;
+const TEMPLATE_CSV_HREF = `data:text/csv;charset=utf-8,${encodeURIComponent(`﻿${IMPORT_TEMPLATE}`)}`;
+// O modelo .xlsx (poucos KB) é montado aqui mesmo, a partir das mesmas linhas do .csv, e também vai num endereço data:.
+const TEMPLATE_XLSX_HREF = `data:${XLSX_MIME};base64,${btoa(String.fromCharCode(...buildXlsx(IMPORT_TEMPLATE_ROWS)))}`;
 
 interface BookImportFormProps {
   // A ação do servidor chega por prop: o componente não conhece o banco.
   onImport: (formData: FormData) => Promise<BookImportResult>;
 }
 
-// Aba "Importar planilha" do cadastro de livro (Figma, card 0117): envio do .csv, planilha modelo e resumo do resultado
+// Aba "Importar planilha" do cadastro de livro (Figma, card 0117): envio do .csv ou .xlsx, planilhas modelo e resumo do resultado
 // com a tabela de linhas que não entraram.
 export function BookImportForm({ onImport }: BookImportFormProps) {
   const [file, setFile] = useState<File | null>(null);
@@ -59,7 +65,7 @@ export function BookImportForm({ onImport }: BookImportFormProps) {
           className="flex cursor-pointer flex-col items-center gap-2 rounded-lg border-2 border-dashed border-line-strong px-6 py-10 text-center hover:bg-subtle focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-focus"
         >
           <FileSpreadsheet size={32} strokeWidth={1.5} aria-hidden className="text-brand" />
-          <span className="text-base font-medium">{file ? file.name : "Escolher arquivo .csv"}</span>
+          <span className="text-base font-medium">{file ? file.name : "Escolher arquivo .csv ou .xlsx"}</span>
           <span className="text-xs text-ink-muted">
             Até {IMPORT_MAX_ROWS} livros e {IMPORT_MAX_BYTES / 1024} KB por envio. Colunas obrigatórias: titulo, autor,
             categoria, codigo e quantidade.
@@ -67,7 +73,7 @@ export function BookImportForm({ onImport }: BookImportFormProps) {
           <input
             id="planilha"
             type="file"
-            accept=".csv,text/csv"
+            accept=".csv,.xlsx,text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
             disabled={pending}
             className="sr-only"
             onChange={(event) => {
@@ -77,14 +83,16 @@ export function BookImportForm({ onImport }: BookImportFormProps) {
           />
         </label>
 
-        <a
-          href={TEMPLATE_HREF}
-          download="planilha-modelo-livros.csv"
-          className="mt-4 inline-flex items-center gap-2 text-sm text-link hover:underline"
-        >
-          <Download size={16} strokeWidth={1.5} aria-hidden />
-          Baixar planilha modelo (.csv)
-        </a>
+        <div className="mt-4 flex flex-wrap gap-x-6 gap-y-2 text-sm">
+          <a href={TEMPLATE_XLSX_HREF} download="planilha-modelo-livros.xlsx" className="inline-flex items-center gap-2 text-link hover:underline">
+            <Download size={16} strokeWidth={1.5} aria-hidden />
+            Baixar planilha modelo (.xlsx)
+          </a>
+          <a href={TEMPLATE_CSV_HREF} download="planilha-modelo-livros.csv" className="inline-flex items-center gap-2 text-link hover:underline">
+            <Download size={16} strokeWidth={1.5} aria-hidden />
+            Baixar planilha modelo (.csv)
+          </a>
+        </div>
       </section>
 
       {result?.ok && (

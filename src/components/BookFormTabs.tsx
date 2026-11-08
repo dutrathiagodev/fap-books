@@ -5,7 +5,7 @@ export type BookFormTab = "manual" | "import";
 
 const TABS: { key: BookFormTab; label: string; href: string }[] = [
   { key: "manual", label: "Formulário manual", href: `${ACERVO_PATH}/novo` },
-  { key: "import", label: "Importar planilha (.csv)", href: `${ACERVO_PATH}/novo?aba=importar` },
+  { key: "import", label: "Importar planilha (.csv / .xlsx)", href: `${ACERVO_PATH}/novo?aba=importar` },
 ];
 
 // Abas do cadastro de livro (Figma, card 0117): formulário manual e importação por planilha. São links, então a aba

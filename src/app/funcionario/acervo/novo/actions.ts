@@ -3,13 +3,15 @@
 import { revalidatePath } from "next/cache";
 import { ACERVO_PATH } from "@/domain/access/access-rules";
 import { bookFormErrors, parseBookForm, toBookRow } from "@/domain/books/book-form-rules";
-import { IMPORT_MAX_BYTES, importRowError, parseBookImport } from "@/domain/books/book-import";
+import { IMPORT_MAX_BYTES, importRowError, parseBookImport, parseBookRows, type BookImportParse } from "@/domain/books/book-import";
+import { detectImportFormat } from "@/domain/books/book-import-xlsx";
 import { inspectCover, type CleanCover } from "@/domain/books/cover-image";
 import { COVER_MAX_BYTES } from "@/domain/books/cover-rules";
 import { requireRole } from "@/lib/require-role";
 import { invalidateCatalogCache } from "@/services/catalog-cache.service";
 import { removeBookCover, uploadBookCover } from "@/services/book-cover.service";
 import { createBook } from "@/services/books.service";
+import { readXlsxRows } from "@/services/xlsx-reader.service";
 import type { BookCreateResult, BookImportResult, BookImportRowError } from "@/types/book";
 
 function parseValues(formData: FormData): unknown {
@@ -57,17 +59,33 @@ export async function createBookAction(formData: FormData): Promise<BookCreateRe
   return result;
 }
 
-// Importação em lote (card 0117, aba "Importar planilha"). Confere quem está logado, o tamanho do arquivo e cada linha
-// com as mesmas regras do formulário. As linhas boas são gravadas uma a uma (cada livro vai para a auditoria e um código
+// Lê o arquivo enviado (.csv ou .xlsx) e devolve as linhas já conferidas pelo parser, ou o motivo de recusar.
+// Ordem: tamanho, extensão e tipo (MIME) e só então os bytes. O .xlsx é aberto por xlsx-reader.service.ts.
+async function parseUpload(file: File): Promise<BookImportParse | Extract<BookImportResult, { ok: false }>> {
+  if (file.size > IMPORT_MAX_BYTES) return { ok: false, reason: "too_big" };
+  const kind = detectImportFormat(file.name, file.type);
+  if (!kind.ok) return kind;
+
+  const bytes = new Uint8Array(await file.arrayBuffer());
+  if (kind.format === "csv") {
+    // Um .xlsx renomeado para .csv começa com "PK" (zip): melhor avisar do que reclamar de colunas.
+    if (bytes[0] === 0x50 && bytes[1] === 0x4b) return { ok: false, reason: "invalid_file" };
+    return parseBookImport(new TextDecoder().decode(bytes));
+  }
+  const sheet = await readXlsxRows(bytes);
+  return sheet.ok ? parseBookRows(sheet.rows) : sheet;
+}
+
+// Importação em lote (card 0117, aba "Importar planilha"; aceita .csv e .xlsx). Confere quem está logado, o tamanho do
+// arquivo e cada linha com as mesmas regras do formulário. As linhas boas são gravadas uma a uma (cada livro vai para a auditoria e um código
 // repetido recusa só aquela linha); as ruins voltam com a linha e o motivo, para corrigir e reenviar.
 export async function importBooksAction(formData: FormData): Promise<BookImportResult> {
   const profile = await requireRole("librarian");
 
   const file = formData.get("planilha");
   if (!(file instanceof File) || file.size === 0) return { ok: false, reason: "no_file" };
-  if (file.size > IMPORT_MAX_BYTES) return { ok: false, reason: "too_big" };
 
-  const parsed = parseBookImport(await file.text());
+  const parsed = await parseUpload(file);
   if (!parsed.ok) return parsed;
 
   const errors: BookImportRowError[] = [];

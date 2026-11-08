@@ -5,6 +5,7 @@
 | [prd.md](prd.md) | Requisitos do produto (documento base, com histórico de mudanças) |
 | [onboarding.md](onboarding.md) | Preparar o notebook, onde está cada coisa e como o trabalho flui |
 | [arquitetura.md](arquitetura.md) | Pastas do código, regras de dependência, como criar uma feature, Supabase e RLS |
+| [importacao-de-planilha.md](importacao-de-planilha.md) | Importação de livros por `.csv` ou `.xlsx`: regras, segurança, biblioteca e testes |
 | [qualidade-de-software.md](qualidade-de-software.md) | Regras de código limpo e seguro e o checklist de todo PR |
 | [database/modelo-de-dados.md](database/modelo-de-dados.md) | Tabelas do banco e como testar mudanças |
 | [database/lgpd.md](database/lgpd.md) | Dados pessoais e o que falta para a LGPD |
