@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { ACERVO_PATH } from "@/domain/access/access-rules";
 import { isUuid } from "@/domain/books/book-rules";
 import { requireRole } from "@/lib/require-role";
+import { invalidateCatalogCache } from "@/services/catalog-cache.service";
 import { deleteBook, inactivateBook } from "@/services/books.service";
 import type { BookActionResult } from "@/types/book";
 
@@ -14,7 +15,10 @@ export async function deleteBookAction(bookId: string): Promise<BookActionResult
   if (!isUuid(bookId)) return { ok: false, reason: "not_found" };
 
   const result = await deleteBook(bookId, profile.id);
-  if (result.ok) revalidatePath(ACERVO_PATH);
+  if (result.ok) {
+    revalidatePath(ACERVO_PATH);
+    invalidateCatalogCache();
+  }
   return result;
 }
 
@@ -23,6 +27,9 @@ export async function inactivateBookAction(bookId: string): Promise<BookActionRe
   if (!isUuid(bookId)) return { ok: false, reason: "not_found" };
 
   const result = await inactivateBook(bookId, profile.id);
-  if (result.ok) revalidatePath(ACERVO_PATH);
+  if (result.ok) {
+    revalidatePath(ACERVO_PATH);
+    invalidateCatalogCache();
+  }
   return result;
 }
