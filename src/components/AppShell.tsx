@@ -191,7 +191,7 @@ function SidebarToggle({ collapsed, onClick }: { collapsed: boolean; onClick: ()
 // Busca no topo da funcionária (Figma): leva à listagem do acervo já filtrada. Só no computador; no celular, a busca fica na própria tela do acervo.
 function TopSearch() {
   return (
-    <form action={ACERVO_PATH} role="search" className="ml-4 hidden max-w-xl flex-1 md:block">
+    <form action={ACERVO_PATH} role="search" className="hidden max-w-xl flex-1 md:block">
       <label className="relative block">
         <span className="sr-only">Buscar livros por título, autor ou ISBN</span>
         <Search size={16} aria-hidden className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-ink-muted" />
@@ -412,7 +412,9 @@ export function AppShell({ profile, noticeCount = 0, children }: AppShellProps) 
       )}
 
       <div className="flex min-w-0 flex-1 flex-col">
-        <header className="flex h-[72px] items-center gap-3 border-b border-line bg-surface px-4 md:px-6">
+        {/* O conteúdo da página fica numa coluna de até 1280 px, centralizada. Com o menu lateral, o cabeçalho usa a mesma coluna (como no Figma, onde busca, título e tabelas partem da mesma margem); o menu horizontal do aluno continua de ponta a ponta. */}
+        <header className="flex h-[72px] items-center border-b border-line bg-surface px-4 md:px-8">
+          <div className={`flex h-full w-full items-center gap-3 ${topNav ? "" : "mx-auto max-w-[1280px]"}`}>
           <button
             type="button"
             aria-label="Abrir menu"
@@ -433,6 +435,7 @@ export function AppShell({ profile, noticeCount = 0, children }: AppShellProps) 
           <div className="ml-auto flex items-center gap-3">
             <NoticeBell count={noticeCount} />
             <UserMenu profile={profile} />
+          </div>
           </div>
         </header>
         <main className="flex-1 bg-page p-4 md:p-8">
