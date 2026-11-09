@@ -12,7 +12,7 @@ import {
   formatIsoDate,
   isIsoDate,
   MAX_BOOKS,
-  MAX_DAYS,
+  DEFAULT_MAX_DAYS,
   MAX_PURPOSE_LENGTH,
   MIN_DAYS,
   parseReservationInput,
@@ -43,6 +43,8 @@ export interface ReservationFormProps {
   searchTeachers?: (term: string) => Promise<LookupResult<PickableTeacher>>;
   // Server Action. Recebe a mesma chave de idempotência no clique duplo e na nova tentativa depois de falha de rede.
   submit: (payload: ReservationSubmitPayload, idempotencyKey: string) => Promise<ReservationSubmitResult>;
+  // Limite de dias do dia (configurável pela funcionária, card 0218). Sem valor, vale o padrão de 30.
+  maxDays?: number;
 }
 
 const COPY = {
@@ -69,8 +71,8 @@ const IN_PERSON_STEPS = ["Buscar o professor", "Escolher os livros", "Definir o 
 const NETWORK_ERROR = "Não foi possível enviar agora. Confira a conexão e tente de novo.";
 
 // Resumo antes de enviar (Figma, card 0137): quantos livros, o período e quando devolver.
-function Summary({ books, startDate, days, inPerson }: { books: PickableBook[]; startDate: string; days: number; inPerson: boolean }) {
-  const valid = isIsoDate(startDate) && Number.isInteger(days) && days >= MIN_DAYS && days <= MAX_DAYS;
+function Summary({ books, startDate, days, inPerson, maxDays }: { books: PickableBook[]; startDate: string; days: number; inPerson: boolean; maxDays: number }) {
+  const valid = isIsoDate(startDate) && Number.isInteger(days) && days >= MIN_DAYS && days <= maxDays;
   if (books.length === 0 && !valid) return null;
   return (
     <aside aria-label="Resumo da solicitação" className="rounded-lg bg-subtle p-4 text-sm">
@@ -92,7 +94,7 @@ function Summary({ books, startDate, days, inPerson }: { books: PickableBook[]; 
 
 // Formulário da reserva pedagógica, o mesmo para o professor e para o balcão (o 0138 só muda quem preenche).
 // A tela avisa os erros antes de enviar, mas quem decide é o servidor (e, por último, o banco).
-export function ReservationForm({ variant, today, searchBooks, searchTeachers, submit }: ReservationFormProps) {
+export function ReservationForm({ variant, today, searchBooks, searchTeachers, submit, maxDays = DEFAULT_MAX_DAYS }: ReservationFormProps) {
   const copy = COPY[variant];
   const [teacher, setTeacher] = useState<PickableTeacher | null>(null);
   const [books, setBooks] = useState<PickableBook[]>([]);
@@ -136,7 +138,7 @@ export function ReservationForm({ variant, today, searchBooks, searchTeachers, s
     if (pending) return;
     setFormError(undefined);
 
-    const parsed = parseReservationInput({ bookIds: books.map((book) => book.id), startDate, days, purpose }, today);
+    const parsed = parseReservationInput({ bookIds: books.map((book) => book.id), startDate, days, purpose }, today, maxDays);
     const next: ReservationFieldErrors & { teacher?: string } = parsed.ok ? {} : { ...parsed.errors };
     if (variant === "in_person" && !teacher) next.teacher = "Busque e escolha o professor.";
     setErrors(next);
@@ -207,8 +209,8 @@ export function ReservationForm({ variant, today, searchBooks, searchTeachers, s
           required
           value={days}
           min={MIN_DAYS}
-          max={MAX_DAYS}
-          hint={`Máximo de ${MAX_DAYS} dias`}
+          max={maxDays}
+          hint={`Máximo de ${maxDays} dias`}
           disabled={pending}
           error={errors.days}
           onChange={edit(setDays)}
@@ -225,7 +227,7 @@ export function ReservationForm({ variant, today, searchBooks, searchTeachers, s
         />
       </div>
 
-      <Summary books={books} startDate={startDate} days={daysNumber} inPerson={variant === "in_person"} />
+      <Summary books={books} startDate={startDate} days={daysNumber} inPerson={variant === "in_person"} maxDays={maxDays} />
 
       <aside className="flex items-start gap-3 rounded-lg border border-info-100 bg-info-100 p-4 text-sm text-ink dark:border-sky-400/40 dark:bg-sky-400/15">
         <Info size={18} aria-hidden className="mt-0.5 shrink-0 text-info-700 dark:text-sky-300" />

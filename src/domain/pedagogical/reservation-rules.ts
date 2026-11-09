@@ -8,7 +8,10 @@ export const NEW_IN_PERSON_PATH = "/funcionario/reservas-pedagogicas/nova";
 // Limites do pedido (PRD, RF-18). São os mesmos do banco (pedagogical_max_days e pedagogical_max_books); aqui servem
 // para avisar antes de enviar e para validar no servidor, mas quem decide é o banco.
 export const MIN_DAYS = 1;
-export const MAX_DAYS = 30;
+// 30 é o padrão (decisão do dono, 27/10); a funcionária pode alterar (card 0218) e o valor do dia vem do banco.
+export const DEFAULT_MAX_DAYS = 30;
+export const MAX_DAYS = DEFAULT_MAX_DAYS;
+export const MAX_DAYS_CEILING = 365;
 export const MAX_BOOKS = 10;
 export const MAX_PURPOSE_LENGTH = 120;
 export const MAX_NOTE_LENGTH = 500;
@@ -97,6 +100,19 @@ export const FIELD_MESSAGES = {
   purposeTooLong: `A disciplina deve ter no máximo ${MAX_PURPOSE_LENGTH} caracteres.`,
 } as const;
 
+// As mesmas frases com o limite do dia (configurável pela funcionária).
+export const daysInvalidMessage = (maxDays: number) => `Informe o prazo em dias, de ${MIN_DAYS} a ${maxDays}.`;
+export const daysTooManyMessage = (maxDays: number) => `O prazo máximo é de ${maxDays} dias.`;
+
+// Limite de dias que a funcionária digita: inteiro de 1 a 365 (o banco confere de novo).
+export function parseMaxDaysInput(raw: unknown): { ok: true; days: number } | { ok: false; message: string } {
+  const text = typeof raw === "number" ? String(raw) : typeof raw === "string" ? raw.trim() : "";
+  if (!/^\d{1,3}$/.test(text)) return { ok: false, message: `Informe um número de 1 a ${MAX_DAYS_CEILING}.` };
+  const days = Number(text);
+  if (days < 1 || days > MAX_DAYS_CEILING) return { ok: false, message: `O limite deve ser de 1 a ${MAX_DAYS_CEILING} dias.` };
+  return { ok: true, days };
+}
+
 // Texto livre do navegador: sem caracteres de controle, espaços juntos.
 export function cleanText(raw: unknown, maxLength: number): string {
   if (typeof raw !== "string") return "";
@@ -104,7 +120,7 @@ export function cleanText(raw: unknown, maxLength: number): string {
 }
 
 // Confere e limpa o pedido. Roda na tela (para avisar logo) e no servidor (que não confia no navegador).
-export function parseReservationInput(input: ReservationInput, today: string = todayInBrasilia()): ReservationParse {
+export function parseReservationInput(input: ReservationInput, today: string = todayInBrasilia(), maxDays: number = DEFAULT_MAX_DAYS): ReservationParse {
   const errors: ReservationFieldErrors = {};
 
   const rawIds = Array.isArray(input.bookIds) ? input.bookIds : [];
@@ -119,8 +135,8 @@ export function parseReservationInput(input: ReservationInput, today: string = t
   else if (startDate > addDays(today, MAX_DAYS_AHEAD)) errors.startDate = FIELD_MESSAGES.startTooFar;
 
   const days = typeof input.days === "number" ? input.days : typeof input.days === "string" && /^\d{1,4}$/.test(input.days.trim()) ? Number(input.days) : NaN;
-  if (!Number.isInteger(days) || days < MIN_DAYS) errors.days = FIELD_MESSAGES.daysInvalid;
-  else if (days > MAX_DAYS) errors.days = FIELD_MESSAGES.daysTooMany;
+  if (!Number.isInteger(days) || days < MIN_DAYS) errors.days = daysInvalidMessage(maxDays);
+  else if (days > maxDays) errors.days = daysTooManyMessage(maxDays);
 
   const purpose = cleanText(input.purpose, MAX_PURPOSE_LENGTH);
   if (purpose.length > MAX_PURPOSE_LENGTH) errors.purpose = FIELD_MESSAGES.purposeTooLong;

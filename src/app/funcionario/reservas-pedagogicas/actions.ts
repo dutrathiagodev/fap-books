@@ -2,8 +2,9 @@
 
 import { revalidatePath } from "next/cache";
 import { parseLookupTerm } from "@/domain/loans/loan-lookup-rules";
-import { isUuid, NEW_IN_PERSON_PATH, parseDecisionNote, parseReservationInput, QUEUE_PATH } from "@/domain/pedagogical/reservation-rules";
+import { isUuid, NEW_IN_PERSON_PATH, parseDecisionNote, parseMaxDaysInput, parseReservationInput, QUEUE_PATH, TEACHER_RESERVATION_PATH } from "@/domain/pedagogical/reservation-rules";
 import { requireRole } from "@/lib/require-role";
+import { getPedagogicalMaxDays, setPedagogicalMaxDays, type SetMaxDaysResult } from "@/services/library-settings.service";
 import {
   decideReservation,
   registerInPersonReservation,
@@ -51,7 +52,7 @@ export async function registerInPersonAction(payload: ReservationSubmitPayload, 
   if (!isUuid(idempotencyKey)) return INVALID_KEY as ReservationSubmitResult;
   if (!isUuid(payload?.teacherId)) return { ok: false, message: "Busque e escolha o professor.", final: true, fieldErrors: { teacher: "Busque e escolha o professor." } };
 
-  const parsed = parseReservationInput(payload);
+  const parsed = parseReservationInput(payload, undefined, await getPedagogicalMaxDays());
   if (!parsed.ok) return { ok: false, message: "Confira os campos destacados.", final: true, fieldErrors: parsed.errors };
 
   const result = await registerInPersonReservation(payload.teacherId, parsed.values, idempotencyKey);
@@ -88,5 +89,19 @@ export async function returnReservationAction(reservationId: string, idempotency
 
   const result = await returnReservation(reservationId, idempotencyKey);
   if (result.ok) revalidatePath(QUEUE_PATH);
+  return result;
+}
+
+// Altera o limite de dias da reserva pedagógica (card 0218). Só a funcionária; vale para os próximos pedidos.
+export async function updateMaxDaysAction(rawDays: string): Promise<SetMaxDaysResult> {
+  await requireRole("librarian");
+  const parsed = parseMaxDaysInput(rawDays);
+  if (!parsed.ok) return parsed;
+  const result = await setPedagogicalMaxDays(parsed.days);
+  if (result.ok) {
+    revalidatePath(QUEUE_PATH);
+    revalidatePath(NEW_IN_PERSON_PATH);
+    revalidatePath(TEACHER_RESERVATION_PATH);
+  }
   return result;
 }

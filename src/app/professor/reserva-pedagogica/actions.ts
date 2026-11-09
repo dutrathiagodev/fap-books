@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { parseLookupTerm } from "@/domain/loans/loan-lookup-rules";
 import { isUuid, parseReservationInput, TEACHER_RESERVATION_PATH, type ReservationInput } from "@/domain/pedagogical/reservation-rules";
 import { requireRole } from "@/lib/require-role";
+import { getPedagogicalMaxDays } from "@/services/library-settings.service";
 import { requestReservation, searchBooksForReservation } from "@/services/pedagogical-reservations.service";
 import type { LookupResult, PickableBook, ReservationSubmitResult } from "@/types/pedagogical-reservation";
 
@@ -25,7 +26,7 @@ export async function requestReservationAction(input: ReservationInput, idempote
   await requireRole("teacher");
   if (!isUuid(idempotencyKey)) return { ok: false, message: "Ação inválida. Atualize a tela e tente de novo.", final: true };
 
-  const parsed = parseReservationInput(input);
+  const parsed = parseReservationInput(input, undefined, await getPedagogicalMaxDays());
   if (!parsed.ok) {
     return { ok: false, message: "Confira os campos destacados.", final: true, fieldErrors: parsed.errors };
   }

@@ -3,6 +3,7 @@ import { ReservationCard } from "@/components/ReservationCard";
 import { ReservationForm } from "@/components/ReservationForm";
 import { RolePage } from "@/components/RolePage";
 import { todayInBrasilia } from "@/domain/pedagogical/reservation-rules";
+import { getPedagogicalMaxDays } from "@/services/library-settings.service";
 import { listMyReservations } from "@/services/pedagogical-reservations.service";
 import { requestReservationAction, searchBooksAction } from "./actions";
 import type { Metadata } from "next";
@@ -14,16 +15,16 @@ export default function ReservaPedagogicaPage() {
   return (
     <RolePage role="teacher">
       {async (profile) => {
-        const reservations = await listMyReservations(profile.id);
+        const [reservations, maxDays] = await Promise.all([listMyReservations(profile.id), getPedagogicalMaxDays()]);
         return (
           <>
             <PageHeader
               title="Reserva pedagógica"
               breadcrumbs={[{ label: "Início" }, { label: "Reserva pedagógica" }]}
-              description="Solicite livros para uso em sala de aula por até 30 dias."
+              description={`Solicite livros para uso em sala de aula por até ${maxDays} dias.`}
             />
             <div className="flex flex-col gap-8">
-              <ReservationForm variant="teacher" today={todayInBrasilia()} searchBooks={searchBooksAction} submit={requestReservationAction} />
+              <ReservationForm variant="teacher" today={todayInBrasilia()} searchBooks={searchBooksAction} submit={requestReservationAction} maxDays={maxDays} />
 
               <section aria-labelledby="minhas-reservas">
                 <h2 id="minhas-reservas" className="mb-4 text-h3">

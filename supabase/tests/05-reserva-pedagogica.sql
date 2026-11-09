@@ -211,3 +211,46 @@ begin
   perform pg_temp.say('devolvida sem data de devolução não existe',
     pg_temp.err(format('update public.pedagogical_reservations set returned_at = null where id = %L', r.id)) like '%pedagogical_returned_has_date%');
 end $$;
+
+-- ---------------------------------------------------------------------------------------------------------------------
+-- Limite de dias configurável (card 0218, história 0050): padrão 30; só a funcionária altera; vale para os próximos pedidos.
+-- ---------------------------------------------------------------------------------------------------------------------
+do $$
+declare
+  P1 text:='00000000-0000-0000-0000-0000000000a1'; ALUNO text:='00000000-0000-0000-0000-0000000000a3';
+  BIB text:='00000000-0000-0000-0000-0000000000a4';
+  fa uuid:='b0000000-0000-0000-0000-0000000000f1';
+  today date := (now() at time zone 'America/Sao_Paulo')::date;
+  r public.pedagogical_reservations; k uuid := gen_random_uuid();
+begin
+  perform pg_temp.as_user(P1);
+  perform pg_temp.say('professor lê o limite: padrão 30 dias', (select int_value from public.library_settings where key = 'pedagogical_max_days') = 30);
+  perform pg_temp.say('professor NÃO altera o limite pela função', pg_temp.err('select public.set_pedagogical_max_days(60)') = 'not_allowed');
+  perform pg_temp.say('professor NÃO grava direto na tabela de configurações', pg_temp.err('update public.library_settings set int_value = 60') like 'permission denied%');
+  perform pg_temp.say('professor NÃO insere configuração nova', pg_temp.err('insert into public.library_settings (key, int_value) values (''pedagogical_max_days'', 1)') like 'permission denied%');
+  perform pg_temp.as_user(ALUNO);
+  perform pg_temp.say('aluno NÃO altera o limite', pg_temp.err('select public.set_pedagogical_max_days(60)') = 'not_allowed');
+  perform pg_temp.as_anon();
+  perform pg_temp.say('anônimo NÃO executa a função de alterar', pg_temp.err('select public.set_pedagogical_max_days(60)') like 'permission denied%');
+  perform pg_temp.say('anônimo NÃO lê as configurações', pg_temp.err('select * from public.library_settings') like 'permission denied%');
+
+  perform pg_temp.as_user(BIB);
+  perform pg_temp.say('limite 0 recusado', pg_temp.err('select public.set_pedagogical_max_days(0)') = 'invalid_max_days');
+  perform pg_temp.say('limite 366 recusado', pg_temp.err('select public.set_pedagogical_max_days(366)') = 'invalid_max_days');
+  perform pg_temp.say('limite vazio recusado', pg_temp.err('select public.set_pedagogical_max_days(null)') = 'invalid_max_days');
+  perform pg_temp.say('funcionária altera o limite para 45 (e a auditoria aceita o registro)', public.set_pedagogical_max_days(45) = 45);
+
+  perform pg_temp.as_user(P1);
+  r := public.request_pedagogical_reservation(array[fa], today + 5, 40, null, k);
+  perform pg_temp.say('com o limite em 45, um prazo de 40 dias vale', r.days = 40 and r.status = 'pending');
+  perform pg_temp.say('com o limite em 45, 46 dias é recusado', pg_temp.err(format('select public.request_pedagogical_reservation(array[%L]::uuid[], %L, 46)', fa, today + 5)) = 'invalid_days');
+
+  perform pg_temp.as_user(BIB);
+  perform pg_temp.say('funcionária volta o limite para 30', public.set_pedagogical_max_days(30) = 30);
+  perform pg_temp.say('mudar o limite não altera a reserva já criada (continua 40 dias)', (select days from public.pedagogical_reservations where id = r.id) = 40);
+  perform pg_temp.as_user(P1);
+  perform pg_temp.say('com o limite de volta em 30, 31 dias é recusado', pg_temp.err(format('select public.request_pedagogical_reservation(array[%L]::uuid[], %L, 31)', fa, today + 5)) = 'invalid_days');
+  perform set_config('role', 'postgres', true);
+  perform pg_temp.say('o teto técnico da tabela continua (366 dias não entra nem por SQL direto)',
+    pg_temp.err('update public.pedagogical_reservations set days = 366') like '%pedagogical_reservations_days_check%');
+end $$;
