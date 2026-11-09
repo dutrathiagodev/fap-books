@@ -32,7 +32,12 @@ export function BooksTable({ books, onDelete, onInactivate }: BooksTableProps) {
               </span>
             }
           />
-          <span className="font-medium">{book.title}</span>
+          <div className="min-w-0">
+            <span className="font-medium">{book.title}</span>
+            {(book.edition || book.publisher) && (
+              <span className="block text-xs text-ink-muted">{[book.edition, book.publisher].filter(Boolean).join(" · ")}</span>
+            )}
+          </div>
         </div>
       ),
     },

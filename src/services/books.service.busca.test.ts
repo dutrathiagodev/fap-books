@@ -4,9 +4,12 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 // envia (parâmetros, nunca texto de consulta) e como ele lê a resposta. A busca em si é testada no banco (supabase/tests).
 const rpc = vi.fn();
 const getCachedCategories = vi.fn();
+// Edição e editora da página vêm de uma segunda leitura, direto da tabela (select + in + limit).
+const extras = vi.fn();
+const from = vi.fn(() => ({ select: () => ({ in: () => ({ limit: extras }) }) }));
 
 vi.mock("next/server", () => ({ connection: async () => {} }));
-vi.mock("@/lib/supabase/server-client", () => ({ createSupabaseServerClient: async () => ({ rpc }) }));
+vi.mock("@/lib/supabase/server-client", () => ({ createSupabaseServerClient: async () => ({ rpc, from }) }));
 vi.mock("./catalog-cache.service", () => ({ getCachedCategories }));
 vi.mock("./audit.service", () => ({ recordAudit: vi.fn() }));
 vi.mock("./book-cover.service", () => ({ removeBookCover: vi.fn() }));
@@ -36,6 +39,7 @@ const row = (over: Record<string, unknown> = {}) => ({
 beforeEach(() => {
   vi.clearAllMocks();
   getCachedCategories.mockResolvedValue(["Romance", "Saúde"]);
+  extras.mockResolvedValue({ data: [{ id: "b1", edition: "2ª edição", publisher: "Garnier" }], error: null });
 });
 
 describe("searchBooks", () => {
@@ -117,6 +121,20 @@ describe("listBooks", () => {
     });
     expect(result).toMatchObject({ total: 25, page: 2, pageSize: 10 });
     expect(result.books[0]).toMatchObject({ openLoans: 1, hasActiveReservation: false, hasHistory: true, status: "inactive" });
+  });
+
+  it("traz edição e editora dos livros da página (subtítulo da listagem) e aceita livro sem esses dados", async () => {
+    rpc.mockResolvedValue({ data: [row(), row({ id: "b2" })], error: null });
+    const result = await listBooks({ query: "", category: "", status: "all", page: 1 });
+    expect(from).toHaveBeenCalledWith("books");
+    expect(result.books[0]).toMatchObject({ edition: "2ª edição", publisher: "Garnier" });
+    expect(result.books[1]).toMatchObject({ edition: null, publisher: null });
+  });
+
+  it("não lê edição e editora quando a página vem vazia", async () => {
+    rpc.mockResolvedValue({ data: [], error: null });
+    await listBooks({ query: "xyz", category: "", status: "all", page: 1 });
+    expect(from).not.toHaveBeenCalled();
   });
 });
 
