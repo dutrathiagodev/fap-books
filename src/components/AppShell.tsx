@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -25,7 +25,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { logout } from "@/app/actions/auth";
-import { ROLE_LABELS } from "@/domain/access/access-rules";
+import { ACERVO_PATH, ROLE_LABELS } from "@/domain/access/access-rules";
 import { isActive, navItemsFor, type NavItem } from "@/domain/navigation/nav-items";
 import type { Profile, UserRole } from "@/types/profile";
 import { HelpAssistant } from "./HelpAssistant";
@@ -79,8 +79,19 @@ function MenuList({
 }) {
   return (
     <nav aria-label="Menu principal" className="flex flex-1 flex-col gap-1 overflow-y-auto px-3 py-4">
-      {items.map((item) => {
+      {items.map((item, index) => {
         const Icon = iconFor(item, role);
+        // Rótulo do grupo (OPERAÇÃO, GESTÃO) quando começa um grupo novo; recolhido, vira só uma linha de separação.
+        const startsGroup = item.group !== undefined && item.group !== items[index - 1]?.group;
+        const groupHeader = startsGroup ? (
+          wide ? (
+            <p key={`group-${item.group}`} className={`px-3 pb-1 text-xs font-semibold uppercase tracking-wider text-navy-200 ${index === 0 ? "" : "pt-4"}`}>
+              {item.group}
+            </p>
+          ) : index > 0 ? (
+            <div key={`group-${item.group}`} aria-hidden className="mx-2 my-2 border-t border-white/10" />
+          ) : null
+        ) : null;
         const content = (
           <>
             <Icon size={20} aria-hidden className="shrink-0" />
@@ -90,29 +101,29 @@ function MenuList({
 
         if (!item.href) {
           return (
-            <span
-              key={item.key}
-              aria-disabled="true"
-              title="Em breve"
-              className={`${ITEM_BASE} cursor-not-allowed opacity-50`}
-            >
-              {content}
-            </span>
+            <Fragment key={item.key}>
+              {groupHeader}
+              <span aria-disabled="true" title="Em breve" className={`${ITEM_BASE} cursor-not-allowed opacity-50`}>
+                {content}
+              </span>
+            </Fragment>
           );
         }
 
         const active = isActive(item, pathname);
         return (
-          <Link
-            key={item.key}
-            href={item.href}
-            aria-current={active ? "page" : undefined}
-            onClick={onNavigate}
-            className={`${ITEM_BASE} hover:bg-navy-800/70 ${active ? "bg-navy-800" : ""}`}
-          >
-            {active && <span aria-hidden className="absolute inset-y-2 left-0 w-1 rounded-r bg-navy-200" />}
-            {content}
-          </Link>
+          <Fragment key={item.key}>
+            {groupHeader}
+            <Link
+              href={item.href}
+              aria-current={active ? "page" : undefined}
+              onClick={onNavigate}
+              className={`${ITEM_BASE} hover:bg-navy-800/70 ${active ? "bg-navy-800" : ""}`}
+            >
+              {active && <span aria-hidden className="absolute inset-y-2 left-0 w-1 rounded-r bg-navy-200" />}
+              {content}
+            </Link>
+          </Fragment>
         );
       })}
     </nav>
@@ -173,6 +184,25 @@ function SidebarToggle({ collapsed, onClick }: { collapsed: boolean; onClick: ()
     >
       {collapsed ? <PanelLeftOpen size={18} aria-hidden /> : <PanelLeftClose size={18} aria-hidden />}
     </button>
+  );
+}
+
+// Busca no topo da funcionária (Figma): leva à listagem do acervo já filtrada. Só no computador; no celular, a busca fica na própria tela do acervo.
+function TopSearch() {
+  return (
+    <form action={ACERVO_PATH} role="search" className="ml-4 hidden max-w-xl flex-1 md:block">
+      <label className="relative block">
+        <span className="sr-only">Buscar livros por título, autor ou ISBN</span>
+        <Search size={16} aria-hidden className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-ink-muted" />
+        <input
+          type="search"
+          name="q"
+          maxLength={100}
+          placeholder="Buscar livros por título, autor ou ISBN"
+          className="h-10 w-full rounded-md border border-line bg-subtle pl-9 pr-3 text-sm text-ink placeholder:text-ink-muted focus-visible:outline-2 focus-visible:outline-focus"
+        />
+      </label>
+    </form>
   );
 }
 
@@ -391,6 +421,7 @@ export function AppShell({ profile, noticeCount = 0, children }: AppShellProps) 
             </Link>
           </div>
           {topNav && <TopNav items={items} role={profile.role} pathname={pathname} />}
+          {profile.role === "librarian" && <TopSearch />}
 
           <div className="ml-auto flex items-center gap-3">
             <NoticeBell count={noticeCount} />
