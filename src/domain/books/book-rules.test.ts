@@ -7,16 +7,13 @@ import {
   cleanSearchTerm,
   bookSituation,
   confirmsTitle,
-  countSituations,
   formatBrazilDate,
   isUuid,
   pageNumbers,
-  paginateBySituation,
   parseAvailabilityFilter,
   parseBookFilters,
   parseBookSort,
-  sortBooks,
-} from "./book-rules";
+  } from "./book-rules";
 
 describe("availableCopies", () => {
   it("desconta os empréstimos em aberto", () => {
@@ -41,30 +38,6 @@ describe("bookSituation", () => {
   });
   it("livro inativo fica inativo, mesmo com reserva", () => {
     expect(bookSituation({ ...base, status: "inactive", hasActiveReservation: true })).toBe("inactive");
-  });
-});
-
-describe("countSituations", () => {
-  const active = { quantity: 2, status: "active" as const };
-
-  it("conta cada situação e soma o total dos livros ativos", () => {
-    const counts = countSituations([
-      { ...active, openLoans: 0, hasActiveReservation: false },
-      { ...active, openLoans: 0, hasActiveReservation: false },
-      { ...active, openLoans: 2, hasActiveReservation: false },
-      { ...active, openLoans: 1, hasActiveReservation: true },
-    ]);
-    expect(counts).toEqual({ available: 2, unavailable: 1, reserved: 1 });
-  });
-  it("não conta livro inativo", () => {
-    expect(countSituations([{ quantity: 2, status: "inactive", openLoans: 0, hasActiveReservation: false }])).toEqual({
-      available: 0,
-      unavailable: 0,
-      reserved: 0,
-    });
-  });
-  it("lista vazia zera tudo", () => {
-    expect(countSituations([])).toEqual({ available: 0, unavailable: 0, reserved: 0 });
   });
 });
 
@@ -138,30 +111,6 @@ describe("bookSearchHref", () => {
   });
 });
 
-describe("paginateBySituation", () => {
-  const livros = ["available", "unavailable", "available", "reserved", "available"].map((situation, id) => ({
-    id,
-    situation: situation as "available" | "unavailable" | "reserved",
-  }));
-
-  it("sem filtro devolve a página pedida e o total", () => {
-    const result = paginateBySituation(livros, "all", 2, 2);
-    expect(result.items.map((item) => item.id)).toEqual([2, 3]);
-    expect(result).toMatchObject({ total: 5, page: 2 });
-  });
-  it("com filtro conta e pagina só os que combinam", () => {
-    const result = paginateBySituation(livros, "available", 1, 2);
-    expect(result.items.map((item) => item.id)).toEqual([0, 2]);
-    expect(result.total).toBe(3);
-  });
-  it("página além do fim vale a última", () => {
-    expect(paginateBySituation(livros, "all", 99, 2)).toMatchObject({ page: 3, items: [{ id: 4 }] });
-  });
-  it("sem resultado devolve lista vazia na página 1", () => {
-    expect(paginateBySituation([], "reserved", 5, 6)).toEqual({ items: [], total: 0, page: 1 });
-  });
-});
-
 describe("parseAvailabilityFilter", () => {
   it("lê as três situações e trata o resto como todos", () => {
     expect(parseAvailabilityFilter({ situacao: "available" })).toBe("available");
@@ -212,50 +161,6 @@ describe("parseBookSort", () => {
     expect(parseBookSort({ ordem: "x" })).toBe("relevance");
     expect(parseBookSort({ ordem: "constructor" })).toBe("relevance");
     expect(parseBookSort({})).toBe("relevance");
-  });
-});
-
-describe("sortBooks", () => {
-  const livros = [
-    { title: "Zoologia", author: "Ana", situation: "unavailable" as const },
-    { title: "Álgebra", author: "Zélia", situation: "available" as const },
-    { title: "Biologia", author: "Ana", situation: "reserved" as const },
-    { title: "Cálculo", author: "Mário", situation: "available" as const },
-  ];
-
-  it("por título, com acento no lugar certo", () => {
-    expect(sortBooks(livros, "title").map((l) => l.title)).toEqual(["Álgebra", "Biologia", "Cálculo", "Zoologia"]);
-  });
-  it("por autor, e o empate sai pelo título", () => {
-    expect(sortBooks(livros, "author").map((l) => l.title)).toEqual(["Biologia", "Zoologia", "Cálculo", "Álgebra"]);
-  });
-  it("disponíveis primeiro, depois reservados e emprestados", () => {
-    expect(sortBooks(livros, "available").map((l) => l.title)).toEqual(["Álgebra", "Cálculo", "Biologia", "Zoologia"]);
-  });
-  it("mais relevantes sem busca fica por título", () => {
-    expect(sortBooks(livros, "relevance").map((l) => l.title)).toEqual(["Álgebra", "Biologia", "Cálculo", "Zoologia"]);
-  });
-  it("mais relevantes põe título igual, depois começo, palavra, trecho e autor, sem ligar para acento", () => {
-    const achados = [
-      { title: "Teoria dos Jogos", author: "Fiani", situation: "available" as const },
-      { title: "Introdução à Teoria", author: "Souza", situation: "available" as const },
-      { title: "Prática", author: "Ana Teoria", situation: "available" as const },
-      { title: "Teoria", author: "Lima", situation: "available" as const },
-      { title: "Metateoria", author: "Costa", situation: "available" as const },
-    ];
-    expect(sortBooks(achados, "relevance", "teoria").map((l) => l.title)).toEqual([
-      "Teoria",
-      "Teoria dos Jogos",
-      "Introdução à Teoria",
-      "Metateoria",
-      "Prática",
-    ]);
-    expect(sortBooks(achados, "relevance", "INTRODUCAO")[0].title).toBe("Introdução à Teoria");
-  });
-  it("não altera a lista recebida", () => {
-    const copia = livros.map((l) => l.title);
-    sortBooks(livros, "author");
-    expect(livros.map((l) => l.title)).toEqual(copia);
   });
 });
 

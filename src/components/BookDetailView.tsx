@@ -40,7 +40,7 @@ export function BookDetailView({
         <div className="flex flex-col gap-4">
           {book.category && (
             <p>
-              <span className="inline-block whitespace-nowrap rounded-full bg-selected px-3 py-1 text-xs font-medium text-brand">
+              <span className="inline-block whitespace-nowrap rounded-full bg-selected px-3 py-1 text-xs font-medium text-brand-ink">
                 {book.category}
               </span>
             </p>

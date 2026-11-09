@@ -17,7 +17,7 @@ const HEADERS = ["Usuário", "Livro / empréstimo", "Atraso", "Valor", "Status",
 function Person({ fine }: { fine: FineView }) {
   return (
     <div className="flex items-center gap-3">
-      <span aria-hidden className="flex size-8 shrink-0 items-center justify-center rounded-full bg-selected text-xs font-medium text-brand">
+      <span aria-hidden className="flex size-8 shrink-0 items-center justify-center rounded-full bg-selected text-xs font-medium text-brand-ink">
         {fine.initials}
       </span>
       <div className="min-w-0">

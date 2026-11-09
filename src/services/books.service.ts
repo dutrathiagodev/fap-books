@@ -1,14 +1,6 @@
 import { connection } from "next/server";
 import { createSupabaseServerClient } from "@/lib/supabase/server-client";
-import {
-  isUuid,
-  cleanSearchTerm,
-  countSituations,
-  paginateBySituation,
-  sortBooks,
-  type BookSort,
-  type SituationCounts,
-} from "@/domain/books/book-rules";
+import { availableCopies, cleanSearchTerm, isUuid, type BookSort, type SituationCounts } from "@/domain/books/book-rules";
 import type {
   BookActionResult,
   BookAvailabilityFilter,
@@ -20,6 +12,7 @@ import type {
   BookListResult,
   BookSearchItem,
   BookSearchResult,
+  BookSituation,
   BookStatus,
   BookUpdateResult,
   BookUpdateRow,
@@ -31,25 +24,59 @@ import { recordAudit } from "./audit.service";
 import { getCachedCategories } from "./catalog-cache.service";
 import { removeBookCover } from "./book-cover.service";
 import { shelfByBook, shelfStatus, type ShelfRow } from "./book-shelf";
-import { FOREIGN_KEY_VIOLATION, RANGE_NOT_SATISFIABLE, UNIQUE_VIOLATION } from "./postgres-codes";
+import { FOREIGN_KEY_VIOLATION, UNIQUE_VIOLATION } from "./postgres-codes";
 
 const BOOKS_PAGE_SIZE = 10;
 // A pesquisa de alunos e professores mostra 12 livros por página: fecha as linhas da grade de 3 (professor) e de 4 colunas (aluno).
 const SEARCH_PAGE_SIZE = 12;
 
-// Reserva que ainda guarda um exemplar: aguardando ou pronta para retirada (as outras já foram atendidas ou canceladas).
-const ACTIVE_RESERVATION_STATUSES = ["waiting", "ready"];
-
-// Filtro de busca por título, autor, código ou ISBN. A listagem e os contadores usam o mesmo, para os números baterem.
-function searchClause(term: string): string {
-  return `title.ilike.%${term}%,author.ilike.%${term}%,code.ilike.%${term}%,isbn.ilike.%${term}%`;
+// Cada linha da search_books do banco (migrations 20261108100100 e 20261109090000). O filtro por texto sem acento,
+// a situação, a ordem, a contagem e a página são calculados no banco; o app só mostra.
+interface SearchBooksRow {
+  id: string;
+  title: string;
+  author: string;
+  category: string | null;
+  code: string;
+  quantity: number;
+  status: string;
+  cover_url: string | null;
+  open_loans: number;
+  has_active_reservation: boolean;
+  next_due_at: string | null;
+  situation: BookSituation;
+  total_count: number;
+  page_number: number;
+  isbn: string | null;
+  has_history: boolean;
 }
 
-// Quantos empréstimos em aberto cada livro tem, a partir das linhas de empréstimo (uma por exemplar emprestado).
-function countByBook(loans: { book_id: string }[]): Map<string, number> {
-  const counts = new Map<string, number>();
-  for (const loan of loans) counts.set(loan.book_id, (counts.get(loan.book_id) ?? 0) + 1);
-  return counts;
+// Chama a search_books. O texto, a categoria e os filtros vão como parâmetros (nunca montados em texto de consulta).
+// Se a página pedida passa do fim, o banco devolve a última; sem nenhuma linha, a página é 1 e o total 0.
+async function runSearch(
+  supabase: ServerClient,
+  args: {
+    query: string;
+    category: string;
+    situation: BookAvailabilityFilter;
+    status: "active" | "inactive" | "all";
+    sort: BookSort;
+    page: number;
+    pageSize: number;
+  },
+): Promise<{ rows: SearchBooksRow[]; total: number; page: number }> {
+  const { data, error } = await supabase.rpc("search_books", {
+    p_query: args.query || null,
+    p_category: args.category || null,
+    p_situation: args.situation,
+    p_status: args.status,
+    p_sort: args.sort,
+    p_page: args.page,
+    p_page_size: args.pageSize,
+  });
+  if (error || !data) throw new Error("Não foi possível pesquisar os livros.");
+  const rows = data as SearchBooksRow[];
+  return { rows, total: Number(rows[0]?.total_count ?? 0), page: rows[0]?.page_number ?? 1 };
 }
 
 // Categorias sem repetir, em ordem alfabética (viram as opções do filtro).
@@ -67,7 +94,7 @@ async function loadCategories(supabase: ServerClient, activeOnly = false): Promi
   try {
     return await getCachedCategories(activeOnly);
   } catch {
-    let query = supabase.from("books").select("category").not("category", "is", null);
+    let query = supabase.from("books").select("category").not("category", "is", null).limit(1000);
     if (activeOnly) query = query.eq("status", "active");
     const { data, error } = await query;
     if (error) throw new Error("Não foi possível carregar as categorias.");
@@ -86,7 +113,7 @@ type SearchBookRow = {
   cover_url: string | null;
 };
 
-// Livro da pesquisa: os dados do catálogo mais a situação na estante (book_availability).
+// Livro da pesquisa a partir do catálogo (novidades e detalhe): a situação na estante vem da disponibilidade.
 function toSearchItem(book: SearchBookRow, shelfRows: ReturnType<typeof shelfByBook>): BookSearchItem {
   return {
     id: book.id,
@@ -100,31 +127,36 @@ function toSearchItem(book: SearchBookRow, shelfRows: ReturnType<typeof shelfByB
   };
 }
 
+// Disponibilidade só dos livros pedidos (a função limita a 100 ids). Nunca lê o acervo todo.
+async function loadShelf(supabase: ServerClient, bookIds: string[]) {
+  return supabase.rpc("book_availability_for_books", { p_book_ids: bookIds });
+}
+
 // Livros ativos mais recentes (Figma, card 0108: destaque e "Novidades no acervo" da pesquisa do aluno).
 // Só entram livros com capa, que é o que o desenho mostra; sem capa o espaço ficaria vazio.
 export async function listNewArrivals(limit: number): Promise<BookSearchItem[]> {
   await connection();
   const supabase = await createSupabaseServerClient();
 
-  const [books, shelf] = await Promise.all([
-    supabase
-      .from("books")
-      .select("id, title, author, category, code, isbn, quantity, cover_url")
-      .eq("status", "active")
-      .not("cover_url", "is", null)
-      .order("created_at", { ascending: false })
-      .limit(limit),
-    supabase.rpc("book_availability"),
-  ]);
-  if (books.error || shelf.error) throw new Error("Não foi possível carregar as novidades.");
+  const books = await supabase
+    .from("books")
+    .select("id, title, author, category, code, isbn, quantity, cover_url")
+    .eq("status", "active")
+    .not("cover_url", "is", null)
+    .order("created_at", { ascending: false })
+    .limit(limit);
+  if (books.error) throw new Error("Não foi possível carregar as novidades.");
+
+  const shelf = await loadShelf(supabase, books.data.map((book) => book.id));
+  if (shelf.error) throw new Error("Não foi possível carregar as novidades.");
 
   const shelfRows = shelfByBook(shelf.data as ShelfRow[]);
   return books.data.map((book) => toSearchItem(book, shelfRows));
 }
 
-// Pesquisa de alunos e professores (Figma, card 0108): só livros ativos. O RLS esconde os empréstimos dos outros,
-// então a situação vem da função book_availability do banco. Lê até 1000 livros (limite padrão do PostgREST);
-// acima disso, trocar por paginação no banco.
+// Pesquisa de alunos e professores (Figma, card 0108): só livros ativos. Busca sem acento e sem diferenciar maiúsculas,
+// situação, ordem, contagem e página são feitos no banco (função search_books, com índice): a página traz só 12 livros.
+// A situação vem do banco, que enxerga todos os empréstimos mesmo com o RLS escondendo os dos outros.
 export async function searchBooks(
   filters: Pick<BookListFilters, "query" | "category" | "page">,
   availability: BookAvailabilityFilter,
@@ -133,33 +165,35 @@ export async function searchBooks(
   await connection();
   const supabase = await createSupabaseServerClient();
 
-  let booksQuery = supabase
-    .from("books")
-    .select("id, title, author, category, code, isbn, quantity, cover_url")
-    .eq("status", "active");
-  const term = cleanSearchTerm(filters.query);
-  if (term) booksQuery = booksQuery.or(searchClause(term));
+  const categories = await loadCategories(supabase, true);
+  // Categoria que não existe no acervo (inclusive texto de ataque no endereço) nem chega à consulta.
+  if (filters.category && !categories.includes(filters.category)) {
+    return { books: [], total: 0, page: 1, pageSize: SEARCH_PAGE_SIZE, categories };
+  }
 
-  const [books, shelf, categories] = await Promise.all([
-    booksQuery,
-    supabase.rpc("book_availability"),
-    loadCategories(supabase, true),
-  ]);
-  if (books.error || shelf.error) throw new Error("Não foi possível pesquisar os livros.");
-
-  const shelfRows = shelfByBook(shelf.data as ShelfRow[]);
-  // A categoria é filtrada aqui, na memória: o texto vindo do endereço não vai para a consulta ao banco.
-  const inCategory = books.data.filter((book) => !filters.category || book.category === filters.category);
-  const found = inCategory.map((book) => toSearchItem(book, shelfRows));
-
-  const result = paginateBySituation(sortBooks(found, sort, term), availability, filters.page, SEARCH_PAGE_SIZE);
-  return {
-    books: result.items,
-    total: result.total,
-    page: result.page,
+  const { rows, total, page } = await runSearch(supabase, {
+    query: cleanSearchTerm(filters.query),
+    category: filters.category,
+    situation: availability,
+    status: "active",
+    sort,
+    page: filters.page,
     pageSize: SEARCH_PAGE_SIZE,
-    categories,
-  };
+  });
+
+  const books: BookSearchItem[] = rows.map((row) => ({
+    id: row.id,
+    title: row.title,
+    author: row.author,
+    category: row.category,
+    code: row.code,
+    isbn: row.isbn,
+    coverUrl: row.cover_url,
+    situation: row.situation,
+    freeCopies: availableCopies(row.quantity, row.open_loans),
+    nextDueAt: row.next_due_at,
+  }));
+  return { books, total, page, pageSize: SEARCH_PAGE_SIZE, categories };
 }
 
 // Detalhe de um livro. O id vem do endereço: só consulta o banco se for um UUID. Devolve null se não existe ou
@@ -178,7 +212,7 @@ export async function getBookDetail(id: string, includeInactive = false): Promis
     .eq("id", id);
   if (!includeInactive) bookQuery = bookQuery.eq("status", "active");
 
-  const [book, shelf] = await Promise.all([bookQuery.maybeSingle(), supabase.rpc("book_availability")]);
+  const [book, shelf] = await Promise.all([bookQuery.maybeSingle(), loadShelf(supabase, [id])]);
   if (book.error || shelf.error) throw new Error("Não foi possível carregar o livro.");
   if (!book.data) return null;
 
@@ -203,7 +237,7 @@ export async function getBookDetail(id: string, includeInactive = false): Promis
 }
 
 // Contadores do topo: quantos títulos do resultado do filtro (não só da página) estão disponíveis, emprestados ou reservados.
-// Lê até 1000 linhas por consulta (limite padrão do PostgREST); acima disso, trocar por uma função no banco.
+// Uma consulta no banco (função book_situation_counts), com o mesmo filtro da listagem para os números baterem.
 export async function countBookSituations(filters: BookListFilters): Promise<SituationCounts> {
   await connection();
   const supabase = await createSupabaseServerClient();
@@ -211,33 +245,23 @@ export async function countBookSituations(filters: BookListFilters): Promise<Sit
     return { available: 0, unavailable: 0, reserved: 0 };
   }
 
-  let booksQuery = supabase.from("books").select("id, quantity, status");
-  const term = cleanSearchTerm(filters.query);
-  if (term) booksQuery = booksQuery.or(searchClause(term));
-  if (filters.category) booksQuery = booksQuery.eq("category", filters.category);
-  if (filters.status !== "all") booksQuery = booksQuery.eq("status", filters.status);
+  const { data, error } = await supabase.rpc("book_situation_counts", {
+    p_query: cleanSearchTerm(filters.query) || null,
+    p_category: filters.category || null,
+    p_status: filters.status,
+  });
+  if (error || !data) throw new Error("Não foi possível contar o acervo.");
 
-  const [books, loans, reservations] = await Promise.all([
-    booksQuery,
-    supabase.from("loans").select("book_id").is("returned_at", null),
-    supabase.from("reservations").select("book_id").in("status", ACTIVE_RESERVATION_STATUSES),
-  ]);
-  if (books.error || loans.error || reservations.error) throw new Error("Não foi possível contar o acervo.");
-
-  const openLoans = countByBook(loans.data);
-  const reserved = new Set(reservations.data.map((reservation) => reservation.book_id));
-
-  return countSituations(
-    books.data.map((book) => ({
-      quantity: book.quantity,
-      status: book.status as BookStatus,
-      openLoans: openLoans.get(book.id) ?? 0,
-      hasActiveReservation: reserved.has(book.id),
-    })),
-  );
+  const counts = (Array.isArray(data) ? data[0] : data) as { available: number; unavailable: number; reserved: number } | undefined;
+  return {
+    available: Number(counts?.available ?? 0),
+    unavailable: Number(counts?.unavailable ?? 0),
+    reserved: Number(counts?.reserved ?? 0),
+  };
 }
 
-// Lista o acervo com busca, filtros e página. Só a bibliotecária usa esta tela (o RLS libera a leitura a todos).
+// Lista o acervo com busca, filtros e página, por título. Só a bibliotecária usa esta tela (livro inativo só ela vê).
+// A busca, a contagem e a página vêm da função search_books do banco, que devolve a última página se a pedida passar do fim.
 export async function listBooks(filters: BookListFilters): Promise<BookListResult> {
   await connection();
   const supabase = await createSupabaseServerClient();
@@ -246,48 +270,17 @@ export async function listBooks(filters: BookListFilters): Promise<BookListResul
     return { books: [], total: 0, page: 1, pageSize: BOOKS_PAGE_SIZE, categories };
   }
 
-  const from = (filters.page - 1) * BOOKS_PAGE_SIZE;
-  let query = supabase
-    .from("books")
-    .select("id, title, author, category, code, quantity, status, cover_url", { count: "exact" })
-    .order("title")
-    .range(from, from + BOOKS_PAGE_SIZE - 1);
+  const { rows, total, page } = await runSearch(supabase, {
+    query: cleanSearchTerm(filters.query),
+    category: filters.category,
+    situation: "all",
+    status: filters.status,
+    sort: "title",
+    page: filters.page,
+    pageSize: BOOKS_PAGE_SIZE,
+  });
 
-  const term = cleanSearchTerm(filters.query);
-  if (term) query = query.or(searchClause(term));
-  if (filters.category) query = query.eq("category", filters.category);
-  if (filters.status !== "all") query = query.eq("status", filters.status);
-
-  const { data, count, error } = await query;
-
-  if (error?.code === RANGE_NOT_SATISFIABLE && filters.page > 1) {
-    return listBooks({ ...filters, page: 1 });
-  }
-  if (error || !data) throw new Error("Não foi possível carregar o acervo.");
-
-  const ids = data.map((row) => row.id);
-  const [loans, reservations, pedagogical] = await Promise.all([
-    ids.length ? supabase.from("loans").select("book_id, returned_at").in("book_id", ids) : { data: [], error: null },
-    ids.length
-      ? supabase.from("reservations").select("book_id, status").in("book_id", ids)
-      : { data: [], error: null },
-    ids.length
-      ? supabase.from("pedagogical_reservation_books").select("book_id").in("book_id", ids)
-      : { data: [], error: null },
-  ]);
-  if (loans.error || reservations.error || pedagogical.error) {
-    throw new Error("Não foi possível carregar o acervo.");
-  }
-
-  const openLoans = countByBook((loans.data ?? []).filter((loan) => loan.returned_at === null));
-  const withHistory = new Set<string>();
-  for (const loan of loans.data ?? []) withHistory.add(loan.book_id);
-  for (const row of [...(reservations.data ?? []), ...(pedagogical.data ?? [])]) withHistory.add(row.book_id);
-  const withActiveReservation = new Set(
-    (reservations.data ?? []).filter((row) => ACTIVE_RESERVATION_STATUSES.includes(row.status)).map((row) => row.book_id),
-  );
-
-  const books: BookListItem[] = data.map((row) => ({
+  const books: BookListItem[] = rows.map((row) => ({
     id: row.id,
     title: row.title,
     author: row.author,
@@ -296,12 +289,12 @@ export async function listBooks(filters: BookListFilters): Promise<BookListResul
     quantity: row.quantity,
     status: row.status as BookStatus,
     coverUrl: row.cover_url,
-    openLoans: openLoans.get(row.id) ?? 0,
-    hasActiveReservation: withActiveReservation.has(row.id),
-    hasHistory: withHistory.has(row.id),
+    openLoans: row.open_loans,
+    hasActiveReservation: row.has_active_reservation,
+    hasHistory: row.has_history,
   }));
 
-  return { books, total: count ?? 0, page: filters.page, pageSize: BOOKS_PAGE_SIZE, categories };
+  return { books, total, page, pageSize: BOOKS_PAGE_SIZE, categories };
 }
 
 // Grava o livro novo. A linha já foi validada no servidor; o banco confere de novo (check, unique e RLS).

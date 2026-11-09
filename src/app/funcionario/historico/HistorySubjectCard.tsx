@@ -15,7 +15,7 @@ export function HistorySubjectCard({ subject, total, changeHref }: HistorySubjec
   const Icon = subject.kind === "livro" ? BookOpen : UserRound;
   return (
     <section aria-label="Consulta atual" className="mb-6 flex flex-wrap items-center gap-4 rounded-lg border border-line bg-surface p-4">
-      <span className="flex size-12 shrink-0 items-center justify-center rounded-full bg-selected text-brand">
+      <span className="flex size-12 shrink-0 items-center justify-center rounded-full bg-selected text-brand-ink">
         <Icon size={24} aria-hidden />
       </span>
       <div className="min-w-0 flex-1">

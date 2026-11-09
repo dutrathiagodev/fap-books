@@ -57,6 +57,9 @@ begin
   perform pg_temp.say('busca com acento e maiúscula acha o mesmo livro', n = 1);
   select count(*) into n from public.search_books('9788535287615');
   perform pg_temp.say('busca por ISBN', n = 1);
+  select isbn into msg from public.search_books('9788535287615');
+  perform pg_temp.say('a busca devolve o ISBN do livro', msg = '9788535287615');
+  perform pg_temp.say('livro sem empréstimo nem reserva não tem histórico', not (select has_history from public.search_books('s-003')));
   select count(*) into n from public.search_books('s-003');
   perform pg_temp.say('busca por código', n = 1);
   select count(*) into n from public.search_books('100%');
@@ -237,6 +240,28 @@ begin
   perform pg_temp.say('empréstimo vencido bloqueia novo empréstimo', pg_temp.err(format('select public.create_loan(%L, %L)', c5, BIA)) = 'user_has_pending');
   perform pg_temp.as_user(BIA);
   perform pg_temp.say('empréstimo vencido não renova', pg_temp.err(format('select public.renew_loan(%L)', (select id from public.loans where user_id = BIA::uuid and book_id = v6 and returned_at is null))) = 'loan_overdue');
+
+  ---------------------------------------------------------------- BUSCA COM EMPRÉSTIMOS (situação, ordem, histórico, texto longo)
+  perform pg_temp.as_user(ANA);
+  perform pg_temp.say('texto de busca muito longo não dá erro nem acha nada', (select count(*) from public.search_books(repeat('a', 500))) = 0);
+  perform pg_temp.say('texto só de curingas ("%_%") não vira "todos os livros"', (select count(*) from public.search_books('%_%')) = 0);
+  perform pg_temp.say('filtro "emprestado" devolve só emprestados (e há ao menos um)',
+    (select count(*) from public.search_books(null, null, 'unavailable')) > 0
+    and not exists (select 1 from public.search_books(null, null, 'unavailable') where situation <> 'unavailable'));
+  perform pg_temp.say('filtro "reservado" devolve só reservados',
+    not exists (select 1 from public.search_books(null, null, 'reserved') where situation <> 'reserved'));
+  perform pg_temp.say('filtro "disponível" não traz emprestado',
+    not exists (select 1 from public.search_books(null, null, 'available', 'active', 'title', 1, 50) where situation <> 'available'));
+  perform pg_temp.say('ordem por título', (select array_agg(title order by ord) from (select title, row_number() over () ord from public.search_books(null, null, 'all', 'active', 'title', 1, 20)) x)
+    = (select array_agg(title order by title, id) from (select title, id from public.books where status = 'active' order by title, id limit 20) y));
+  perform pg_temp.say('ordem por autor', (select array_agg(author order by ord) from (select author, row_number() over () ord from public.search_books(null, null, 'all', 'active', 'author', 1, 20)) x)
+    = (select array_agg(author order by author, title, id) from (select author, title, id from public.books where status = 'active' order by author, title, id limit 20) y));
+  perform pg_temp.say('ordem "disponíveis primeiro": nenhum emprestado antes de um disponível',
+    (select bool_and(rk >= prev) from (select rk, coalesce(lag(rk) over (order by ord), 0) prev
+      from (select row_number() over () ord, case situation when 'available' then 0 when 'reserved' then 1 else 2 end rk
+            from public.search_books(null, null, 'all', 'active', 'available', 1, 50)) a) b));
+  perform pg_temp.as_user(DORA);
+  perform pg_temp.say('livro com empréstimo tem histórico (só inativa, não exclui)', (select has_history from public.search_books('s-001', null, 'all', 'all')) );
 
   perform pg_temp.say('funções não são públicas (anon)', not has_function_privilege('anon', 'public.create_loan(uuid, uuid, uuid)', 'execute')
     and not has_function_privilege('anon', 'public.search_books(text,text,text,text,text,integer,integer)', 'execute'));

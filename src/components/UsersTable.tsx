@@ -21,7 +21,7 @@ const ACTION =
 function Person({ user }: { user: UserView }) {
   return (
     <div className="flex items-center gap-3">
-      <span aria-hidden className="flex size-8 shrink-0 items-center justify-center rounded-full bg-selected text-xs font-medium text-brand">
+      <span aria-hidden className="flex size-8 shrink-0 items-center justify-center rounded-full bg-selected text-xs font-medium text-brand-ink">
         {user.initials}
       </span>
       <div className="min-w-0">
@@ -48,7 +48,7 @@ function Actions({ user, onEdit, onToggleActive, disabled }: { user: UserView } 
         disabled={disabled}
         aria-label={`Editar ${user.fullName}`}
         onClick={() => onEdit(user)}
-        className={`${ACTION} px-2 text-brand hover:bg-selected`}
+        className={`${ACTION} px-2 text-brand-ink hover:bg-selected`}
       >
         <Pencil size={16} strokeWidth={1.5} aria-hidden />
       </button>

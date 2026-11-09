@@ -23,13 +23,13 @@ export function GuidelinesPanel({ role }: { role: UserRole | null }) {
       <h2 className="text-sm font-semibold text-ink">Diretrizes do perfil</h2>
       {role ? (
         <>
-          <p className="mt-2 inline-flex rounded-full bg-selected px-2 py-0.5 text-xs text-brand">Regime de {REGIME[role]}</p>
+          <p className="mt-2 inline-flex rounded-full bg-selected px-2 py-0.5 text-xs text-brand-ink">Regime de {REGIME[role]}</p>
           <dl className="mt-4 flex flex-col gap-3.5">
             {guidelineItems(role).map((item) => {
               const Icon = ICONS[item.label] ?? KeyRound;
               return (
                 <div key={item.label} className="flex items-start gap-3">
-                  <span aria-hidden className="flex size-7 shrink-0 items-center justify-center rounded-md bg-selected text-brand">
+                  <span aria-hidden className="flex size-7 shrink-0 items-center justify-center rounded-md bg-selected text-brand-ink">
                     <Icon size={16} strokeWidth={1.5} />
                   </span>
                   <div className="min-w-0">

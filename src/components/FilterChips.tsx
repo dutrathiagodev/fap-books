@@ -17,9 +17,9 @@ export interface FilterChipsProps {
 }
 
 const ACTIVE_TONE = {
-  soft: "border-brand bg-selected font-medium text-brand",
+  soft: "border-brand bg-selected font-medium text-brand-ink",
   solid: "border-brand bg-brand font-medium text-on-brand",
-  segmented: "border-transparent bg-selected font-medium text-brand",
+  segmented: "border-transparent bg-selected font-medium text-brand-ink",
 } as const;
 
 // Chips de filtro (Figma, card 0144: Todas, Em aberto, Pagas). Cada chip é um link: o filtro fica no endereço,
