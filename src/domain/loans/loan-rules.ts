@@ -28,7 +28,7 @@ export function calculateDueDate(borrowedAt: Date, days = LOAN_PERIOD_DAYS): Dat
 }
 
 // "2026-10-27": o dia do calendário de Brasília em que o instante cai.
-function localDay(date: Date): string {
+export function localDay(date: Date): string {
   return new Intl.DateTimeFormat("en-CA", { timeZone: TIME_ZONE }).format(date);
 }
 

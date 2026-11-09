@@ -126,6 +126,8 @@
     --subtle: #0f2745;
     --soft: #0f2745;
     --selected: #143360;
+    --btn-soft: #143360;
+    --btn-soft-hover: #1b3f78;
     --brand: var(--color-navy-400);
     --brand-hover: var(--color-navy-300);
     --on-brand: var(--color-navy-950);
