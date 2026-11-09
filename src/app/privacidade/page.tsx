@@ -13,7 +13,7 @@ export default function PrivacidadePage() {
   return (
     <main className="flex flex-1 items-center justify-center bg-page px-4 py-10">
       <article className="flex w-full max-w-[520px] flex-col gap-4 rounded-lg border border-line bg-surface p-8 shadow-md">
-        <span className="flex size-12 items-center justify-center rounded-full bg-selected text-brand">
+        <span className="flex size-12 items-center justify-center rounded-full bg-selected text-brand-ink">
           <ShieldCheck size={24} aria-hidden />
         </span>
         <h1 className="text-h3">Como usamos seus dados</h1>

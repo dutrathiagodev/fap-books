@@ -71,7 +71,7 @@ function Body({ user, pending = false, error, fieldErrors, onSave, onClose }: Us
               <label
                 key={role}
                 className={`flex min-h-10 cursor-pointer items-center gap-2 rounded-md border px-3 text-sm has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-focus has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-60 ${
-                  values.role === role ? "border-brand bg-selected font-medium text-brand" : "border-line bg-surface text-ink hover:bg-subtle"
+                  values.role === role ? "border-brand bg-selected font-medium text-brand-ink" : "border-line bg-surface text-ink hover:bg-subtle"
                 }`}
               >
                 <input

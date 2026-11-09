@@ -35,7 +35,7 @@ const VARIANTS = {
   primary: "rounded-md bg-brand text-on-brand hover:bg-brand-hover active:bg-navy-950 dark:active:bg-navy-300",
   light: "rounded-md bg-white text-navy-900 hover:bg-navy-50",
   // No escuro o fundo é navy fechado e o texto azul-claro (contraste acima de 4,5:1); no claro, texto navy sobre azul-claro.
-  secondary: "rounded-md bg-btn-soft text-brand hover:bg-btn-soft-hover active:bg-navy-300 dark:text-navy-200 dark:active:bg-navy-700",
+  secondary: "rounded-md bg-btn-soft text-brand-ink hover:bg-btn-soft-hover active:bg-navy-300 dark:text-navy-200 dark:active:bg-navy-700",
   tertiary: "rounded-md text-ink-muted hover:bg-surface active:bg-subtle",
   danger: "rounded-md border border-danger-700 bg-danger-100 text-danger-700",
   // 32 px, como o botão de ícone da linha (a linha do frame tem 56 px). Fora dos tamanhos: ignora o size.

@@ -56,7 +56,7 @@ export function TeacherPicker({ selected, onChange, search, error, disabled = fa
         <span className="text-sm leading-6 font-medium text-ink">Professor</span>
         <div className="flex items-center justify-between gap-3 rounded-md border border-line bg-surface px-3 py-2">
           <div className="flex min-w-0 items-center gap-3">
-            <span aria-hidden className="flex size-8 shrink-0 items-center justify-center rounded-full bg-selected text-xs font-medium text-brand">
+            <span aria-hidden className="flex size-8 shrink-0 items-center justify-center rounded-full bg-selected text-xs font-medium text-brand-ink">
               {selected.initials}
             </span>
             <div className="min-w-0">
@@ -123,7 +123,7 @@ export function TeacherPicker({ selected, onChange, search, error, disabled = fa
                       onClick={() => onChange(teacher)}
                       className="flex w-full cursor-pointer items-center gap-3 px-3 py-2 text-left hover:bg-subtle focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-focus"
                     >
-                      <span aria-hidden className="flex size-8 shrink-0 items-center justify-center rounded-full bg-selected text-xs font-medium text-brand">
+                      <span aria-hidden className="flex size-8 shrink-0 items-center justify-center rounded-full bg-selected text-xs font-medium text-brand-ink">
                         {teacher.initials}
                       </span>
                       <span className="min-w-0">

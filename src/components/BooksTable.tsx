@@ -27,7 +27,7 @@ export function BooksTable({ books, onDelete, onInactivate }: BooksTableProps) {
             height={44}
             className="h-11 w-8 shrink-0 rounded-sm object-cover"
             fallback={
-              <span aria-hidden className="flex h-11 w-8 shrink-0 items-center justify-center rounded-sm bg-selected text-brand">
+              <span aria-hidden className="flex h-11 w-8 shrink-0 items-center justify-center rounded-sm bg-selected text-brand-ink">
                 <BookOpen size={16} />
               </span>
             }
@@ -42,7 +42,7 @@ export function BooksTable({ books, onDelete, onInactivate }: BooksTableProps) {
       header: "Categoria",
       cell: (book) =>
         book.category ? (
-          <span className="inline-block whitespace-nowrap rounded-full bg-selected px-2.5 py-1 text-xs font-medium text-brand">{book.category}</span>
+          <span className="inline-block whitespace-nowrap rounded-full bg-selected px-2.5 py-1 text-xs font-medium text-brand-ink">{book.category}</span>
         ) : (
           "—"
         ),
@@ -66,7 +66,7 @@ export function BooksTable({ books, onDelete, onInactivate }: BooksTableProps) {
         height={80}
         className="h-20 w-14 shrink-0 rounded-sm object-cover"
         fallback={
-          <span aria-hidden className="flex h-20 w-14 shrink-0 items-center justify-center rounded-sm bg-selected text-brand">
+          <span aria-hidden className="flex h-20 w-14 shrink-0 items-center justify-center rounded-sm bg-selected text-brand-ink">
             <BookOpen size={20} />
           </span>
         }

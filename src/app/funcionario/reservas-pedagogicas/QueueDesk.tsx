@@ -165,7 +165,7 @@ export function QueueDesk({ reservations, filter }: { reservations: ReservationV
         {reservations.map((reservation) => (
           <li key={reservation.id} className="flex flex-col gap-3 rounded-lg border border-line bg-surface p-4">
             <div className="flex min-w-0 items-start gap-3">
-              <span aria-hidden className="flex size-9 shrink-0 items-center justify-center rounded-full bg-selected text-xs font-medium text-brand">
+              <span aria-hidden className="flex size-9 shrink-0 items-center justify-center rounded-full bg-selected text-xs font-medium text-brand-ink">
                 {reservation.teacherInitials}
               </span>
               <div className="min-w-0">

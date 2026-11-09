@@ -38,7 +38,7 @@ const SORT_OPTIONS: Array<{ value: BookSort; label: string }> = [
 const FOCUS = "outline-offset-2 focus-visible:outline-2 focus-visible:outline-focus";
 const CHIP = `inline-flex h-10 items-center rounded-full border px-3 text-xs sm:h-8 ${FOCUS}`;
 const CHIP_OFF = "border-line-strong bg-surface text-ink hover:bg-subtle";
-const CHIP_ON = "border-brand bg-selected font-medium text-brand";
+const CHIP_ON = "border-brand bg-selected font-medium text-brand-ink";
 const SEGMENT = `inline-flex h-10 items-center border-r border-line-strong px-3 text-xs last:border-r-0 sm:h-8 ${FOCUS}`;
 const LABEL = "w-20 shrink-0 text-xs font-medium uppercase tracking-wide text-ink-muted";
 

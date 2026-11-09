@@ -43,7 +43,7 @@ export function ProfileSelector({ value, onChange, disabled = false, error }: Pr
               />
               <span
                 className={`flex size-10 shrink-0 items-center justify-center rounded-md ${
-                  selected ? "bg-brand text-on-brand" : "bg-selected text-brand"
+                  selected ? "bg-brand text-on-brand" : "bg-selected text-brand-ink"
                 }`}
               >
                 <Icon size={20} strokeWidth={1.5} aria-hidden />
