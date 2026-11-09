@@ -17,10 +17,13 @@ export interface DataTableProps<Row> {
   error?: string;
   // Cartão próprio no celular (no lugar da lista "rótulo: valor"). Quem usa desenha o cartão inteiro.
   renderCard?: (row: Row) => ReactNode;
+  // Linha inteira clicável com o mouse (o teclado continua usando o botão dentro da linha). Opcional.
+  onRowClick?: (row: Row) => void;
+  selectedKey?: string;
 }
 
 // Tabela do design system (Figma: Título, Autor, Status, Ações). No celular vira cartões.
-export function DataTable<Row>({ columns, rows, rowKey, emptyLabel = "Nenhum registro.", error, renderCard }: DataTableProps<Row>) {
+export function DataTable<Row>({ columns, rows, rowKey, emptyLabel = "Nenhum registro.", error, renderCard, onRowClick, selectedKey }: DataTableProps<Row>) {
   const failed = Boolean(error) && rows.length === 0;
   const showEmpty = !error && rows.length === 0;
   const frame = error ? "border-danger-700" : "border-line";
@@ -58,7 +61,11 @@ export function DataTable<Row>({ columns, rows, rowKey, emptyLabel = "Nenhum reg
               </tr>
             ) : (
               rows.map((row) => (
-                <tr key={rowKey(row)} className="border-t border-line hover:bg-selected">
+                <tr
+                  key={rowKey(row)}
+                  onClick={onRowClick ? () => onRowClick(row) : undefined}
+                  className={`border-t border-line hover:bg-selected ${onRowClick ? "cursor-pointer" : ""} ${selectedKey === rowKey(row) ? "bg-selected" : ""}`}
+                >
                   {columns.map((column) => (
                     <td key={column.key} className="px-4 py-4">
                       {column.cell(row)}

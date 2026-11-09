@@ -1,10 +1,15 @@
 import { describe, expect, it } from "vitest";
-import { ACERVO_PATH, ROLE_LABELS, decideRoute } from "./access-rules";
+import { ACERVO_PATH, ROLE_LABELS, decideRoute, safeNextPath } from "./access-rules";
 
 describe("decideRoute", () => {
   it("manda quem não está logado para /login", () => {
-    expect(decideRoute("/aluno", null)).toEqual({ action: "redirect", to: "/login" });
-    expect(decideRoute("/livros", null)).toEqual({ action: "redirect", to: "/login" });
+    expect(decideRoute("/aluno", null)).toEqual({ action: "redirect", to: "/login?next=%2Faluno" });
+    expect(decideRoute("/funcionario/acervo", null, "?q=dom")).toEqual({ action: "redirect", to: "/login?next=%2Ffuncionario%2Facervo%3Fq%3Ddom" });
+  });
+
+  it("deixa o visitante abrir endereço que não existe, para cair no 404 (card 0241)", () => {
+    expect(decideRoute("/livros", null)).toEqual({ action: "allow" });
+    expect(decideRoute("/xyz", null)).toEqual({ action: "allow" });
   });
 
   it("deixa quem não está logado abrir a landing page na raiz", () => {
@@ -23,7 +28,7 @@ describe("decideRoute", () => {
   it("deixa qualquer pessoa abrir o aviso de privacidade", () => {
     expect(decideRoute("/privacidade", null)).toEqual({ action: "allow" });
     expect(decideRoute("/privacidade", "student")).toEqual({ action: "allow" });
-    expect(decideRoute("/privacidadex", null)).toEqual({ action: "redirect", to: "/login" });
+    expect(decideRoute("/privacidadex", null)).toEqual({ action: "allow" });
   });
 
   it("deixa qualquer pessoa abrir termos, acessibilidade e suporte", () => {
@@ -31,13 +36,13 @@ describe("decideRoute", () => {
       expect(decideRoute(path, null)).toEqual({ action: "allow" });
       expect(decideRoute(path, "teacher")).toEqual({ action: "allow" });
     }
-    expect(decideRoute("/termosx", null)).toEqual({ action: "redirect", to: "/login" });
+    expect(decideRoute("/termosx", null)).toEqual({ action: "allow" });
   });
 
   it("deixa qualquer pessoa abrir /definir-senha (convite), logada ou não", () => {
     expect(decideRoute("/definir-senha", null)).toEqual({ action: "allow" });
     expect(decideRoute("/definir-senha", "librarian")).toEqual({ action: "allow" });
-    expect(decideRoute("/definir-senhax", null)).toEqual({ action: "redirect", to: "/login" });
+    expect(decideRoute("/definir-senhax", null)).toEqual({ action: "allow" });
   });
 
   it("deixa cada perfil abrir a própria área, inclusive subpáginas", () => {
@@ -77,4 +82,16 @@ describe("ACERVO_PATH e ROLE_LABELS", () => {
   it("tem um rótulo para cada perfil", () => {
     expect(ROLE_LABELS).toEqual({ student: "Aluno", teacher: "Professor", librarian: "Funcionário" });
   });
+});
+
+describe("safeNextPath", () => {
+  it("aceita caminho interno de área protegida, com parâmetros", () => {
+    expect(safeNextPath("/funcionario/acervo?q=dom")).toBe("/funcionario/acervo?q=dom");
+    expect(safeNextPath("/aluno/livros/abc")).toBe("/aluno/livros/abc");
+  });
+
+  it.each([null, undefined, "", "//evil.com", "/\\evil.com", "https://evil.com", "javascript:alert(1)", "/login", "/", "/privacidade"])(
+    "recusa %s (evita redirecionamento aberto)",
+    (value) => expect(safeNextPath(value)).toBeNull(),
+  );
 });

@@ -67,7 +67,7 @@ export async function proxy(request: NextRequest) {
     role = (profile?.role as UserRole | undefined) ?? null;
   }
 
-  const decision = decideRoute(request.nextUrl.pathname, role);
+  const decision = decideRoute(request.nextUrl.pathname, role, request.nextUrl.search);
   if (decision.action === "allow") return response;
 
   // Leva junto os cookies da sessão renovada, senão o login se perde no redirecionamento.
