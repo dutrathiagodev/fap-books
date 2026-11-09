@@ -91,7 +91,7 @@ export function UserCreateForm({ onCreate, cancelHref = USERS_PATH }: UserCreate
       <PageHeader
         title="Cadastro de usuário"
         breadcrumbs={[{ label: "Biblioteca" }, { label: "Usuários" }, { label: "Cadastro" }]}
-        description="Escolha o perfil e preencha os dados. A pessoa recebe um convite por e-mail para criar a própria senha."
+        description="Cadastre alunos, professores e funcionários com acesso integrado ao acervo da biblioteca."
         action={
           <Link
             href={cancelHref}

@@ -1,7 +1,7 @@
 import Link from "next/link";
-import { Plus, Search } from "lucide-react";
+import { Search } from "lucide-react";
 import { EmptyState, PageHeader, Pagination, TextField, TextLink } from "@/components";
-import { FilterChips } from "@/components/FilterChips";
+import { FilterMenu } from "@/components/FilterMenu";
 import { RolePage } from "@/components/RolePage";
 import { USER_CREATE_PATH } from "@/domain/users/user-form-rules";
 import {
@@ -42,53 +42,50 @@ async function UsuariosContent({ searchParams, selfId }: { searchParams: SearchP
             href={USER_CREATE_PATH}
             className="inline-flex h-11 items-center gap-2 rounded-md bg-brand px-5 text-sm font-medium text-on-brand hover:bg-brand-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
           >
-            <Plus size={16} strokeWidth={1.5} aria-hidden />
             Novo usuário
           </Link>
         }
       />
 
-      <div className="mb-4 flex flex-col gap-3">
-        <form method="get" action={USERS_PATH} className="flex max-w-2xl items-end gap-3">
-          {/* Buscar (ou Enter no campo) mantém os filtros escolhidos. */}
-          {filters.role !== "all" && <input type="hidden" name="perfil" value={filters.role} />}
-          {filters.status !== "all" && <input type="hidden" name="situacao" value={filters.status} />}
-          <TextField
-            id="usuarios-busca"
-            name="q"
-            label="Buscar"
-            hideLabel
-            type="search"
-            defaultValue={filters.query}
-            placeholder="Nome, e-mail ou matrícula"
-            leadingIcon={Search}
-            className="min-w-0 flex-1"
-          />
-          <button type="submit" className="h-11 cursor-pointer rounded-md bg-brand px-5 text-sm font-medium text-on-brand hover:bg-brand-hover">
-            Buscar
-          </button>
-        </form>
-        <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
-          <FilterChips
-            label="Filtrar por perfil"
-            chips={ROLE_FILTER_ORDER.map((role) => ({
-              label: ROLE_FILTER_LABELS[role],
-              count: list.counts.byRole[role],
-              href: userHref({ ...filters, role, page: 1 }),
-              active: filters.role === role,
-            }))}
-          />
-          <FilterChips
-            label="Filtrar por situação"
-            chips={STATUS_FILTER_ORDER.map((status) => ({
-              label: STATUS_FILTER_LABELS[status],
-              count: list.counts.byStatus[status],
-              href: userHref({ ...filters, status, page: 1 }),
-              active: filters.status === status,
-            }))}
-          />
-        </div>
-      </div>
+      <form method="get" action={USERS_PATH} className="mb-4 flex flex-wrap items-end gap-3">
+        {/* Buscar (ou Enter no campo) mantém os filtros escolhidos. */}
+        {filters.role !== "all" && <input type="hidden" name="perfil" value={filters.role} />}
+        {filters.status !== "all" && <input type="hidden" name="situacao" value={filters.status} />}
+        <TextField
+          id="usuarios-busca"
+          name="q"
+          label="Buscar"
+          hideLabel
+          type="search"
+          defaultValue={filters.query}
+          placeholder="Nome, e-mail ou matrícula"
+          leadingIcon={Search}
+          className="min-w-60 flex-1"
+        />
+        <FilterMenu
+          label="Filtrar por perfil"
+          hideLabel
+          value={`Perfil: ${ROLE_FILTER_LABELS[filters.role]}`}
+          options={ROLE_FILTER_ORDER.map((role) => ({
+            label: `${ROLE_FILTER_LABELS[role]} (${list.counts.byRole[role]})`,
+            href: userHref({ ...filters, role, page: 1 }),
+            active: filters.role === role,
+          }))}
+        />
+        <FilterMenu
+          label="Filtrar por situação"
+          hideLabel
+          value={`Status: ${STATUS_FILTER_LABELS[filters.status]}`}
+          options={STATUS_FILTER_ORDER.map((status) => ({
+            label: `${STATUS_FILTER_LABELS[status]} (${list.counts.byStatus[status]})`,
+            href: userHref({ ...filters, status, page: 1 }),
+            active: filters.status === status,
+          }))}
+        />
+        <button type="submit" className="h-11 cursor-pointer rounded-md bg-brand px-5 text-sm font-medium text-on-brand hover:bg-brand-hover">
+          Buscar
+        </button>
+      </form>
 
       {list.users.length === 0 ? (
         <EmptyState

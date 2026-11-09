@@ -55,7 +55,7 @@ describe("UsersTable", () => {
     expect(markup).toContain("Ana Beatriz Souza");
     expect(markup).toContain("ana@aluno.fap.edu.br");
     expect(markup).toContain("242802");
-    for (const header of ["Nome", "Perfil", "Situação", "Empréstimos", "Ações"]) expect(markup).toContain(header);
+    for (const header of ["Nome", "Perfil", "Status", "Empréstimos", "Ações"]) expect(markup).toContain(header);
   });
 
   it("ativo oferece Inativar; inativo oferece Reativar", () => {

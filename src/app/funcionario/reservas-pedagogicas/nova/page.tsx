@@ -14,9 +14,9 @@ export default function NovaReservaPedagogicaPage() {
       {() => (
         <>
           <PageHeader
-            title="Registrar reserva pedagógica"
-            breadcrumbs={[{ label: "Gestão bibliotecária" }, { label: "Reservas pedagógicas" }, { label: "Registrar" }]}
-            description="Registre o pedido feito no balcão. Ele entra na fila de aprovação."
+            title="Registrar reserva presencial"
+            breadcrumbs={[{ label: "Biblioteca" }, { label: "Reservas pedagógicas" }, { label: "Registrar presencial" }]}
+            description="Registre no balcão a solicitação de um professor. Ela entra na fila de aprovação."
           />
           <ReservationForm
             variant="in_person"

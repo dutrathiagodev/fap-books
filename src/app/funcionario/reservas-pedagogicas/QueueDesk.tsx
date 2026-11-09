@@ -70,11 +70,100 @@ export function QueueDesk({ reservations, filter }: { reservations: ReservationV
     );
   }
 
+  // Detalhes, Aprovar/Recusar (pendente) ou Registrar devolução (aprovada): os mesmos botões na tabela e nos cartões.
+  const actionsOf = (reservation: ReservationView) => (
+    <div className="flex flex-wrap items-center gap-2">
+      <Link
+        href={queueHref({ filter, detail: reservation.id })}
+        className="rounded-md px-3 py-2 text-sm font-medium text-brand underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-focus"
+      >
+        Detalhes
+      </Link>
+      {reservation.status === "pending" && (
+        <>
+          <Button text="Aprovar" size="small" fullWidth={false} disabled={pending} onClick={() => approve(reservation)} />
+          <Button
+            text="Recusar"
+            variant="danger"
+            size="small"
+            fullWidth={false}
+            disabled={pending}
+            onClick={() => {
+              setError(undefined);
+              setDialog({ kind: "reject", reservation });
+            }}
+          />
+        </>
+      )}
+      {reservation.status === "approved" && (
+        <Button
+          text="Registrar devolução"
+          variant="secondary"
+          size="small"
+          fullWidth={false}
+          disabled={pending}
+          onClick={() => {
+            setError(undefined);
+            setDialog({ kind: "return", reservation });
+          }}
+        />
+      )}
+    </div>
+  );
+
+  const justification = (reservation: ReservationView) =>
+    reservation.status === "rejected" && reservation.decisionNote ? (
+      <p className="mt-2 text-sm text-danger-700 dark:text-red-300">Justificativa: {reservation.decisionNote}</p>
+    ) : null;
+
   return (
     <>
-      <ul className="flex flex-col gap-3">
+      {/* Computador (Figma 0140): tabela Professor, Livros, Período, Origem, Tipo e Ações. */}
+      <div className="hidden overflow-hidden rounded-lg border border-line bg-surface lg:block">
+        <table className="w-full text-left text-sm">
+          <thead className="bg-subtle text-ink">
+            <tr>
+              {["Professor", "Livros", "Período", "Origem", "Tipo", "Ações"].map((header) => (
+                <th key={header} scope="col" className="px-4 py-3 font-medium whitespace-nowrap">
+                  {header}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {reservations.map((reservation) => (
+              <tr key={reservation.id} className="border-t border-line align-top hover:bg-selected">
+                <td className="px-4 py-3">
+                  <p className="font-medium text-ink">{reservation.teacherName}</p>
+                  <p className="text-xs text-ink-muted">Solicitada em {reservation.requestedOn}</p>
+                </td>
+                <td className="px-4 py-3 text-ink">
+                  {bookTitlesSummary(reservation.books.map((book) => book.title))}
+                  {justification(reservation)}
+                </td>
+                <td className="px-4 py-3 whitespace-nowrap">
+                  <p className="font-medium text-ink">{reservation.startOn}</p>
+                  <p className="text-xs text-ink-muted">
+                    a {reservation.endOn} ({formatDays(reservation.days)})
+                  </p>
+                </td>
+                <td className="px-4 py-3"><ReservationOriginBadge inPerson={reservation.inPerson} /></td>
+                <td className="px-4 py-3">
+                  <div className="flex flex-col items-start gap-1">
+                    <ReservationKindBadge renewal={reservation.renewal} />
+                    {filter !== "pending" && <ReservationStatusBadge status={reservation.status} />}
+                  </div>
+                </td>
+                <td className="px-4 py-3">{actionsOf(reservation)}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      <ul className="flex flex-col gap-3 lg:hidden">
         {reservations.map((reservation) => (
-          <li key={reservation.id} className="flex flex-col gap-3 rounded-lg border border-line bg-surface p-4 lg:flex-row lg:items-center lg:justify-between">
+          <li key={reservation.id} className="flex flex-col gap-3 rounded-lg border border-line bg-surface p-4">
             <div className="flex min-w-0 items-start gap-3">
               <span aria-hidden className="flex size-9 shrink-0 items-center justify-center rounded-full bg-selected text-xs font-medium text-brand">
                 {reservation.teacherInitials}
@@ -90,49 +179,10 @@ export function QueueDesk({ reservations, filter }: { reservations: ReservationV
                   <ReservationKindBadge renewal={reservation.renewal} />
                   {filter !== "pending" && <ReservationStatusBadge status={reservation.status} />}
                 </div>
-                {reservation.status === "rejected" && reservation.decisionNote && (
-                  <p className="mt-2 text-sm text-danger-700 dark:text-red-300">Justificativa: {reservation.decisionNote}</p>
-                )}
+                {justification(reservation)}
               </div>
             </div>
-
-            <div className="flex flex-wrap items-center gap-2">
-              <Link
-                href={queueHref({ filter, detail: reservation.id })}
-                className="rounded-md px-3 py-2 text-sm font-medium text-brand underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-focus"
-              >
-                Detalhes
-              </Link>
-              {reservation.status === "pending" && (
-                <>
-                  <Button text="Aprovar" size="small" fullWidth={false} disabled={pending} onClick={() => approve(reservation)} />
-                  <Button
-                    text="Recusar"
-                    variant="danger"
-                    size="small"
-                    fullWidth={false}
-                    disabled={pending}
-                    onClick={() => {
-                      setError(undefined);
-                      setDialog({ kind: "reject", reservation });
-                    }}
-                  />
-                </>
-              )}
-              {reservation.status === "approved" && (
-                <Button
-                  text="Registrar devolução"
-                  variant="secondary"
-                  size="small"
-                  fullWidth={false}
-                  disabled={pending}
-                  onClick={() => {
-                    setError(undefined);
-                    setDialog({ kind: "return", reservation });
-                  }}
-                />
-              )}
-            </div>
+            {actionsOf(reservation)}
           </li>
         ))}
       </ul>

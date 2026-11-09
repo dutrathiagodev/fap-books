@@ -1,6 +1,6 @@
 "use client";
 
-import { Pencil, UserCheck, UserX } from "lucide-react";
+import { Eye, EyeOff, Pencil } from "lucide-react";
 import type { UserView } from "../types/user-admin";
 import { UserRoleBadge, UserStatusBadge } from "./UserBadges";
 
@@ -13,7 +13,7 @@ export interface UsersTableProps {
   disabled?: boolean;
 }
 
-const HEADERS = ["Nome", "Perfil", "Matrícula / cargo", "Situação", "Empréstimos", "Ações"] as const;
+const HEADERS = ["Nome", "Perfil", "Matrícula / cargo", "Status", "Empréstimos", "Ações"] as const;
 
 const ACTION =
   "inline-flex h-9 cursor-pointer items-center gap-1.5 rounded-md px-2.5 text-sm font-medium whitespace-nowrap focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus disabled:cursor-not-allowed disabled:opacity-60";
@@ -48,10 +48,9 @@ function Actions({ user, onEdit, onToggleActive, disabled }: { user: UserView } 
         disabled={disabled}
         aria-label={`Editar ${user.fullName}`}
         onClick={() => onEdit(user)}
-        className={`${ACTION} text-brand hover:bg-selected`}
+        className={`${ACTION} px-2 text-brand hover:bg-selected`}
       >
-        <Pencil size={14} strokeWidth={1.5} aria-hidden />
-        Editar
+        <Pencil size={16} strokeWidth={1.5} aria-hidden />
       </button>
       {!user.isSelf &&
         (user.active ? (
@@ -62,7 +61,7 @@ function Actions({ user, onEdit, onToggleActive, disabled }: { user: UserView } 
             onClick={() => onToggleActive(user)}
             className={`${ACTION} text-danger-700 hover:bg-danger-100 dark:text-red-300 dark:hover:bg-red-400/15`}
           >
-            <UserX size={14} strokeWidth={1.5} aria-hidden />
+            <EyeOff size={14} strokeWidth={1.5} aria-hidden />
             Inativar
           </button>
         ) : (
@@ -73,7 +72,7 @@ function Actions({ user, onEdit, onToggleActive, disabled }: { user: UserView } 
             onClick={() => onToggleActive(user)}
             className={`${ACTION} text-success-700 hover:bg-success-100 dark:text-green-300 dark:hover:bg-green-400/15`}
           >
-            <UserCheck size={14} strokeWidth={1.5} aria-hidden />
+            <Eye size={14} strokeWidth={1.5} aria-hidden />
             Reativar
           </button>
         ))}

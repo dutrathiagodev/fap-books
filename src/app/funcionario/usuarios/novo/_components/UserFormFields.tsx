@@ -1,8 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { Info } from "lucide-react";
+import { Info, Mail, Phone } from "lucide-react";
 import { TextField } from "@/components/TextField";
+import { ToneBadge } from "@/components/ToneBadge";
 import { userFormErrors, type UserFormErrors, type UserFormField, type UserFormValues } from "@/domain/users/user-form-rules";
 
 interface UserFormFieldsProps {
@@ -33,7 +34,7 @@ export function UserFormFields({ values, errors: external, disabled = false, onC
   return (
     <fieldset disabled={disabled} className="min-w-0 border-0 p-0">
       <legend className="sr-only">Dados do usuário</legend>
-      <h2 className="mb-4 text-h3">Informações pessoais</h2>
+      <h2 className="mb-4 border-b border-line pb-2 text-base font-semibold text-ink">Informações pessoais</h2>
       <div className="grid grid-cols-1 gap-x-4 gap-y-3.5 md:grid-cols-2 md:gap-y-[18px]">
         <TextField
           id="user-name"
@@ -49,24 +50,29 @@ export function UserFormFields({ values, errors: external, disabled = false, onC
           id="user-email"
           name="email"
           type="email"
-          label="E-mail"
+          label="E-mail acadêmico ou pessoal"
           required
           autoComplete="off"
           inputMode="email"
-          placeholder="Ex.: maria@exemplo.com"
-          hint="O convite para criar a senha é enviado para este e-mail."
+          placeholder="usuario@fap.edu.br"
+          leadingIcon={Mail}
           {...bind("email")}
         />
         <TextField
           id="user-phone"
           name="phone"
-          label="Telefone (WhatsApp)"
+          label="Telefone / WhatsApp"
           autoComplete="off"
           inputMode="numeric"
-          placeholder="Ex.: (11) 98765-4321"
-          hint="Usado nos avisos da biblioteca."
+          placeholder="(41) 99999-0000"
+          leadingIcon={Phone}
           {...bind("phone")}
         />
+
+        <p className="flex items-start gap-2 rounded-md border border-info-100 bg-info-100 px-4 py-3 text-xs text-ink md:col-span-2 dark:border-sky-400/40 dark:bg-sky-400/15">
+          <Info size={16} strokeWidth={1.5} aria-hidden className="mt-0.5 shrink-0 text-info-700 dark:text-sky-300" />
+          O acesso é liberado por convite enviado ao e-mail informado. O telefone / WhatsApp recebe os avisos de devolução.
+        </p>
 
         {values.role === "librarian" && (
           <TextField
@@ -83,7 +89,10 @@ export function UserFormFields({ values, errors: external, disabled = false, onC
 
       {values.role === "student" && (
         <section className="mt-8">
-          <h2 className="mb-4 text-h3">Vínculo acadêmico (Aluno)</h2>
+          <h2 className="mb-4 flex items-center justify-between gap-3 border-b border-line pb-2 text-base font-semibold text-ink">
+            Vínculo acadêmico (Aluno)
+            <ToneBadge tone="success">Discente ativo</ToneBadge>
+          </h2>
           <p className="mb-4 flex items-start gap-2 rounded-md border border-line bg-subtle px-4 py-3 text-sm text-ink">
             <Info size={16} strokeWidth={1.5} aria-hidden className="mt-0.5 shrink-0 text-brand" />
             A matrícula (RA) identifica o aluno no balcão de empréstimo e não pode se repetir.
@@ -104,7 +113,7 @@ export function UserFormFields({ values, errors: external, disabled = false, onC
             <TextField
               id="user-course"
               name="course"
-              label="Curso"
+              label="Curso de graduação"
               required
               autoComplete="off"
               placeholder="Ex.: Análise e Desenvolvimento de Sistemas"
