@@ -17,7 +17,7 @@ function localDay(date: Date): string {
 
 // Dias de atraso = dias corridos entre o dia do prazo e o dia da devolução (ou de hoje, se ainda não devolveu).
 // Devolver no dia do prazo, a qualquer hora, não é atraso; o dia seguinte já é 1 dia. Não há desconto por feriado,
-// recesso ou fim de semana: todo dia do calendário conta (decisão registrada em docs/multas.md).
+// recesso ou fim de semana: todo dia do calendário conta (decisão registrada em docs/arquitetura.md, seção "Regras de negócio").
 export function calculateDaysLate(dueAt: Date, returnedAt: Date): number {
   const diff = (Date.parse(localDay(returnedAt)) - Date.parse(localDay(dueAt))) / DAY_MS;
   return Math.max(0, Math.round(diff));

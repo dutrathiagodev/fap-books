@@ -1,4 +1,4 @@
-# Roteiro de QA em produção (v0.8.1)
+# Roteiro de QA em produção (v0.8.6)
 
 Para o Thiago testar `https://fap-books.vercel.app` com calma, na ordem. Cada item tem o resultado esperado. Marque `[x]` o que passou e anote o que falhou (card, tela e o que apareceu).
 
@@ -12,7 +12,7 @@ Para o Thiago testar `https://fap-books.vercel.app` com calma, na ordem. Cada it
 | Professor | `professor@fapbooks.test` | `/professor/livros` |
 | Aluno | `aluno@fapbooks.test` | `/aluno/livros` |
 
-**Estado inicial do banco** (conferido em 09/11/2026): aluno de teste com **3 empréstimos abertos** (A Hora da Estrela vence em 09/11; Clean Code e Dom Casmurro atrasados), 0 multas, 0 reservas pedagógicas, 4 perfis (as 3 contas de teste e o Thiago). O banco é único e não tem dado real: pode testar à vontade, mas deixe como na seção 8.
+**Estado inicial do banco** (conferido em 09/11/2026): aluno de teste com **3 empréstimos abertos** (A Hora da Estrela vence em 09/11; Clean Code e Dom Casmurro atrasados), **2 multas em aberto** (R$ 37,00 e R$ 27,00, criadas pela tarefa diária; total R$ 64,00), 0 reservas pedagógicas, limite da reserva pedagógica em 30 dias, 4 perfis (as 3 contas de teste e o Thiago). O banco é único e não tem dado real: pode testar à vontade, mas deixe como na seção 8.
 
 **Dicas:** use uma janela anônima por perfil (os cookies não se misturam); para tema claro/escuro e celular, abra as ferramentas do navegador (F12) e emule a largura 375 e 768; não há botão de tema, o app segue o sistema.
 
@@ -24,7 +24,8 @@ Para o Thiago testar `https://fap-books.vercel.app` com calma, na ordem. Cada it
 - [ ] `/login` abre; entrar com senha errada mostra erro em português e não revela se o e-mail existe.
 - [ ] `/funcionario/painel`, `/aluno/livros`, `/professor/livros` sem login mandam para `/login`.
 - [ ] `/privacidade`, `/termos` e `/acessibilidade` abrem.
-- [ ] Rota que não existe (ex.: `/xyz`) hoje leva ao login (P2 aberto: decidir se vira página 404).
+- [ ] Rota que não existe (ex.: `/xyz`) mostra a página 404 com o título da aba "Página não encontrada".
+- [ ] Link direto de área protegida sem login (ex.: `/funcionario/acervo?q=dom`) leva a `/login?next=...` e, depois de entrar, volta para o endereço pedido.
 
 ## 2. Aluno (`aluno@fapbooks.test`)
 
@@ -39,7 +40,7 @@ Para o Thiago testar `https://fap-books.vercel.app` com calma, na ordem. Cada it
 
 ### 3.1 Painel e avisos (cards 0097, 0094, 0158, 0234)
 
-- [ ] `/funcionario/painel` mostra os 4 números (emprestados, atrasados, disponíveis, multas) e eles batem com a seção 0 (3 emprestados, 2 atrasados, R$ 0,00).
+- [ ] `/funcionario/painel` mostra os 4 números (emprestados, atrasados, disponíveis, multas) e eles batem com a seção 0 (3 emprestados, 2 atrasados, multas em aberto R$ 64,00). A busca do topo ("Buscar livros por título, autor ou ISBN") só aparece no Painel e leva ao acervo filtrado.
 - [ ] Faixa de aviso ("... vence em até 2 dias e 2 estão atrasados") e a lista "Pendências de hoje".
 - [ ] "Ver avisos de prazo" abre `/funcionario/painel/avisos`, agrupado em Vence hoje e Atrasado; os chips filtram.
 - [ ] **Botão "Avisar no WhatsApp":** o aluno de teste não tem telefone, então aparece "Sem telefone cadastrado". Edite o aluno de teste em Usuários e ponha um telefone seu (só números com DDD) para ver o botão; ele abre o WhatsApp com a mensagem pronta (vence hoje, ou atrasado com dias e multa). Depois **apague o telefone** (seção 8).
@@ -72,13 +73,14 @@ Para o Thiago testar `https://fap-books.vercel.app` com calma, na ordem. Cada it
 
 ### 3.6 Multas e histórico (cards 0061, 0145, 0146, 0068, 0069, 0150 a 0152)
 
-- [ ] `/funcionario/multas`: lista com filtros; a baixa abre o modal e registra autor e data. **Só faça a baixa de multa de teste** (se devolver um dos livros atrasados do aluno, ele gera multa real de R$ 27 ou R$ 37; veja a seção 8).
+- [ ] `/funcionario/multas`: lista com filtros; a baixa abre o modal e registra autor e data. Hoje há 2 multas em aberto do aluno de teste (R$ 37,00 e R$ 27,00): dê baixa em uma para testar e, se quiser repetir, peça para reabrir (seção 8). Devolver um dos livros atrasados também fecha a multa daquele empréstimo no valor final.
 - [ ] `/funcionario/historico`: busque por pessoa e por livro; o filtro de período e situação funciona; mostra retirada, prazo, devolução, renovações e multa.
 
 ### 3.7 Reserva pedagógica (cards 0090 a 0092, 0136, 0137, 0141, 0048)
 
 - [ ] `/funcionario/reservas-pedagogicas`: fila com chips (Pendentes, Aprovadas, Recusadas, Devolvidas); tabela no desktop e cartões abaixo de 1024 px.
-- [ ] "Registrar solicitação presencial": 4 passos (professor, livros, prazo, registrar); prazo acima de 30 dias é recusado.
+- [ ] "Registrar solicitação presencial": 4 passos (professor, livros, prazo, registrar); prazo acima do limite (padrão 30 dias) é recusado.
+- [ ] **Limite de dias:** no quadro azul da fila, o campo "Prazo máximo (dias)" começa em 30 e o "Salvar" só habilita quando o valor muda. Salve 45: aparece "Limite salvo: 45 dias", o texto da regra passa a dizer 45 e o formulário do balcão aceita "Máximo de 45 dias". Volte para 30 no fim. O professor vê o mesmo limite em "por até N dias". Só a funcionária altera.
 - [ ] Aprovar; recusar **exige justificativa**; devolver pede confirmação.
 
 ## 4. Professor (`professor@fapbooks.test`)
@@ -104,11 +106,10 @@ Para o Thiago testar `https://fap-books.vercel.app` com calma, na ordem. Cada it
 
 ## 7. Itens que você precisa saber que estão abertos (não são falha do QA)
 
-- Área do aluno (meus empréstimos, renovação, reservas, multas): cards 0214 e 0215, com o Igor.
-- Aviso automático por e-mail: card 0236. Prova de carga: card 0235.
-- Página 404 para visitante (P2) e linha clicável só no nome na aba Renovação (P3).
-- Conferência lado a lado com o Figma: parcial; histórico por pessoa e a fila com "Devolvidas" e "Disciplina" foram mantidos de propósito (decisão registrada no card 0226).
-- Balão do assistente e botão de WhatsApp não têm frame no Figma.
+- Área do aluno (meus empréstimos, renovação, reservas, multas): cards 0214 a 0217, com o Igor.
+- Aviso automático por e-mail: card 0236. Prova de carga: card 0235. Observabilidade com alerta: card 0252.
+- QA que ainda não foi feito (inativar livro, "Sair e voltar", Lighthouse, celular 375/768, teclado e leitor de tela, capas, newsletter real e as perguntas do balão): card 0248.
+- Conferência com o Figma das telas restantes: card 0249; extras do site ainda sem desenho: card 0251. O painel geral do Histórico (indicadores, exportar CSV) fica para Relatórios (cards 0096 e 0154 a 0156).
 
 ## 8. Como deixar o banco limpo no fim
 
@@ -117,6 +118,7 @@ Peça ao Claude ("limpa o banco de teste") ou rode no Supabase (SQL Editor), nes
 1. Apagar o usuário de teste criado na seção 3.3 (Authentication, Users) e os empréstimos dele.
 2. Apagar os livros `QA-` e as reservas pedagógicas de teste.
 3. Voltar o telefone do aluno de teste para vazio.
-4. Se algum dos dois livros atrasados do aluno de teste foi devolvido (gera multa real), o estado original é: **Dom Casmurro** e **Clean Code** abertos, A Hora da Estrela aberto, 0 multas.
+4. Se algum dos dois livros atrasados do aluno de teste foi devolvido (gera multa real), o estado original é: **Dom Casmurro** e **Clean Code** abertos, A Hora da Estrela aberto, 2 multas em aberto (R$ 37,00 do Clean Code e R$ 27,00 do Dom Casmurro; se alguma foi paga no teste, reabra com `update fines set paid_at = null, paid_by = null where amount_cents = <valor>`).
+5. Voltar o limite da reserva pedagógica para 30 dias (pela própria tela).
 
-Estado esperado ao terminar: 3 empréstimos abertos (todos do aluno de teste), 0 multas, 0 reservas pedagógicas, 4 perfis.
+Estado esperado ao terminar: 3 empréstimos abertos (todos do aluno de teste), 2 multas em aberto, 0 reservas pedagógicas, limite em 30 dias, 4 perfis.
