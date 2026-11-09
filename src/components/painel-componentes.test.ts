@@ -93,10 +93,29 @@ const notice = (over: Partial<DeadlineNoticeView>): DeadlineNoticeView => ({
   fineLabel: "Multa: R$ 0,00",
   daysLate: 0,
   fineCents: 0,
+  whatsappUrl: null,
   ...over,
 });
 
 describe("DeadlineNoticeList", () => {
+  it("com telefone mostra o botão de WhatsApp que abre em nova aba; sem telefone avisa", () => {
+    const out = html(
+      createElement(DeadlineNoticeList, {
+        notices: [
+          notice({ id: "a", userName: "Ana Souza", whatsappUrl: "https://wa.me/5544999887766?text=oi" }),
+          notice({ id: "b", userName: "Bia Lima", whatsappUrl: null }),
+        ],
+      }),
+    );
+    expect(out).toContain('href="https://wa.me/5544999887766?text=oi"');
+    expect(out).toContain('target="_blank"');
+    expect(out).toContain('rel="noopener noreferrer"');
+    expect(out).toContain("Avisar Ana Souza por WhatsApp");
+    expect(out).toContain("Avisar no WhatsApp");
+    expect(out).toContain("Sem telefone cadastrado");
+    expect(out).not.toContain("Avisar Bia Lima");
+  });
+
   it("agrupa e mostra só os grupos com itens, na ordem a vencer, hoje, atrasado", () => {
     const out = html(
       createElement(DeadlineNoticeList, {

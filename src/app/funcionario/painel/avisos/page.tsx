@@ -34,8 +34,11 @@ async function AvisosContent({ searchParams }: { searchParams: SearchParams }) {
           chips={CHIP_ORDER.map((chip) => ({ label: NOTICE_FILTER_LABELS[chip], href: noticeHref(chip), active: chip === filter }))}
         />
       </div>
-      {/* Só promete o que existe: por enquanto o aviso é visto aqui e no painel (o envio por e-mail ainda não está ativo). */}
-      <p className="mb-6 text-xs text-ink-muted">Os avisos aparecem aqui e no painel. O envio por e-mail ainda não está ativo.</p>
+      {/* Só promete o que existe: o aviso aparece aqui e no painel, e a funcionária o envia pelo WhatsApp (o envio automático por e-mail ainda não está ativo). */}
+      <p className="mb-6 text-xs text-ink-muted">
+        Os avisos aparecem aqui e no painel. Use &ldquo;Avisar no WhatsApp&rdquo; para abrir a conversa com a mensagem pronta; quem envia é você. O envio
+        automático por e-mail ainda não está ativo.
+      </p>
 
       {notices.length === 0 ? (
         <EmptyState
