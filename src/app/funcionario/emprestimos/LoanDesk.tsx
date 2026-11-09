@@ -13,7 +13,7 @@ import {
 } from "./actions";
 import { LoanAlert } from "./LoanAlert";
 import { LoanReceiptCard } from "./LoanReceiptCard";
-import { LoanStepper } from "./LoanStepper";
+import { Stepper } from "@/components/Stepper";
 import { useActionKeys } from "./useActionKeys";
 
 const SEARCH_DELAY_MS = 300;
@@ -146,7 +146,7 @@ export function LoanDesk() {
   if (receipt) {
     return (
       <div className="flex flex-col gap-6">
-        <LoanStepper current={6} />
+        <Stepper current={6} />
         <LoanReceiptCard receipt={receipt} onNew={restart} />
       </div>
     );
@@ -187,7 +187,7 @@ export function LoanDesk() {
 
   return (
     <div className="flex flex-col gap-6">
-      <LoanStepper current={step} />
+      <Stepper current={step} />
       {blocked ? (
         <LoanAlert tone="danger">{blocked}</LoanAlert>
       ) : (

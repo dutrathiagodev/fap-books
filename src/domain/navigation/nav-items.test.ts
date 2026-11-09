@@ -13,21 +13,25 @@ describe("navItemsFor", () => {
     expect(labels.at(-1)).toBe("Reserva pedagógica");
   });
 
-  it("funcionário tem 7 itens, começando por Acervo (o Painel volta com o card 0097)", () => {
+  it("funcionário tem 8 itens, começando por Painel e Acervo (sem Início)", () => {
     const labels = navItemsFor("librarian").map((i) => i.label);
-    expect(labels).toHaveLength(7);
-    expect(labels[0]).toBe("Acervo");
-    expect(labels).not.toContain("Painel");
+    expect(labels).toHaveLength(8);
+    expect(labels.slice(0, 2)).toEqual(["Painel", "Acervo"]);
     expect(labels).not.toContain("Início");
   });
 
-  it("aluno e professor têm a pesquisa de livros; a funcionária tem acervo, usuários, empréstimos, multas e histórico", () => {
+  it("aluno tem a pesquisa; professor, a pesquisa e a reserva pedagógica; a funcionária, as telas já entregues", () => {
     expect(navItemsFor("student").filter((i) => i.href).map((i) => i.href)).toEqual(["/aluno/livros"]);
-    expect(navItemsFor("teacher").filter((i) => i.href).map((i) => i.href)).toEqual(["/professor/livros"]);
+    expect(navItemsFor("teacher").filter((i) => i.href).map((i) => i.href)).toEqual([
+      "/professor/livros",
+      "/professor/reserva-pedagogica",
+    ]);
     expect(navItemsFor("librarian").filter((i) => i.href).map((i) => i.href)).toEqual([
+      "/funcionario/painel",
       "/funcionario/acervo",
-      "/funcionario/usuarios/novo",
+      "/funcionario/usuarios",
       "/funcionario/emprestimos",
+      "/funcionario/reservas-pedagogicas",
       "/funcionario/multas",
       "/funcionario/historico",
     ]);

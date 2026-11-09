@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from "react";
 import Link from "next/link";
-import { CircleAlert, CircleCheck, Download, FileSpreadsheet } from "lucide-react";
+import { CircleAlert, CircleCheck, Download, FileText } from "lucide-react";
 import { ACERVO_PATH } from "@/domain/access/access-rules";
 import { IMPORT_MAX_BYTES, IMPORT_MAX_ROWS, IMPORT_TEMPLATE, IMPORT_TEMPLATE_ROWS } from "@/domain/books/book-import";
 import { XLSX_MIME, buildXlsx } from "@/domain/books/xlsx-writer";
@@ -62,13 +62,25 @@ export function BookImportForm({ onImport }: BookImportFormProps) {
       <section className="rounded-lg border border-line bg-surface p-4 shadow-sm md:p-7">
         <label
           htmlFor="planilha"
-          className="flex cursor-pointer flex-col items-center gap-2 rounded-lg border-2 border-dashed border-line-strong px-6 py-10 text-center hover:bg-subtle focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-focus"
+          onDragOver={(event) => event.preventDefault()}
+          onDrop={(event) => {
+            event.preventDefault();
+            if (pending) return;
+            setFile(event.dataTransfer.files[0] ?? null);
+            setResult(null);
+          }}
+          className="flex cursor-pointer flex-col items-center gap-4 rounded-lg border-2 border-dashed border-line-strong bg-subtle px-6 py-5 text-center hover:bg-selected focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-focus sm:flex-row sm:text-left"
         >
-          <FileSpreadsheet size={32} strokeWidth={1.5} aria-hidden className="text-brand" />
-          <span className="text-base font-medium">{file ? file.name : "Escolher arquivo .csv ou .xlsx"}</span>
-          <span className="text-xs text-ink-muted">
-            Até {IMPORT_MAX_ROWS} livros e {IMPORT_MAX_BYTES / 1024} KB por envio. Colunas obrigatórias: titulo, autor,
-            categoria, codigo e quantidade.
+          <FileText size={20} strokeWidth={1.5} aria-hidden className="shrink-0 text-brand" />
+          <span className="min-w-0 flex-1">
+            <span className="block text-sm font-medium text-ink">{file ? file.name : "Arraste um arquivo .csv ou .xlsx aqui"}</span>
+            <span className="block text-xs text-ink-muted">
+              Até {IMPORT_MAX_ROWS} livros e {IMPORT_MAX_BYTES / 1024} KB por envio. Colunas obrigatórias: titulo, autor,
+              categoria, codigo e quantidade.
+            </span>
+          </span>
+          <span className="inline-flex h-10 shrink-0 items-center rounded-md border border-line-strong bg-surface px-4 text-sm font-medium text-ink">
+            {file ? "Trocar arquivo" : "Selecionar arquivo"}
           </span>
           <input
             id="planilha"

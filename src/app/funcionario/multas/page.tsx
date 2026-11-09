@@ -34,14 +34,14 @@ async function MultasContent({ searchParams }: { searchParams: SearchParams }) {
       <PageHeader
         title="Controle de multas"
         breadcrumbs={[{ label: "Gestão bibliotecária" }, { label: "Multas" }]}
-        description="Gestão das multas por atraso na devolução. O pagamento é feito presencialmente no balcão."
+        description="Gestão de pendências financeiras decorrentes de atrasos na devolução. O pagamento é feito presencialmente no balcão."
       />
 
       <aside className="mb-6 flex items-start gap-3 rounded-lg border border-info-100 bg-info-100 p-4 text-sm text-ink dark:border-sky-400/40 dark:bg-sky-400/15">
         <Info size={18} aria-hidden className="mt-0.5 shrink-0 text-info-700 dark:text-sky-300" />
         <p>
-          <strong className="font-medium">Regra de negócio.</strong> O pagamento é presencial e manual (sem pagamento online).
-          A baixa da multa libera o usuário para novos empréstimos.
+          <strong className="font-medium">Regra de negócio:</strong> o pagamento é presencial e manual (dinheiro/balcão). A baixa da
+          multa libera imediatamente o usuário para realizar novos empréstimos.
         </p>
       </aside>
 
@@ -66,6 +66,7 @@ async function MultasContent({ searchParams }: { searchParams: SearchParams }) {
         </form>
         <FilterChips
           label="Filtrar multas"
+          tone="segmented"
           chips={CHIP_ORDER.map((filter) => ({
             label: FILTER_LABELS[filter],
             count: list.counts[filter],

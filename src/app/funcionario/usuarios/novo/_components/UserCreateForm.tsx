@@ -6,6 +6,7 @@ import { ArrowLeft, Check, CircleAlert, CircleCheck, Mail } from "lucide-react";
 import { PageHeader } from "@/components/PageHeader";
 import {
   EMPTY_USER_FORM,
+  USERS_PATH,
   USER_FORM_MESSAGES,
   fieldsFor,
   userFormErrors,
@@ -30,7 +31,7 @@ const BUTTON =
   "inline-flex h-11 w-full items-center justify-center gap-2 rounded-md px-4 text-sm font-medium focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus disabled:cursor-not-allowed disabled:opacity-70 md:w-auto";
 
 // Cadastro de usuários (FAP-0087, frame 0121): seletor de perfil, campos do perfil, diretrizes e aviso de convite.
-export function UserCreateForm({ onCreate, cancelHref = "/funcionario" }: UserCreateFormProps) {
+export function UserCreateForm({ onCreate, cancelHref = USERS_PATH }: UserCreateFormProps) {
   const [values, setValues] = useState<UserFormValues>(EMPTY_USER_FORM);
   const [status, setStatus] = useState<Status>("idle");
   const [error, setError] = useState<string | undefined>();
@@ -90,7 +91,7 @@ export function UserCreateForm({ onCreate, cancelHref = "/funcionario" }: UserCr
       <PageHeader
         title="Cadastro de usuário"
         breadcrumbs={[{ label: "Biblioteca" }, { label: "Usuários" }, { label: "Cadastro" }]}
-        description="Escolha o perfil e preencha os dados. A pessoa recebe um convite por e-mail para criar a própria senha."
+        description="Cadastre alunos, professores e funcionários com acesso integrado ao acervo da biblioteca."
         action={
           <Link
             href={cancelHref}
@@ -125,6 +126,9 @@ export function UserCreateForm({ onCreate, cancelHref = "/funcionario" }: UserCr
           >
             <CircleCheck size={16} strokeWidth={1.5} aria-hidden />
             Usuário cadastrado. O convite foi enviado por e-mail.
+            <Link href={USERS_PATH} className="font-medium underline">
+              Ver lista de usuários
+            </Link>
           </p>
         )}
         {status === "error" && (

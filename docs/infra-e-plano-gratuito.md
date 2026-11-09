@@ -34,7 +34,7 @@ Só dado **igual para todo mundo**. A migration `20261108130000_public_book_cate
 ### First Load JS e streaming
 
 - `npx next analyze` abre o analisador de bundle do Turbopack (Next 16.1+) para ver o que pesa por rota.
-- O CI roda `scripts/orcamento-bundle.mjs` depois da build: soma o JavaScript do navegador (gzip) e falha se passar de **380 KB** no total ou **95 KB** em um arquivo (medido em 08/11/2026: 297 KB e 79 KB antes das telas de usuários, balcão, multas e histórico; 345 KB e 79 KB depois delas, por isso o teto total subiu de 340 para 380 KB, cerca de 10% de folga). Subiu de propósito? Aumente o teto no mesmo PR e explique.
+- O CI roda `scripts/orcamento-bundle.mjs` depois da build: soma o JavaScript do navegador (gzip) e falha se passar de **440 KB** no total ou **95 KB** em um arquivo (medido em 08/11/2026: 297 KB e 79 KB antes das telas de usuários, balcão, multas e histórico; 345 KB e 79 KB depois delas, por isso o teto total subiu de 340 para 380 KB; as telas da reserva pedagógica levaram o total a 385 KB e o teto a 400 KB; com o painel e a listagem de usuários o total foi a 405 KB e o teto a 440 KB). Subiu de propósito? Aumente o teto no mesmo PR e explique.
 - Lighthouse no CI **não foi adicionado**: pede um app rodando com login e mais minutos de CI. Fica como evolução.
 - Streaming com esqueleto nas telas autenticadas segue como está; revisar onde cada `connection()` é necessário depende de as consultas virarem funções SQL (card 0225, lista 1).
 

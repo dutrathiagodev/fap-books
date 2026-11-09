@@ -57,5 +57,33 @@ export function BooksTable({ books, onDelete, onInactivate }: BooksTableProps) {
     },
   ];
 
-  return <DataTable columns={columns} rows={books} rowKey={(book) => book.id} emptyLabel="Nenhum livro encontrado." />;
+  // Celular (Figma 0113 mobile): capa, status, título, autor, código com disponibilidade e as ações.
+  const card = (book: BookListItem) => (
+    <div className="flex items-start gap-3">
+      <BookCover
+        url={book.coverUrl}
+        width={56}
+        height={80}
+        className="h-20 w-14 shrink-0 rounded-sm object-cover"
+        fallback={
+          <span aria-hidden className="flex h-20 w-14 shrink-0 items-center justify-center rounded-sm bg-selected text-brand">
+            <BookOpen size={20} />
+          </span>
+        }
+      />
+      <div className="min-w-0 flex-1">
+        <SituationBadge situation={bookSituation(book)} />
+        <p className="mt-1 font-medium text-ink">{book.title}</p>
+        <p className="text-xs text-ink-muted">{book.author}</p>
+        <p className="text-xs text-ink-muted">
+          Cód. {book.code} · {availableCopies(book.quantity, book.openLoans)} / {book.quantity} disp.
+        </p>
+        <div className="mt-2">
+          <BookRowActions book={book} onDelete={onDelete} onInactivate={onInactivate} />
+        </div>
+      </div>
+    </div>
+  );
+
+  return <DataTable columns={columns} rows={books} rowKey={(book) => book.id} emptyLabel="Nenhum livro encontrado." renderCard={card} />;
 }
