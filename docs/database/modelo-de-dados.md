@@ -11,7 +11,8 @@ O banco do FAP Books é simples: **7 tabelas** que vêm direto dos requisitos do
 | `loans` | Empréstimos: livro, pessoa, prazo, devolução e renovações | RF-10 a RF-12, RF-14, RF-21 |
 | `fines` | A multa de um empréstimo atrasado, em centavos, e a baixa manual | RF-22, RF-23 |
 | `reservations` | Reserva de livro indisponível (aluno) | RF-13 |
-| `pedagogical_reservations` | Pedido do professor: início, dias (1 a 30) e decisão da bibliotecária | RF-16 a RF-20 |
+| `pedagogical_reservations` | Pedido do professor: início, dias (1 a 365 no banco; o limite do dia é o de `library_settings`, padrão 30) e decisão da bibliotecária | RF-16 a RF-20 |
+| `library_settings` | Configurações da biblioteca (hoje só `pedagogical_max_days`); todo usuário logado lê e só a função `set_pedagogical_max_days()` altera (funcionária) | RF-18 |
 | `pedagogical_reservation_books` | Quais livros entram em cada reserva pedagógica | RF-16 |
 | `audit_logs` | Quem fez o quê e quando (só acrescenta, nunca edita) | Requisito de auditoria |
 
