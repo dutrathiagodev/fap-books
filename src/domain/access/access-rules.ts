@@ -45,18 +45,29 @@ export type RouteDecision =
   | { action: "allow" }
   | { action: "redirect"; to: string };
 
+const PROTECTED_AREAS = Object.values(ROLE_HOME);
+
+// Voltar ao endereço pedido depois do login (card 0246). Só aceita caminho interno de uma área protegida:
+// "//site.com", "/\\site.com", endereço absoluto e o próprio /login nunca passam (evita redirecionamento aberto).
+export function safeNextPath(raw: string | null | undefined): string | null {
+  if (!raw || !raw.startsWith("/") || raw.startsWith("//") || raw.includes("\\")) return null;
+  const pathname = raw.split(/[?#]/)[0];
+  return PROTECTED_AREAS.some((area) => isInside(pathname, area)) ? raw : null;
+}
+
 function isInside(pathname: string, area: string) {
   return pathname === area || pathname.startsWith(`${area}/`);
 }
 
 // Decide o que fazer com o endereço pedido. role é null quando a pessoa não está logada.
-export function decideRoute(pathname: string, role: UserRole | null): RouteDecision {
+// search é a parte "?x=y" do endereço: vai junto no ?next= para a pessoa voltar ao mesmo lugar depois de entrar.
+export function decideRoute(pathname: string, role: UserRole | null, search = ""): RouteDecision {
   if (PUBLIC_INFO_PATHS.some((path) => isInside(pathname, path))) return { action: "allow" };
 
   if (role === null) {
-    return pathname === LOGIN_PATH || pathname === LANDING_PATH || pathname === WELCOME_PATH
-      ? { action: "allow" }
-      : { action: "redirect", to: LOGIN_PATH };
+    // Só as áreas dos perfis exigem login. Qualquer outro endereço segue adiante e cai na página 404 (card 0241).
+    if (!PROTECTED_AREAS.some((area) => isInside(pathname, area))) return { action: "allow" };
+    return { action: "redirect", to: `${LOGIN_PATH}?next=${encodeURIComponent(pathname + search)}` };
   }
 
   const home = ROLE_HOME[role];
