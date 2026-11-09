@@ -10,7 +10,7 @@ export function BookImportPage({ onImport }: { onImport: (formData: FormData) =>
       <PageHeader
         title="Cadastro de livro"
         breadcrumbs={[{ label: "Acervo" }, { label: "Novo livro" }]}
-        description="Preencha as informações catalográficas ou use a importação de planilha."
+        description="Importe vários livros de uma vez com uma planilha .csv ou .xlsx."
       />
       <BookFormTabs active="import" />
       <BookImportForm onImport={onImport} />

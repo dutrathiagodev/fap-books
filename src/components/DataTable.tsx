@@ -15,10 +15,12 @@ export interface DataTableProps<Row> {
   // Mensagem quando não há linhas. O erro substitui o vazio.
   emptyLabel?: string;
   error?: string;
+  // Cartão próprio no celular (no lugar da lista "rótulo: valor"). Quem usa desenha o cartão inteiro.
+  renderCard?: (row: Row) => ReactNode;
 }
 
 // Tabela do design system (Figma: Título, Autor, Status, Ações). No celular vira cartões.
-export function DataTable<Row>({ columns, rows, rowKey, emptyLabel = "Nenhum registro.", error }: DataTableProps<Row>) {
+export function DataTable<Row>({ columns, rows, rowKey, emptyLabel = "Nenhum registro.", error, renderCard }: DataTableProps<Row>) {
   const failed = Boolean(error) && rows.length === 0;
   const showEmpty = !error && rows.length === 0;
   const frame = error ? "border-danger-700" : "border-line";
@@ -78,7 +80,12 @@ export function DataTable<Row>({ columns, rows, rowKey, emptyLabel = "Nenhum reg
         ) : showEmpty ? (
           <p className="rounded-lg border border-line bg-surface px-4 py-8 text-center text-sm text-ink-muted">{emptyLabel}</p>
         ) : (
-          rows.map((row) => (
+          rows.map((row) =>
+            renderCard ? (
+              <article key={rowKey(row)} className={`rounded-lg border bg-surface p-3 ${frame}`}>
+                {renderCard(row)}
+              </article>
+            ) : (
             <article key={rowKey(row)} className={`rounded-lg border bg-surface px-4 ${frame}`}>
               {columns.map((column) => (
                 <div key={column.key} className="flex items-start justify-between gap-3 border-b border-line py-3 last:border-b-0">
@@ -87,7 +94,8 @@ export function DataTable<Row>({ columns, rows, rowKey, emptyLabel = "Nenhum reg
                 </div>
               ))}
             </article>
-          ))
+            ),
+          )
         )}
       </div>
     </div>

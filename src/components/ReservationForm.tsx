@@ -3,6 +3,8 @@
 import { useRef, useState, useTransition } from "react";
 import Link from "next/link";
 import { CalendarDays, Info } from "lucide-react";
+import { ReservationOriginBadge } from "./ReservationBadges";
+import { Stepper } from "./Stepper";
 import {
   addDays,
   bookTitlesSummary,
@@ -62,10 +64,12 @@ const COPY = {
   },
 } as const;
 
+const IN_PERSON_STEPS = ["Buscar o professor", "Escolher os livros", "Definir o prazo", "Registrar"] as const;
+
 const NETWORK_ERROR = "Não foi possível enviar agora. Confira a conexão e tente de novo.";
 
 // Resumo antes de enviar (Figma, card 0137): quantos livros, o período e quando devolver.
-function Summary({ books, startDate, days }: { books: PickableBook[]; startDate: string; days: number }) {
+function Summary({ books, startDate, days, inPerson }: { books: PickableBook[]; startDate: string; days: number; inPerson: boolean }) {
   const valid = isIsoDate(startDate) && Number.isInteger(days) && days >= MIN_DAYS && days <= MAX_DAYS;
   if (books.length === 0 && !valid) return null;
   return (
@@ -77,6 +81,11 @@ function Summary({ books, startDate, days }: { books: PickableBook[]; startDate:
         {books.length === 0 ? "Nenhum livro escolhido" : `${books.length} ${books.length === 1 ? "livro" : "livros"}: ${bookTitlesSummary(books.map((book) => book.title), 3)}`}
         {valid && ` · início ${formatIsoDate(startDate)} · devolução até ${formatIsoDate(addDays(startDate, days))} (${formatDays(days)})`}
       </p>
+      {inPerson && (
+        <p className="mt-2 flex items-center gap-2 text-xs text-ink-muted">
+          Origem na fila: <ReservationOriginBadge inPerson />
+        </p>
+      )}
     </aside>
   );
 }
@@ -162,8 +171,12 @@ export function ReservationForm({ variant, today, searchBooks, searchTeachers, s
   }
 
   const daysNumber = Number(days);
+  // Passo atual do registro presencial (Figma 0138): o primeiro que ainda falta; depois de registrar, todos concluídos.
+  const step = done ? IN_PERSON_STEPS.length + 1 : !teacher ? 1 : books.length === 0 ? 2 : 3;
 
   return (
+    <>
+    {variant === "in_person" && <div className="mb-5"><Stepper current={step} steps={IN_PERSON_STEPS} label="Passos do registro" /></div>}
     <form onSubmit={onSubmit} noValidate className="flex flex-col gap-5 rounded-lg border border-line bg-surface p-4 sm:p-6">
       <h2 className="text-h3">{copy.title}</h2>
 
@@ -212,7 +225,7 @@ export function ReservationForm({ variant, today, searchBooks, searchTeachers, s
         />
       </div>
 
-      <Summary books={books} startDate={startDate} days={daysNumber} />
+      <Summary books={books} startDate={startDate} days={daysNumber} inPerson={variant === "in_person"} />
 
       <aside className="flex items-start gap-3 rounded-lg border border-info-100 bg-info-100 p-4 text-sm text-ink dark:border-sky-400/40 dark:bg-sky-400/15">
         <Info size={18} aria-hidden className="mt-0.5 shrink-0 text-info-700 dark:text-sky-300" />
@@ -238,5 +251,6 @@ export function ReservationForm({ variant, today, searchBooks, searchTeachers, s
 
       {toast && <Toast message={toast} onClose={() => setToast(null)} />}
     </form>
+    </>
   );
 }

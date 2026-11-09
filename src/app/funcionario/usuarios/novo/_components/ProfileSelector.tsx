@@ -1,6 +1,6 @@
 "use client";
 
-import { Check, GraduationCap, IdCard, Presentation, type LucideIcon } from "lucide-react";
+import { BookOpen, CircleCheck, IdCard, User, type LucideIcon } from "lucide-react";
 import { USER_ROLES, USER_ROLE_CARDS } from "@/domain/users/user-form-rules";
 import type { UserRole } from "@/types/profile";
 
@@ -11,7 +11,7 @@ interface ProfileSelectorProps {
   error?: string;
 }
 
-const ICONS: Record<UserRole, LucideIcon> = { student: GraduationCap, teacher: Presentation, librarian: IdCard };
+const ICONS: Record<UserRole, LucideIcon> = { student: User, teacher: IdCard, librarian: BookOpen };
 
 // Seletor de perfil (card 0122): três cartões com ícone, nome e subtítulo, e o marcador de selecionado.
 // É um grupo de rádios, então funciona por teclado e leitor de tela.
@@ -30,7 +30,7 @@ export function ProfileSelector({ value, onChange, disabled = false, error }: Pr
             <label
               key={role}
               className={`relative flex cursor-pointer items-center gap-3 rounded-lg border p-4 @xl:flex-col @xl:items-start has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-focus has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-50 ${
-                selected ? "border-brand bg-selected" : "border-line bg-surface hover:bg-subtle"
+                selected ? "border-2 border-brand bg-surface" : "border-line bg-surface hover:bg-subtle"
               }`}
             >
               <input
@@ -41,7 +41,11 @@ export function ProfileSelector({ value, onChange, disabled = false, error }: Pr
                 onChange={() => onChange(role)}
                 className="sr-only"
               />
-              <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-subtle text-brand">
+              <span
+                className={`flex size-10 shrink-0 items-center justify-center rounded-md ${
+                  selected ? "bg-brand text-on-brand" : "bg-selected text-brand"
+                }`}
+              >
                 <Icon size={20} strokeWidth={1.5} aria-hidden />
               </span>
               <span className="min-w-0">
@@ -49,8 +53,8 @@ export function ProfileSelector({ value, onChange, disabled = false, error }: Pr
                 <span className="block text-xs text-ink-muted">{card.subtitle}</span>
               </span>
               {selected && (
-                <span className="ml-auto flex size-5 shrink-0 @xl:absolute @xl:top-3 @xl:right-3 @xl:ml-0 items-center justify-center rounded-full bg-brand text-on-brand">
-                  <Check size={12} strokeWidth={2} aria-hidden />
+                <span className="ml-auto flex shrink-0 text-brand @xl:absolute @xl:top-3 @xl:right-3 @xl:ml-0">
+                  <CircleCheck size={20} strokeWidth={1.5} aria-hidden />
                   <span className="sr-only">Selecionado</span>
                 </span>
               )}

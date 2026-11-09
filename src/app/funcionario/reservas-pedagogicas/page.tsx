@@ -58,6 +58,7 @@ async function QueueContent({ searchParams }: { searchParams: SearchParams }) {
       <div className="mb-4">
         <FilterChips
           label="Filtrar solicitações"
+          tone="solid"
           chips={QUEUE_FILTERS.map((filter) => ({
             label: QUEUE_FILTER_LABELS[filter],
             count: list.counts[filter],

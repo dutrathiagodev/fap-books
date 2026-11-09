@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { FileUp, Info, Search } from "lucide-react";
+import { FileUp, Info, Plus, Search } from "lucide-react";
 import { BooksTable, EmptyState, FilterMenu, PageHeader, Pagination, TextField, TextLink } from "@/components";
 import { RolePage } from "@/components/RolePage";
 import { ACERVO_PATH } from "@/domain/access/access-rules";
@@ -44,18 +44,19 @@ async function AcervoContent({ searchParams }: { searchParams: SearchParams }) {
         breadcrumbs={[{ label: "Gestão bibliotecária" }, { label: "Acervo" }]}
         description="Gerencie o catálogo, os exemplares e a disponibilidade da biblioteca."
         action={
-          <div className="flex flex-wrap gap-3">
+          <div className="flex flex-col gap-3 sm:flex-row">
             <Link
               href={`${ACERVO_PATH}/novo?aba=importar`}
-              className="inline-flex h-11 items-center gap-2 rounded-md border border-line bg-surface px-4 text-sm font-medium text-brand hover:bg-subtle focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
+              className="inline-flex h-11 items-center justify-center gap-2 rounded-md border border-line bg-surface px-4 text-sm font-medium text-brand hover:bg-subtle focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
             >
               <FileUp size={16} strokeWidth={1.5} aria-hidden />
               Importar planilha
             </Link>
             <Link
               href={`${ACERVO_PATH}/novo`}
-              className="inline-flex h-11 items-center rounded-md bg-brand px-5 text-sm font-medium text-on-brand hover:bg-brand-hover"
+              className="inline-flex h-11 items-center justify-center gap-2 rounded-md bg-brand px-5 text-sm font-medium text-on-brand hover:bg-brand-hover"
             >
+              <Plus size={16} strokeWidth={1.5} aria-hidden />
               Novo livro
             </Link>
           </div>
@@ -70,14 +71,16 @@ async function AcervoContent({ searchParams }: { searchParams: SearchParams }) {
           id="acervo-busca"
           name="q"
           label="Buscar"
+          hideLabel
           type="search"
           defaultValue={filters.query}
-          placeholder="Título, autor ou código"
+          placeholder="Buscar por título, autor, ISBN ou código"
           leadingIcon={Search}
           className="min-w-60 flex-1"
         />
         <FilterMenu
           label="Categoria"
+          hideLabel
           value={filters.category || "Todas as categorias"}
           options={[
             { label: "Todas as categorias", category: "" },
@@ -90,6 +93,7 @@ async function AcervoContent({ searchParams }: { searchParams: SearchParams }) {
         />
         <FilterMenu
           label="Status"
+          hideLabel
           value={STATUS_OPTIONS.find((option) => option.value === filters.status)?.label ?? "Todos os status"}
           options={STATUS_OPTIONS.map((option) => ({
             label: option.label,

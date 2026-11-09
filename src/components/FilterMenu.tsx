@@ -6,6 +6,8 @@ import { Check, ChevronDown } from "lucide-react";
 
 interface FilterMenuProps {
   label: string;
+  // Esconde o rótulo só da vista (continua para o leitor de tela): o Figma mostra o menu sem texto em cima.
+  hideLabel?: boolean;
   // Texto da opção escolhida agora (aparece fechado).
   value: string;
   options: Array<{ label: string; href: string; active: boolean }>;
@@ -14,7 +16,7 @@ interface FilterMenuProps {
 // Menu de filtro: <details> com uma lista de links. Cada opção é um endereço (guarda a pesquisa e dá para copiar), então
 // funciona até sem JavaScript. O pouco de JavaScript só fecha o menu ao escolher ou ao clicar fora. Substitui o <select>
 // do navegador, cuja lista aberta não segue o tema do sistema.
-export function FilterMenu({ label, value, options }: FilterMenuProps) {
+export function FilterMenu({ label, hideLabel = false, value, options }: FilterMenuProps) {
   const menu = useRef<HTMLDetailsElement>(null);
 
   useEffect(() => {
@@ -27,9 +29,9 @@ export function FilterMenu({ label, value, options }: FilterMenuProps) {
 
   return (
     <div className="flex flex-col gap-1 text-sm font-medium">
-      <span>{label}</span>
+      <span className={hideLabel ? "sr-only" : undefined}>{label}</span>
       <details ref={menu} className="group relative">
-        <summary className="flex h-10 min-w-48 cursor-pointer list-none items-center justify-between gap-3 rounded-md border border-line-strong bg-surface px-3 text-sm font-normal outline-offset-2 hover:bg-subtle focus-visible:outline-2 focus-visible:outline-focus">
+        <summary className="flex h-11 min-w-48 cursor-pointer list-none items-center justify-between gap-3 rounded-md border border-line-strong bg-surface px-3 text-sm font-normal outline-offset-2 hover:bg-subtle focus-visible:outline-2 focus-visible:outline-focus">
           {value}
           <ChevronDown size={16} aria-hidden className="text-ink-muted transition-transform group-open:rotate-180" />
         </summary>
