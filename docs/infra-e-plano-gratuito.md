@@ -143,5 +143,5 @@ Travas: só aceita `localhost`; outro host exige `PROVA_HOSTS_PERMITIDOS` (decis
 | Apagar auditoria antiga | Dono rodar o workflow à mão com `apagar_auditoria = sim` (a partir de 2028 haverá o que apagar) |
 | Avisos de vencimento (RF-24) | Dono definir canal e tabela de avisos |
 | Prova de carga com números oficiais | Funções de busca paginada |
-| `docs/architecture/system-design.md` (diagrama, estimativas, ADRs, plano de crescimento) | Fecha o 0232 depois das listas 1 e 2 do 0225; este documento é a base das partes de cache, limites e agendamento |
+| `docs/architecture/system-design.md` (diagrama, estimativas, ADRs, plano de crescimento) | **Escrito em 09/11/2026**; a seção 7 dele lista o que ainda não está provado |
 | Lighthouse no CI | Evolução opcional |
