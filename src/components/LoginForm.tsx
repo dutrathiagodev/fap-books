@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { useRouter } from "next/navigation";
 import { ChevronRight, Eye, EyeOff, Mail } from "lucide-react";
+import { safeNextPath } from "@/domain/access/access-rules";
 import { createSupabaseBrowserClient } from "@/lib/supabase/browser-client";
 import { Button } from "./Button";
 import { TextField } from "./TextField";
@@ -50,7 +51,8 @@ export function LoginForm() {
       return;
     }
 
-    router.replace("/");
+    // Link direto pedido antes do login (?next=): volta para ele; qualquer valor suspeito cai na raiz.
+    router.replace(safeNextPath(new URLSearchParams(window.location.search).get("next")) ?? "/");
     router.refresh();
   }
 

@@ -34,6 +34,11 @@ export function RenewDesk({ loans }: { loans: OpenLoanView[] }) {
     });
   }
 
+  function select(id: string) {
+    setSelectedId(id);
+    setNotice(undefined);
+  }
+
   const columns: DataTableColumn<OpenLoanView>[] = [
     {
       key: "user",
@@ -43,10 +48,7 @@ export function RenewDesk({ loans }: { loans: OpenLoanView[] }) {
           type="button"
           aria-pressed={loan.id === selectedId}
           aria-label={`Selecionar ${loan.bookTitle} de ${loan.userName}`}
-          onClick={() => {
-            setSelectedId(loan.id);
-            setNotice(undefined);
-          }}
+          onClick={() => select(loan.id)}
           className={`cursor-pointer rounded-md text-left focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus ${loan.id === selectedId ? "ring-2 ring-brand ring-offset-4 ring-offset-surface" : ""}`}
         >
           <LoanPerson name={loan.userName} initials={loan.initials} registration={loan.registration} />
@@ -71,7 +73,7 @@ export function RenewDesk({ loans }: { loans: OpenLoanView[] }) {
     <div className="flex flex-col gap-4">
       {notice && <LoanAlert tone={notice.tone}>{notice.text}</LoanAlert>}
       <div className="grid items-start gap-4 lg:grid-cols-[minmax(0,1fr)_380px]">
-        <DataTable columns={columns} rows={loans} rowKey={(loan) => loan.id} />
+        <DataTable columns={columns} rows={loans} rowKey={(loan) => loan.id} onRowClick={(loan) => select(loan.id)} selectedKey={selectedId} />
 
         <section aria-labelledby="renew-title" className="flex min-w-0 flex-col gap-3.5 rounded-lg border border-line bg-surface p-5">
           <h2 id="renew-title" className="font-sans text-base leading-6 font-semibold text-ink">Renovar empréstimo</h2>

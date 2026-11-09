@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { SearchX } from "lucide-react";
 import { EmptyState, Logo } from "@/components";
+import { NotFoundTitle } from "@/components/NotFoundTitle";
 
 export const metadata: Metadata = { title: "Página não encontrada | FAP Books" };
 
@@ -10,6 +11,7 @@ export const metadata: Metadata = { title: "Página não encontrada | FAP Books"
 export default function NotFound() {
   return (
     <main className="mx-auto flex w-full max-w-xl flex-1 flex-col items-center justify-center gap-8 p-6">
+      <NotFoundTitle />
       <h1 className="sr-only">Página não encontrada</h1>
       <Logo width={140} />
       <EmptyState
