@@ -9,7 +9,6 @@ import { describe, expect, it } from "vitest";
 // Estas são as leituras sem limite que já existiam quando a regra entrou. Elas NÃO podem aumentar; cada uma que for
 // trocada por função SQL ou paginação no banco (card 0225, lista 1) deve ser removida daqui. Teto por arquivo:
 const LEITURAS_SEM_LIMITE_CONHECIDAS: Record<string, number> = {
-  "books.service.ts": 9,
   "loans-lookup.service.ts": 2,
 };
 
