@@ -6,7 +6,7 @@ export interface TextFieldProps {
   id: string;
   label: string;
   name?: string;
-  type?: "text" | "email" | "password" | "number" | "search";
+  type?: "text" | "email" | "password" | "number" | "search" | "date";
   placeholder?: string;
   // Texto de ajuda abaixo do campo. Some quando há erro.
   hint?: string;
@@ -20,6 +20,9 @@ export interface TextFieldProps {
   autoComplete?: string;
   inputMode?: "text" | "numeric" | "search" | "email";
   maxLength?: number;
+  // Limites de campo numérico ou de data (aviso do navegador; o servidor confere de novo).
+  min?: string | number;
+  max?: string | number;
   // Rótulo só para leitor de tela, quando a tela já explica o campo (ex.: barra de busca).
   hideLabel?: boolean;
   // Classes de posição do campo na tela (largura, coluna da grade). O visual vem do componente.
@@ -48,6 +51,8 @@ export function TextField({
   autoComplete,
   inputMode,
   maxLength,
+  min,
+  max,
   hideLabel = false,
   className = "",
   onChange,
@@ -84,6 +89,8 @@ export function TextField({
           autoComplete={autoComplete}
           inputMode={inputMode}
           maxLength={maxLength}
+          min={min}
+          max={max}
           aria-invalid={error ? true : undefined}
           aria-describedby={describedBy}
           onChange={onChange ? (event) => onChange(event.target.value) : undefined}
