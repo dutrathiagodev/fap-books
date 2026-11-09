@@ -27,7 +27,7 @@ begin for l in execute 'explain ' || q loop r := r || l || E'\n'; end loop; retu
 -- Livros de teste: 1 (poucos exemplares), 2 e 3 (acervo para busca), mais 1500 para o índice ter o que indexar.
 insert into public.books (id, title, author, category, code, isbn, quantity) values
  ('b0000000-0000-0000-0000-0000000000c1','Dom Casmurro','Machado de Assis','Romance','S-001',null,1),
- ('b0000000-0000-0000-0000-0000000000c2','São Paulo Antigo','Maria Souza','História','S-002','9788535287615',2),
+ ('b0000000-0000-0000-0000-0000000000c2','São Paulo Antigo','Maria Souza','História','S-002','978-85-352-8761-5',2),
  ('b0000000-0000-0000-0000-0000000000c3','Sao Bernardo','Graciliano Ramos','Romance','S-003',null,1),
  ('b0000000-0000-0000-0000-0000000000c4','Cem por cento (100%) Seguro','Fulano','Técnico','S-004',null,1),
  ('b0000000-0000-0000-0000-0000000000c5','Livro de Cinco','Autor','Técnico','S-005',null,5);
@@ -56,9 +56,15 @@ begin
   select count(*) into n from public.search_books('SÃO paulo');
   perform pg_temp.say('busca com acento e maiúscula acha o mesmo livro', n = 1);
   select count(*) into n from public.search_books('9788535287615');
-  perform pg_temp.say('busca por ISBN', n = 1);
+  perform pg_temp.say('busca por ISBN sem hífens acha o livro guardado com hífens (0247)', n = 1);
+  select count(*) into n from public.search_books('978-85-352-8761-5');
+  perform pg_temp.say('busca por ISBN com hífens', n = 1);
+  select count(*) into n from public.search_books('978-85-352');
+  perform pg_temp.say('busca por pedaço do ISBN com hífens', n = 1);
+  select count(*) into n from public.search_books('85352876');
+  perform pg_temp.say('busca por pedaço do ISBN sem hífens', n = 1);
   select isbn into msg from public.search_books('9788535287615');
-  perform pg_temp.say('a busca devolve o ISBN do livro', msg = '9788535287615');
+  perform pg_temp.say('a busca devolve o ISBN do livro como foi guardado', msg = '978-85-352-8761-5');
   perform pg_temp.say('livro sem empréstimo nem reserva não tem histórico', not (select has_history from public.search_books('s-003')));
   select count(*) into n from public.search_books('s-003');
   perform pg_temp.say('busca por código', n = 1);
