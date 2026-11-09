@@ -37,7 +37,7 @@ O produto reúne, em um só lugar, uma área de consulta ao acervo (para alunos 
 
 ## Estado atual
 
-O projeto está em **MVP em desenvolvimento** (versão `0.7.0`). O que já funciona:
+O projeto está em **MVP em desenvolvimento** (versão `0.8.0`). O que já funciona:
 
 | | Área | O que já existe |
 | -- | -- | -- |
@@ -49,10 +49,12 @@ O projeto está em **MVP em desenvolvimento** (versão `0.7.0`). O que já funci
 | 🔄 | **Balcão** | Registro de empréstimo em 5 passos, devolução (com multa de R$ 1,00 por dia de atraso) e renovação até 3 vezes, pelas funções do banco, com limite de 3 livros (4 para formandos) e proteção contra clique duplo |
 | 💵 | **Multas** | Lista com filtros e busca, baixa manual do pagamento presencial com autor e data |
 | 🧾 | **Histórico** | Empréstimos por usuário e por livro, com filtro por período e situação |
-| 👥 | **Usuários** | Cadastro de aluno, professor e funcionário por convite de e-mail: a pessoa define a própria senha em `/definir-senha` |
+| 👥 | **Usuários** | Listagem com busca e filtros, edição e inativação/reativação; cadastro de aluno, professor e funcionário por convite de e-mail (com a logo da FAP): a pessoa define a própria senha em `/definir-senha` |
+| 🗂️ | **Painel da bibliotecária** | Indicadores do dia (emprestados, atrasos, prazos, disponíveis, multas e reservas pendentes), pendências e atalhos, com avisos de prazo |
+| 🎓 | **Reserva pedagógica** | Professor solicita livros para a aula (até 30 dias); a funcionária registra no balcão, aprova ou recusa com justificativa, acompanha a fila e a devolução |
 | 🎨 | **Design system** | Tokens, tema e componentes base (botão, campo, tabela, modal) usados pelas telas |
 
-Em andamento: painel da bibliotecária, reserva pedagógica, avisos de prazo e relatórios (esperam o design); tudo segue no quadro do Trello.
+Em andamento: área do aluno (meus empréstimos e renovação), relatórios e a conferência final com o Figma; tudo segue no quadro do Trello.
 
 ## Módulos
 
