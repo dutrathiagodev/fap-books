@@ -35,6 +35,8 @@ export interface DeadlineNoticeView {
   // Dias de atraso (0 se ainda não venceu).
   daysLate: number;
   fineCents: number;
+  // Link do WhatsApp com a mensagem pronta (a funcionária envia). null quando a pessoa não tem telefone válido cadastrado.
+  whatsappUrl: string | null;
 }
 
 // Reserva pedagógica aguardando decisão (só leitura: a fila de aprovação é de outra tela).

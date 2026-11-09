@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { MessageCircle } from "lucide-react";
 import { DEADLINE_GROUP_TITLES, groupNotices, loanHref } from "../domain/panel/panel-rules";
 import type { DeadlineNoticeView, DeadlineStatus } from "../types/panel";
 import { DeadlineBadge } from "./DeadlineBadge";
@@ -27,6 +28,21 @@ function NoticeRow({ notice }: { notice: DeadlineNoticeView }) {
           <p className="text-xs text-ink-muted">{notice.fineLabel}</p>
         </div>
         <DeadlineBadge status={notice.status} />
+        {notice.whatsappUrl ? (
+          // Abre o WhatsApp com a mensagem pronta; quem envia é a funcionária (sem API e sem custo).
+          <a
+            href={notice.whatsappUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={`Avisar ${notice.userName} por WhatsApp (abre em uma nova aba)`}
+            className="inline-flex h-8 items-center gap-1.5 rounded-md bg-btn-soft px-2.5 text-sm font-medium text-brand transition-colors hover:bg-btn-soft-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus dark:text-navy-200"
+          >
+            <MessageCircle aria-hidden className="size-4" />
+            Avisar no WhatsApp
+          </a>
+        ) : (
+          <span className="text-xs text-ink-muted">Sem telefone cadastrado</span>
+        )}
         <Link
           href={loanHref(notice.code)}
           className="text-sm font-medium text-link hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"

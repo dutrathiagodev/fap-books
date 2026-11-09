@@ -40,7 +40,7 @@ export async function listDeadlineNotices(filter: NoticeFilter = "all", now = ne
   const supabase = await createSupabaseServerClient();
   let query = supabase
     .from("loans")
-    .select("id, due_at, profiles!loans_user_id_fkey(full_name), books(title, code)")
+    .select("id, due_at, profiles!loans_user_id_fkey(full_name, phone), books(title, code)")
     .is("returned_at", null)
     .order("due_at", { ascending: true })
     .limit(NOTICE_LIMIT);

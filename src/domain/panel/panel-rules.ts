@@ -1,4 +1,5 @@
 import { calculateDaysLate, calculateFine, formatLoanDate, formatReais, localDay } from "../loans/loan-rules";
+import { buildNoticeMessage, buildWhatsAppUrl } from "../whatsapp/whatsapp-link";
 import type { DeadlineNoticeView, DeadlineStatus, NoticeFilter, PanelSummary, PendingItem, PendingPedagogicalView } from "@/types/panel";
 
 // Regras do painel da bibliotecária (RF-24, RF-30 a RF-32; Figma, cards 0157 e 0147).
@@ -72,7 +73,7 @@ export function whenLabel(status: DeadlineStatus, days: number): string {
 export interface NoticeRow {
   id: string;
   due_at: string;
-  profiles: { full_name: string } | null;
+  profiles: { full_name: string; phone: string | null } | null;
   books: { title: string; code: string } | null;
 }
 
@@ -82,17 +83,25 @@ export function toNoticeView(row: NoticeRow, now: Date, soonDays = DUE_SOON_DAYS
   const status = deadlineStatus(dueAt, now, soonDays);
   if (!status) return null;
   const { daysLate, amountCents } = calculateFine(dueAt, now);
+  const userName = row.profiles?.full_name ?? "Usuário removido";
+  const bookTitle = row.books?.title ?? "Livro removido";
+  const dueOn = formatLoanDate(dueAt);
+  const fineLabel = `Multa: ${formatReais(amountCents)}`;
   return {
     id: row.id,
     status,
-    userName: row.profiles?.full_name ?? "Usuário removido",
-    bookTitle: row.books?.title ?? "Livro removido",
+    userName,
+    bookTitle,
     code: row.books?.code ?? "—",
-    dueOn: formatLoanDate(dueAt),
+    dueOn,
     whenLabel: whenLabel(status, status === "overdue" ? daysLate : daysUntilDue(dueAt, now)),
-    fineLabel: `Multa: ${formatReais(amountCents)}`,
+    fineLabel,
     daysLate,
     fineCents: amountCents,
+    // Pessoa removida não recebe aviso: sem perfil não há telefone e o link não é gerado.
+    whatsappUrl: row.profiles
+      ? buildWhatsAppUrl(row.profiles.phone, buildNoticeMessage({ status, userName, bookTitle, dueOn, daysLate, fineLabel }))
+      : null,
   };
 }
 

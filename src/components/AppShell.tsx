@@ -28,6 +28,7 @@ import { logout } from "@/app/actions/auth";
 import { ROLE_LABELS } from "@/domain/access/access-rules";
 import { isActive, navItemsFor, type NavItem } from "@/domain/navigation/nav-items";
 import type { Profile, UserRole } from "@/types/profile";
+import { HelpAssistant } from "./HelpAssistant";
 import { Logo } from "./Logo";
 
 interface AppShellProps {
@@ -400,6 +401,8 @@ export function AppShell({ profile, noticeCount = 0, children }: AppShellProps) 
           <div className="mx-auto w-full max-w-[1280px]">{children}</div>
         </main>
       </div>
+      {/* Aluno e professor tiram dúvidas por aqui; a bibliotecária opera o balcão e não precisa do assistente. */}
+      {profile.role !== "librarian" && <HelpAssistant />}
     </div>
   );
 }

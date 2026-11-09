@@ -76,7 +76,7 @@ describe("toNoticeView", () => {
   const row = (iso: string) => ({
     id: "l1",
     due_at: due(iso).toISOString(),
-    profiles: { full_name: "João Pedro Alves" },
+    profiles: { full_name: "João Pedro Alves", phone: "44999887766" as string | null },
     books: { title: "Banco de Dados", code: "T-0042" },
   });
 
@@ -108,6 +108,24 @@ describe("toNoticeView", () => {
     expect(toNoticeView(row("2026-11-08T08:00:00"), NOW)).toMatchObject({ status: "today", whenLabel: "Vence hoje" });
   });
 
+  it("com telefone válido, gera o link do WhatsApp com a mensagem do aviso", () => {
+    const url = toNoticeView(row("2026-11-04T12:00:00"), NOW)?.whatsappUrl ?? "";
+    expect(url.startsWith("https://wa.me/5544999887766?text=")).toBe(true);
+    const text = decodeURIComponent(url.split("?text=")[1]);
+    expect(text).toContain("Olá, João!");
+    expect(text).toContain("4 dias de atraso");
+    expect(text).toContain("Multa: R$ 4,00");
+  });
+
+  it("sem telefone ou com telefone inválido, não há link", () => {
+    expect(toNoticeView({ ...row("2026-11-04T12:00:00"), profiles: { full_name: "Ana", phone: null } }, NOW)?.whatsappUrl).toBeNull();
+    expect(toNoticeView({ ...row("2026-11-04T12:00:00"), profiles: { full_name: "Ana", phone: "123" } }, NOW)?.whatsappUrl).toBeNull();
+  });
+
+  it("pessoa removida não gera link", () => {
+    expect(toNoticeView({ ...row("2026-11-04T12:00:00"), profiles: null }, NOW)?.whatsappUrl).toBeNull();
+  });
+
   it("prazo longe não é aviso", () => {
     expect(toNoticeView(row("2026-11-20T12:00:00"), NOW)).toBeNull();
   });
@@ -129,6 +147,7 @@ const notice = (over: Partial<DeadlineNoticeView>): DeadlineNoticeView => ({
   fineLabel: "Multa: R$ 0,00",
   daysLate: 0,
   fineCents: 0,
+  whatsappUrl: null,
   ...over,
 });
 
