@@ -37,7 +37,7 @@ export function DataTable<Row>({ columns, rows, rowKey, emptyLabel = "Nenhum reg
           <thead className="bg-subtle text-ink">
             <tr>
               {columns.map((column) => (
-                <th key={column.key} scope="col" className="px-4 py-3 font-medium">
+                <th key={column.key} scope="col" className="px-4 py-3 text-xs font-semibold uppercase tracking-wide text-ink-muted">
                   {column.header}
                 </th>
               ))}

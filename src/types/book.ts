@@ -19,6 +19,9 @@ export interface BookListItem {
   quantity: number;
   status: BookStatus;
   coverUrl: string | null;
+  // Edição e editora, para o subtítulo "1ª edição · Garnier" da listagem (Figma 0113).
+  edition: string | null;
+  publisher: string | null;
   // Exemplares emprestados agora (empréstimos sem devolução).
   openLoans: number;
   // Tem reserva aguardando ou pronta para retirada (guarda um exemplar).

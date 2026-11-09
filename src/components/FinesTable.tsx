@@ -80,7 +80,7 @@ export function FinesTable({ fines, onPay, disabled = false }: FinesTableProps) 
           <thead className="bg-subtle text-ink">
             <tr>
               {headers.map((header) => (
-                <th key={header} scope="col" className={`px-4 py-3 font-medium ${header === "Valor" ? "text-right" : ""}`}>
+                <th key={header} scope="col" className={`px-4 py-3 text-xs font-semibold uppercase tracking-wide text-ink-muted ${header === "Valor" ? "text-right" : ""}`}>
                   {header}
                 </th>
               ))}
