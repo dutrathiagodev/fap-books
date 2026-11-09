@@ -37,7 +37,7 @@ O produto reúne, em um só lugar, uma área de consulta ao acervo (para alunos 
 
 ## Estado atual
 
-O projeto está em **MVP em desenvolvimento** (versão `0.8.0`). O que já funciona:
+O projeto está em **MVP em desenvolvimento** (versão `0.8.1`). O que já funciona:
 
 | | Área | O que já existe |
 | -- | -- | -- |
@@ -50,11 +50,12 @@ O projeto está em **MVP em desenvolvimento** (versão `0.8.0`). O que já funci
 | 💵 | **Multas** | Lista com filtros e busca, baixa manual do pagamento presencial com autor e data |
 | 🧾 | **Histórico** | Empréstimos por usuário e por livro, com filtro por período e situação |
 | 👥 | **Usuários** | Listagem com busca e filtros, edição e inativação/reativação; cadastro de aluno, professor e funcionário por convite de e-mail (com a logo da FAP): a pessoa define a própria senha em `/definir-senha` |
-| 🗂️ | **Painel da bibliotecária** | Indicadores do dia (emprestados, atrasos, prazos, disponíveis, multas e reservas pendentes), pendências e atalhos, com avisos de prazo |
+| 🗂️ | **Painel da bibliotecária** | Indicadores do dia (emprestados, atrasos, prazos, disponíveis, multas e reservas pendentes), pendências e atalhos, com avisos de prazo e o botão "Avisar no WhatsApp" (mensagem pronta, sem custo) |
+| 💬 | **Assistente de ajuda** | Balão para aluno e professor que responde o básico (horário, prazo, multa, renovação, contato) por regras, sem IA, e leva ao WhatsApp da biblioteca quando não sabe |
 | 🎓 | **Reserva pedagógica** | Professor solicita livros para a aula (até 30 dias); a funcionária registra no balcão, aprova ou recusa com justificativa, acompanha a fila e a devolução |
 | 🎨 | **Design system** | Tokens, tema e componentes base (botão, campo, tabela, modal) usados pelas telas |
 
-Em andamento: área do aluno (meus empréstimos e renovação), relatórios e a conferência final com o Figma; tudo segue no quadro do Trello.
+Em andamento: área do aluno (meus empréstimos e renovação), aviso de vencimento automático por e-mail, relatórios e a prova de carga; tudo segue no quadro do Trello.
 
 ## Módulos
 
@@ -147,6 +148,8 @@ As automações rodam a cada 10 minutos e precisam dos secrets `TRELLO_KEY` e `T
 | | Documento | Conteúdo |
 | -- | -- | -- |
 | 🚀 | [`docs/onboarding.md`](docs/onboarding.md) | **Configuração de ambiente:** o que instalar e como rodar o projeto no seu notebook |
+| 🧭 | [`docs/architecture/system-design.md`](docs/architecture/system-design.md) | System design: componentes, dados, carga esperada, decisões e plano de crescimento |
+| ✅ | [`docs/qa/roteiro-producao.md`](docs/qa/roteiro-producao.md) | Roteiro de QA em produção, por perfil, com o resultado esperado e como deixar o banco limpo |
 | 🏛️ | [`docs/arquitetura.md`](docs/arquitetura.md) | Onde fica cada coisa no código, regras de dependência, como criar uma feature e regras do Supabase/RLS |
 | 📄 | [`docs/prd.md`](docs/prd.md) | **PRD: documento base do projeto.** É a ideia central, e pode mudar com o tempo; as mudanças ficam registradas no histórico dele |
 | 📥 | [`docs/importacao-de-planilha.md`](docs/importacao-de-planilha.md) | Importação de livros por `.csv` ou `.xlsx`: regras, segurança do arquivo e testes |
