@@ -37,6 +37,13 @@ describe("navItemsFor", () => {
     ]);
   });
 
+  it("a funcionária tem os grupos Operação (5 itens) e Gestão (3 itens), como no Figma; aluno e professor não têm grupo", () => {
+    const groups = navItemsFor("librarian").map((i) => i.group);
+    expect(groups).toEqual(["Operação", "Operação", "Operação", "Operação", "Operação", "Gestão", "Gestão", "Gestão"]);
+    expect(navItemsFor("student").every((i) => i.group === undefined)).toBe(true);
+    expect(navItemsFor("teacher").every((i) => i.group === undefined)).toBe(true);
+  });
+
   it("nenhum perfil repete item", () => {
     for (const role of ["student", "teacher", "librarian"] as const) {
       const keys = navItemsFor(role).map((i) => i.key);

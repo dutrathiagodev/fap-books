@@ -25,6 +25,8 @@ export interface NavItem {
   label: string;
   // Sem href, a tela ainda não foi construída: o menu mostra o item desativado.
   href?: string;
+  // Grupo do menu lateral (Figma: OPERAÇÃO e GESTÃO). Itens seguidos com o mesmo grupo ficam sob um só rótulo.
+  group?: string;
 }
 
 // Itens do menu por perfil, na ordem do Figma (card 0101).
@@ -35,14 +37,14 @@ export function navItemsFor(role: UserRole): NavItem[] {
 
   if (role === "librarian") {
     return [
-      { key: "home", label: "Painel", href: PANEL_PATH },
-      { key: "books", label: "Acervo", href: ACERVO_PATH },
-      { key: "users", label: "Usuários", href: USERS_PATH },
-      { key: "loans", label: "Empréstimos", href: LOANS_PATH },
-      { key: "pedagogical", label: "Reservas pedagógicas", href: PEDAGOGICAL_PATH },
-      { key: "fines", label: "Multas", href: FINES_PATH },
-      { key: "history", label: "Histórico", href: HISTORY_PATH },
-      { key: "reports", label: "Relatórios" },
+      { key: "home", label: "Painel", href: PANEL_PATH, group: "Operação" },
+      { key: "books", label: "Acervo", href: ACERVO_PATH, group: "Operação" },
+      { key: "users", label: "Usuários", href: USERS_PATH, group: "Operação" },
+      { key: "loans", label: "Empréstimos", href: LOANS_PATH, group: "Operação" },
+      { key: "pedagogical", label: "Reservas pedagógicas", href: PEDAGOGICAL_PATH, group: "Operação" },
+      { key: "fines", label: "Multas", href: FINES_PATH, group: "Gestão" },
+      { key: "history", label: "Histórico", href: HISTORY_PATH, group: "Gestão" },
+      { key: "reports", label: "Relatórios", group: "Gestão" },
     ];
   }
 
