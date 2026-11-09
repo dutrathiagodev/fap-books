@@ -7,7 +7,7 @@ export const RESERVATION_ERROR_MESSAGES = {
   books_required: "Escolha pelo menos um livro.",
   too_many_books: "Há livros demais nesta solicitação. Escolha menos livros.",
   duplicate_books: "O mesmo livro foi escolhido mais de uma vez.",
-  invalid_days: "O prazo deve ser de 1 a 30 dias.",
+  invalid_days: "O prazo está acima do limite de dias da biblioteca. Confira o máximo no formulário.",
   start_in_past: "A data de início não pode ser no passado.",
   start_too_far: "A data de início deve ser dentro de um ano.",
   purpose_too_long: "A disciplina deve ter no máximo 120 caracteres.",

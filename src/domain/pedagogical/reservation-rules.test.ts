@@ -2,12 +2,16 @@ import { describe, expect, it } from "vitest";
 import {
   addDays,
   bookTitlesSummary,
+  daysInvalidMessage,
+  daysTooManyMessage,
+  DEFAULT_MAX_DAYS,
   FIELD_MESSAGES,
   formatInstantDate,
   formatPeriod,
   isIsoDate,
   MAX_BOOKS,
   parseDecisionNote,
+  parseMaxDaysInput,
   parseQueueFilters,
   parseReservationInput,
   queueHref,
@@ -101,6 +105,39 @@ describe("parseReservationInput", () => {
     const parsed = parseReservationInput({ bookIds: [], startDate: "", days: 99, purpose: "" }, TODAY);
     expect(parsed.ok).toBe(false);
     expect(!parsed.ok && Object.keys(parsed.errors).sort()).toEqual(["books", "days", "startDate"]);
+  });
+});
+
+describe("limite de dias configurável (card 0218)", () => {
+  it("o padrão é 30 dias: 30 vale e 31 não", () => {
+    expect(DEFAULT_MAX_DAYS).toBe(30);
+    expect(parseReservationInput({ ...valid, days: 30 }, TODAY).ok).toBe(true);
+    const parsed = parseReservationInput({ ...valid, days: 31 }, TODAY);
+    expect(parsed.ok || parsed.errors.days).toBe(daysTooManyMessage(30));
+  });
+
+  it("com o limite em 45, 40 dias vale e 46 não, e a mensagem cita o limite do dia", () => {
+    expect(parseReservationInput({ ...valid, days: 40 }, TODAY, 45).ok).toBe(true);
+    const parsed = parseReservationInput({ ...valid, days: 46 }, TODAY, 45);
+    expect(parsed.ok || parsed.errors.days).toBe("O prazo máximo é de 45 dias.");
+  });
+
+  it("com o limite em 7, 8 dias é recusado", () => {
+    expect(parseReservationInput({ ...valid, days: 7 }, TODAY, 7).ok).toBe(true);
+    expect(parseReservationInput({ ...valid, days: 8 }, TODAY, 7).ok).toBe(false);
+  });
+
+  it("prazo vazio ou zero pede o intervalo certo do dia", () => {
+    const parsed = parseReservationInput({ ...valid, days: 0 }, TODAY, 45);
+    expect(parsed.ok || parsed.errors.days).toBe(daysInvalidMessage(45));
+  });
+
+  it.each([["1", 1], ["30", 30], [" 45 ", 45], ["365", 365], [60, 60]])("a funcionária digita %s e vira %s", (raw, days) => {
+    expect(parseMaxDaysInput(raw)).toEqual({ ok: true, days });
+  });
+
+  it.each(["", "0", "366", "-5", "3.5", "abc", "10 dias", "1e2", null, undefined, 0, 400])("recusa o limite %s", (raw) => {
+    expect(parseMaxDaysInput(raw).ok).toBe(false);
   });
 });
 

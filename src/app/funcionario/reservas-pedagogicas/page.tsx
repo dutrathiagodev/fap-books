@@ -11,8 +11,11 @@ import {
   queueHref,
   queueSummary,
 } from "@/domain/pedagogical/reservation-rules";
+import { getPedagogicalMaxDays } from "@/services/library-settings.service";
 import { getAvailability, getReservation, listQueue } from "@/services/pedagogical-reservations.service";
 import type { QueueFilter } from "@/types/pedagogical-reservation";
+import { updateMaxDaysAction } from "./actions";
+import { MaxDaysSetting } from "./MaxDaysSetting";
 import { QueueDesk } from "./QueueDesk";
 import { ReservationDetail } from "./ReservationDetail";
 import type { Metadata } from "next";
@@ -31,7 +34,7 @@ const EMPTY: Record<QueueFilter, { title: string; description: string }> = {
 // A fila lê os filtros do endereço (dado da requisição), por isso roda dentro do Suspense do RolePage.
 async function QueueContent({ searchParams }: { searchParams: SearchParams }) {
   const filters = parseQueueFilters(await searchParams);
-  const list = await listQueue(filters);
+  const [list, maxDays] = await Promise.all([listQueue(filters), getPedagogicalMaxDays()]);
   const first = list.total === 0 ? 0 : (list.page - 1) * list.pageSize + 1;
 
   // Detalhe: só abre se a solicitação existe (uuid inválido ou de outro lugar mostra a fila sem painel).
@@ -49,10 +52,13 @@ async function QueueContent({ searchParams }: { searchParams: SearchParams }) {
 
       <aside className="mb-6 flex items-start gap-3 rounded-lg border border-info-100 bg-info-100 p-4 text-sm text-ink dark:border-sky-400/40 dark:bg-sky-400/15">
         <Info size={18} aria-hidden className="mt-0.5 shrink-0 text-info-700 dark:text-sky-300" />
-        <p>
-          <strong className="font-medium">Regra de negócio.</strong> Ao aprovar, um exemplar de cada livro fica guardado para o professor até a
-          devolução. O prazo máximo é de 30 dias e a decisão registra quem decidiu e quando.
-        </p>
+        <div className="flex flex-1 flex-col gap-3 lg:flex-row lg:items-center lg:justify-between lg:gap-6">
+          <p>
+            <strong className="font-medium">Regra de negócio.</strong> Ao aprovar, um exemplar de cada livro fica guardado para o professor até a
+            devolução. O prazo máximo é de {maxDays} dias e a decisão registra quem decidiu e quando.
+          </p>
+          <MaxDaysSetting maxDays={maxDays} save={updateMaxDaysAction} />
+        </div>
       </aside>
 
       <div className="mb-4">
