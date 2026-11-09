@@ -70,22 +70,20 @@ begin
   denied:=false; begin insert into public.pedagogical_reservations(teacher_id,start_date,days) values (A1::uuid,current_date+5,10); exception when others then denied:=true; end;
   perform pg_temp.say('aluno NÃO pede reserva pedagógica', denied);
   perform pg_temp.as_user(T1);
-  insert into public.pedagogical_reservations(teacher_id,start_date,days) values (T1::uuid,current_date+5,30) returning id into rid;
-  perform pg_temp.say('professor pede reserva de 30 dias', true);
-  denied:=false; begin insert into public.pedagogical_reservations(teacher_id,start_date,days) values (T1::uuid,current_date+5,31); exception when others then denied:=true; end;
+  -- Desde a migration 20261108180000 o professor pede só pela função (escrita direta nas tabelas é da bibliotecária).
+  denied:=false; begin insert into public.pedagogical_reservations(teacher_id,start_date,days) values (T1::uuid,current_date+5,30); exception when others then denied:=true; end;
+  perform pg_temp.say('professor NÃO grava direto na tabela de reservas pedagógicas (só pela função)', denied);
+  rid := (public.request_pedagogical_reservation(array['b0000000-0000-0000-0000-000000000001']::uuid[], current_date+5, 30)).id;
+  perform pg_temp.say('professor pede reserva de 30 dias pela função', rid is not null);
+  denied:=false; begin perform public.request_pedagogical_reservation(array['b0000000-0000-0000-0000-000000000001']::uuid[], current_date+5, 31); exception when others then denied:=true; end;
   perform pg_temp.say('prazo de 31 dias é recusado (máximo 30)', denied);
-  denied:=false; begin insert into public.pedagogical_reservations(teacher_id,start_date,days,status) values (T1::uuid,current_date+5,5,'approved'); exception when others then denied:=true; end;
-  perform pg_temp.say('professor NÃO se autoaprova', denied);
-  insert into public.pedagogical_reservation_books(reservation_id,book_id) values (rid,'b0000000-0000-0000-0000-000000000001');
-  perform pg_temp.say('professor adiciona livro à própria reserva', true);
+  denied:=false; begin insert into public.pedagogical_reservation_books(reservation_id,book_id) values (rid,'b0000000-0000-0000-0000-000000000001'); exception when others then denied:=true; end;
+  perform pg_temp.say('professor NÃO grava direto nos livros da reserva', denied);
   update public.pedagogical_reservations set status='approved' where id=rid; get diagnostics c=row_count;
   perform pg_temp.say('professor NÃO altera o status da reserva', c=0);
   perform pg_temp.as_user(L1);
   update public.pedagogical_reservations set status='approved', decided_by=L1::uuid, decided_at=now() where id=rid; get diagnostics c=row_count;
   perform pg_temp.say('bibliotecária aprova a reserva', c=1);
-  perform pg_temp.as_user(T1);
-  denied:=false; begin insert into public.pedagogical_reservation_books(reservation_id,book_id) values (rid,'b0000000-0000-0000-0000-000000000001'); exception when others then denied:=true; end;
-  perform pg_temp.say('livro repetido/depois de aprovada é recusado', denied);
 
   -- auditoria
   perform pg_temp.as_user(A1);
@@ -109,7 +107,7 @@ begin
   denied:=false; begin delete from public.audit_logs; exception when others then denied:=true; end;
   perform pg_temp.say('auditoria não pode ser apagada', denied);
   perform pg_temp.as_user(L1); select count(*) into c from public.audit_logs;
-  perform pg_temp.say('bibliotecária lê a auditoria', c=1);
+  perform pg_temp.say('bibliotecária lê a auditoria', c>=1);  -- a solicitação pedagógica da seção acima também audita
   insert into public.audit_logs(actor_id,action,entity,details) values (L1::uuid,'loan_created','loans','{"loan_id":"b0000000-0000-0000-0000-000000000009","book_id":"b0000000-0000-0000-0000-000000000001"}');
   perform pg_temp.say('bibliotecária grava auditoria de empréstimo, só com ids', true);
 
