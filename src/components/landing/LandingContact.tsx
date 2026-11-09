@@ -6,7 +6,7 @@ function InfoCard({ icon: Icon, title, children }: { icon: LucideIcon; title: st
   return (
     <li className="flex flex-col rounded-2xl border border-line bg-surface p-[29px] lg:h-[354px]">
       <h3 className="flex items-center gap-[14px] font-heading text-[22px] font-semibold leading-[30px]">
-        <span aria-hidden className="flex size-11 items-center justify-center rounded-[10px] bg-selected text-brand dark:bg-navy-900">
+        <span aria-hidden className="flex size-11 items-center justify-center rounded-[10px] bg-selected text-brand-ink dark:bg-navy-900">
           <Icon size={22} strokeWidth={1.5} />
         </span>
         {title}

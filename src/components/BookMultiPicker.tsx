@@ -135,7 +135,7 @@ export function BookMultiPicker({ selected, onChange, search, max, error, disabl
       {selected.length > 0 && (
         <ul aria-label="Livros escolhidos" className="flex flex-wrap gap-2">
           {selected.map((book) => (
-            <li key={book.id} className="flex max-w-full items-center gap-1 rounded-full bg-selected py-1 pr-1 pl-3 text-sm text-brand">
+            <li key={book.id} className="flex max-w-full items-center gap-1 rounded-full bg-selected py-1 pr-1 pl-3 text-sm text-brand-ink">
               <span className="truncate">{book.title}</span>
               <button
                 type="button"

@@ -53,6 +53,8 @@
   --color-btn-feature: var(--btn-feature);
   --color-selected: var(--selected);
   --color-brand: var(--brand);
+  /* Texto de marca sobre fundo tintado (bg-selected, bg-btn-soft): no escuro precisa ser mais claro que o --brand (3,67:1 -> acima de 4,5:1). */
+  --color-brand-ink: var(--brand-ink);
   --color-brand-hover: var(--brand-hover);
   --color-ink: var(--ink);
   --color-ink-muted: var(--ink-muted);
@@ -106,6 +108,7 @@
   --btn-feature: var(--color-navy-900);
   --selected: var(--color-navy-100);
   --brand: var(--color-navy-900);
+  --brand-ink: var(--color-navy-900);
   --brand-hover: var(--color-navy-700);
   --ink: var(--color-navy-950);
   --ink-muted: var(--color-gray-600);
@@ -129,6 +132,7 @@
     --btn-soft: #143360;
     --btn-soft-hover: #1b3f78;
     --brand: var(--color-navy-400);
+    --brand-ink: var(--color-navy-200);
     --brand-hover: var(--color-navy-300);
     --on-brand: var(--color-navy-950);
     --side: var(--color-navy-950);
@@ -151,6 +155,7 @@
     --soft: #032b5e;
     --selected: #0d3b6e;
     --brand: var(--color-navy-500);
+    --brand-ink: var(--color-navy-200);
     --brand-hover: var(--color-navy-400);
     --on-brand: #ffffff;
     --ink: #ededed;

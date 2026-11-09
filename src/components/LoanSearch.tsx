@@ -106,7 +106,7 @@ function UserSlot({
       <p className="text-xs text-ink-muted">Usuário</p>
       {user ? (
         <div className="mt-3 flex gap-3">
-          <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-selected text-sm font-medium text-brand">
+          <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-selected text-sm font-medium text-brand-ink">
             {user.initials}
           </span>
           <div className="min-w-0">
@@ -115,7 +115,7 @@ function UserSlot({
               {user.roleLabel} · {user.registration} · {user.detail}
             </p>
             <div className="mt-2 flex flex-wrap gap-2">
-              <span className="rounded-full bg-selected px-2.5 py-1 text-xs font-medium text-brand">
+              <span className="rounded-full bg-selected px-2.5 py-1 text-xs font-medium text-brand-ink">
                 Empréstimos ativos: {user.activeLoans} de {user.loanLimit}
               </span>
               <span
