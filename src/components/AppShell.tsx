@@ -421,7 +421,8 @@ export function AppShell({ profile, noticeCount = 0, children }: AppShellProps) 
             </Link>
           </div>
           {topNav && <TopNav items={items} role={profile.role} pathname={pathname} />}
-          {profile.role === "librarian" && <TopSearch />}
+          {/* Na própria listagem do acervo a busca da tela já faz isso: duas buscas empilhadas seriam redundantes. */}
+          {profile.role === "librarian" && pathname !== ACERVO_PATH && <TopSearch />}
 
           <div className="ml-auto flex items-center gap-3">
             <NoticeBell count={noticeCount} />
