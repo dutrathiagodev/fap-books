@@ -90,3 +90,16 @@ create policy "books_write_librarian" on public.books
 ```
 
 Checklist de migration: nome no padrão; RLS ligado; `grant` e policies por perfil; `search_path` vazio nas funções `security definer`; índice nas colunas de busca; testado com aluno e bibliotecária (`supabase/tests/`). O modelo das tabelas está em [database/modelo-de-dados.md](database/modelo-de-dados.md).
+
+
+## Regras de negócio que valem lembrar
+
+**Multas (RF-22 e RF-23).**
+- R$ 1,00 por dia de atraso (`fine_cents_per_day()` no banco e `FINE_PER_DAY_CENTS` em `src/domain/fines/fine-rules.ts`), em **dias corridos** entre o dia do prazo e o da devolução (ou de hoje, se o livro ainda não voltou), no calendário de Brasília. Devolver no dia do prazo, a qualquer hora, não é atraso. No máximo uma multa por empréstimo.
+- Sábado, domingo, feriado e recesso **contam**: o regulamento do PRD não prevê exceção. Perdoar esses dias é decisão do dono e mexe em três lugares (`return_loan`, a tarefa diária e `calculateDaysLate`); está testado em `fine-rules.test.ts` para ninguém mudar sem perceber.
+- A mesma conta existe em três lugares: `return_loan` (grava a multa na devolução), `scripts/agendadas/multas-por-atraso.sql` (tarefa diária, cresce um dia por dia nos empréstimos em aberto e nunca altera multa paga) e `calculateFine` no código. Testes: `supabase/tests/04-pagar-multa.sql` e `fine-rules.test.ts`.
+- A baixa é presencial e manual. `public.pay_fine(p_fine_id, p_idempotency_key)` é a única forma de gravar a baixa: só a funcionária, grava `paid_at` e `paid_by`, audita `fine_paid` só com ids e usa `claim_action_key`. Depois da baixa, `create_loan` e `renew_loan` deixam de bloquear o usuário por aquela multa.
+
+**Limite de dias da reserva pedagógica (RF-18).** O padrão é 30 dias e a funcionária altera na fila de reservas (campo "Prazo máximo (dias)", de 1 a 365). Fica na tabela `library_settings` e só se altera por `set_pedagogical_max_days()` (só funcionária, com auditoria). O limite vale na criação do pedido; reservas já feitas não mudam.
+
+**Importação de livros por planilha.** `.csv` ou `.xlsx` (primeira aba), até 200 KB, 100 livros por envio, colunas `titulo`, `autor`, `categoria`, `codigo`, `quantidade` (obrigatórias) e `isbn`, `editora`, `edicao`. As linhas boas entram e as ruins voltam com o número da linha e o motivo (as que entraram não se repetem; código repetido recusa só aquela linha). O `.xlsx` só muda como as linhas são lidas: passa pelo mesmo `parseBookRows` (`src/domain/books/book-import.ts`). O arquivo é conferido antes de abrir: tipo pelos primeiros bytes (`PK` para zip), índice do zip sem descompactar, sem macro (`vbaProject.bin`), até 8 MB descompactado (proteção contra zip bomb), no máximo 500 linhas e 20 colunas; qualquer falha da biblioteca vira "arquivo inválido" sem mostrar a mensagem original.
