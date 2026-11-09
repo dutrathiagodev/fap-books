@@ -69,17 +69,9 @@ O que é real, por rota:
 | Inscrição na newsletter | 5 por 10 minutos por IP; passou, a tela mostra o aviso em português | `src/app/actions/newsletter.ts` |
 | Login | **Não passa pelo servidor do app**: `LoginForm` chama o Supabase Auth direto do navegador (`signInWithPassword`). O limite de tentativas é do **Supabase Auth** (Authentication > Rate Limits no painel, já ativo com padrões). Limitar no app exigiria mudar o login para uma Server Action, o que mexe na tela de login e não foi feito | Painel do Supabase |
 
-**Ressalva importante:** o limitador do app guarda a contagem na memória, e na Vercel cada instância tem a sua. Ele barra o abuso comum e não custa nada, mas **não é global**. A garantia global exige estado compartilhado: o WAF da Vercel (sem código) ou um serviço externo como o Upstash (conta e chave novas). Regra sugerida para o WAF, a aplicar pelo dono (muda a produção; confirmar no painel quantas regras o Hobby permite):
+**Limite global (WAF da Vercel): ATIVO desde 09/11/2026.** O limitador do app guarda a contagem na memória e cada instância tem a sua, então ele sozinho não é global. A camada global é uma regra do Firewall da Vercel (Hobby permite até 3 regras de rate limit), criada pelo dono no painel: **"Limite de POST por IP"**: método `POST`, janela fixa de 60 segundos, **60 requisições por IP**, resposta `429` ao passar. Todo envio de formulário do sistema é um POST. O número é 60 (e não 20) porque a biblioteca e o Wi-Fi do campus saem pelo mesmo IP público.
 
-```bash
-vercel firewall rules add "Limite de POST por IP" \
-  --condition '{"type":"method","op":"eq","value":"POST"}' \
-  --action rate_limit \
-  --rate-limit-window 60 \
-  --rate-limit-requests 20 \
-  --rate-limit-keys ip \
-  --rate-limit-action deny --yes
-```
+Prova (09/11/2026, produção): 80 POSTs seguidos de um mesmo IP em menos de um minuto para uma página pública sem efeito deram 60 respostas normais e 20 respostas `429`. Se um dia a regra bloquear uso legítimo, suba o limite em Firewall > Rules; para desligar, use o botão da regra e publique.
 
 O IP vem do `x-forwarded-for`, que na Vercel é escrito pela plataforma. Fora dela todos dividem a chave "desconhecido" (lado seguro).
 
@@ -139,9 +131,9 @@ Travas: só aceita `localhost`; outro host exige `PROVA_HOSTS_PERMITIDOS` (decis
 
 | Item | Quem / depende de |
 | -- | -- |
-| Limite global por IP | Dono aplicar a regra do WAF no painel da Vercel e conferir o limite de tentativas do Supabase Auth |
+| Limite global por IP | **Feito** (regra no WAF, 60 POSTs por minuto por IP). Resta conferir o limite de tentativas do Supabase Auth no painel |
 | Apagar auditoria antiga | Dono rodar o workflow à mão com `apagar_auditoria = sim` (a partir de 2028 haverá o que apagar) |
 | Avisos de vencimento (RF-24) | Dono definir canal e tabela de avisos |
 | Prova de carga com números oficiais | Funções de busca paginada |
-| `docs/architecture/system-design.md` (diagrama, estimativas, ADRs, plano de crescimento) | Fecha o 0232 depois das listas 1 e 2 do 0225; este documento é a base das partes de cache, limites e agendamento |
+| `docs/architecture/system-design.md` (diagrama, estimativas, ADRs, plano de crescimento) | **Escrito em 09/11/2026**; a seção 7 dele lista o que ainda não está provado |
 | Lighthouse no CI | Evolução opcional |
