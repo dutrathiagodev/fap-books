@@ -104,7 +104,7 @@ export function Modal({
         aria-modal="true"
         aria-labelledby={titleId}
         tabIndex={-1}
-        className="relative w-full max-w-[480px] rounded-lg bg-surface p-4 shadow-lg outline-none sm:p-6"
+        className="relative max-h-[calc(100dvh-2rem)] w-full max-w-[480px] overflow-y-auto rounded-lg bg-surface p-4 shadow-lg outline-none sm:p-6"
       >
         <h2 id={titleId} className="pr-8 text-h3">
           {title}
