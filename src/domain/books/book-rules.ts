@@ -21,18 +21,9 @@ export function bookSituation(book: {
 
 export type SituationCounts = Record<Exclude<BookSituation, "inactive">, number>;
 
-// Contadores do topo do acervo. Livro inativo não entra em nenhum dos três.
-export function countSituations(books: Parameters<typeof bookSituation>[0][]): SituationCounts {
-  const counts: SituationCounts = { available: 0, unavailable: 0, reserved: 0 };
-  for (const book of books) {
-    const situation = bookSituation(book);
-    if (situation !== "inactive") counts[situation] += 1;
-  }
-  return counts;
-}
-
-// Deixa na busca só letras, números, espaço, ponto e hífen. O resto vira espaço, inclusive o que tem função no filtro
-// do banco (vírgula, parênteses, curinga, aspas) e sinais de comando SQL. Hífens repetidos viram um só.
+// Deixa na busca só letras, números, espaço, ponto e hífen. O resto vira espaço, inclusive curinga, aspas e sinais de
+// comando SQL. Hífens repetidos viram um só. O texto ainda vai ao banco como parâmetro (a função search_books escapa
+// "%" e "_" por conta própria); esta limpeza só evita lixo na busca.
 export function cleanSearchTerm(raw: string): string {
   return raw
     .replace(/[^\p{L}\p{N}\s.-]/gu, " ")
@@ -102,41 +93,6 @@ export function parseBookSort(params: RawParams): BookSort {
   return BOOK_SORTS.find((option) => option === value) ?? "relevance";
 }
 
-const SITUATION_RANK: Record<BookSituation, number> = { available: 0, reserved: 1, unavailable: 2, inactive: 3 };
-
-// Texto sem acento e em minúsculas, para comparar a busca com título e autor.
-function fold(text: string): string {
-  return text.normalize("NFD").replace(/\p{M}/gu, "").toLowerCase();
-}
-
-// Posição na relevância (menor = mais relevante): título igual à busca, título que começa com ela, título com uma
-// palavra que começa com ela, título que a contém, autor que a contém e, por fim, o que casou só por código ou ISBN.
-function relevanceRank(item: { title: string; author: string }, term: string): number {
-  const title = fold(item.title);
-  if (title === term) return 0;
-  if (title.startsWith(term)) return 1;
-  if (title.split(/\s+/).some((word) => word.startsWith(term))) return 2;
-  if (title.includes(term)) return 3;
-  return fold(item.author).includes(term) ? 4 : 5;
-}
-
-// Ordena os resultados. Em "relevance" vale a busca (sem busca, fica por título); em "available" os livros com exemplar
-// livre vêm primeiro. Em toda ordem, o empate sai pelo título.
-export function sortBooks<T extends { title: string; author: string; situation: BookSituation }>(
-  items: T[],
-  sort: BookSort,
-  query = "",
-): T[] {
-  const byText = (a: string, b: string) => a.localeCompare(b, "pt-BR");
-  const term = fold(query.trim());
-  return [...items].sort((a, b) => {
-    if (sort === "relevance" && term) return relevanceRank(a, term) - relevanceRank(b, term) || byText(a.title, b.title);
-    if (sort === "author") return byText(a.author, b.author) || byText(a.title, b.title);
-    if (sort === "available") return SITUATION_RANK[a.situation] - SITUATION_RANK[b.situation] || byText(a.title, b.title);
-    return byText(a.title, b.title);
-  });
-}
-
 // Data no fuso de Brasília: o servidor roda em UTC, e uma devolução prevista para a noite de um dia cairia no dia seguinte.
 export function formatBrazilDate(iso: string): string {
   return new Date(iso).toLocaleDateString("pt-BR", { timeZone: "America/Sao_Paulo" });
@@ -153,19 +109,6 @@ export function bookSearchHref(basePath: string, state: Partial<BookSearchState>
   if (state.page && state.page > 1) search.set("pagina", String(state.page));
   const text = search.toString();
   return text ? `${basePath}?${text}` : basePath;
-}
-
-// Aplica o STATUS escolhido e devolve só a página pedida. Se a página passar do fim, vale a última.
-export function paginateBySituation<T extends { situation: BookSituation }>(
-  items: T[],
-  availability: BookAvailabilityFilter,
-  page: number,
-  pageSize: number,
-): { items: T[]; total: number; page: number } {
-  const matching = availability === "all" ? items : items.filter((item) => item.situation === availability);
-  const lastPage = Math.max(1, Math.ceil(matching.length / pageSize));
-  const current = Math.min(page, lastPage);
-  return { items: matching.slice((current - 1) * pageSize, current * pageSize), total: matching.length, page: current };
 }
 
 export type PageItem = number | "…";

@@ -79,16 +79,16 @@ done; wait
 say "mesmo livro e mesma pessoa em paralelo: 1 empréstimo" "$([ "$(count_ok "$TMP/c4")" = 1 ] && echo 1 || echo 0)"
 
 # 5) Devolução e empréstimo ao mesmo tempo, com uma pessoa na fila: o exemplar devolvido fica guardado para ela.
-#    O livro 1 está com quem ganhou a corrida do cenário 1; o aluno 6 entra na fila e os alunos 7 a 9 tentam furá-la.
+#    O livro 1 está com quem ganhou a corrida do cenário 1; o aluno 12 (que não disputou o cenário 1) entra na fila e os alunos 7 a 9 tentam furá-la.
 HOLDER_LOAN="$(psql_run -c "select id from public.loans where book_id = '$(bid 1)' and returned_at is null")"
-as_user "$(uid 6)" "select public.reserve_book('$(bid 1)');" "$TMP/e5r" >/dev/null
+as_user "$(uid 12)" "select public.reserve_book('$(bid 1)');" "$TMP/e5r" >/dev/null
 : > "$TMP/c5"
 ( as_user "$LIB" "select public.return_loan('$HOLDER_LOAN');" "$TMP/e5a" >> "$TMP/c5" ) &
 for i in 7 8 9; do ( as_user "$LIB" "select public.create_loan('$(bid 1)', '$(uid "$i")');" "$TMP/e5_$i" >> "$TMP/c5" ) & done; wait
 say "devolução x empréstimo: ninguém fura a fila (só quem reservou pode pegar)" \
   "$([ "$(psql_run -c "select count(*) from public.loans where book_id = '$(bid 1)' and returned_at is null and user_id in ('$(uid 7)','$(uid 8)','$(uid 9)')")" = 0 ] && echo 1 || echo 0)"
 say "devolução x empréstimo: a reserva da fila ficou \"pronta\"" \
-  "$([ "$(psql_run -c "select status from public.reservations where book_id = '$(bid 1)' and user_id = '$(uid 6)'")" = ready ] && echo 1 || echo 0)"
+  "$([ "$(psql_run -c "select status from public.reservations where book_id = '$(bid 1)' and user_id = '$(uid 12)'")" = ready ] && echo 1 || echo 0)"
 say "devolução x empréstimo: nunca passa do total de exemplares" \
   "$([ "$(psql_run -c "select count(*) from public.loans where book_id = '$(bid 1)' and returned_at is null")" -le 1 ] && echo 1 || echo 0)"
 
@@ -97,6 +97,9 @@ say "devolução x empréstimo: nunca passa do total de exemplares" \
 for i in $(seq 1 $N); do ( as_user "$(uid 13)" "select public.reserve_book('$(bid 1)');" "$TMP/e6_$i" >> "$TMP/c6" ) & done; wait
 say "reservas simultâneas da mesma pessoa: 1 só fica ativa" \
   "$([ "$(psql_run -c "select count(*) from public.reservations where book_id = '$(bid 1)' and user_id = '$(uid 13)' and status in ('waiting','ready')")" = 1 ] && echo 1 || echo 0)"
+
+# Com DEBUG=1, mostra os erros recebidos pelas requisições (ajuda a entender uma falha).
+if [ "${DEBUG:-0}" = 1 ]; then for f in "$TMP"/e5r "$TMP"/e6_1 "$TMP"/e5a; do echo "--- $(basename "$f"):"; cat "$f" 2>/dev/null | head -3; done; fi
 
 # 7) Deadlock: o banco conta os que ocorreram (a ordem fixa de bloqueio das funções existe para ele ficar em zero).
 DEAD="$(docker exec -i "$CONTAINER" psql -U postgres -X -q -t -A -c "select count(*) from pg_stat_database where datname = current_database() and deadlocks > 0")"
