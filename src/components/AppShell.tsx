@@ -26,6 +26,7 @@ import {
 } from "lucide-react";
 import { logout } from "@/app/actions/auth";
 import { ACERVO_PATH, ROLE_LABELS } from "@/domain/access/access-rules";
+import { PANEL_PATH } from "@/domain/navigation/nav-items";
 import { isActive, navItemsFor, type NavItem } from "@/domain/navigation/nav-items";
 import type { Profile, UserRole } from "@/types/profile";
 import { HelpAssistant } from "./HelpAssistant";
@@ -356,9 +357,8 @@ export function AppShell({ profile, noticeCount = 0, children }: AppShellProps) 
         className={`sticky top-0 hidden h-screen shrink-0 flex-col self-start bg-side transition-[width] ${topNav ? "" : "md:flex"} ${collapsed ? "w-[68px]" : "w-60"}`}
       >
         {collapsed ? (
-          <div className="flex flex-col items-center gap-3 px-2 py-4">
+          <div className="flex h-[72px] items-center justify-center px-2">
             <Logo width={40} tone="white" />
-            <SidebarToggle collapsed onClick={() => setCollapsed(false)} />
           </div>
         ) : (
           <div className="flex h-[72px] items-center justify-between px-5">
@@ -367,6 +367,12 @@ export function AppShell({ profile, noticeCount = 0, children }: AppShellProps) 
           </div>
         )}
         <div aria-hidden className="mx-4 border-t border-white/10" />
+        {/* Recolhido, o botão de expandir fica logo abaixo da logo, e a logo ocupa a mesma altura da barra do topo (72 px). */}
+        {collapsed && (
+          <div className="flex justify-center pt-3">
+            <SidebarToggle collapsed onClick={() => setCollapsed(false)} />
+          </div>
+        )}
         <MenuList items={items} role={profile.role} pathname={pathname} wide={!collapsed} />
         <SidebarUser profile={profile} wide={!collapsed} />
       </aside>
@@ -421,8 +427,8 @@ export function AppShell({ profile, noticeCount = 0, children }: AppShellProps) 
             </Link>
           </div>
           {topNav && <TopNav items={items} role={profile.role} pathname={pathname} />}
-          {/* Na própria listagem do acervo a busca da tela já faz isso: duas buscas empilhadas seriam redundantes. */}
-          {profile.role === "librarian" && pathname !== ACERVO_PATH && <TopSearch />}
+          {/* A busca do topo só procura livros: faz sentido como atalho na tela inicial (Painel). Nas outras telas (usuários, multas, histórico...) ela não ajudaria, e no acervo seria duplicada. */}
+          {profile.role === "librarian" && pathname === PANEL_PATH && <TopSearch />}
 
           <div className="ml-auto flex items-center gap-3">
             <NoticeBell count={noticeCount} />

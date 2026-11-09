@@ -280,6 +280,12 @@ export async function listBooks(filters: BookListFilters): Promise<BookListResul
     pageSize: BOOKS_PAGE_SIZE,
   });
 
+  // Edição e editora só dos livros desta página (até BOOKS_PAGE_SIZE), numa consulta só.
+  const { data: extras } = rows.length
+    ? await supabase.from("books").select("id, edition, publisher").in("id", rows.map((row) => row.id)).limit(rows.length)
+    : { data: [] };
+  const extraById = new Map((extras ?? []).map((extra) => [extra.id as string, extra]));
+
   const books: BookListItem[] = rows.map((row) => ({
     id: row.id,
     title: row.title,
@@ -289,6 +295,8 @@ export async function listBooks(filters: BookListFilters): Promise<BookListResul
     quantity: row.quantity,
     status: row.status as BookStatus,
     coverUrl: row.cover_url,
+    edition: (extraById.get(row.id)?.edition as string | null | undefined) ?? null,
+    publisher: (extraById.get(row.id)?.publisher as string | null | undefined) ?? null,
     openLoans: row.open_loans,
     hasActiveReservation: row.has_active_reservation,
     hasHistory: row.has_history,

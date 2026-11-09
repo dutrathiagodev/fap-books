@@ -1,6 +1,6 @@
 import { ACERVO_PATH, ROLE_HOME } from "../access/access-rules";
 
-const PANEL_PATH = "/funcionario/painel";
+export const PANEL_PATH = "/funcionario/painel";
 const USERS_PATH = "/funcionario/usuarios";
 const PEDAGOGICAL_PATH = "/funcionario/reservas-pedagogicas";
 const TEACHER_PEDAGOGICAL_PATH = "/professor/reserva-pedagogica";
