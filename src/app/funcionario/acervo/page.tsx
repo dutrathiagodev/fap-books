@@ -74,7 +74,7 @@ async function AcervoContent({ searchParams }: { searchParams: SearchParams }) {
           hideLabel
           type="search"
           defaultValue={filters.query}
-          placeholder="Buscar por título, autor, ISBN ou código"
+          placeholder="Buscar por título, autor, ISBN ou código de chamada"
           leadingIcon={Search}
           className="min-w-60 flex-1"
         />
