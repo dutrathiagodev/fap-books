@@ -289,15 +289,14 @@ function UserMenu({ profile }: { profile: Profile }) {
 }
 
 // Menu horizontal do aluno (Figma, card 0108, visual editorial): no lugar do menu lateral, só no computador. O início
-// fica de fora (a logo leva a ele) e os rótulos são os do frame.
-const TOP_NAV_LABELS: Partial<Record<NavItem["key"], string>> = { books: "Acervo", reservations: "Reservas" };
+// fica de fora (a logo leva a ele) e os rótulos são os do frame. Abaixo de 1024 px (tablet e celular) o aluno usa a gaveta:
+// com cinco itens, o menu horizontal não cabe ao lado da logo e do menu do usuário.
+const TOP_NAV_LABELS: Partial<Record<NavItem["key"], string>> = { books: "Acervo", loans: "Empréstimos", reservations: "Reservas" };
 
 function TopNav({ items, role, pathname }: { items: NavItem[]; role: UserRole; pathname: string }) {
   return (
-    <nav aria-label="Menu principal" className="ml-6 hidden items-center gap-1 md:flex">
-      {items
-        .filter((item) => item.key !== "home")
-        .map((item) => {
+    <nav aria-label="Menu principal" className="ml-6 hidden items-center gap-1 lg:flex">
+      {items.map((item) => {
           const Icon = iconFor(item, role);
           const label = TOP_NAV_LABELS[item.key] ?? item.label;
           const content = (
@@ -325,7 +324,7 @@ function TopNav({ items, role, pathname }: { items: NavItem[]; role: UserRole; p
               {content}
             </Link>
           );
-        })}
+      })}
     </nav>
   );
 }
@@ -339,6 +338,8 @@ export function AppShell({ profile, noticeCount = 0, children }: AppShellProps) 
   const items = navItemsFor(profile.role);
   // O aluno usa o menu horizontal no computador (Figma, card 0108); professor e funcionário, o lateral.
   const topNav = profile.role === "student";
+  // Onde a gaveta e o botão que a abre somem: no md (768 px) para o menu lateral; só no lg (1024 px) para o menu horizontal do aluno.
+  const hideDrawerFrom = topNav ? "lg:hidden" : "md:hidden";
 
   // A gaveta fecha com Escape.
   useEffect(() => {
@@ -379,7 +380,7 @@ export function AppShell({ profile, noticeCount = 0, children }: AppShellProps) 
 
       {/* Menu em gaveta (celular) */}
       {drawer && (
-        <div className="fixed inset-0 z-40 md:hidden">
+        <div className={`fixed inset-0 z-40 ${hideDrawerFrom}`}>
           <button
             type="button"
             aria-label="Fechar menu"
@@ -419,7 +420,7 @@ export function AppShell({ profile, noticeCount = 0, children }: AppShellProps) 
             type="button"
             aria-label="Abrir menu"
             onClick={() => setDrawer(true)}
-            className="cursor-pointer rounded-md p-2 hover:bg-subtle focus-visible:outline-2 focus-visible:outline-focus md:hidden"
+            className={`cursor-pointer rounded-md p-2 hover:bg-subtle focus-visible:outline-2 focus-visible:outline-focus ${hideDrawerFrom}`}
           >
             <Menu size={20} aria-hidden />
           </button>
