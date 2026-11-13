@@ -22,7 +22,7 @@ describe("decideRoute", () => {
 
   it("deixa quem não está logado abrir as boas-vindas do celular", () => {
     expect(decideRoute("/boas-vindas", null)).toEqual({ action: "allow" });
-    expect(decideRoute("/boas-vindas", "student")).toEqual({ action: "redirect", to: "/aluno" });
+    expect(decideRoute("/boas-vindas", "student")).toEqual({ action: "redirect", to: "/aluno/livros" });
   });
 
   it("deixa qualquer pessoa abrir o aviso de privacidade", () => {
@@ -61,13 +61,13 @@ describe("decideRoute", () => {
     expect(decideRoute("/professor/livros", "student")).toEqual({ action: "redirect", to: "/aluno" });
   });
 
-  it("manda quem já está logado do /login e da raiz para a própria área", () => {
-    expect(decideRoute("/login", "student")).toEqual({ action: "redirect", to: "/aluno" });
-    expect(decideRoute("/", "librarian")).toEqual({ action: "redirect", to: "/funcionario" });
+  it("manda quem já está logado do /login e da raiz para a primeira tela do perfil (o aluno não cai em Minha área)", () => {
+    expect(decideRoute("/login", "student")).toEqual({ action: "redirect", to: "/aluno/livros" });
+    expect(decideRoute("/", "librarian")).toEqual({ action: "redirect", to: "/funcionario/acervo" });
   });
 
   it("não confunde áreas com o mesmo começo de nome", () => {
-    expect(decideRoute("/alunos-extra", "student")).toEqual({ action: "redirect", to: "/aluno" });
+    expect(decideRoute("/alunos-extra", "student")).toEqual({ action: "redirect", to: "/aluno/livros" });
   });
 });
 

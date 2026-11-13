@@ -7,8 +7,8 @@ export const ROLE_HOME: Record<UserRole, string> = {
   librarian: "/funcionario",
 };
 
-// Primeira tela de cada perfil depois do login: o acervo (a pessoa vai direto ao que usa; o endereço-base da área
-// só redireciona para cá). O painel da bibliotecária entra aqui quando o card 0097 for entregue.
+// Primeira tela de cada perfil depois do login: o acervo (a pessoa vai direto ao que usa). Professor e funcionário: o endereço-base da área
+// só redireciona para cá; o aluno tem a página Minha área em /aluno, que se abre pelo menu. O painel da bibliotecária entra aqui quando o card 0097 for entregue.
 export const ROLE_LANDING: Record<UserRole, string> = {
   student: "/aluno/livros",
   teacher: "/professor/livros",
@@ -72,5 +72,8 @@ export function decideRoute(pathname: string, role: UserRole | null, search = ""
 
   const home = ROLE_HOME[role];
   if (isInside(pathname, home)) return { action: "allow" };
-  return { action: "redirect", to: home };
+  // Área de outro perfil: volta para a própria área. Fora de qualquer área (raiz, login, boas-vindas): vai à primeira tela do
+  // perfil. O aluno tem uma página no endereço-base (/aluno, Minha área), então o login dele não pode cair lá.
+  if (PROTECTED_AREAS.some((area) => isInside(pathname, area))) return { action: "redirect", to: home };
+  return { action: "redirect", to: ROLE_LANDING[role] };
 }
