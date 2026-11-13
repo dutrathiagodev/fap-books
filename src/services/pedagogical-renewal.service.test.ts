@@ -57,11 +57,12 @@ describe("getAvailability de uma renovação", () => {
   });
 });
 
-// A tabela aponta para ela mesma (renewal_of). Com o nome da constraint na dica, o PostgREST responde PGRST200 e as telas da
-// reserva pedagógica quebram (achado no QA de 13/11); a dica certa é o nome da coluna. Os testes com `from` simulado não pegam isso.
+// A tabela aponta para ela mesma (renewal_of): o embed automático do PostgREST falha (PGRST200 com o nome da constraint) ou
+// devolve o lado errado (com o nome da coluna) e a renovação ficava sem livro (achado no QA de 13/11). Os livros da reserva
+// original vêm de uma segunda consulta; o select principal não pode voltar a embutir a si mesmo.
 describe("select da reserva pedagógica", () => {
-  it("liga a reserva original pela coluna renewal_of, não pelo nome da constraint", () => {
-    expect(RESERVATION_COLUMNS_FOR_TEST).toContain("original:pedagogical_reservations!renewal_of(");
-    expect(RESERVATION_COLUMNS_FOR_TEST).not.toContain("pedagogical_reservations_renewal_of_fkey");
+  it("não embute a própria tabela para buscar a reserva original", () => {
+    expect(RESERVATION_COLUMNS_FOR_TEST).not.toContain("original:");
+    expect(RESERVATION_COLUMNS_FOR_TEST).not.toContain("pedagogical_reservations!");
   });
 });
