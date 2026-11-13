@@ -74,6 +74,16 @@ describe("definePasswordFromInvite", () => {
     expect(check).not.toHaveBeenCalled();
   });
 
+  it("fronteira do mínimo no servidor: 7 caracteres é recusado e 8 é aceito (card 0258)", async () => {
+    const short = await definePasswordFromInvite(idle, form({ ...valid, password: "abcdefg", confirmation: "abcdefg" }));
+    expect(short).toMatchObject({ status: "invalid_fields", check: { password: "too_short" } });
+    expect(verifyOtp).not.toHaveBeenCalled();
+    expect(updateUser).not.toHaveBeenCalled();
+
+    await expect(definePasswordFromInvite(idle, form({ ...valid, password: "abcdefgh", confirmation: "abcdefgh" }))).rejects.toThrow();
+    expect(updateUser).toHaveBeenCalledWith({ password: "abcdefgh" });
+  });
+
   it("campos de senha ausentes: erro genérico", async () => {
     expect(await definePasswordFromInvite(idle, form({ token_hash: HASH, type: "invite" }))).toEqual({ status: "failed" });
   });
