@@ -116,12 +116,14 @@ Use dois usuários novos sem multa (seção 3.3) e um livro com 1 exemplar. Empr
 - [ ] "Registrar solicitação presencial": 4 passos (professor, livros, prazo, registrar); prazo acima do limite (padrão 30 dias) é recusado.
 - [ ] **Limite de dias:** no quadro azul da fila, o campo "Prazo máximo (dias)" começa em 30 e o "Salvar" só habilita quando o valor muda. Salve 45: aparece "Limite salvo: 45 dias", o texto da regra passa a dizer 45 e o formulário do balcão aceita "Máximo de 45 dias". Volte para 30 no fim. O professor vê o mesmo limite em "por até N dias". Só a funcionária altera.
 - [ ] Aprovar; recusar **exige justificativa**; devolver pede confirmação.
+- [ ] **Renovação (cards 0053 e 0055):** o pedido do professor aparece nas Pendentes com a etiqueta **Renovação** e o título dos livros da reserva original. "Detalhes" explica que os exemplares já estão guardados e que aprovar só estende o prazo. Aprovar: a reserva original passa a terminar na nova data (Aprovadas) e a linha da renovação não tem botão de devolução. Recusar sem justificativa é impedido. Devolver a reserva original leva as renovações para Devolvidas (a pendente é cancelada). Antes de testar, rodar o `db push` da migration `20261113500000`.
 
 ## 4. Professor (`professor@fapbooks.test`)
 
 - [ ] Entra em `/professor/livros` com busca e filtros iguais aos do aluno.
 - [ ] `/professor/reserva-pedagogica`: escolhe 1 ou mais livros, início, dias (1 a 30) e disciplina opcional; envia e aparece "Aguardando aprovação" em "Minhas reservas pedagógicas".
 - [ ] Depois que a funcionária decide, o professor vê Aprovada, Recusada (com a justificativa) ou Devolvida.
+- [ ] **Renovar reserva:** numa reserva aprovada com mais de 7 dias para o fim, o cartão diz "Você poderá pedir a renovação a partir de dd/mm/aaaa" e não tem botão. Na última semana (use uma reserva de teste que termine em até 7 dias), aparece "Renovar reserva": abre "Dias a mais" (máximo = limite configurado), envia e mostra "Pedido de renovação enviado". O cartão da renovação aparece como "Renovação: ..." Aguardando aprovação e o botão some (só uma pendente por reserva). Dias acima do limite são recusados na tela. Depois de aprovada, a reserva original passa a terminar na nova data; recusada, mostra a justificativa.
 - [ ] O assistente de ajuda aparece também para o professor; o item "Reserva pedagógica" está no menu.
 
 ## 5. Transversal (vale para todas as telas)

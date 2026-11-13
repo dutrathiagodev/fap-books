@@ -3,10 +3,11 @@
 import { revalidatePath } from "next/cache";
 import { parseLookupTerm } from "@/domain/loans/loan-lookup-rules";
 import { isUuid, parseReservationInput, TEACHER_RESERVATION_PATH, type ReservationInput } from "@/domain/pedagogical/reservation-rules";
+import { parseRenewalDays } from "@/domain/pedagogical/renewal-rules";
 import { requireRole } from "@/lib/require-role";
 import { getPedagogicalMaxDays } from "@/services/library-settings.service";
-import { requestReservation, searchBooksForReservation } from "@/services/pedagogical-reservations.service";
-import type { LookupResult, PickableBook, ReservationSubmitResult } from "@/types/pedagogical-reservation";
+import { requestRenewal, requestReservation, searchBooksForReservation } from "@/services/pedagogical-reservations.service";
+import type { LookupResult, PickableBook, ReservationActionResult, ReservationSubmitResult } from "@/types/pedagogical-reservation";
 
 // Server Action é uma porta pública: confere de novo quem está logado (só o professor) e valida o que veio do
 // navegador. O servidor decide; a tela só pede.
@@ -32,6 +33,20 @@ export async function requestReservationAction(input: ReservationInput, idempote
   }
 
   const result = await requestReservation(parsed.values, idempotencyKey);
+  if (result.ok) revalidatePath(TEACHER_RESERVATION_PATH);
+  return result;
+}
+
+// Pede a renovação de uma reserva aprovada (mais dias, com nova aprovação da funcionária). O banco confere o dono, a janela
+// da última semana, o limite de dias, uma pendente por reserva e o teto de 365 dias. A chave de idempotência nasce na tela.
+export async function requestRenewalAction(reservationId: string, rawDays: string, idempotencyKey: string): Promise<ReservationActionResult> {
+  await requireRole("teacher");
+  if (!isUuid(reservationId)) return { ok: false, message: "Reserva não encontrada. Atualize a tela.", final: true };
+  if (!isUuid(idempotencyKey)) return { ok: false, message: "Ação inválida. Atualize a tela e tente de novo.", final: true };
+  const days = parseRenewalDays(rawDays, await getPedagogicalMaxDays());
+  if (!days.ok) return { ok: false, message: days.message, final: true };
+
+  const result = await requestRenewal(reservationId, days.days, idempotencyKey);
   if (result.ok) revalidatePath(TEACHER_RESERVATION_PATH);
   return result;
 }

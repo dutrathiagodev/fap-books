@@ -65,7 +65,9 @@ export function QueueDesk({ reservations, filter }: { reservations: ReservationV
     run(
       `approve:${reservation.id}`,
       (key) => decideReservationAction(reservation.id, true, "", key),
-      `Solicitação de ${reservation.teacherName} aprovada. Os exemplares ficam guardados até a devolução.`,
+      reservation.renewal
+        ? `Renovação de ${reservation.teacherName} aprovada. O prazo da reserva foi estendido até ${reservation.endOn}.`
+        : `Solicitação de ${reservation.teacherName} aprovada. Os exemplares ficam guardados até a devolução.`,
       false,
     );
   }
@@ -95,7 +97,7 @@ export function QueueDesk({ reservations, filter }: { reservations: ReservationV
           />
         </>
       )}
-      {reservation.status === "approved" && (
+      {reservation.status === "approved" && !reservation.renewal && (
         <Button
           text="Registrar devolução"
           variant="secondary"

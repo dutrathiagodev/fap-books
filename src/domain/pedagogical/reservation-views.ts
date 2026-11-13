@@ -19,6 +19,8 @@ export interface ReservationRow {
   teacher: { full_name: string } | null;
   decider: { full_name: string } | null;
   pedagogical_reservation_books: Array<{ books: ReservationBook | null }>;
+  // Só nas renovações: a reserva original, de onde vêm os livros (a renovação não tem livros próprios).
+  original?: { pedagogical_reservation_books: Array<{ books: ReservationBook | null }> } | null;
 }
 
 export function toReservationView(row: ReservationRow): ReservationView {
@@ -27,15 +29,17 @@ export function toReservationView(row: ReservationRow): ReservationView {
     id: row.id,
     teacherName,
     teacherInitials: initialsOf(teacherName),
-    books: row.pedagogical_reservation_books
+    books: [...row.pedagogical_reservation_books, ...(row.original?.pedagogical_reservation_books ?? [])]
       .map((item) => item.books)
       .filter((book): book is ReservationBook => book !== null)
       .sort((a, b) => a.title.localeCompare(b.title, "pt-BR")),
     status: row.status,
     inPerson: row.requested_in_person,
     renewal: row.renewal_of !== null,
+    renewalOf: row.renewal_of,
     startOn: formatIsoDate(row.start_date),
     endOn: formatIsoDate(addDays(row.start_date, row.days)),
+    endDate: addDays(row.start_date, row.days),
     days: row.days,
     requestedOn: formatInstantDate(row.created_at),
     purpose: row.purpose,

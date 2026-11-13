@@ -14,7 +14,7 @@ export function ReservationDetail({ reservation, availability, filter }: { reser
       <div className="flex items-start justify-between gap-3">
         <div>
           <h2 id="detalhe-titulo" className="text-h3">
-            Disponibilidade no período pedido
+            {reservation.renewal ? "Pedido de renovação" : "Disponibilidade no período pedido"}
           </h2>
           <p className="text-sm text-ink-muted">
             {reservation.teacherName}, {reservation.startOn} a {reservation.endOn} · {formatDays(reservation.days)}
@@ -40,6 +40,20 @@ export function ReservationDetail({ reservation, availability, filter }: { reser
           <TriangleAlert size={16} aria-hidden className="mt-0.5 shrink-0" />
           Há livro sem exemplar livre agora: não dá para aprovar até um exemplar voltar. Você pode recusar com justificativa.
         </p>
+      )}
+
+      {reservation.renewal && (
+        <>
+          <p className="mt-4 text-sm text-ink">
+            Os exemplares já estão guardados nesta reserva: aprovar só estende o prazo até {reservation.endOn}. Recusar exige justificativa e
+            mantém o prazo atual.
+          </p>
+          <ul className="mt-2 list-disc pl-5 text-sm text-ink-muted">
+            {reservation.books.map((book) => (
+              <li key={book.id}>{book.title}</li>
+            ))}
+          </ul>
+        </>
       )}
 
       <ul className="mt-4 divide-y divide-line">

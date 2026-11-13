@@ -38,7 +38,13 @@ describe("toReservationView", () => {
 
   it("origem, renovação, iniciais e quem decidiu", () => {
     const view = toReservationView({ ...row, renewal_of: "r0" });
-    expect(view).toMatchObject({ inPerson: true, renewal: true, teacherInitials: "CL", decidedBy: "Maria Santos", purpose: "Redes I" });
+    expect(view).toMatchObject({ inPerson: true, renewal: true, renewalOf: "r0", teacherInitials: "CL", decidedBy: "Maria Santos", purpose: "Redes I" });
+    expect(view.endDate).toBe("2026-12-10");
+  });
+
+  it("a renovação não tem livros próprios: usa os da reserva original", () => {
+    const renewal = { ...row, renewal_of: "r0", pedagogical_reservation_books: [], original: { pedagogical_reservation_books: row.pedagogical_reservation_books } };
+    expect(toReservationView(renewal).books.map((book) => book.title)).toEqual(["Metodologia Científica", "Redes de Computadores"]);
   });
 
   it("professor não lê o perfil de quem decidiu: o nome fica vazio, sem quebrar", () => {
