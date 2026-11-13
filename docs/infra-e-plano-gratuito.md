@@ -119,7 +119,7 @@ O que foi feito:
 
 - `src/instrumentation.ts` (`onRequestError` do Next) grava **uma linha JSON de nível `error`** por erro do servidor, aparece em **Vercel > Logs** (filtre por *Error* ou por `erro_servidor`). Campos: `digest` (o mesmo código da tela de erro), `tipo`, `rota`, `contexto`, `metodo`, `caminho`. **Sem PII**: nunca vai a mensagem do erro, a query string, cabeçalhos ou cookies (`src/lib/error-log.ts`, testado).
 - **Alerta de site fora do ar:** `verificacao-do-site.yml` (a cada 6 h) abre `/` e `/login` em produção e falha se não vier 200. Falhou, o GitHub manda e-mail e a issue automática abre.
-- **Alerta de rotina quebrada:** `alerta-falha-rotina.yml` abre (ou comenta numa) issue "Falha na rotina: ..." quando **backup, multas, saúde ou verificação do site** terminam com falha. Usa só o token automático do workflow.
+- **Alerta de rotina quebrada:** `alerta-falha-rotina.yml` abre (ou comenta numa) issue "Falha na rotina: ..." quando **backup, multas, saúde, verificação do site ou avisos de vencimento** terminam com falha. Usa só o token automático do workflow.
 
 **Passo do dono (uma vez):** em GitHub > Settings > Notifications, deixe ligado o e-mail de *Actions* ("Send notifications for failed workflows only") e o *Watch* do repositório em *All activity* (ou *Custom > Issues*) para a issue chegar por e-mail. O workflow só passa a valer depois de entrar na `main`.
 
