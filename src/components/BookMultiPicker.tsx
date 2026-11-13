@@ -142,7 +142,7 @@ export function BookMultiPicker({ selected, onChange, search, max, error, disabl
                 disabled={disabled}
                 aria-label={`Remover ${book.title}`}
                 onClick={() => onChange(selected.filter((item) => item.id !== book.id))}
-                className="flex size-6 shrink-0 cursor-pointer items-center justify-center rounded-full hover:bg-navy-100 focus-visible:outline-2 focus-visible:outline-focus disabled:cursor-not-allowed dark:hover:bg-navy-800"
+                className="-my-2 flex size-11 shrink-0 md:my-0 md:size-6 cursor-pointer items-center justify-center rounded-full hover:bg-navy-100 focus-visible:outline-2 focus-visible:outline-focus disabled:cursor-not-allowed dark:hover:bg-navy-800"
               >
                 <X size={14} aria-hidden />
               </button>

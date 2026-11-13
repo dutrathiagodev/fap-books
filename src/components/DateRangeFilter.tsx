@@ -38,11 +38,11 @@ export function DateRangeFilter({ action, hidden, from, to, error, clearHref }: 
           Até
           <input type="date" name="ate" defaultValue={to ?? ""} aria-invalid={error ? true : undefined} className={DATE_INPUT} />
         </label>
-        <button type="submit" className="h-10 cursor-pointer rounded-md bg-brand px-4 text-sm font-medium text-on-brand hover:bg-brand-hover">
+        <button type="submit" className="h-11 cursor-pointer rounded-md md:h-10 bg-brand px-4 text-sm font-medium text-on-brand hover:bg-brand-hover">
           Aplicar período
         </button>
         {(from || to) && (
-          <Link href={clearHref} className="flex h-10 items-center rounded-md border border-line-strong px-4 text-sm hover:bg-subtle">
+          <Link href={clearHref} className="flex h-11 items-center rounded-md md:h-10 border border-line-strong px-4 text-sm hover:bg-subtle">
             Limpar
           </Link>
         )}

@@ -104,12 +104,15 @@ export const FIELD_MESSAGES = {
 export const daysInvalidMessage = (maxDays: number) => `Informe o prazo em dias, de ${MIN_DAYS} a ${maxDays}.`;
 export const daysTooManyMessage = (maxDays: number) => `O prazo máximo é de ${maxDays} dias.`;
 
+// Mesma frase na tela, no servidor e no erro do banco (card 0254): a funcionária nunca vê a validação nativa do navegador.
+export const MAX_DAYS_RANGE_MESSAGE = `Informe de 1 a ${MAX_DAYS_CEILING} dias.`;
+
 // Limite de dias que a funcionária digita: inteiro de 1 a 365 (o banco confere de novo).
 export function parseMaxDaysInput(raw: unknown): { ok: true; days: number } | { ok: false; message: string } {
   const text = typeof raw === "number" ? String(raw) : typeof raw === "string" ? raw.trim() : "";
-  if (!/^\d{1,3}$/.test(text)) return { ok: false, message: `Informe um número de 1 a ${MAX_DAYS_CEILING}.` };
+  if (!/^\d{1,3}$/.test(text)) return { ok: false, message: MAX_DAYS_RANGE_MESSAGE };
   const days = Number(text);
-  if (days < 1 || days > MAX_DAYS_CEILING) return { ok: false, message: `O limite deve ser de 1 a ${MAX_DAYS_CEILING} dias.` };
+  if (days < 1 || days > MAX_DAYS_CEILING) return { ok: false, message: MAX_DAYS_RANGE_MESSAGE };
   return { ok: true, days };
 }
 

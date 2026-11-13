@@ -29,7 +29,7 @@ Só dado **igual para todo mundo**. A migration `20261108130000_public_book_cate
 
 ### Imagens de capa
 
-`BookCover` usa `<img>` simples (as capas vêm do Storage, que serve com cache longo). Agora leva `loading="lazy"` e `decoding="async"`: a capa fora da tela só baixa quando a pessoa rola até ela. Não foi usado `next/image` de propósito: o otimizador da Vercel tem cota própria no plano gratuito, e a capa já chega pequena (limite de 2 MB no envio). Se um dia as capas pesarem, a alternativa é a transformação de imagem do Supabase Storage (recurso pago).
+`BookCover` usa `<img>` simples (as capas vêm do Storage, que serve com cache longo). Agora leva `loading="lazy"` e `decoding="async"`: a capa fora da tela só baixa quando a pessoa rola até ela. Não foi usado `next/image` de propósito: o otimizador da Vercel tem cota própria no plano gratuito, e a capa já chega pequena (limite de 2 MB no envio). Se um dia as capas pesarem, a alternativa é a transformação de imagem do Supabase Storage (recurso pago). As capas da primeira tela (detalhe do livro e as 4 primeiras da pesquisa) levam `priority` (`loading="eager"` e `fetchPriority="high"`), para o LCP não esperar; as demais seguem preguiçosas. O tamanho certo vem de `width`/`height` e das classes por tela (32×44 na tabela, 56×80 no cartão do celular). Card 0253.
 
 ### First Load JS e streaming
 

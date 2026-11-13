@@ -73,7 +73,7 @@ export function TeacherPicker({ selected, onChange, search, error, disabled = fa
               onChange(null);
               setTerm("");
             }}
-            className="flex h-8 shrink-0 cursor-pointer items-center gap-1 rounded-md px-2 text-sm text-ink-muted hover:bg-subtle hover:text-ink focus-visible:outline-2 focus-visible:outline-focus disabled:cursor-not-allowed"
+            className="flex h-11 shrink-0 md:h-8 cursor-pointer items-center gap-1 rounded-md px-2 text-sm text-ink-muted hover:bg-subtle hover:text-ink focus-visible:outline-2 focus-visible:outline-focus disabled:cursor-not-allowed"
           >
             <X size={14} aria-hidden />
             Trocar

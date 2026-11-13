@@ -1,5 +1,5 @@
 import { connection } from "next/server";
-import { DEFAULT_MAX_DAYS, MAX_DAYS_CEILING } from "@/domain/pedagogical/reservation-rules";
+import { DEFAULT_MAX_DAYS, MAX_DAYS_CEILING, MAX_DAYS_RANGE_MESSAGE } from "@/domain/pedagogical/reservation-rules";
 import { createSupabaseServerClient } from "@/lib/supabase/server-client";
 
 // Configurações da biblioteca (tabela library_settings). Hoje só o limite de dias da reserva pedagógica (card 0218):
@@ -24,6 +24,6 @@ export async function setPedagogicalMaxDays(days: number): Promise<SetMaxDaysRes
   const { error } = await supabase.rpc("set_pedagogical_max_days", { p_days: days });
   if (!error) return { ok: true, days };
   if (error.code === "42501" || error.message === "not_allowed") return { ok: false, message: "Só a funcionária da biblioteca altera o limite." };
-  if (error.message === "invalid_max_days") return { ok: false, message: `O limite deve ser de 1 a ${MAX_DAYS_CEILING} dias.` };
+  if (error.message === "invalid_max_days") return { ok: false, message: MAX_DAYS_RANGE_MESSAGE };
   return { ok: false, message: "Não foi possível salvar agora. Tente de novo." };
 }

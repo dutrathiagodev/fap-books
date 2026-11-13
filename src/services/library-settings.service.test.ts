@@ -42,7 +42,7 @@ describe("setPedagogicalMaxDays", () => {
   it.each([
     ["sem permissão (SQLSTATE 42501)", { code: "42501", message: "permission denied" }, "Só a funcionária da biblioteca altera o limite."],
     ["perfil sem direito (not_allowed)", { code: "P0001", message: "not_allowed" }, "Só a funcionária da biblioteca altera o limite."],
-    ["valor fora do intervalo", { code: "P0001", message: "invalid_max_days" }, "O limite deve ser de 1 a 365 dias."],
+    ["valor fora do intervalo", { code: "P0001", message: "invalid_max_days" }, "Informe de 1 a 365 dias."],
     ["erro qualquer", { code: "XX000", message: "boom" }, "Não foi possível salvar agora. Tente de novo."],
   ])("traduz o erro: %s", async (_nome, error, message) => {
     rpc.mockResolvedValue({ data: null, error });

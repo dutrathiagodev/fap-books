@@ -30,6 +30,7 @@ export function BookDetailView({
       <div className="grid gap-8 md:grid-cols-[18rem_1fr]">
         <div className="flex h-80 items-center justify-center rounded-lg bg-selected md:h-96">
           <BookCover
+            priority
             url={book.coverUrl}
             alt={`Capa de ${book.title}`}
             className="h-72 w-auto rounded-md shadow-md md:h-80"

@@ -31,7 +31,7 @@ export function Pagination({ page, pages, summary, label, hrefFor }: PaginationP
               …
             </span>
           ) : item === page ? (
-            <span key={item} aria-current="page" className="flex size-9 items-center justify-center rounded-md bg-brand font-medium text-on-brand">
+            <span key={item} aria-current="page" className="flex size-11 items-center justify-center rounded-md bg-brand md:size-9 font-medium text-on-brand">
               {item}
             </span>
           ) : (
@@ -39,7 +39,7 @@ export function Pagination({ page, pages, summary, label, hrefFor }: PaginationP
               key={item}
               href={hrefFor(item)}
               aria-label={`Ir para a página ${item}`}
-              className="flex size-9 items-center justify-center rounded-md border border-line-strong hover:bg-subtle"
+              className="flex size-11 items-center justify-center rounded-md border md:size-9 border-line-strong hover:bg-subtle"
             >
               {item}
             </Link>

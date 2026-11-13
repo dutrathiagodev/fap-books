@@ -2,22 +2,22 @@
 
 import Link from "next/link";
 import { useState, useTransition } from "react";
-import { Archive, Eye, Pencil, Trash2 } from "lucide-react";
 import { ACERVO_PATH } from "@/domain/access/access-rules";
 import { confirmsTitle } from "@/domain/books/book-rules";
 import type { BookActionResult, BookListItem } from "@/types/book";
 import { Modal } from "./Modal";
+import { RowIcon } from "./RowIcon";
 import { TextField } from "./TextField";
 
 interface BookRowActionsProps {
-  book: BookListItem;
+  // Só o que as ações usam: menos dados por linha na página (card 0239).
+  book: Pick<BookListItem, "id" | "title" | "status" | "hasHistory">;
   // As ações do servidor chegam por props: o componente não conhece o banco.
   onDelete: (bookId: string) => Promise<BookActionResult>;
   onInactivate: (bookId: string) => Promise<BookActionResult>;
 }
 
-const ICON_BUTTON =
-  "flex size-8 items-center justify-center rounded-md border border-line outline-offset-2 focus-visible:outline-2 focus-visible:outline-focus";
+const ICON_BUTTON = "row-icon-btn";
 
 const ERROR_TEXT: Record<"has_history" | "not_found" | "error", string> = {
   has_history: "Este livro já tem histórico e não pode ser excluído. Atualize a página e inative o livro.",
@@ -64,10 +64,10 @@ export function BookRowActions({ book, onDelete, onInactivate }: BookRowActionsP
   return (
     <div className="flex items-center gap-2">
       <Link href={`${ACERVO_PATH}/${book.id}`} title="Ver detalhes" aria-label={`Ver ${book.title}`} className={`${ICON_BUTTON} text-ink-muted hover:bg-subtle`}>
-        <Eye size={16} aria-hidden />
+        <RowIcon name="eye" />
       </Link>
       <Link href={`${ACERVO_PATH}/${book.id}/editar`} title="Editar" aria-label={`Editar ${book.title}`} className={`${ICON_BUTTON} text-ink-muted hover:bg-subtle`}>
-        <Pencil size={16} aria-hidden />
+        <RowIcon name="pencil" />
       </Link>
       {book.hasHistory ? (
         <>
@@ -78,7 +78,7 @@ export function BookRowActions({ book, onDelete, onInactivate }: BookRowActionsP
             aria-label={`Excluir ${book.title} (livro com histórico: use Inativar)`}
             className={`${ICON_BUTTON} cursor-not-allowed border-danger-100 bg-danger-100 text-danger-700 opacity-50`}
           >
-            <Trash2 size={16} aria-hidden />
+            <RowIcon name="trash" />
           </button>
           {!alreadyInactive && (
             <button
@@ -88,7 +88,7 @@ export function BookRowActions({ book, onDelete, onInactivate }: BookRowActionsP
               aria-label={`Inativar ${book.title}`}
               className={`${ICON_BUTTON} cursor-pointer text-ink-muted hover:bg-subtle`}
             >
-              <Archive size={16} aria-hidden />
+              <RowIcon name="archive" />
             </button>
           )}
         </>
@@ -100,7 +100,7 @@ export function BookRowActions({ book, onDelete, onInactivate }: BookRowActionsP
           aria-label={`Excluir ${book.title}`}
           className={`${ICON_BUTTON} cursor-pointer border-danger-100 bg-danger-100 text-danger-700 hover:bg-danger-700 hover:text-white`}
         >
-          <Trash2 size={16} aria-hidden />
+          <RowIcon name="trash" />
         </button>
       )}
 

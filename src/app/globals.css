@@ -230,3 +230,69 @@ h3 {
   font-family: var(--font-heading), Georgia, serif;
   font-weight: 600;
 }
+
+/*
+  Botão de ícone das linhas de tabela (acervo): 44 px no celular (alvo de toque, card 0255) e 32 px no computador.
+  Fica aqui e não em cada botão para a página do acervo não repetir a mesma lista de classes 40 vezes no HTML.
+*/
+@utility row-icon-btn {
+  display: flex;
+  width: 2.75rem;
+  height: 2.75rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  outline-offset: 2px;
+  @media (min-width: 48rem) {
+    width: 2rem;
+    height: 2rem;
+  }
+  &:focus-visible {
+    outline: 2px solid var(--focus);
+  }
+}
+
+/* Traço dos ícones do sprite da tabela do acervo (mesmo estilo do lucide). */
+.row-icon {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/*
+  Linha do acervo: cartão no celular (capa, status, título, autor, código e ações em grade) e linha de tabela a partir
+  de md (768 px). Mesma marcação nos dois (card 0239); a classe vive aqui para não repetir ~200 caracteres por linha.
+*/
+@utility book-row {
+  display: grid;
+  grid-template-columns: 3.5rem minmax(0, 1fr);
+  column-gap: 0.75rem;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  padding: 0.75rem;
+  @media (min-width: 48rem) {
+    display: table-row;
+    border-radius: 0;
+    border-width: 1px 0 0;
+    background: transparent;
+    padding: 0;
+    &:hover {
+      background: var(--selected);
+    }
+  }
+}
+
+/* Selos de situação do livro: as mesmas cores de antes, numa classe só para não repetir a lista na tabela (card 0239). */
+@utility situation-available {
+  @apply bg-success-100 text-success-700 dark:bg-green-400/15 dark:text-green-300 dark:ring-1 dark:ring-green-400/40 dark:ring-inset;
+}
+@utility situation-unavailable {
+  @apply bg-info-100 text-info-700 dark:bg-sky-400/15 dark:text-sky-300 dark:ring-1 dark:ring-sky-400/40 dark:ring-inset;
+}
+@utility situation-reserved {
+  @apply bg-warning-100 text-warning-700 dark:bg-amber-400/15 dark:text-amber-300 dark:ring-1 dark:ring-amber-400/40 dark:ring-inset;
+}
