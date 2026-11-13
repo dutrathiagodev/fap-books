@@ -95,7 +95,7 @@ export function TextField({
           aria-describedby={describedBy}
           onChange={onChange ? (event) => onChange(event.target.value) : undefined}
           onBlur={onBlur}
-          className={`h-10 w-full rounded-md border bg-surface text-base text-ink placeholder:text-ink-muted focus:outline-2 disabled:cursor-not-allowed disabled:bg-subtle disabled:opacity-70 ${
+          className={`h-11 w-full md:h-10 rounded-md border bg-surface text-base text-ink placeholder:text-ink-muted focus:outline-2 disabled:cursor-not-allowed disabled:bg-subtle disabled:opacity-70 ${
             Leading ? "pl-10" : "pl-4"
           } ${trailing ? "pr-12" : "pr-4"} ${
             error ? "border-danger-700 focus:border-danger-700 focus:outline-danger-700" : "border-line focus:border-focus focus:outline-focus"

@@ -35,7 +35,7 @@ function useNarrowScreen(): boolean {
 }
 
 const CONTROL =
-  "h-10 w-full rounded-md border bg-surface px-4 text-base text-ink outline-offset-2 placeholder:text-ink-muted focus-visible:outline-2 focus-visible:outline-focus disabled:cursor-not-allowed disabled:opacity-50";
+  "h-11 w-full rounded-md border bg-surface px-4 md:h-10 text-base text-ink outline-offset-2 placeholder:text-ink-muted focus-visible:outline-2 focus-visible:outline-focus disabled:cursor-not-allowed disabled:opacity-50";
 
 function controlClass(invalid: boolean): string {
   return `${CONTROL} ${invalid ? "border-danger-700" : "border-line focus-visible:border-focus"}`;

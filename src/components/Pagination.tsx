@@ -12,7 +12,7 @@ interface PaginationProps {
   hrefFor: (page: number) => string;
 }
 
-const STEP = "rounded-md border border-line-strong px-3 py-1.5 hover:bg-subtle";
+const STEP = "inline-flex min-h-11 items-center rounded-md border border-line-strong px-3 py-1.5 hover:bg-subtle md:min-h-0";
 
 // Paginação com números (Figma, cards 0113 e 0108): Anterior, números com "…" e Próxima.
 export function Pagination({ page, pages, summary, label, hrefFor }: PaginationProps) {

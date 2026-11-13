@@ -154,7 +154,7 @@ export function HelpAssistant() {
               autoComplete="off"
               aria-label="Sua pergunta"
               placeholder="Pergunte sobre prazo, multa, horário…"
-              className="h-10 min-w-0 flex-1 rounded-md border border-line bg-surface px-3 text-sm text-ink placeholder:text-ink-muted focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-focus"
+              className="h-11 min-w-0 flex-1 md:h-10 rounded-md border border-line bg-surface px-3 text-sm text-ink placeholder:text-ink-muted focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-focus"
             />
             <button
               type="submit"

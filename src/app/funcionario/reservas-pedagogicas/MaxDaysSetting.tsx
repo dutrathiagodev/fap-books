@@ -52,7 +52,7 @@ export function MaxDaysSetting({ maxDays, save }: MaxDaysSettingProps) {
             setValue(event.target.value);
             setMessage(undefined);
           }}
-          className="h-8 w-20 rounded-md border border-line bg-surface px-2 text-sm text-ink focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-focus disabled:opacity-50"
+          className="h-11 w-20 md:h-8 rounded-md border border-line bg-surface px-2 text-sm text-ink focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-focus disabled:opacity-50"
         />
         <Button text="Salvar" type="submit" variant="secondary" size="small" fullWidth={false} loading={pending} disabled={pending || unchanged} />
       </div>

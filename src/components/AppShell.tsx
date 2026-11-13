@@ -118,6 +118,7 @@ function MenuList({
             <Link
               href={item.href}
               aria-current={active ? "page" : undefined}
+              title={wide ? undefined : item.label}
               onClick={onNavigate}
               className={`${ITEM_BASE} hover:bg-navy-800/70 ${active ? "bg-navy-800" : ""}`}
             >

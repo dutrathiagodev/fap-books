@@ -101,7 +101,7 @@ export function TeacherPicker({ selected, onChange, search, error, disabled = fa
           aria-describedby={error ? `${inputId}-error` : undefined}
           aria-invalid={error ? true : undefined}
           onChange={(event) => setTerm(event.target.value)}
-          className={`h-10 w-full rounded-md border bg-surface pr-4 pl-10 text-base text-ink placeholder:text-ink-muted focus:outline-2 disabled:cursor-not-allowed disabled:bg-subtle disabled:opacity-70 ${
+          className={`h-11 w-full rounded-md border bg-surface md:h-10 pr-4 pl-10 text-base text-ink placeholder:text-ink-muted focus:outline-2 disabled:cursor-not-allowed disabled:bg-subtle disabled:opacity-70 ${
             error ? "border-danger-700 focus:border-danger-700 focus:outline-danger-700" : "border-line focus:border-focus focus:outline-focus"
           }`}
         />

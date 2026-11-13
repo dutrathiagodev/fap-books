@@ -113,7 +113,7 @@ export function Modal({
           type="button"
           onClick={onClose}
           aria-label="Fechar"
-          className="absolute top-4 right-4 flex size-8 cursor-pointer items-center justify-center rounded-md text-ink-muted hover:bg-subtle hover:text-ink focus-visible:outline-2 focus-visible:outline-focus"
+          className="absolute top-2 right-2 flex size-11 md:top-4 md:right-4 md:size-8 cursor-pointer items-center justify-center rounded-md text-ink-muted hover:bg-subtle hover:text-ink focus-visible:outline-2 focus-visible:outline-focus"
         >
           <X size={16} strokeWidth={1.5} aria-hidden />
         </button>

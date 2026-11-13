@@ -45,7 +45,7 @@ function NoticeRow({ notice }: { notice: DeadlineNoticeView }) {
         )}
         <Link
           href={loanHref(notice.code)}
-          className="text-sm font-medium text-link hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
+          className="inline-flex min-h-11 items-center text-sm font-medium text-link hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus md:min-h-0"
         >
           Ver empréstimo
         </Link>

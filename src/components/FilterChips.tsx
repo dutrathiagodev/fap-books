@@ -36,7 +36,7 @@ export function FilterChips({ label, chips, tone = "soft" }: FilterChipsProps) {
           href={chip.href}
           aria-current={chip.active ? "true" : undefined}
           className={`inline-flex items-center gap-1.5 border text-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus ${
-            tone === "segmented" ? "h-9 rounded-md px-3" : "h-11 rounded-full px-4"
+            tone === "segmented" ? "h-11 rounded-md px-3 md:h-9" : "h-11 rounded-full px-4"
           } ${
             chip.active
               ? ACTIVE_TONE[tone]

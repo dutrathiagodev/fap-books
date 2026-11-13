@@ -16,7 +16,7 @@ export interface DateRangeFilterProps {
 }
 
 const DATE_INPUT =
-  "h-10 rounded-md border border-line bg-surface px-3 text-sm text-ink focus:border-focus focus:outline-2 focus:outline-focus";
+  "h-11 rounded-md border border-line bg-surface px-3 md:h-10 text-sm text-ink focus:border-focus focus:outline-2 focus:outline-focus";
 
 // Filtro por período (Figma, card 0152): data inicial e final. É um formulário comum (GET), sem JavaScript.
 // O campo de data do navegador mostra dd/mm/aaaa no idioma do sistema; o endereço guarda aaaa-mm-dd.
