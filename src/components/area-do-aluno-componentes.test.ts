@@ -53,9 +53,9 @@ describe("lista de empréstimos", () => {
   it("atrasado ou com multa: botão desligado e o motivo escrito", () => {
     const late = render(createElement(StudentLoanList, { loans: [toMyLoanView(loanRow("2026-11-06T15:00:00Z"), NOW, 0)], renew }));
     expect(late).toContain(" disabled=");
-    expect(late).toContain("Empréstimo em atraso não pode ser renovado");
+    expect(late).toContain("Devolva o livro na biblioteca");
     const fined = render(createElement(StudentLoanList, { loans: [toMyLoanView(loanRow("2026-11-17T15:00:00Z"), NOW, 200)], renew }));
-    expect(fined).toContain("multa em aberto");
+    expect(fined).toContain("Você tem multa em aberto");
   });
 });
 

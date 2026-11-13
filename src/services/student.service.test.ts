@@ -123,6 +123,12 @@ describe("renewMyLoan", () => {
     expect(result.ok === false && result.message).toMatch(/Pague na biblioteca/);
   });
 
+  it("atraso: pede para devolver na biblioteca, sem falar com a bibliotecária", async () => {
+    rpc.mockResolvedValue({ data: null, error: { message: "loan_overdue" } });
+    const result = await renewMyLoan("l1", "k1");
+    expect(result.ok === false && result.message).toBe("Livro em atraso não pode ser renovado. Devolva o livro na biblioteca.");
+  });
+
   it("empréstimo de outra pessoa (42501) e erro desconhecido não vazam texto do banco", async () => {
     rpc.mockResolvedValueOnce({ data: null, error: { code: "42501", message: "permission denied for table x" } });
     expect(await renewMyLoan("l2", "k1")).toEqual({ ok: false, message: "Você não tem permissão para esta ação." });

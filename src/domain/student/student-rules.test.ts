@@ -39,7 +39,8 @@ describe("toMyLoanView", () => {
     const view = toMyLoanView(loan("2026-11-06T15:00:00Z"), NOW, 0);
     expect(view.status).toBe("overdue");
     expect(view.whenLabel).toBe("4 dias de atraso");
-    expect(view.renewBlocked).toMatch(/atraso/);
+    expect(view.renewBlocked).toBe("Livro em atraso não pode ser renovado. Devolva o livro na biblioteca.");
+    expect(view.renewBlocked).not.toMatch(/registre/);
   });
 
   it("multa em aberto bloqueia a renovação mesmo sem atraso", () => {
@@ -67,6 +68,10 @@ describe("buildStudentSummary", () => {
       dueSoon: 0,
       openFineLabel: "R$ 4,00",
     });
+  });
+  it("formando com 4 livros chegou ao limite; aluno comum com 3 também", () => {
+    const four = [{ status: null }, { status: null }, { status: null }, { status: null }];
+    expect(buildStudentSummary({ loans: four, graduating: true, openFineCents: 0 })).toMatchObject({ borrowed: 4, limit: 4, remaining: 0 });
   });
   it("formando tem limite 4", () => {
     expect(buildStudentSummary({ loans, graduating: true, openFineCents: 0 })).toMatchObject({ limit: 4, remaining: 1 });

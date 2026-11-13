@@ -1,5 +1,6 @@
 import { createSupabaseServerClient } from "@/lib/supabase/server-client";
 import { GENERIC_LOAN_ERROR, loanErrorCode, loanErrorMessage } from "@/domain/loans/loan-errors";
+import { STUDENT_RENEW_BLOCK_MESSAGES } from "@/domain/student/student-rules";
 import { formatLoanDate } from "@/domain/loans/loan-rules";
 import {
   buildStudentSummary,
@@ -95,7 +96,7 @@ export async function listMyFines(userId: string): Promise<MyFineView[]> {
 }
 
 // Renovação pelo aluno: a regra é toda da função renew_loan do banco (dono do empréstimo, atraso, multa, reserva de outra
-// pessoa e limite de 3 renovações). Aqui só se traduz a resposta; a mensagem de multa é a do aluno, não a do balcão.
+// pessoa e limite de 3 renovações). Aqui só se traduz a resposta; as mensagens de multa e atraso são as do aluno, não as do balcão.
 export async function renewMyLoan(
   loanId: string,
   idempotencyKey: string,
@@ -104,9 +105,9 @@ export async function renewMyLoan(
   const { data, error } = await supabase.rpc("renew_loan", { p_loan_id: loanId, p_idempotency_key: idempotencyKey });
   if (error) {
     console.error("Falha ao renovar o empréstimo do aluno:", error.message);
-    if (loanErrorCode(error) === "user_has_pending") {
-      return { ok: false, message: "Você tem multa em aberto. Pague na biblioteca para poder renovar." };
-    }
+    const code = loanErrorCode(error);
+    if (code === "user_has_pending") return { ok: false, message: STUDENT_RENEW_BLOCK_MESSAGES.open_fine };
+    if (code === "loan_overdue") return { ok: false, message: STUDENT_RENEW_BLOCK_MESSAGES.overdue };
     return { ok: false, message: loanErrorMessage(error) };
   }
   const loan = data as { due_at: string; renewals: number } | null;

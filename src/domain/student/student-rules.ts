@@ -7,6 +7,7 @@ import {
   renewBlockReason,
   renewedDueDate,
   RENEW_BLOCK_MESSAGES,
+  type RenewBlockReason,
 } from "../loans/loan-rules";
 import { renewalsLabel } from "../loans/loan-views";
 import type { MyFineView, MyLoanView, MyReservationStatus, MyReservationView, StudentSummary } from "@/types/student";
@@ -22,6 +23,14 @@ export const STUDENT_FINES_PATH = "/aluno/multas";
 export const FINE_PAYMENT_NOTICE = "O pagamento da multa é feito somente na biblioteca, com a bibliotecária.";
 
 // ---- Empréstimos ----
+
+// Motivos de bloqueio da renovação, ditos ao aluno (os de RENEW_BLOCK_MESSAGES falam com a bibliotecária:
+// "registre a devolução", "Usuário com multa"). O limite de renovações serve aos dois.
+export const STUDENT_RENEW_BLOCK_MESSAGES: Record<RenewBlockReason, string> = {
+  limit: RENEW_BLOCK_MESSAGES.limit,
+  overdue: "Livro em atraso não pode ser renovado. Devolva o livro na biblioteca.",
+  open_fine: "Você tem multa em aberto. Pague na biblioteca para poder renovar.",
+};
 
 export interface MyLoanRow {
   id: string;
@@ -50,7 +59,7 @@ export function toMyLoanView(row: MyLoanRow, now: Date, openFineCents: number): 
     whenLabel: status ? whenLabel(status, days) : `Vence em ${formatLoanDate(dueAt)}`,
     renewals: row.renewals,
     renewalsLabel: renewalsLabel(row.renewals),
-    renewBlocked: blocked ? RENEW_BLOCK_MESSAGES[blocked] : null,
+    renewBlocked: blocked ? STUDENT_RENEW_BLOCK_MESSAGES[blocked] : null,
   };
 }
 
