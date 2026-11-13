@@ -17,6 +17,7 @@ import {
   Library,
   LayoutDashboard,
   LogOut,
+  Mail,
   Menu,
   Receipt,
   Search,
@@ -29,6 +30,7 @@ import { ACERVO_PATH, ROLE_LABELS } from "@/domain/access/access-rules";
 import { PANEL_PATH } from "@/domain/navigation/nav-items";
 import { isActive, navItemsFor, type NavItem } from "@/domain/navigation/nav-items";
 import type { Profile, UserRole } from "@/types/profile";
+import { noticePreferencesPath } from "@/domain/notices/loan-notice";
 import { HelpAssistant } from "./HelpAssistant";
 import { Logo } from "./Logo";
 
@@ -275,6 +277,15 @@ function UserMenu({ profile }: { profile: Profile }) {
           role="menu"
           className="absolute right-0 top-full z-30 mt-2 w-48 rounded-lg border border-line bg-surface p-1 shadow-md"
         >
+          <Link
+            href={noticePreferencesPath(profile.role)}
+            role="menuitem"
+            onClick={() => setOpen(false)}
+            className="flex w-full cursor-pointer items-center gap-3 rounded-md px-3 py-2 text-sm hover:bg-subtle focus-visible:outline-2 focus-visible:outline-focus"
+          >
+            <Mail size={16} aria-hidden />
+            Avisos por e-mail
+          </Link>
           <form action={logout}>
             <button
               type="submit"

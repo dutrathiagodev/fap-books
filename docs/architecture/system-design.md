@@ -127,7 +127,7 @@ A decisão de custo é do dono do projeto.
 
 - **Prova de carga com os números oficiais: rodada em 13/11/2026 e NÃO bateu a meta nas telas autenticadas.** Detalhes abaixo; correção no card 0260.
 - **Limite global por IP:** depende de o dono aplicar a regra do WAF.
-- **Avisos de vencimento (RF-24) por canal externo:** dependem de o dono definir o canal (WhatsApp ou e-mail). O painel já mostra os avisos de prazo.
+- **Avisos de vencimento (RF-24) por canal externo:** o e-mail está feito (tarefa agendada, tabela `loan_email_notices`, provedor trocável; veja `docs/email/README.md`). O WhatsApp depende de o dono definir o canal. O painel já mostra os avisos de prazo.
 - **Lighthouse no CI:** evolução opcional; o orçamento de JavaScript já roda.
 
 ### Resultado da prova de carga (card 0235, 13/11/2026)

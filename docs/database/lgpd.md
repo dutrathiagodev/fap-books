@@ -7,7 +7,7 @@ Card `FAP - 0011` · requisito não funcional do [PRD](../prd.md) (seção 7). L
 | Onde | Dado | Para que serve | De quem |
 | -- | -- | -- | -- |
 | `auth.users` (login do Supabase) | e-mail, senha (guardada só como hash) | entrar no sistema | todos |
-| `profiles` | nome completo, e-mail, perfil (aluno, professor, funcionário), cargo, ativo ou não | mostrar o nome, decidir o que a pessoa pode fazer | todos |
+| `profiles` | nome completo, e-mail, perfil (aluno, professor, funcionário), cargo, ativo ou não, preferência de receber aviso de prazo por e-mail (`email_notices`, a própria pessoa liga ou desliga) | mostrar o nome, decidir o que a pessoa pode fazer | todos |
 | `loans` | quem pegou qual livro, quando, prazo, devolução, renovações, quem registrou | controlar empréstimos | alunos e professores |
 | `fines` | multa por atraso, valor em centavos, data do pagamento, quem deu baixa | cobrar atrasos | alunos e professores |
 | `reservations` | quem reservou qual livro e em que fila | reserva de livro indisponível | alunos |

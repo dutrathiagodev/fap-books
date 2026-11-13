@@ -6,7 +6,7 @@ name: Alerta de falha de rotina
 # O gatilho workflow_run só funciona a partir do arquivo na branch padrão (main). Veja docs/infra-e-plano-gratuito.md.
 on:
   workflow_run:
-    workflows: ['Backup do banco', 'Multas por atraso', 'Saúde do Supabase', 'Verificação do site']
+    workflows: ['Backup do banco', 'Multas por atraso', 'Saúde do Supabase', 'Verificação do site', 'Avisos de vencimento por e-mail']
     types: [completed]
 
 permissions:

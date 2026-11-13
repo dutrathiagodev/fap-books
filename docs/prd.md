@@ -170,7 +170,7 @@ Prioridade classificada em MoSCoW: **Must have** (essencial ao MVP), **Should ha
 | RF-21 | Cálculo automático do prazo de devolução (padrão de 7 dias, ou o prazo definido na reserva pedagógica) | Must have | Planejado |
 | RF-22 | Cálculo automático de multa por atraso (R$ 1,00 por dia de atraso) | Must have | Planejado |
 | RF-23 | Registro, pela bibliotecária, da baixa manual do pagamento da multa | Must have | Planejado |
-| RF-24 | Notificação de prazo próximo do vencimento ou já vencido, via WhatsApp, e-mail e painel do sistema | Should have | Planejado |
+| RF-24 | Notificação de prazo próximo do vencimento ou já vencido, via WhatsApp, e-mail e painel do sistema | Should have | E-mail feito (aviso automático, `docs/email/README.md`); painel feito; WhatsApp planejado |
 
 ### 6.6 Histórico e Relatórios
 
