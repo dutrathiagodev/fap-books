@@ -105,9 +105,9 @@ Leitura domina a escrita: pesquisa de livros é a rota mais quente. Por isso a b
 ## 5. Observabilidade e operação
 
 - **Backup:** diário, criptografado (`database/backup.md`).
-- **Saúde do Supabase (semanal):** mantém o projeto ativo, mede banco e arquivos (alerta em 80%), conta auditoria antiga, lista consultas lentas (`pg_stat_statements`).
-- **Erros do servidor:** painel da Vercel (Logs). Sentry exigiria conta e chave novas.
-- **Alertas do Supabase (`get_advisors`):** conferir semanalmente no painel (Advisors). Automatizar exigiria um token novo da API de gerenciamento.
+- **Saúde do Supabase (semanal):** mantém o projeto ativo, mede banco e arquivos (alerta em 80%), conta auditoria antiga, lista consultas lentas (`pg_stat_statements`) e roda os advisors por SQL (`scripts/agendadas/advisors.sql`, sem token novo).
+- **Erros do servidor:** log estruturado sem PII em Vercel > Logs (`src/instrumentation.ts`); Sentry fica como evolução (precisa de conta, DSN e pacote). Decisão e limites em `infra-e-plano-gratuito.md`, seção 3.
+- **Alertas:** `verificacao-do-site.yml` (site fora do ar) e `alerta-falha-rotina.yml` (backup, multas, saúde ou verificação falharam) abrem issue e o GitHub avisa por e-mail.
 - **Segurança:** última verificação em 09/11/2026 (RLS em todas as tabelas, anônimo recusado em tabelas e funções, sem segredo no repositório nem no bundle, 0 vulnerabilidades no `npm audit`).
 
 ## 6. Plano de crescimento
