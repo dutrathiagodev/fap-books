@@ -108,6 +108,7 @@ Para o Thiago testar `https://fap-books.vercel.app` com calma, na ordem. Cada it
 - [ ] Cadastro direto na API é recusado: no terminal, `curl -s -X POST "$NEXT_PUBLIC_SUPABASE_URL/auth/v1/signup" -H "apikey: $NEXT_PUBLIC_SUPABASE_ANON_KEY" -H "Content-Type: application/json" -d '{"email":"x@example.com","password":"Senha-12345"}'` deve devolver `signup_disabled`.
 - [ ] Limite global: mais de 60 POSTs por minuto de um mesmo IP recebem `429` (regra do WAF da Vercel).
 - [ ] Aluno e professor não abrem nenhuma tela da funcionária.
+- [ ] **Senha mínima de 8 no Supabase Auth (passo do dono, card 0258):** painel do Supabase > Authentication > Sign In / Providers > Email > *Minimum password length* = **8** (o padrão do Supabase é 6). O app já recusa menos de 8 no formulário e no servidor; este ajuste fecha a porta de quem chamar a API do Auth direto. Conferir: `curl -s -X PUT "$NEXT_PUBLIC_SUPABASE_URL/auth/v1/user" ...` exige sessão, então o teste prático é definir uma senha de 7 caracteres num convite de teste: o formulário recusa antes de enviar.
 
 ## 7. Itens que você precisa saber que estão abertos (não são falha do QA)
 
