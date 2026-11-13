@@ -4,7 +4,7 @@ name: Avisos de vencimento por e-mail
 # Chama a rota protegida do app (POST /api/cron/avisos-vencimento) que escolhe os empréstimos que vencem em até 2 dias,
 # vencem hoje ou estão atrasados e envia um e-mail por situação (RF-24). Idempotente: o banco guarda o que já foi avisado,
 # então rodar de novo não repete nada. No máximo 50 e-mails por execução; falha de envio é tentada de novo nas próximas.
-# A chave do provedor de e-mail e a chave do banco ficam só na Vercel; aqui só vai o CRON_SECRET (docs/email/README.md).
+# A senha do provedor de e-mail (Gmail/Brevo/Resend, todos grátis) e a chave do banco ficam só na Vercel; aqui só vai o CRON_SECRET (docs/email/README.md).
 # O agendamento só roda a partir da branch padrão (main).
 on:
   schedule:

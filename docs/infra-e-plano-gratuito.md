@@ -103,7 +103,7 @@ As tarefas de banco usam o segredo que **já existe** (`SUPABASE_DB_URL`, o mesm
 
 ### Avisos de vencimento por e-mail (RF-24)
 
-`avisos-vencimento.yml` (todo dia 08:00, horário de Brasília, e por "Run workflow") chama a rota protegida `POST /api/cron/avisos-vencimento`, que envia um e-mail por empréstimo e situação (a vencer em até 2 dias, vence hoje, atrasado). Idempotente (chave única em `loan_email_notices`), em lote de no máximo 50 por execução, com até 3 tentativas por aviso. **Segredo novo:** `CRON_SECRET` (GitHub e Vercel, o mesmo valor); a chave do Resend fica só na Vercel. Sem a chave do Resend a tarefa só simula. Detalhes, preferência de não receber (LGPD) e o que o dono configura: `docs/email/README.md`. O aviso por WhatsApp (card 0065) continua em aberto.
+`avisos-vencimento.yml` (todo dia 08:00, horário de Brasília, e por "Run workflow") chama a rota protegida `POST /api/cron/avisos-vencimento`, que envia um e-mail por empréstimo e situação (a vencer em até 2 dias, vence hoje, atrasado). Idempotente (chave única em `loan_email_notices`), em lote de no máximo 50 por execução, com até 3 tentativas por aviso. **Segredo novo:** `CRON_SECRET` (GitHub e Vercel, o mesmo valor); a senha do provedor de e-mail (Gmail com senha de app, Brevo ou Resend, todos grátis) fica só na Vercel. Sem provedor configurado a tarefa só simula. Detalhes, preferência de não receber (LGPD) e o que o dono configura: `docs/email/README.md`. O aviso por WhatsApp (card 0065) continua em aberto.
 
 ### Observabilidade (card 0252)
 
@@ -167,7 +167,7 @@ Travas: só aceita `localhost`; outro host exige `PROVA_HOSTS_PERMITIDOS` (decis
 | -- | -- |
 | Limite global por IP | **Feito** (regra no WAF, 60 POSTs por minuto por IP). Resta conferir o limite de tentativas do Supabase Auth no painel |
 | Apagar auditoria antiga | Dono rodar o workflow à mão com `apagar_auditoria = sim` (a partir de 2028 haverá o que apagar) |
-| Avisos de vencimento por e-mail (RF-24) | Dono: conta no Resend, remetente verificado e os segredos (`docs/email/README.md`); WhatsApp segue em aberto |
 | Prova de carga com números oficiais | **Rodada** (13/11/2026): não bateu na listagem; correção no card 0260 e nova rodada depois |
+| Avisos de vencimento por e-mail (RF-24) | Dono: conta Gmail da biblioteca com senha de app (ou Brevo) e os segredos (`docs/email/README.md`), sem custo; WhatsApp segue em aberto |
 | `docs/architecture/system-design.md` (diagrama, estimativas, ADRs, plano de crescimento) | **Escrito em 09/11/2026**; a seção 7 dele lista o que ainda não está provado |
 | Lighthouse no CI | Evolução opcional |
