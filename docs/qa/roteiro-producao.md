@@ -32,7 +32,12 @@ Para o Thiago testar `https://fap-books.vercel.app` com calma, na ordem. Cada it
 - [ ] Entra direto em `/aluno/livros` (card 0108 e acesso por perfil).
 - [ ] Busca "casmurro": acha o livro; filtros de categoria e disponibilidade funcionam; a página do livro mostra exemplares livres.
 - [ ] Botões "Solicitar reserva" e "Entrar na lista de espera" aparecem desabilitados ("Em breve"): é proposital.
-- [ ] Menu "Meus empréstimos", "Reservas" e "Multas" aparecem sem tela (os cards 0214 e 0215 estão com o Igor).
+- [ ] Menu do aluno: "Minha área", "Buscar livros", "Meus empréstimos", "Minhas reservas" e "Multas", todos com tela (cards 0212 e 0214 a 0217).
+- [ ] `/aluno` (Minha área): cartões "Livros emprestados" (`3 de 3`), "Prazos próximos ou atrasados" e "Multa em aberto"; faixa de atenção lista os livros atrasados com selo "Atrasado"; aviso do pagamento presencial com (44) 3236-8065.
+- [ ] `/aluno/emprestimos`: um cartão por livro com prazo e renovações (`0 de 3`); com atraso ou multa em aberto o botão "Renovar" fica desligado e o motivo aparece escrito. (Para ver a renovação funcionando, use o usuário de QA da seção 3.3, sem multa nem atraso: o prazo sobe 7 dias e o contador vira `1 de 3`.)
+- [ ] `/aluno/reservas`: mostra o estado vazio "Você não tem reservas" (a fila de espera é outro card).
+- [ ] `/aluno/multas`: multas em aberto primeiro, valor em R$, aviso "pagamento somente na biblioteca". Pagas aparecem depois, com a data.
+- [ ] 375 e 768 px sem rolagem lateral, botões com 44 px de altura, tema claro e escuro legíveis.
 - [ ] **Assistente de ajuda** (balão no canto, card 0234): pergunte "qual o horário", "como renovar", "como funciona a multa", "quantos livros posso pegar", "qual o contato". As respostas batem com a regra (7 dias, 3 livros, 4 para formandos, renovar até 3 vezes, R$ 1,00 por dia). Uma pergunta fora do assunto ("posso trazer meu cachorro?") mostra "Falar no WhatsApp", que abre o número (44) 3236-8065 com a pergunta preenchida. Esc fecha e devolve o foco ao botão.
 - [ ] Abrir `/funcionario/painel` e `/professor/livros` com o aluno redireciona para a área dele.
 
@@ -106,7 +111,7 @@ Para o Thiago testar `https://fap-books.vercel.app` com calma, na ordem. Cada it
 
 ## 7. Itens que você precisa saber que estão abertos (não são falha do QA)
 
-- Área do aluno (meus empréstimos, renovação, reservas, multas): cards 0214 a 0217, com o Igor.
+- Área do aluno: a renovação e as multas estão prontas; a reserva de livro indisponível (fila de espera) é de outro card, por isso "Minhas reservas" aparece vazia.
 - Aviso automático por e-mail: card 0236. Prova de carga: card 0235. Observabilidade com alerta: card 0252.
 - QA que ainda não foi feito (inativar livro, "Sair e voltar", Lighthouse, celular 375/768, teclado e leitor de tela, capas, newsletter real e as perguntas do balão): card 0248.
 - Conferência com o Figma das telas restantes: card 0249; extras do site ainda sem desenho: card 0251. O painel geral do Histórico (indicadores, exportar CSV) fica para Relatórios (cards 0096 e 0154 a 0156).
