@@ -87,7 +87,9 @@ Todas usam o segredo que **já existe** (`SUPABASE_DB_URL`, o mesmo do backup). 
 | -- | -- | -- | -- |
 | `backup-banco.yml` | Todo dia 03:00 | Backup criptografado (já existia; ver `database/backup.md`) | Sim |
 | `multas-atrasos.yml` | Todo dia 03:30 | `scripts/agendadas/multas-por-atraso.sql`: multa de R$ 1,00 por dia de atraso (RF-22) | Sim |
-| `saude-supabase.yml` | Segunda 06:00 | Mantém o projeto ativo, mede banco e arquivos, conta auditoria antiga, lista consultas lentas | Sim (só lê; apagar é manual) |
+| `saude-supabase.yml` | Segunda 06:00 | Mantém o projeto ativo, mede banco e arquivos, conta auditoria antiga, lista consultas lentas e roda os advisors por SQL | Sim (só lê; apagar é manual) |
+| `verificacao-do-site.yml` | A cada 6 h | Abre `/` e `/login` em produção; falha se não vier 200 | Sim |
+| `alerta-falha-rotina.yml` | Quando uma das quatro rotinas acima falha | Abre ou atualiza uma issue com o link da execução | Sim (não duplica issue aberta) |
 
 ### Multa por atraso
 
@@ -102,11 +104,40 @@ Todas usam o segredo que **já existe** (`SUPABASE_DB_URL`, o mesmo do backup). 
 
 Não existe canal de envio (WhatsApp, e-mail) nem tabela de avisos no painel. Quando o dono definir o canal e a tabela, o aviso vira outra etapa do mesmo tipo de tarefa (consulta os empréstimos que vencem em até 2 dias ou já venceram e ainda não receberam aviso).
 
-### Observabilidade
+### Observabilidade (card 0252)
 
-- Consultas lentas: o relatório semanal lê `pg_stat_statements` (ative em Database > Extensions se o workflow avisar que está desligada). **O repositório é público e o resumo do job também**: o texto das consultas vem normalizado (sem valores), mas não use isso para dado sensível.
-- Alertas do Supabase (`get_advisors`: índices que faltam, RLS): rodar no painel (Advisors) ou pelo assistente a cada semana. Fazer isso por workflow exigiria um token novo da API de gerenciamento, por isso ficou de fora.
-- Log de erros: o painel da Vercel (Logs) guarda os erros do servidor. Sentry exigiria conta e chave novas.
+**Erros do app: decisão.** Comparei três opções no plano gratuito:
+
+| Opção | Custo / exigência | Veredito |
+| -- | -- | -- |
+| Vercel Log Drains / alertas de Observability | Drains e alertas são recursos de plano pago (confirmar na página de preços da Vercel); o Hobby só guarda os Logs por pouco tempo | Fora |
+| Sentry (plano Developer grátis) | Conta nova, DSN novo (segredo), pacote `@sentry/nextjs` (pesa no JavaScript do navegador, perto do teto do orçamento do CI) e risco de PII nos eventos se mal configurado | Fica como evolução se o piloto crescer |
+| **Log estruturado no próprio app + rotinas do GitHub** | Zero custo, zero dependência, zero segredo | **Escolhida** |
+
+O que foi feito:
+
+- `src/instrumentation.ts` (`onRequestError` do Next) grava **uma linha JSON de nível `error`** por erro do servidor, aparece em **Vercel > Logs** (filtre por *Error* ou por `erro_servidor`). Campos: `digest` (o mesmo código da tela de erro), `tipo`, `rota`, `contexto`, `metodo`, `caminho`. **Sem PII**: nunca vai a mensagem do erro, a query string, cabeçalhos ou cookies (`src/lib/error-log.ts`, testado).
+- **Alerta de site fora do ar:** `verificacao-do-site.yml` (a cada 6 h) abre `/` e `/login` em produção e falha se não vier 200. Falhou, o GitHub manda e-mail e a issue automática abre.
+- **Alerta de rotina quebrada:** `alerta-falha-rotina.yml` abre (ou comenta numa) issue "Falha na rotina: ..." quando **backup, multas, saúde ou verificação do site** terminam com falha. Usa só o token automático do workflow.
+
+**Passo do dono (uma vez):** em GitHub > Settings > Notifications, deixe ligado o e-mail de *Actions* ("Send notifications for failed workflows only") e o *Watch* do repositório em *All activity* (ou *Custom > Issues*) para a issue chegar por e-mail. O workflow só passa a valer depois de entrar na `main`.
+
+**Limite honesto:** um erro de código que não derruba a página (ex.: falha numa ação que mostra mensagem) fica no Log da Vercel, mas **não dispara e-mail**. Isso só o Sentry (ou um plano pago da Vercel) entrega; hoje a conferência é olhar Vercel > Logs quando alguém reportar problema.
+
+**Consultas lentas (`pg_stat_statements`).** O workflow semanal tenta ligar a extensão (`create extension if not exists pg_stat_statements with schema extensions`; no Supabase ela costuma vir ativa) e lista as 10 mais lentas no resumo do job. Para olhar à mão no SQL Editor (as estatísticas zeram quando o banco reinicia):
+
+```sql
+select round(mean_exec_time::numeric, 1) as media_ms, round(max_exec_time::numeric, 1) as maximo_ms, calls as chamadas,
+       round(total_exec_time::numeric) as total_ms, left(regexp_replace(query, '\s+', ' ', 'g'), 160) as consulta
+from extensions.pg_stat_statements
+where query not ilike '%pg_stat_statements%' and calls >= 5
+order by mean_exec_time desc
+limit 20;
+```
+
+Para investigar uma consulta, copie o texto e rode `explain (analyze, buffers) ...` com valores de teste. **O repositório é público e o resumo do job também**: o texto vem normalizado (sem valores), mas não use isso para dado sensível.
+
+**Advisors do Supabase, toda segunda, sem token novo.** A API oficial dos Advisors exige token de gerenciamento (segredo novo), então `scripts/agendadas/advisors.sql` reproduz as conferências que mais importam **consultando o catálogo do Postgres** com o `SUPABASE_DB_URL` que já existe: tabela sem RLS, view sem `security_invoker`, função `SECURITY DEFINER` sem `search_path` (esses três são **ERRO e derrubam o workflow**) e, como **AVISO** (só listam): RLS sem política, função liberada ao anônimo, chave estrangeira sem índice, índice grande sem uso. Rodado no banco com as 34 migrations, sem ERRO; avisos de hoje: `public_book_categories` liberada ao anônimo (de propósito), `action_keys` sem política (de propósito: só o servidor usa) e 7 chaves de "quem criou/decidiu" sem índice (tabelas pequenas, sem impacto). Fica de fora o que só o painel enxerga (configuração do Auth, como a senha mínima): continue olhando **Advisors** no painel de vez em quando. Para automatizar também isso, o passo do dono seria criar um token de acesso da conta Supabase e guardá-lo como segredo `SUPABASE_ACCESS_TOKEN`; não foi feito para não criar segredo novo.
 
 ## 4. Prova de carga
 
