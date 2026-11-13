@@ -79,7 +79,7 @@ export function BookImportForm({ onImport }: BookImportFormProps) {
               categoria, codigo e quantidade.
             </span>
           </span>
-          <span className="inline-flex h-10 shrink-0 items-center rounded-md border border-line-strong bg-surface px-4 text-sm font-medium text-ink">
+          <span className="inline-flex h-11 shrink-0 items-center rounded-md border border-line-strong bg-surface px-4 md:h-10 text-sm font-medium text-ink">
             {file ? "Trocar arquivo" : "Selecionar arquivo"}
           </span>
           <input

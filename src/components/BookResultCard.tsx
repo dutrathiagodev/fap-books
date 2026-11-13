@@ -8,11 +8,12 @@ import { SituationBadge } from "./SituationBadge";
 
 // Cartão de livro da pesquisa (Figma, card 0108): capa, categoria, título, autor, situação e "Ver detalhes".
 // "Ver detalhes" leva à página do livro (card 0111), dentro da mesma área (basePath).
-export function BookResultCard({ book, basePath }: { book: BookSearchItem; basePath: string }) {
+export function BookResultCard({ book, basePath, priority = false }: { book: BookSearchItem; basePath: string; priority?: boolean }) {
   return (
     <article className="flex h-full flex-col gap-3 rounded-lg border border-line bg-surface p-4">
       <div className="relative flex h-44 items-center justify-center rounded-lg bg-selected">
         <BookCover
+          priority={priority}
           url={book.coverUrl}
           className="h-36 w-auto rounded-md shadow-md"
           fallback={<BookOpen aria-hidden size={40} className="text-brand" />}
@@ -43,7 +44,7 @@ export function BookResultCard({ book, basePath }: { book: BookSearchItem; baseP
       </p>
       <Link
         href={`${basePath}/${book.id}`}
-        className="flex h-10 items-center justify-center rounded-md border border-line-strong text-sm font-medium hover:bg-subtle"
+        className="flex h-11 items-center justify-center rounded-md border border-line-strong text-sm font-medium hover:bg-subtle"
       >
         Ver detalhes
       </Link>

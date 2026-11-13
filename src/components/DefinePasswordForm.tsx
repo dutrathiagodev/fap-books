@@ -22,7 +22,7 @@ function ShowHideButton({ shown, onToggle, label }: { shown: boolean; onToggle: 
       onClick={onToggle}
       aria-label={`${shown ? "Ocultar" : "Mostrar"} ${label}`}
       aria-pressed={shown}
-      className="flex size-8 cursor-pointer items-center justify-center rounded-md text-ink-muted hover:text-ink focus-visible:outline-2 focus-visible:outline-focus"
+      className="flex size-11 cursor-pointer md:size-8 items-center justify-center rounded-md text-ink-muted hover:text-ink focus-visible:outline-2 focus-visible:outline-focus"
     >
       {shown ? <EyeOff size={18} strokeWidth={1.5} aria-hidden /> : <Eye size={18} strokeWidth={1.5} aria-hidden />}
     </button>

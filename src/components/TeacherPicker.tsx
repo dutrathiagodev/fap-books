@@ -73,7 +73,7 @@ export function TeacherPicker({ selected, onChange, search, error, disabled = fa
               onChange(null);
               setTerm("");
             }}
-            className="flex h-8 shrink-0 cursor-pointer items-center gap-1 rounded-md px-2 text-sm text-ink-muted hover:bg-subtle hover:text-ink focus-visible:outline-2 focus-visible:outline-focus disabled:cursor-not-allowed"
+            className="flex h-11 shrink-0 md:h-8 cursor-pointer items-center gap-1 rounded-md px-2 text-sm text-ink-muted hover:bg-subtle hover:text-ink focus-visible:outline-2 focus-visible:outline-focus disabled:cursor-not-allowed"
           >
             <X size={14} aria-hidden />
             Trocar
@@ -101,7 +101,7 @@ export function TeacherPicker({ selected, onChange, search, error, disabled = fa
           aria-describedby={error ? `${inputId}-error` : undefined}
           aria-invalid={error ? true : undefined}
           onChange={(event) => setTerm(event.target.value)}
-          className={`h-10 w-full rounded-md border bg-surface pr-4 pl-10 text-base text-ink placeholder:text-ink-muted focus:outline-2 disabled:cursor-not-allowed disabled:bg-subtle disabled:opacity-70 ${
+          className={`h-11 w-full rounded-md border bg-surface md:h-10 pr-4 pl-10 text-base text-ink placeholder:text-ink-muted focus:outline-2 disabled:cursor-not-allowed disabled:bg-subtle disabled:opacity-70 ${
             error ? "border-danger-700 focus:border-danger-700 focus:outline-danger-700" : "border-line focus:border-focus focus:outline-focus"
           }`}
         />

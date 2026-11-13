@@ -27,7 +27,7 @@ export function DeadlineBanner({ summary }: { summary: Pick<PanelSummary, "dueTo
         <p>{sentence}</p>
         <Link
           href={NOTICES_PATH}
-          className="mt-1 inline-block font-medium text-brand underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
+          className="mt-1 inline-flex min-h-11 items-center font-medium text-brand underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus md:min-h-0"
         >
           Ver avisos de prazo
         </Link>

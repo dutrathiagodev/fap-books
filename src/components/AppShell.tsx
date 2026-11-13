@@ -9,6 +9,8 @@ import {
   Bookmark,
   ChartColumn,
   ChevronDown,
+  ChevronsLeft,
+  ChevronsRight,
   GraduationCap,
   History,
   Home,
@@ -16,8 +18,6 @@ import {
   LayoutDashboard,
   LogOut,
   Menu,
-  PanelLeftClose,
-  PanelLeftOpen,
   Receipt,
   Search,
   Users,
@@ -118,6 +118,7 @@ function MenuList({
             <Link
               href={item.href}
               aria-current={active ? "page" : undefined}
+              title={wide ? undefined : item.label}
               onClick={onNavigate}
               className={`${ITEM_BASE} hover:bg-navy-800/70 ${active ? "bg-navy-800" : ""}`}
             >
@@ -164,7 +165,7 @@ function SidebarUser({ profile, wide }: { profile: Profile; wide: boolean }) {
           type="submit"
           aria-label="Sair"
           title="Sair"
-          className="flex size-9 cursor-pointer items-center justify-center rounded-md text-white hover:bg-navy-800 focus-visible:outline-2 focus-visible:outline-white"
+          className="flex size-11 cursor-pointer items-center justify-center rounded-md text-white hover:bg-navy-800 md:size-9 focus-visible:outline-2 focus-visible:outline-white"
         >
           <LogOut size={18} aria-hidden />
         </button>
@@ -173,17 +174,19 @@ function SidebarUser({ profile, wide }: { profile: Profile; wide: boolean }) {
   );
 }
 
-// Botão de recolher/abrir o menu: fica no topo do próprio menu, ao lado da logo (Figma, menu lateral).
+// Botão de recolher/abrir o menu: fica no topo do próprio menu, ao lado da logo (Figma, menu lateral). A seta dupla
+// aponta para onde o menu vai (« recolhe, » expande) e a dica aparece ao passar o mouse (card 0256).
 function SidebarToggle({ collapsed, onClick }: { collapsed: boolean; onClick: () => void }) {
   return (
     <button
       type="button"
       aria-label={collapsed ? "Expandir menu" : "Recolher menu"}
+      title={collapsed ? "Expandir menu" : "Recolher menu"}
       aria-expanded={!collapsed}
       onClick={onClick}
       className="flex size-9 shrink-0 cursor-pointer items-center justify-center rounded-md border border-navy-200/50 text-white hover:bg-navy-800 focus-visible:outline-2 focus-visible:outline-white"
     >
-      {collapsed ? <PanelLeftOpen size={18} aria-hidden /> : <PanelLeftClose size={18} aria-hidden />}
+      {collapsed ? <ChevronsRight size={18} aria-hidden /> : <ChevronsLeft size={18} aria-hidden />}
     </button>
   );
 }
@@ -394,7 +397,7 @@ export function AppShell({ profile, noticeCount = 0, children }: AppShellProps) 
                 type="button"
                 aria-label="Fechar menu"
                 onClick={() => setDrawer(false)}
-                className="cursor-pointer rounded-md p-2 text-white hover:bg-navy-800 focus-visible:outline-2 focus-visible:outline-white"
+                className="flex size-11 cursor-pointer items-center justify-center rounded-md text-white hover:bg-navy-800 focus-visible:outline-2 focus-visible:outline-white"
               >
                 <X size={20} aria-hidden />
               </button>
@@ -420,7 +423,7 @@ export function AppShell({ profile, noticeCount = 0, children }: AppShellProps) 
             type="button"
             aria-label="Abrir menu"
             onClick={() => setDrawer(true)}
-            className={`cursor-pointer rounded-md p-2 hover:bg-subtle focus-visible:outline-2 focus-visible:outline-focus ${hideDrawerFrom}`}
+            className={`flex size-11 cursor-pointer items-center justify-center rounded-md hover:bg-subtle focus-visible:outline-2 focus-visible:outline-focus ${hideDrawerFrom}`}
           >
             <Menu size={20} aria-hidden />
           </button>

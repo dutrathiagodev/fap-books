@@ -13,6 +13,9 @@ import { RolePage } from "./RolePage";
 import { StudentSearchHero } from "./StudentSearchHero";
 import { TextLink } from "./TextLink";
 
+// Capas que já aparecem na primeira tela: baixam na hora, as demais só ao rolar (card 0253).
+const FIRST_SCREEN_COVERS = 4;
+
 export type SearchParams = Promise<Record<string, string | string[] | undefined>>;
 
 interface BookSearchPageProps {
@@ -93,12 +96,12 @@ export function BookSearchPage({ role, basePath, searchParams, editorial = false
                       : "grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
                   }
                 >
-                  {books.map((book) => (
+                  {books.map((book, index) => (
                     <li key={book.id}>
                       {editorial ? (
-                        <BookCatalogCard book={book} basePath={basePath} />
+                        <BookCatalogCard book={book} basePath={basePath} priority={index < FIRST_SCREEN_COVERS} />
                       ) : (
-                        <BookResultCard book={book} basePath={basePath} />
+                        <BookResultCard book={book} basePath={basePath} priority={index < FIRST_SCREEN_COVERS} />
                       )}
                     </li>
                   ))}

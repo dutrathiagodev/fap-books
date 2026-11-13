@@ -42,7 +42,7 @@ export function Toast({ message, tone = "success", onClose, durationMs = 6000 }:
         type="button"
         onClick={onClose}
         aria-label="Fechar aviso"
-        className="flex size-6 shrink-0 cursor-pointer items-center justify-center rounded-md text-ink-muted hover:bg-subtle hover:text-ink focus-visible:outline-2 focus-visible:outline-focus"
+        className="flex size-11 shrink-0 md:size-6 cursor-pointer items-center justify-center rounded-md text-ink-muted hover:bg-subtle hover:text-ink focus-visible:outline-2 focus-visible:outline-focus"
       >
         <X size={14} strokeWidth={1.5} aria-hidden />
       </button>

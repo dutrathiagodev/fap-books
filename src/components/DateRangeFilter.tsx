@@ -18,7 +18,7 @@ export interface DateRangeFilterProps {
 }
 
 const DATE_INPUT =
-  "h-10 rounded-md border border-line bg-surface px-3 text-sm text-ink focus:border-focus focus:outline-2 focus:outline-focus";
+  "h-11 rounded-md border border-line bg-surface px-3 md:h-10 text-sm text-ink focus:border-focus focus:outline-2 focus:outline-focus";
 
 // Filtro por período (Figma, card 0152): data inicial e final. É um formulário comum (GET), sem JavaScript.
 // O campo de data do navegador mostra dd/mm/aaaa no idioma do sistema; o endereço guarda aaaa-mm-dd.
@@ -40,11 +40,11 @@ export function DateRangeFilter({ action, hidden, from, to, error, clearHref, fr
           Até
           <input type="date" name="ate" defaultValue={to ?? ""} aria-invalid={error ? true : undefined} className={DATE_INPUT} />
         </label>
-        <button type="submit" className="h-10 cursor-pointer rounded-md bg-brand px-4 text-sm font-medium text-on-brand hover:bg-brand-hover">
+        <button type="submit" className="h-11 cursor-pointer rounded-md md:h-10 bg-brand px-4 text-sm font-medium text-on-brand hover:bg-brand-hover">
           Aplicar período
         </button>
         {(from || to) && (
-          <Link href={clearHref} className="flex h-10 items-center rounded-md border border-line-strong px-4 text-sm hover:bg-subtle">
+          <Link href={clearHref} className="flex h-11 items-center rounded-md md:h-10 border border-line-strong px-4 text-sm hover:bg-subtle">
             Limpar
           </Link>
         )}

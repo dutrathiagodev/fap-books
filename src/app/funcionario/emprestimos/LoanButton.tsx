@@ -9,7 +9,7 @@ const VARIANTS = {
   outline: "border border-line-strong bg-surface text-brand hover:bg-subtle",
 } as const;
 
-const SIZES = { default: "h-11 px-5", small: "h-9 px-3" } as const;
+const SIZES = { default: "h-11 px-5", small: "h-11 px-3 md:h-9" } as const;
 
 // Botão do balcão: "primary" (azul escuro) e "outline" (borda), 44 px ou 36 px (linha de tabela).
 export function LoanButton({

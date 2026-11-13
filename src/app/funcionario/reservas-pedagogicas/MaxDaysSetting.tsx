@@ -33,7 +33,7 @@ export function MaxDaysSetting({ maxDays, save }: MaxDaysSettingProps) {
   }
 
   return (
-    <form onSubmit={submit} className="flex shrink-0 flex-col gap-1.5" aria-label="Limite de dias da reserva pedagógica">
+    <form onSubmit={submit} noValidate className="flex shrink-0 flex-col gap-1.5" aria-label="Limite de dias da reserva pedagógica">
       <div className="flex items-center gap-2">
         <label htmlFor="limite-dias" className="text-sm font-medium text-ink">
           Prazo máximo (dias)
@@ -46,15 +46,17 @@ export function MaxDaysSetting({ maxDays, save }: MaxDaysSettingProps) {
           max={MAX_DAYS_CEILING}
           value={value}
           disabled={pending}
+          aria-invalid={message?.tone === "error"}
+          aria-describedby="limite-dias-aviso"
           onChange={(event) => {
             setValue(event.target.value);
             setMessage(undefined);
           }}
-          className="h-8 w-20 rounded-md border border-line bg-surface px-2 text-sm text-ink focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-focus disabled:opacity-50"
+          className="h-11 w-20 md:h-8 rounded-md border border-line bg-surface px-2 text-sm text-ink focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-focus disabled:opacity-50"
         />
         <Button text="Salvar" type="submit" variant="secondary" size="small" fullWidth={false} loading={pending} disabled={pending || unchanged} />
       </div>
-      <p role={message?.tone === "error" ? "alert" : "status"} className={`min-h-4 text-xs ${message?.tone === "error" ? "text-danger-700" : "text-ink-muted"}`}>
+      <p id="limite-dias-aviso" role={message?.tone === "error" ? "alert" : "status"} className={`min-h-4 text-xs ${message?.tone === "error" ? "text-danger-700" : "text-ink-muted"}`}>
         {message?.text ?? "Padrão: 30 dias. Vale para os próximos pedidos."}
       </p>
     </form>

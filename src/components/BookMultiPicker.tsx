@@ -82,7 +82,7 @@ export function BookMultiPicker({ selected, onChange, search, max, error, disabl
           aria-invalid={error ? true : undefined}
           aria-controls={listId}
           onChange={(event) => setTerm(event.target.value)}
-          className={`h-10 w-full rounded-md border bg-surface pr-4 pl-10 text-base text-ink placeholder:text-ink-muted focus:outline-2 disabled:cursor-not-allowed disabled:bg-subtle disabled:opacity-70 ${
+          className={`h-11 w-full rounded-md border bg-surface md:h-10 pr-4 pl-10 text-base text-ink placeholder:text-ink-muted focus:outline-2 disabled:cursor-not-allowed disabled:bg-subtle disabled:opacity-70 ${
             error ? "border-danger-700 focus:border-danger-700 focus:outline-danger-700" : "border-line focus:border-focus focus:outline-focus"
           }`}
         />
@@ -142,7 +142,7 @@ export function BookMultiPicker({ selected, onChange, search, max, error, disabl
                 disabled={disabled}
                 aria-label={`Remover ${book.title}`}
                 onClick={() => onChange(selected.filter((item) => item.id !== book.id))}
-                className="flex size-6 shrink-0 cursor-pointer items-center justify-center rounded-full hover:bg-navy-100 focus-visible:outline-2 focus-visible:outline-focus disabled:cursor-not-allowed dark:hover:bg-navy-800"
+                className="-my-2 flex size-11 shrink-0 md:my-0 md:size-6 cursor-pointer items-center justify-center rounded-full hover:bg-navy-100 focus-visible:outline-2 focus-visible:outline-focus disabled:cursor-not-allowed dark:hover:bg-navy-800"
               >
                 <X size={14} aria-hidden />
               </button>

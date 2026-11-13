@@ -45,12 +45,12 @@ export function SituationLine({ book, tinted = false }: { book: BookSearchItem; 
 }
 
 const DETAIL_LINK =
-  "inline-flex h-8 shrink-0 items-center rounded-full border border-line-strong px-3 text-xs font-medium text-ink hover:bg-subtle focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus";
+  "inline-flex h-11 shrink-0 md:h-8 items-center rounded-full border border-line-strong px-3 text-xs font-medium text-ink hover:bg-subtle focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus";
 
 // Cartão do "Todo o acervo" (Figma, card 0108, visual editorial): capa sobre painel claro, categoria, título, autor,
 // situação e o botão. O frame traz "Reservar", "Avisar-me" e "Fila de espera"; enquanto a reserva não existe, o botão
 // leva ao detalhe do livro.
-export function BookCatalogCard({ book, basePath }: { book: BookSearchItem; basePath: string }) {
+export function BookCatalogCard({ book, basePath, priority = false }: { book: BookSearchItem; basePath: string; priority?: boolean }) {
   return (
     <article className="flex h-full flex-col gap-3">
       <Link
@@ -59,6 +59,7 @@ export function BookCatalogCard({ book, basePath }: { book: BookSearchItem; base
         className="flex h-52 items-center justify-center rounded-xl bg-selected focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
       >
         <BookCover
+          priority={priority}
           url={book.coverUrl}
           className="h-40 w-auto rounded-md shadow-md"
           fallback={<BookOpen aria-hidden size={40} className="text-brand" />}

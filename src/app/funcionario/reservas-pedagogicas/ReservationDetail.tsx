@@ -23,7 +23,7 @@ export function ReservationDetail({ reservation, availability, filter }: { reser
         <Link
           href={queueHref({ filter })}
           aria-label="Fechar detalhe"
-          className="flex size-8 shrink-0 items-center justify-center rounded-md text-ink-muted hover:bg-subtle hover:text-ink focus-visible:outline-2 focus-visible:outline-focus"
+          className="flex size-11 shrink-0 md:size-8 items-center justify-center rounded-md text-ink-muted hover:bg-subtle hover:text-ink focus-visible:outline-2 focus-visible:outline-focus"
         >
           <X size={16} aria-hidden />
         </Link>

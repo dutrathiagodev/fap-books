@@ -26,8 +26,8 @@ const COMMON =
 // Altura e respiro de cada tamanho (Figma: 18×12, 14×8 e 10×4).
 const SIZES = {
   large: "h-12 px-4.5",
-  default: "h-[42px] px-3.5",
-  small: "h-8 px-2.5",
+  default: "h-11 px-3.5 md:h-[42px]",
+  small: "h-11 px-2.5 md:h-8",
 } as const;
 
 // Cores por prioridade e estado (hover, pressed) lidas do componente Button do Figma.
@@ -39,7 +39,7 @@ const VARIANTS = {
   tertiary: "rounded-md text-ink-muted hover:bg-surface active:bg-subtle",
   danger: "rounded-md border border-danger-700 bg-danger-100 text-danger-700",
   // 32 px, como o botão de ícone da linha (a linha do frame tem 56 px). Fora dos tamanhos: ignora o size.
-  text: "h-8 rounded-md px-2 text-link hover:underline",
+  text: "h-11 rounded-md px-2 text-link hover:underline md:h-8",
 } as const;
 
 // Botão do FAP Books (Figma, card 0098: cantos de 8 px, três tamanhos e três prioridades).
