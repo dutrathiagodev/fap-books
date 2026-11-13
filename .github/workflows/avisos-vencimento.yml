@@ -1,0 +1,40 @@
+name: Avisos de vencimento por e-mail
+
+# Todo dia às 08:00 (horário de Brasília) e quando alguém clicar em "Run workflow".
+# Chama a rota protegida do app (POST /api/cron/avisos-vencimento) que escolhe os empréstimos que vencem em até 2 dias,
+# vencem hoje ou estão atrasados e envia um e-mail por situação (RF-24). Idempotente: o banco guarda o que já foi avisado,
+# então rodar de novo não repete nada. No máximo 50 e-mails por execução; falha de envio é tentada de novo nas próximas.
+# A chave do provedor de e-mail e a chave do banco ficam só na Vercel; aqui só vai o CRON_SECRET (docs/email/README.md).
+# O agendamento só roda a partir da branch padrão (main).
+on:
+  schedule:
+    - cron: '0 11 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: avisos-vencimento
+  cancel-in-progress: false
+
+jobs:
+  avisos:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Conferir o segredo
+        env:
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+        run: |
+          [ -n "$CRON_SECRET" ] || { echo "::error::Falta o segredo CRON_SECRET (veja docs/email/README.md)"; exit 1; }
+
+      - name: Enviar os avisos
+        env:
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+          APP_URL: https://fap-books.vercel.app
+        run: |
+          # A resposta só tem contadores (sem e-mail nem nome). Erro HTTP derruba o job (curl --fail-with-body).
+          curl --silent --show-error --fail-with-body --max-time 120 --request POST \
+            --header "Authorization: Bearer ${CRON_SECRET}" \
+            "${APP_URL}/api/cron/avisos-vencimento" | tee -a "$GITHUB_STEP_SUMMARY"
