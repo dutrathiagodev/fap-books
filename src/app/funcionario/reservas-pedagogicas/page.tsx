@@ -55,7 +55,8 @@ async function QueueContent({ searchParams }: { searchParams: SearchParams }) {
         <div className="flex flex-1 flex-col gap-3 lg:flex-row lg:items-center lg:justify-between lg:gap-6">
           <p>
             <strong className="font-medium">Regra de negócio.</strong> Ao aprovar, um exemplar de cada livro fica guardado para o professor até a
-            devolução. O prazo máximo é de {maxDays} dias e a decisão registra quem decidiu e quando.
+            devolução. O prazo máximo é de {maxDays} dias e a decisão registra quem decidiu e quando. Pedido marcado como Renovação estende o
+            prazo de uma reserva aprovada e não pega outro exemplar.
           </p>
           <MaxDaysSetting maxDays={maxDays} save={updateMaxDaysAction} />
         </div>

@@ -31,7 +31,9 @@ const RESERVATION_COLUMNS =
   "id, start_date, days, status, requested_in_person, renewal_of, purpose, decision_note, decided_at, returned_at, created_at, " +
   "teacher:profiles!pedagogical_reservations_teacher_id_fkey(full_name), " +
   "decider:profiles!pedagogical_reservations_decided_by_fkey(full_name), " +
-  "pedagogical_reservation_books(books(id, title, code))";
+  "pedagogical_reservation_books(books(id, title, code)), " +
+  // A renovação não tem livros próprios: os da reserva original.
+  "original:pedagogical_reservations!pedagogical_reservations_renewal_of_fkey(pedagogical_reservation_books(books(id, title, code)))";
 
 // ---- Buscas dos formulários ----
 
@@ -174,6 +176,8 @@ export async function getReservation(id: string): Promise<ReservationView | null
 // (quantidade - empréstimos em aberto - reservas do aluno prontas - guardados por OUTRAS reservas pedagógicas aprovadas).
 // Só a funcionária lê empréstimos e reservas dos outros (RLS). Sem nome de pessoa: só contagens e a data de volta.
 export async function getAvailability(reservation: ReservationView): Promise<BookAvailability[]> {
+  // Renovação não precisa de exemplar livre: os exemplares já estão guardados na reserva original.
+  if (reservation.renewal) return [];
   const supabase = await createSupabaseServerClient();
   const ids = reservation.books.map((book) => book.id);
   if (ids.length === 0) return [];
@@ -281,5 +285,15 @@ export async function returnReservation(reservationId: string, idempotencyKey: s
   return toResult(
     "return_pedagogical_reservation",
     await supabase.rpc("return_pedagogical_reservation", { p_reservation_id: reservationId, p_idempotency_key: idempotencyKey }),
+  );
+}
+
+// Pedido de renovação (só o professor dono da reserva aprovada): mais dias, com nova aprovação da funcionária. O banco confere
+// dono, janela (última semana), limite de dias, uma pendente por reserva e o teto de 365 dias.
+export async function requestRenewal(reservationId: string, days: number, idempotencyKey: string): Promise<ReservationActionResult> {
+  const supabase = await createSupabaseServerClient();
+  return toResult(
+    "request_pedagogical_renewal",
+    await supabase.rpc("request_pedagogical_renewal", { p_reservation_id: reservationId, p_days: days, p_idempotency_key: idempotencyKey }),
   );
 }

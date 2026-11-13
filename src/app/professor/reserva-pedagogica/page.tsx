@@ -1,11 +1,13 @@
 import { EmptyState, PageHeader } from "@/components";
+import { RenewalRequest } from "@/components/RenewalRequest";
 import { ReservationCard } from "@/components/ReservationCard";
 import { ReservationForm } from "@/components/ReservationForm";
 import { RolePage } from "@/components/RolePage";
+import { renewalStateOf } from "@/domain/pedagogical/renewal-rules";
 import { todayInBrasilia } from "@/domain/pedagogical/reservation-rules";
 import { getPedagogicalMaxDays } from "@/services/library-settings.service";
 import { listMyReservations } from "@/services/pedagogical-reservations.service";
-import { requestReservationAction, searchBooksAction } from "./actions";
+import { requestRenewalAction, requestReservationAction, searchBooksAction } from "./actions";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = { title: "Reserva pedagógica | FAP Books" };
@@ -34,9 +36,22 @@ export default function ReservaPedagogicaPage() {
                   <EmptyState title="Nenhuma reserva pedagógica ainda" description="Quando você enviar uma solicitação, ela aparece aqui com a situação." />
                 ) : (
                   <ul className="flex flex-col gap-3">
-                    {reservations.map((reservation) => (
-                      <ReservationCard key={reservation.id} reservation={reservation} />
-                    ))}
+                    {reservations.map((reservation) => {
+                      // Renovar: só reserva aprovada na última semana do prazo e sem pedido pendente (o banco confere de novo).
+                      const renewal = renewalStateOf(reservation, reservations);
+                      return (
+                        <ReservationCard
+                          key={reservation.id}
+                          reservation={reservation}
+                          renewalNote={renewal.kind === "too_early" ? `Você poderá pedir a renovação a partir de ${renewal.opensOn}.` : undefined}
+                          actions={
+                            renewal.kind === "open" ? (
+                              <RenewalRequest reservationId={reservation.id} endOn={reservation.endOn} maxDays={maxDays} onRequest={requestRenewalAction} />
+                            ) : undefined
+                          }
+                        />
+                      );
+                    })}
                   </ul>
                 )}
               </section>

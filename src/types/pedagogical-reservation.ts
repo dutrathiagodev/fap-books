@@ -27,11 +27,16 @@ export interface ReservationView {
   books: ReservationBook[];
   status: ReservationStatus;
   inPerson: boolean;
-  // Renovação de outra reserva (campo renewal_of). A tela de renovar ainda não existe; a etiqueta já fica pronta.
+  // Renovação de outra reserva (campo renewal_of): pedido de mais dias, com nova aprovação. Não tem livros próprios:
+  // "books" traz os da reserva original.
   renewal: boolean;
+  // Id da reserva original, quando é renovação.
+  renewalOf: string | null;
   startOn: string;
   // Dia da devolução (início + prazo).
   endOn: string;
+  // O mesmo dia em aaaa-mm-dd, para conferir a janela de renovação.
+  endDate: string;
   days: number;
   requestedOn: string;
   purpose: string | null;
