@@ -81,13 +81,14 @@ Decisão proposta: guardar **24 meses**. A tabela é imutável para o app (sem `
 
 ## 3. Tarefas agendadas
 
-Todas usam o segredo que **já existe** (`SUPABASE_DB_URL`, o mesmo do backup). Nenhum segredo novo. O GitHub só dispara agendamentos a partir da `main`, e pausa os agendamentos de repositório sem atividade por 60 dias.
+As tarefas de banco usam o segredo que **já existe** (`SUPABASE_DB_URL`, o mesmo do backup); só o aviso de e-mail usa um segredo novo (`CRON_SECRET`). O GitHub só dispara agendamentos a partir da `main`, e pausa os agendamentos de repositório sem atividade por 60 dias.
 
 | Workflow | Quando | O que faz | Idempotente? |
 | -- | -- | -- | -- |
 | `backup-banco.yml` | Todo dia 03:00 | Backup criptografado (já existia; ver `database/backup.md`) | Sim |
 | `multas-atrasos.yml` | Todo dia 03:30 | `scripts/agendadas/multas-por-atraso.sql`: multa de R$ 1,00 por dia de atraso (RF-22) | Sim |
 | `saude-supabase.yml` | Segunda 06:00 | Mantém o projeto ativo, mede banco e arquivos, conta auditoria antiga, lista consultas lentas e roda os advisors por SQL | Sim (só lê; apagar é manual) |
+| `avisos-vencimento.yml` | Todo dia 08:00 (Brasília) | `POST /api/cron/avisos-vencimento`: e-mail de prazo (RF-24), 50 por execução | Sim |
 | `verificacao-do-site.yml` | A cada 6 h | Abre `/` e `/login` em produção; falha se não vier 200 | Sim |
 | `alerta-falha-rotina.yml` | Quando uma das quatro rotinas acima falha | Abre ou atualiza uma issue com o link da execução | Sim (não duplica issue aberta) |
 
@@ -100,9 +101,9 @@ Todas usam o segredo que **já existe** (`SUPABASE_DB_URL`, o mesmo do backup). 
 - Testado num Postgres 17 descartável com as migrations do projeto: criou, não duplicou na segunda rodada, atualizou só a multa não paga e respeitou a paga.
 - A multa **nunca é calculada na leitura**. A tela deve só ler `fines`. Quando o registro de devolução (card 0132) for feito, ele também pode gravar a multa na hora; o job apenas corrige o que faltar.
 
-### Avisos de vencimento (RF-24): ainda não feito
+### Avisos de vencimento por e-mail (RF-24)
 
-Não existe canal de envio (WhatsApp, e-mail) nem tabela de avisos no painel. Quando o dono definir o canal e a tabela, o aviso vira outra etapa do mesmo tipo de tarefa (consulta os empréstimos que vencem em até 2 dias ou já venceram e ainda não receberam aviso).
+`avisos-vencimento.yml` (todo dia 08:00, horário de Brasília, e por "Run workflow") chama a rota protegida `POST /api/cron/avisos-vencimento`, que envia um e-mail por empréstimo e situação (a vencer em até 2 dias, vence hoje, atrasado). Idempotente (chave única em `loan_email_notices`), em lote de no máximo 50 por execução, com até 3 tentativas por aviso. **Segredo novo:** `CRON_SECRET` (GitHub e Vercel, o mesmo valor); a chave do Resend fica só na Vercel. Sem a chave do Resend a tarefa só simula. Detalhes, preferência de não receber (LGPD) e o que o dono configura: `docs/email/README.md`. O aviso por WhatsApp (card 0065) continua em aberto.
 
 ### Observabilidade (card 0252)
 
@@ -166,7 +167,7 @@ Travas: só aceita `localhost`; outro host exige `PROVA_HOSTS_PERMITIDOS` (decis
 | -- | -- |
 | Limite global por IP | **Feito** (regra no WAF, 60 POSTs por minuto por IP). Resta conferir o limite de tentativas do Supabase Auth no painel |
 | Apagar auditoria antiga | Dono rodar o workflow à mão com `apagar_auditoria = sim` (a partir de 2028 haverá o que apagar) |
-| Avisos de vencimento (RF-24) | Dono definir canal e tabela de avisos |
+| Avisos de vencimento por e-mail (RF-24) | Dono: conta no Resend, remetente verificado e os segredos (`docs/email/README.md`); WhatsApp segue em aberto |
 | Prova de carga com números oficiais | **Rodada** (13/11/2026): não bateu na listagem; correção no card 0260 e nova rodada depois |
 | `docs/architecture/system-design.md` (diagrama, estimativas, ADRs, plano de crescimento) | **Escrito em 09/11/2026**; a seção 7 dele lista o que ainda não está provado |
 | Lighthouse no CI | Evolução opcional |
