@@ -125,7 +125,9 @@ PROVA_COOKIE='sb-...-auth-token=...' node scripts/prova-de-carga.mjs http://loca
 
 Travas: só aceita `localhost`; outro host exige `PROVA_HOSTS_PERMITIDOS` (decisão do dono); teto de 50 usuários e 60 segundos. Redirecionamento para `/login` conta como erro.
 
-**Ainda não foi rodada nos números oficiais**: a meta depende das funções SQL de busca paginada (card 0225, lista 1). Rodar antes dá o número de partida; rodar depois prova a melhoria.
+**Rodada em 13/11/2026 (card 0235)** com 20 mil livros e 50 usuários: a página pública bateu a meta (p95 120 ms); a listagem do aluno e o detalhe **não** (p95 de 1,6 a 2,3 s e de 0,7 a 1,1 s). Gargalo e números em `docs/architecture/system-design.md`, seção 7; correção no card 0260.
+
+**Montar a pilha local** (sem misturar com outros projetos no Docker): crie uma pasta fora do repositório, rode `supabase init`, no `supabase/config.toml` troque o `project_id` e as portas (ex.: API 55421, banco 55422) para não colidir, ligue `supabase/migrations` ao do projeto e rode `supabase start -x imgproxy,vector,logflare,mailpit,studio,realtime,edge-runtime`. Crie um aluno de teste pela API de administração local, entre com ele e monte o cookie `sb-127-auth-token=base64-...` com a sessão devolvida. A busca por termo (`?q=`) leva 429 do limitador por IP depois de 60 pedidos por minuto, de propósito: meça a busca no banco com `EXPLAIN ANALYZE`.
 
 ## 5. O que falta (decisões e dependências)
 
@@ -134,6 +136,6 @@ Travas: só aceita `localhost`; outro host exige `PROVA_HOSTS_PERMITIDOS` (decis
 | Limite global por IP | **Feito** (regra no WAF, 60 POSTs por minuto por IP). Resta conferir o limite de tentativas do Supabase Auth no painel |
 | Apagar auditoria antiga | Dono rodar o workflow à mão com `apagar_auditoria = sim` (a partir de 2028 haverá o que apagar) |
 | Avisos de vencimento (RF-24) | Dono definir canal e tabela de avisos |
-| Prova de carga com números oficiais | Funções de busca paginada |
+| Prova de carga com números oficiais | **Rodada** (13/11/2026): não bateu na listagem; correção no card 0260 e nova rodada depois |
 | `docs/architecture/system-design.md` (diagrama, estimativas, ADRs, plano de crescimento) | **Escrito em 09/11/2026**; a seção 7 dele lista o que ainda não está provado |
 | Lighthouse no CI | Evolução opcional |
