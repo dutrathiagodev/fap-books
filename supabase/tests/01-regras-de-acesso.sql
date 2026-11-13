@@ -58,7 +58,7 @@ begin
   insert into public.books (id,title,author,code,quantity) values ('b0000000-0000-0000-0000-0000000000a1','Livro emprestado','Autor','R-001',1);
   insert into public.loans(book_id,user_id,due_at,created_by) values ('b0000000-0000-0000-0000-0000000000a1',T1::uuid, now()+interval '7 days', L1::uuid);
   perform pg_temp.as_user(A1);
-  insert into public.reservations(book_id,user_id) values ('b0000000-0000-0000-0000-0000000000a1',A1::uuid);
+  perform public.reserve_book('b0000000-0000-0000-0000-0000000000a1');  -- a escrita direta na tabela foi fechada: só pela função
   perform pg_temp.say('aluno reserva livro para si', true);
   denied:=false; begin insert into public.reservations(book_id,user_id) values ('b0000000-0000-0000-0000-0000000000a1',A2::uuid); exception when others then denied:=true; end;
   perform pg_temp.say('aluno NÃO reserva em nome de outro', denied);

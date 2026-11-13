@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { buildHelpRequestMessage, buildLibraryChatUrl, buildNoticeMessage, buildWhatsAppUrl, normalizeBrazilianPhone } from "./whatsapp-link";
+import { buildHelpRequestMessage, buildLibraryChatUrl, buildNoticeMessage, buildReservationReadyMessage, buildWhatsAppUrl, normalizeBrazilianPhone } from "./whatsapp-link";
 
 describe("normalizeBrazilianPhone", () => {
   it.each([
@@ -85,5 +85,14 @@ describe("buildHelpRequestMessage", () => {
     const text = buildHelpRequestMessage("a".repeat(500));
     expect(text.endsWith("a".repeat(200))).toBe(true);
     expect(text.length).toBeLessThan(260);
+  });
+});
+
+describe("buildReservationReadyMessage", () => {
+  it("avisa o livro e a data limite de retirada", () => {
+    const text = buildReservationReadyMessage({ userName: "Bia Souza", bookTitle: "Dom Casmurro", pickupUntil: "15/11/2026" });
+    expect(text).toContain("Olá, Bia!");
+    expect(text).toContain('"Dom Casmurro"');
+    expect(text).toContain("até 15/11/2026");
   });
 });

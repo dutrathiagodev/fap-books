@@ -1,7 +1,11 @@
 import { notFound } from "next/navigation";
+import { cancelReservationAction, expireReservationAction, reserveBookAction } from "@/app/actions/reservations";
 import { getBookDetail } from "@/services/books.service";
+import { getBookReservationInfo, listBookQueue } from "@/services/reservations.service";
 import type { UserRole } from "@/types/profile";
 import { BookDetailView } from "./BookDetailView";
+import { BookQueuePanel } from "./BookQueuePanel";
+import { ReserveBookPanel } from "./ReserveBookPanel";
 import { RolePage } from "./RolePage";
 
 interface BookDetailPageProps {
@@ -12,9 +16,9 @@ interface BookDetailPageProps {
   params: Promise<{ id: string }>;
 }
 
-// Detalhe do livro (Figma, card 0111) para os três perfis. A bibliotecária também abre livro inativo e não vê os botões
-// de reserva. O id vem do endereço e só vira consulta se for um UUID; livro que não existe (ou está inativo, para
-// aluno e professor) cai no 404.
+// Detalhe do livro (Figma, card 0111) para os três perfis. Aluno e professor reservam livro indisponível e acompanham a
+// fila; a funcionária também abre livro inativo e vê quem está na fila (pode cancelar ou expirar). O id vem do endereço e
+// só vira consulta se for um UUID; livro que não existe (ou está inativo, para aluno e professor) cai no 404.
 export function BookDetailPage({ role, basePath, params }: BookDetailPageProps) {
   return (
     <RolePage role={role}>
@@ -23,7 +27,35 @@ export function BookDetailPage({ role, basePath, params }: BookDetailPageProps) 
         const book = await getBookDetail(id, role === "librarian");
         if (!book) notFound();
 
-        return <BookDetailView book={book} backHref={basePath} canReserve={role !== "librarian"} />;
+        if (role === "librarian") {
+          const entries = await listBookQueue(book.id);
+          return (
+            <BookDetailView
+              book={book}
+              backHref={basePath}
+              queue={
+                <BookQueuePanel bookTitle={book.title} entries={entries} onCancel={cancelReservationAction} onExpire={expireReservationAction} />
+              }
+            />
+          );
+        }
+
+        const info = await getBookReservationInfo(book.id);
+        return (
+          <BookDetailView
+            book={book}
+            backHref={basePath}
+            reservation={
+              <ReserveBookPanel
+                bookId={book.id}
+                situation={book.situation}
+                info={info}
+                onReserve={reserveBookAction}
+                onCancel={cancelReservationAction}
+              />
+            }
+          />
+        );
       }}
     </RolePage>
   );

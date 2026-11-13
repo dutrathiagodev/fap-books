@@ -75,7 +75,7 @@ export const FAQ: FaqEntry[] = [
     suggestion: "Posso reservar um livro?",
     keywords: ["reservar", "reserva", "reservas", "fila de espera", "lista de espera", "indisponivel"],
     answer: () =>
-      "A reserva de livro emprestado pelo sistema ainda não está disponível (aparece como \"Em breve\"). Enquanto isso, fale com a biblioteca para saber quando o livro volta.",
+      "Se todos os exemplares estão emprestados, abra o livro em \"Buscar livros\" e use \"Solicitar reserva\" (ou \"Entrar na lista de espera\"). Quando o livro voltar, a primeira pessoa da fila tem 2 dias para retirar. Você pode cancelar a reserva na mesma tela. Quem tem atraso, multa ou já está no limite de livros não entra na fila.",
   },
   {
     id: "prazo",

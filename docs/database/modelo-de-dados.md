@@ -10,7 +10,7 @@ O banco do FAP Books é simples: **7 tabelas** que vêm direto dos requisitos do
 | `books` | O acervo: título, autor, categoria, código, quantidade, status e capa (opcional) | RF-01 a RF-05 |
 | `loans` | Empréstimos: livro, pessoa, prazo, devolução e renovações | RF-10 a RF-12, RF-14, RF-21 |
 | `fines` | A multa de um empréstimo atrasado, em centavos, e a baixa manual | RF-22, RF-23 |
-| `reservations` | Reserva de livro indisponível (aluno) | RF-13 |
+| `reservations` | Fila de espera do livro indisponível (aluno e professor): `waiting`, `ready` (exemplar guardado, com `expires_at`), `fulfilled`, `cancelled`, `expired`. Só se grava pelas funções `reserve_book`, `cancel_reservation` e `expire_reservation` | RF-13 |
 | `pedagogical_reservations` | Pedido do professor: início, dias (1 a 365 no banco; o limite do dia é o de `library_settings`, padrão 30) e decisão da bibliotecária | RF-16 a RF-20 |
 | `library_settings` | Configurações da biblioteca (hoje só `pedagogical_max_days`); todo usuário logado lê e só a função `set_pedagogical_max_days()` altera (funcionária) | RF-18 |
 | `pedagogical_reservation_books` | Quais livros entram em cada reserva pedagógica | RF-16 |
@@ -38,7 +38,8 @@ profiles ──< loans >── books
 | Cadastrar ou editar livros | não | não | **sim** |
 | Ver empréstimos e multas | só os seus | só os seus | **todos** |
 | Registrar empréstimo, devolução e multa | não | não | **sim** |
-| Reservar livro | para si | para si | todos |
+| Reservar livro indisponível (fila) | para si, só pela função | para si, só pela função | consulta a fila, cancela e expira |
+| Ver reservas | só as suas | só as suas | **todas** |
 | Pedir reserva pedagógica | não | **sim, as suas** | todas |
 | Aprovar ou recusar reserva pedagógica | não | não | **sim** |
 | Ler a auditoria | não | não | **sim** |
