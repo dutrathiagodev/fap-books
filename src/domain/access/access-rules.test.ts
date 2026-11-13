@@ -53,6 +53,15 @@ describe("decideRoute", () => {
     expect(decideRoute("/funcionario/livros/novo", "librarian")).toEqual({ action: "allow" });
   });
 
+  it("os relatórios (e a exportação deles) são só da funcionária (FAP-0096)", () => {
+    for (const path of ["/funcionario/relatorios", "/funcionario/relatorios/exportar"]) {
+      expect(decideRoute(path, "librarian")).toEqual({ action: "allow" });
+      expect(decideRoute(path, "student")).toEqual({ action: "redirect", to: "/aluno" });
+      expect(decideRoute(path, "teacher")).toEqual({ action: "redirect", to: "/professor" });
+      expect(decideRoute(path, null)).toEqual({ action: "redirect", to: `/login?next=${encodeURIComponent(path)}` });
+    }
+  });
+
   it("bloqueia a área de outro perfil e volta para a própria", () => {
     expect(decideRoute("/funcionario", "student")).toEqual({ action: "redirect", to: "/aluno" });
     expect(decideRoute("/funcionario", "teacher")).toEqual({ action: "redirect", to: "/professor" });

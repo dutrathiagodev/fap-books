@@ -13,6 +13,7 @@ const ROTAS = [
   "funcionario/multas",
   "funcionario/painel",
   "funcionario/painel/avisos",
+  "funcionario/relatorios",
   "funcionario/reservas-pedagogicas",
   "funcionario/reservas-pedagogicas/nova",
   "funcionario/usuarios",

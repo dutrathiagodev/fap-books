@@ -34,6 +34,7 @@ describe("navItemsFor", () => {
       "/funcionario/reservas-pedagogicas",
       "/funcionario/multas",
       "/funcionario/historico",
+      "/funcionario/relatorios",
     ]);
   });
 

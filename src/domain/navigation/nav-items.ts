@@ -7,6 +7,7 @@ const TEACHER_PEDAGOGICAL_PATH = "/professor/reserva-pedagogica";
 const LOANS_PATH = "/funcionario/emprestimos";
 const FINES_PATH = "/funcionario/multas";
 const HISTORY_PATH = "/funcionario/historico";
+const REPORTS_PATH = "/funcionario/relatorios";
 import type { UserRole } from "@/types/profile";
 
 export type NavKey =
@@ -44,7 +45,7 @@ export function navItemsFor(role: UserRole): NavItem[] {
       { key: "pedagogical", label: "Reservas pedagógicas", href: PEDAGOGICAL_PATH, group: "Operação" },
       { key: "fines", label: "Multas", href: FINES_PATH, group: "Gestão" },
       { key: "history", label: "Histórico", href: HISTORY_PATH, group: "Gestão" },
-      { key: "reports", label: "Relatórios", group: "Gestão" },
+      { key: "reports", label: "Relatórios", href: REPORTS_PATH, group: "Gestão" },
     ];
   }
 

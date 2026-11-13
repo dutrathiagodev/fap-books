@@ -13,6 +13,8 @@ export interface DateRangeFilterProps {
   error?: string | null;
   // Endereço sem o período (o botão Limpar).
   clearHref: string;
+  // Rótulo do campo inicial: de que data se trata ("Retirada de" no histórico, "Prazo de" no relatório de atraso).
+  fromLabel?: string;
 }
 
 const DATE_INPUT =
@@ -20,7 +22,7 @@ const DATE_INPUT =
 
 // Filtro por período (Figma, card 0152): data inicial e final. É um formulário comum (GET), sem JavaScript.
 // O campo de data do navegador mostra dd/mm/aaaa no idioma do sistema; o endereço guarda aaaa-mm-dd.
-export function DateRangeFilter({ action, hidden, from, to, error, clearHref }: DateRangeFilterProps) {
+export function DateRangeFilter({ action, hidden, from, to, error, clearHref, fromLabel = "Retirada de" }: DateRangeFilterProps) {
   return (
     <form method="get" action={action} className="flex flex-col gap-2">
       {Object.entries(hidden).map(([name, value]) => (
@@ -30,7 +32,7 @@ export function DateRangeFilter({ action, hidden, from, to, error, clearHref }: 
         <label className="flex flex-col gap-1 text-sm font-medium">
           <span className="flex items-center gap-1.5">
             <CalendarDays size={16} strokeWidth={1.5} aria-hidden className="text-ink-muted" />
-            Retirada de
+            {fromLabel}
           </span>
           <input type="date" name="de" defaultValue={from ?? ""} aria-invalid={error ? true : undefined} className={DATE_INPUT} />
         </label>
