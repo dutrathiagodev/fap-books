@@ -31,7 +31,8 @@ Para o Thiago testar `https://fap-books.vercel.app` com calma, na ordem. Cada it
 
 - [ ] Entra direto em `/aluno/livros` (card 0108 e acesso por perfil).
 - [ ] Busca "casmurro": acha o livro; filtros de categoria e disponibilidade funcionam; a página do livro mostra exemplares livres.
-- [ ] Botões "Solicitar reserva" e "Entrar na lista de espera" aparecem desabilitados ("Em breve"): é proposital.
+- [ ] Livro **com** exemplar livre: a página mostra "Há exemplar livre: peça o empréstimo no balcão" e nenhum botão de reserva.
+- [ ] Livro **sem** exemplar livre (ex.: Clean Code): aparece "Solicitar reserva" (fila vazia) ou "Entrar na lista de espera" e o tamanho da fila. O aluno de teste tem atraso e multa, então o clique mostra "Você tem livro em atraso ou multa em aberto..." (bloqueio correto). Para ver a fila funcionando, use o usuário de teste da seção 3.3 (sem multa).
 - [ ] Menu do aluno: "Minha área", "Buscar livros", "Meus empréstimos", "Minhas reservas" e "Multas", todos com tela (cards 0212 e 0214 a 0217).
 - [ ] `/aluno` (Minha área): cartões "Livros emprestados" (`3 de 3`), "Prazos próximos ou atrasados" e "Multa em aberto"; faixa de atenção lista os livros atrasados com selo "Atrasado"; aviso do pagamento presencial com (44) 3236-8065.
 - [ ] `/aluno/emprestimos`: um cartão por livro com prazo e renovações (`0 de 3`); com atraso ou multa em aberto o botão "Renovar" fica desligado e o motivo aparece escrito. (Para ver a renovação funcionando, use o usuário de QA da seção 3.3, sem multa nem atraso: o prazo sobe 7 dias e o contador vira `1 de 3`.)
@@ -95,6 +96,19 @@ Antes: a migration `20261113300000_relatorios.sql` precisa estar aplicada (`supa
 - [ ] **PDF**: baixa `relatorio-<tipo>-<data>.pdf` (A4 deitado) com título, filtros aplicados, tabela e rodapé com data e página. A exportação traz até 1000 linhas; passando disso a tela avisa.
 - [ ] 375 px e 768 px sem rolagem lateral (tabela vira cartões no celular), tema claro e escuro.
 - [ ] Sem linhas, os botões CSV e PDF ficam desativados.
+
+### 3.6b Fila de espera do livro (cards 0044 e 0045)
+
+Use dois usuários novos sem multa (seção 3.3) e um livro com 1 exemplar. Empreste o exemplar a um deles (A) em Empréstimos.
+
+- [ ] Como B, abra o livro: "Solicitar reserva". Clique: aparece "Você está na fila deste livro. Você é o próximo da fila." e o botão "Cancelar reserva". Clique duas vezes rápido no botão: só uma reserva é criada.
+- [ ] Como A, o livro mostra "Você já está com este livro" ao tentar reservar (erro em português, sem botão quebrado).
+- [ ] Como funcionária, o detalhe do livro (Acervo) mostra "Fila de espera" com B em 1º. Registre a devolução de A: B passa a "Pronta", com "Retire até ..." (2 dias), e o botão "Avisar no WhatsApp" (se B tiver telefone) abre a mensagem pronta.
+- [ ] Outra pessoa (C) tenta pegar o exemplar guardado em Empréstimos: recusa "exemplar livre reservado para outra pessoa".
+- [ ] "Expirar" na reserva pronta de B: some da fila; se C estiver na fila, passa a "Pronta". "Cancelar" tira a pessoa da fila e passa a vez.
+- [ ] B cancela a própria reserva pelo botão "Cancelar reserva": a fila diminui. Um aluno não consegue cancelar a reserva de outra pessoa.
+- [ ] Quem tem 3 livros emprestados (4 se formando) não entra na fila: "Você já está no limite de livros emprestados".
+- [ ] Auditoria: reserva criada, cancelada, pronta e expirada aparecem em `audit_logs` só com ids.
 
 ### 3.7 Reserva pedagógica (cards 0090 a 0092, 0136, 0137, 0141, 0048)
 

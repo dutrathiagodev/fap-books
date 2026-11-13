@@ -57,3 +57,15 @@ export function buildNoticeMessage(input: NoticeMessageInput): string {
   }
   return `${greeting} O livro ${book} vence em ${input.dueOn}. Lembrando para você devolver no prazo. Se precisar de mais tempo, fale com a gente.`;
 }
+
+export interface ReservationReadyMessageInput {
+  userName: string;
+  bookTitle: string;
+  // dd/mm/aaaa
+  pickupUntil: string;
+}
+
+// Aviso de que o livro da fila chegou. Fala só da reserva da própria pessoa.
+export function buildReservationReadyMessage(input: ReservationReadyMessageInput): string {
+  return `Olá, ${firstName(input.userName)}! Aqui é a Biblioteca da FAP. O livro "${input.bookTitle}" que você reservou já está disponível para retirada. Guardamos o exemplar para você até ${input.pickupUntil}; depois dessa data ele segue para a próxima pessoa da fila.`;
+}
