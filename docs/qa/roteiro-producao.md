@@ -76,6 +76,21 @@ Para o Thiago testar `https://fap-books.vercel.app` com calma, na ordem. Cada it
 - [ ] `/funcionario/multas`: lista com filtros; a baixa abre o modal e registra autor e data. Hoje há 2 multas em aberto do aluno de teste (R$ 37,00 e R$ 27,00): dê baixa em uma para testar e, se quiser repetir, peça para reabrir (seção 8). Devolver um dos livros atrasados também fecha a multa daquele empréstimo no valor final.
 - [ ] `/funcionario/historico`: busque por pessoa e por livro; o filtro de período e situação funciona; mostra retirada, prazo, devolução, renovações e multa.
 
+### 3.6.1 Relatórios (cards 0070 a 0073, 0096, 0154 a 0156)
+
+Antes: a migration `20261113300000_relatorios.sql` precisa estar aplicada (`supabase db push --linked --include-all`). Sem ela a tela mostra a tela de erro.
+
+- [ ] Menu Gestão → **Relatórios** abre `/funcionario/relatorios`. Aluno e professor, ao digitar o endereço, voltam para a própria área.
+- [ ] **Livros em atraso** (abre assim): cada linha tem usuário, matrícula, livro, tombo, prazo, dias de atraso e multa estimada (R$ 1,00 por dia corrido). Conferir com o Painel: "Atrasados" e com Multas. Os dois cartões do alto (empréstimos e multa estimada) somam o filtro inteiro, não só a página.
+- [ ] Situação **Devolvidos com atraso** e **Todos** mudam a lista; o filtro de **Prazo de / Até** funciona e a data inicial depois da final mostra o aviso. O endereço guarda os filtros (copiar e colar abre igual).
+- [ ] Aba **Acervo**: uma linha por categoria com títulos, exemplares, disponíveis, emprestados, reservados (reserva pedagógica aprovada guarda 1 exemplar) e inativos; a última é "Sem categoria". Os cartões do alto são os totais do acervo.
+- [ ] Aba **Reservas pedagógicas**: filtro por situação e período do pedido; os cartões mostram solicitações, aprovadas, recusadas e aguardando; cada linha traz professor, disciplina, período e livros.
+- [ ] Mais de 10 resultados: a paginação funciona e o texto "Mostrando 1-10 de N" confere. Filtro sem resultado mostra "Limpar filtros".
+- [ ] **CSV**: baixa `relatorio-<tipo>-<data>.csv`; abrir no Excel/Planilhas mostra acentos certos e colunas separadas. Se algum nome ou título começar com `=`, `+`, `-` ou `@`, a célula aparece com `'` na frente (não vira fórmula).
+- [ ] **PDF**: baixa `relatorio-<tipo>-<data>.pdf` (A4 deitado) com título, filtros aplicados, tabela e rodapé com data e página. A exportação traz até 1000 linhas; passando disso a tela avisa.
+- [ ] 375 px e 768 px sem rolagem lateral (tabela vira cartões no celular), tema claro e escuro.
+- [ ] Sem linhas, os botões CSV e PDF ficam desativados.
+
 ### 3.7 Reserva pedagógica (cards 0090 a 0092, 0136, 0137, 0141, 0048)
 
 - [ ] `/funcionario/reservas-pedagogicas`: fila com chips (Pendentes, Aprovadas, Recusadas, Devolvidas); tabela no desktop e cartões abaixo de 1024 px.
@@ -109,7 +124,7 @@ Para o Thiago testar `https://fap-books.vercel.app` com calma, na ordem. Cada it
 - Área do aluno (meus empréstimos, renovação, reservas, multas): cards 0214 a 0217, com o Igor.
 - Aviso automático por e-mail: card 0236. Prova de carga: card 0235. Observabilidade com alerta: card 0252.
 - QA que ainda não foi feito (inativar livro, "Sair e voltar", Lighthouse, celular 375/768, teclado e leitor de tela, capas, newsletter real e as perguntas do balão): card 0248.
-- Conferência com o Figma das telas restantes: card 0249; extras do site ainda sem desenho: card 0251. O painel geral do Histórico (indicadores, exportar CSV) fica para Relatórios (cards 0096 e 0154 a 0156).
+- Conferência com o Figma das telas restantes: card 0249; extras do site ainda sem desenho: card 0251. O painel geral do Histórico (indicadores e exportar CSV) virou a tela Relatórios (seção 3.6.1).
 
 ## 8. Como deixar o banco limpo no fim
 

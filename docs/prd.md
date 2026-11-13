@@ -180,9 +180,9 @@ Prioridade classificada em MoSCoW: **Must have** (essencial ao MVP), **Should ha
 | -- | -- | -- | -- |
 | RF-25 | Histórico de empréstimos por usuário | Must have | Planejado |
 | RF-26 | Histórico de empréstimos por livro | Must have | Planejado |
-| RF-27 | Relatório de livros em atraso | Should have | Planejado |
-| RF-28 | Relatório de acervo (estoque e quantidade disponível por título) | Could have | Planejado |
-| RF-29 | Relatório de reservas pedagógicas (quantidade de solicitações, aprovações e recusas) | Should have | Planejado |
+| RF-27 | Relatório de livros em atraso | Should have | Entregue, em QA |
+| RF-28 | Relatório de acervo (estoque e quantidade disponível por categoria) | Could have | Entregue, em QA |
+| RF-29 | Relatório de reservas pedagógicas (quantidade de solicitações, aprovações e recusas) | Should have | Entregue, em QA |
 
 ### 6.7 Painel da Bibliotecária
 
