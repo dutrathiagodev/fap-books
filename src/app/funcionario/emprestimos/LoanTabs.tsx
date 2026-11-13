@@ -22,7 +22,7 @@ export function LoanTabs({ active, basePath }: { active: LoanTab; basePath: stri
           key={tab.key}
           href={tab.key === "emprestimo" ? basePath : `${basePath}?aba=${tab.key}`}
           aria-current={tab.key === active ? "page" : undefined}
-          className={`-mb-px border-b-2 pb-3 text-sm font-medium focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus ${
+          className={`-mb-px inline-flex min-h-11 items-end border-b-2 pb-3 text-sm font-medium focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus ${
             tab.key === active ? "border-brand text-brand" : "border-transparent text-ink-muted hover:text-ink"
           }`}
         >

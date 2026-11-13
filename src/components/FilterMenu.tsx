@@ -42,7 +42,7 @@ export function FilterMenu({ label, hideLabel = false, value, options }: FilterM
                 href={option.href}
                 onClick={() => menu.current?.removeAttribute("open")}
                 aria-current={option.active ? "true" : undefined}
-                className={`flex items-center justify-between gap-4 whitespace-nowrap rounded-md px-3 py-2 text-sm font-normal hover:bg-subtle ${option.active ? "font-medium text-brand" : ""}`}
+                className={`flex min-h-11 items-center justify-between gap-4 whitespace-nowrap rounded-md px-3 py-2 text-sm font-normal md:min-h-0 hover:bg-subtle ${option.active ? "font-medium text-brand" : ""}`}
               >
                 {option.label}
                 {option.active && <Check size={14} aria-hidden />}

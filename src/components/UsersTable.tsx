@@ -16,7 +16,7 @@ export interface UsersTableProps {
 const HEADERS = ["Nome", "Perfil", "Matrícula / cargo", "Status", "Empréstimos", "Ações"] as const;
 
 const ACTION =
-  "inline-flex h-11 cursor-pointer md:h-9 items-center gap-1.5 rounded-md px-2.5 text-sm font-medium whitespace-nowrap focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus disabled:cursor-not-allowed disabled:opacity-60";
+  "inline-flex h-11 min-w-11 cursor-pointer justify-center md:h-9 md:min-w-0 items-center gap-1.5 rounded-md px-2.5 text-sm font-medium whitespace-nowrap focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus disabled:cursor-not-allowed disabled:opacity-60";
 
 function Person({ user }: { user: UserView }) {
   return (
