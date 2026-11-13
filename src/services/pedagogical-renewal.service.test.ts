@@ -8,7 +8,7 @@ vi.mock("next/server", () => ({ connection: async () => {} }));
 vi.mock("@/lib/supabase/server-client", () => ({ createSupabaseServerClient: async () => ({ rpc }) }));
 vi.mock("./audit.service", () => ({ recordAudit: vi.fn() }));
 
-const { requestRenewal, getAvailability } = await import("./pedagogical-reservations.service");
+const { requestRenewal, getAvailability, RESERVATION_COLUMNS_FOR_TEST } = await import("./pedagogical-reservations.service");
 
 const RES = "b0000000-0000-4000-8000-000000000001";
 const KEY = "c0000000-0000-4000-8000-000000000002";
@@ -54,5 +54,14 @@ describe("getAvailability de uma renovação", () => {
     const view = { id: "r2", renewal: true, books: [{ id: "b1", title: "Livro", code: "L-1" }] };
     await expect(getAvailability(view as never)).resolves.toEqual([]);
     expect(rpc).not.toHaveBeenCalled();
+  });
+});
+
+// A tabela aponta para ela mesma (renewal_of). Com o nome da constraint na dica, o PostgREST responde PGRST200 e as telas da
+// reserva pedagógica quebram (achado no QA de 13/11); a dica certa é o nome da coluna. Os testes com `from` simulado não pegam isso.
+describe("select da reserva pedagógica", () => {
+  it("liga a reserva original pela coluna renewal_of, não pelo nome da constraint", () => {
+    expect(RESERVATION_COLUMNS_FOR_TEST).toContain("original:pedagogical_reservations!renewal_of(");
+    expect(RESERVATION_COLUMNS_FOR_TEST).not.toContain("pedagogical_reservations_renewal_of_fkey");
   });
 });

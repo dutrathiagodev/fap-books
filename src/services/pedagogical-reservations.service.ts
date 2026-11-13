@@ -32,8 +32,12 @@ const RESERVATION_COLUMNS =
   "teacher:profiles!pedagogical_reservations_teacher_id_fkey(full_name), " +
   "decider:profiles!pedagogical_reservations_decided_by_fkey(full_name), " +
   "pedagogical_reservation_books(books(id, title, code)), " +
-  // A renovação não tem livros próprios: os da reserva original.
-  "original:pedagogical_reservations!pedagogical_reservations_renewal_of_fkey(pedagogical_reservation_books(books(id, title, code)))";
+  // A renovação não tem livros próprios: os da reserva original. A tabela aponta para ela mesma, então a dica é o NOME DA
+  // COLUNA (`!renewal_of`): com o nome da constraint o PostgREST responde PGRST200 e as telas da reserva pedagógica quebram.
+  "original:pedagogical_reservations!renewal_of(pedagogical_reservation_books(books(id, title, code)))";
+
+// Exportada só para o teste que impede a volta da dica pelo nome da constraint.
+export const RESERVATION_COLUMNS_FOR_TEST = RESERVATION_COLUMNS;
 
 // ---- Buscas dos formulários ----
 
