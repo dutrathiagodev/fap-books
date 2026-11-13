@@ -117,6 +117,16 @@ Para o Thiago testar `https://fap-books.vercel.app` com calma, na ordem. Cada it
 - QA que ainda não foi feito (inativar livro, "Sair e voltar", Lighthouse, celular 375/768, teclado e leitor de tela, capas, newsletter real e as perguntas do balão): card 0248.
 - Conferência com o Figma das telas restantes: card 0249; extras do site ainda sem desenho: card 0251. O painel geral do Histórico (indicadores, exportar CSV) fica para Relatórios (cards 0096 e 0154 a 0156).
 
+### 7.1 QA automatizado do card 0248 (13/11/2026, site local com 20 mil livros) e o que sobra para o dono
+
+**Feito e verde:** Lighthouse mobile em `/`, `/login`, `/aluno/livros` e detalhe (pelo `npx lighthouse`, sem instalar no projeto; instável e lento para o CI): acessibilidade 100, boas práticas 100, SEO 100, desempenho 82 (`/`, LCP 4,9 s) e 92 a 93 nas demais. Testes de componente em jsdom: foco entra no modal, Tab e Shift+Tab ficam presos, Esc fecha, foco volta ao botão (`Modal.test.ts`); balão de ajuda com Esc e as perguntas de horário, renovar, multa e "cachorro" (abre o WhatsApp) (`HelpAssistant.teclado.test.ts`); capa quebrada agora cai no espaço reservado (`BookCover`). Navegador: inativar livro com histórico mostra "Este livro tem histórico", a linha vira Inativo em ~0,3 s e o excluir fica desabilitado.
+
+**Achados (para decidir):**
+1. **"Sair e voltar":** depois de Sair, o botão Voltar do navegador reexibiu a tela da funcionária (restaurada do cache do navegador; o servidor já redireciona ao login ao recarregar). Correção sugerida: `Cache-Control: no-store` em `/aluno`, `/professor` e `/funcionario` no `next.config.ts` (as páginas dinâmicas já saem com no-store; verificar por que o Voltar ainda restaura). Abrir card P1.
+2. O modal de inativar livro não fecha com Esc (o `destructive` vale também para inativar, que é reversível). Decidir se Esc deve fechar nesse caso.
+
+**Fica para o dono (aparelho real):** celular 375 e tablet 768 (sem rolagem lateral, toque de 44 px, teclado não cobre o botão); leitor de tela nos menus, modais e tabelas; newsletter com e-mail real; balão de ajuda logado como aluno e como professor.
+
 ## 8. Como deixar o banco limpo no fim
 
 Peça ao Claude ("limpa o banco de teste") ou rode no Supabase (SQL Editor), nesta ordem:
