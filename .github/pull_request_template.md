@@ -6,7 +6,7 @@
 
 <!-- Passos curtos para conferir a mudança. -->
 
-## Checklist de qualidade (regra do projeto: docs/qualidade-de-software.md)
+## Checklist de qualidade (regra do projeto: docs/arquitetura.md, seção Qualidade de software)
 
 - [ ] Código limpo: nomes claros, funções e componentes pequenos, textos fora do JSX, sem código morto
 - [ ] Regra de negócio em `src/domain` com teste; telas chamam serviços

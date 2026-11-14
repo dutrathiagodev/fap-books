@@ -272,6 +272,61 @@ begin
     (select bool_and(rk >= prev) from (select rk, coalesce(lag(rk) over (order by ord), 0) prev
       from (select row_number() over () ord, case situation when 'available' then 0 when 'reserved' then 1 else 2 end rk
             from public.search_books(null, null, 'all', 'active', 'available', 1, 50)) a) b));
+  ---------------------------------------------------------------- PAGINAÇÃO NO BANCO (0260): LIMIT/OFFSET sem numerar o acervo
+  -- Percorrer todas as páginas dá a lista inteira, na mesma ordem, sem repetir nem pular livro, em cada ordem possível.
+  perform pg_temp.say('páginas de 7 por título cobrem o acervo ativo, em ordem, sem repetir nem faltar',
+    (select array_agg(id order by pg, ord) from (
+       select p, pg, ord, id from generate_series(1, 230) p,
+       lateral (select p as pg, row_number() over () ord, s.id from public.search_books(null, null, 'all', 'active', 'title', p, 7) s) x) z
+     where pg <= ceil((select count(*) from public.books where status = 'active') / 7.0))
+    = (select array_agg(id order by title, id) from public.books where status = 'active'));
+  perform pg_temp.say('páginas por autor cobrem o acervo ativo, em ordem',
+    (select array_agg(id order by pg, ord) from (
+       select pg, ord, id from generate_series(1, 230) p,
+       lateral (select p as pg, row_number() over () ord, s.id from public.search_books(null, null, 'all', 'active', 'author', p, 7) s) x) z
+     where pg <= ceil((select count(*) from public.books where status = 'active') / 7.0))
+    = (select array_agg(id order by author, title, id) from public.books where status = 'active'));
+  perform pg_temp.say('páginas de "disponíveis primeiro" não repetem nem pulam livro',
+    (select count(*) = count(distinct id) and count(*) = (select count(*) from public.books where status = 'active') from (
+       select s.id, p from generate_series(1, 230) p,
+       lateral (select * from public.search_books(null, null, 'all', 'active', 'available', p, 7)) s
+       where p <= ceil((select count(*) from public.books where status = 'active') / 7.0)) z));
+  perform pg_temp.say('páginas da busca por texto (relevância) cobrem o resultado sem repetir',
+    (select count(*) = count(distinct id) and count(*) = (select count(*) from public.books where status = 'active' and public.search_fold(title) like '%volume 1%') from (
+       select s.id from generate_series(1, 30) p,
+       lateral (select * from public.search_books('volume 1', null, 'all', 'active', 'relevance', p, 50)) s
+       where p <= ceil((select max(total_count) from public.search_books('volume 1', null, 'all', 'active', 'relevance', 1, 50)) / 50.0)) z));
+  perform pg_temp.say('página do meio traz o total e o número da página pedida',
+    (select count(*) = 7 and max(total_count) = (select count(*) from public.books where status = 'active') and max(page_number) = 40
+     from public.search_books(null, null, 'all', 'active', 'title', 40, 7)));
+  perform pg_temp.say('total e página com filtro de situação (livro emprestado) batem com a lista',
+    (select max(total_count) from public.search_books(null, null, 'unavailable', 'active', 'title', 1, 1))
+    = (select count(*) from public.search_books(null, null, 'unavailable', 'active', 'title', 1, 50)));
+  -- A função roda com plano novo a cada chamada (plan_cache_mode): depois de 5 chamadas o plpgsql trocaria para o plano
+  -- genérico e a ordem/os filtros dependentes dos parâmetros deixariam de valer. Chamar 12 vezes seguidas com ordens
+  -- diferentes tem de repetir o mesmo resultado da primeira vez.
+  perform pg_temp.say('12 chamadas seguidas (alternando a ordem) repetem o mesmo resultado da primeira',
+    (select bool_and(distintas = 1) from (
+       select srt, count(distinct lista) distintas from (
+         select srt, (select string_agg(x.id::text, ',' order by x.ord) from (select s.id, row_number() over () ord
+            from public.search_books(null, null, 'all', 'active', srt, 1, 12) s) x) lista
+         from (values ('title'), ('author'), ('available'), ('relevance')) o(srt), generate_series(1, 12)) q
+       group by srt) g));
+  perform pg_temp.say('search_books: security definer, search_path vazio e plano por chamada',
+    (select p.prosecdef and p.proconfig @> array['search_path=""', 'plan_cache_mode=force_custom_plan']
+     from pg_proc p where p.oid = 'public.search_books(text,text,text,text,text,integer,integer)'::regprocedure));
+  perform pg_temp.say('índices de ordem e de novidades da busca existem',
+    (select count(*) = 4 from pg_indexes where schemaname = 'public' and tablename = 'books'
+       and indexname in ('idx_books_status_title_id', 'idx_books_title_id', 'idx_books_status_author_title_id', 'idx_books_new_arrivals')));
+  -- A página por título lê só o começo do índice (sem ordenar o acervo): com varredura em sequência proibida o plano usa o
+  -- índice e não tem nó "Sort" (que apareceria se a consulta precisasse ordenar todas as linhas).
+  perform set_config('role', 'postgres', true);
+  perform set_config('enable_seqscan', 'off', true);
+  plan := pg_temp.plan_of('select c.id from public.catalog_rows(null, null, ''active'') c order by c.title, c.id limit 12');
+  perform pg_temp.say('página por título usa o índice e não ordena o acervo (plano sem Sort)',
+    plan like '%idx_books_status_title_id%' and plan not like '%Sort%');
+  perform set_config('enable_seqscan', 'on', true);
+
   perform pg_temp.as_user(DORA);
   perform pg_temp.say('livro com empréstimo tem histórico (só inativa, não exclui)', (select has_history from public.search_books('s-001', null, 'all', 'all')) );
 

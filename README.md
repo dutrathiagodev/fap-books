@@ -151,13 +151,12 @@ As automações rodam a cada 10 minutos e precisam dos secrets `TRELLO_KEY` e `T
 | | Documento | Conteúdo |
 | -- | -- | -- |
 | 🚀 | [`docs/onboarding.md`](docs/onboarding.md) | **Configuração de ambiente:** o que instalar e como rodar o projeto no seu notebook |
-| 🧭 | [`docs/architecture/system-design.md`](docs/architecture/system-design.md) | System design: componentes, dados, carga esperada, decisões e plano de crescimento |
 | ✅ | [`docs/qa/roteiro-producao.md`](docs/qa/roteiro-producao.md) | Roteiro de QA em produção, por perfil, com o resultado esperado e como deixar o banco limpo |
-| 🏛️ | [`docs/arquitetura.md`](docs/arquitetura.md) | Onde fica cada coisa no código, regras de dependência, como criar uma feature, regras do Supabase/RLS e as regras de negócio (multas, limite da reserva pedagógica, importação) |
+| 🏛️ | [`docs/arquitetura.md`](docs/arquitetura.md) | **Arquitetura:** onde fica cada coisa no código, regras de dependência, como criar uma feature, Supabase/RLS e regras de negócio; o **system design** (componentes, carga, decisões e plano de crescimento) e a **regra de qualidade** (código limpo e seguro, checklist de todo PR) |
 | 📄 | [`docs/prd.md`](docs/prd.md) | **PRD: documento base do projeto.** É a ideia central, e pode mudar com o tempo; as mudanças ficam registradas no histórico dele |
-| ✅ | [`docs/qualidade-de-software.md`](docs/qualidade-de-software.md) | **Regra de qualidade:** código limpo, fácil de entender e seguro, com o checklist de todo PR |
-| 🗄️ | [`docs/database/`](docs/database) | Modelo de dados, LGPD e backup do banco |
-| 🗂️ | [`docs/README.md`](docs/README.md) | Índice de toda a documentação |
+| 🗄️ | [`docs/database/`](docs/database) | Modelo de dados e LGPD (o backup do banco está em `docs/infra-e-plano-gratuito.md`) |
+| ⚙️ | [`docs/infra-e-plano-gratuito.md`](docs/infra-e-plano-gratuito.md) | Cache, limites do plano gratuito, tarefas agendadas, prova de carga e backup do banco |
+| ✉️ | [`docs/email/`](docs/email) | E-mails do sistema: convite, redefinir senha e aviso de prazo, e a configuração no Supabase |
 
 O desenho das telas é feito no [Figma](https://www.figma.com/design/xOr6nlx1EqLMYmSJLh4sHI/FAP-BOOKS---Gestao-para-Biblioteca?node-id=2292-11299), página **🖥️ UI web**. Cores, fontes, cantos e ícones estão na página **Desing System** do Figma e nos tokens de `src/app/globals.css`.
 

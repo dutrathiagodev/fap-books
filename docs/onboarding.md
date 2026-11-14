@@ -102,7 +102,7 @@ Os três devem terminar sem erro. É o mesmo que o CI faz em todo Pull Request.
    git pull
    git switch -c FAP/<número-do-card>
    ```
-4. Ao terminar, siga a [Qualidade de software](qualidade-de-software.md) e abra o PR para a `develop`.
+4. Ao terminar, siga a seção [Qualidade de software](arquitetura.md#qualidade-de-software) e abra o PR para a `develop`.
 
 ## Onde está cada coisa
 
