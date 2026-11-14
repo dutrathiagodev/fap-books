@@ -30,7 +30,7 @@ export function PendingList({ items, emptyAction, moreHref, moreLabel = "Ver tod
           Pendências de hoje
         </h2>
         {moreHref && (
-          <Link href={moreHref} className="text-sm font-medium text-link hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus">
+          <Link href={moreHref} className="inline-flex min-h-11 items-center text-sm font-medium text-link hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus md:min-h-0">
             {moreLabel}
           </Link>
         )}
@@ -49,7 +49,7 @@ export function PendingList({ items, emptyAction, moreHref, moreLabel = "Ver tod
               </ToneBadge>
               <Link
                 href={item.href}
-                className="text-sm font-medium text-link hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
+                className="inline-flex min-h-11 items-center text-sm font-medium text-link hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus md:min-h-0"
               >
                 {item.actionLabel}
               </Link>

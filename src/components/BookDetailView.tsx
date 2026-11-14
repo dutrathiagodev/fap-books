@@ -1,24 +1,26 @@
 import Link from "next/link";
-import { ArrowLeft, BookOpen, Info } from "lucide-react";
+import type { ReactNode } from "react";
+import { ArrowLeft, BookOpen } from "lucide-react";
 import { catalogRows, formatBrazilDate } from "@/domain/books/book-rules";
 import { plural } from "@/domain/format";
 import type { BookDetail } from "@/types/book";
 import { BookCover } from "./BookCover";
 import { SituationBadge } from "./SituationBadge";
 
-const DISABLED_BUTTON = "h-11 cursor-not-allowed rounded-md px-5 text-sm font-medium opacity-60";
-
 // Página de detalhe do livro (Figma, card 0111): capa, dados do catálogo, situação e exemplares. Só desenha:
-// a página carrega o livro. Reservar e entrar na fila (card 0115) ficam desativados até o fluxo existir.
+// a página carrega o livro e entrega os blocos de reserva (aluno e professor) e de fila (funcionária).
 export function BookDetailView({
   book,
   backHref,
-  canReserve = true,
+  reservation,
+  queue,
 }: {
   book: BookDetail;
   backHref: string;
-  // A bibliotecária só consulta: sem os botões de reserva.
-  canReserve?: boolean;
+  // Reservar e acompanhar a fila (aluno e professor).
+  reservation?: ReactNode;
+  // Fila de espera do livro (funcionária), abaixo dos dados do catálogo.
+  queue?: ReactNode;
 }) {
   return (
     <div className="flex flex-col gap-8">
@@ -30,6 +32,7 @@ export function BookDetailView({
       <div className="grid gap-8 md:grid-cols-[18rem_1fr]">
         <div className="flex h-80 items-center justify-center rounded-lg bg-selected md:h-96">
           <BookCover
+            priority
             url={book.coverUrl}
             alt={`Capa de ${book.title}`}
             className="h-72 w-auto rounded-md shadow-md md:h-80"
@@ -60,22 +63,7 @@ export function BookDetailView({
 
           {book.description && <p className="max-w-prose leading-relaxed">{book.description}</p>}
 
-          {canReserve && (
-            <>
-              <div className="flex flex-wrap gap-3">
-                <button type="button" disabled title="Em breve" className={`${DISABLED_BUTTON} bg-brand text-on-brand`}>
-                  Solicitar reserva
-                </button>
-                <button type="button" disabled title="Em breve" className={`${DISABLED_BUTTON} border border-line-strong`}>
-                  Entrar na lista de espera
-                </button>
-              </div>
-              <p className="flex items-center gap-2 text-xs text-ink-muted">
-                <Info size={14} aria-hidden />
-                Prazo padrão de 7 dias corridos e máximo de 3 livros por usuário.
-              </p>
-            </>
-          )}
+          {reservation}
         </div>
       </div>
 
@@ -92,6 +80,8 @@ export function BookDetailView({
           ))}
         </dl>
       </section>
+
+      {queue}
     </div>
   );
 }

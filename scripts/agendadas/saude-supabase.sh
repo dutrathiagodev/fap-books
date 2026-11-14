@@ -4,6 +4,7 @@
 # 2) Mede o banco e os arquivos contra o limite do plano e FALHA (o GitHub avisa por e-mail) acima de 80%.
 # 3) Conta os registros de auditoria mais velhos que a retenção e, só se pedido, apaga.
 # 4) Lista as consultas mais lentas (pg_stat_statements).
+# 5) Conferência de segurança e desempenho no estilo dos Advisors (scripts/agendadas/advisors.sql); ERRO derruba o job.
 # Só lê, exceto no passo 3 com APAGAR_AUDITORIA=sim. Rodar de novo não muda nada. Veja docs/infra-e-plano-gratuito.md.
 #
 # Variáveis de ambiente:
@@ -53,14 +54,30 @@ else
   resumo "- Auditoria: ${antigos} registros com mais de ${retencao_meses} meses (nada apagado; para apagar, rode o workflow à mão com apagar_auditoria = sim)."
 fi
 
+consulta "create extension if not exists pg_stat_statements with schema extensions" > /dev/null 2>&1 || true
 if [ "$(consulta "select count(*) from pg_extension where extname = 'pg_stat_statements'")" = "1" ]; then
   resumo ""
   resumo "### 10 consultas mais lentas (tempo médio em ms)"
   resumo '```'
-  consulta "select round(mean_exec_time::numeric, 1) || ' ms | ' || calls || ' chamadas | ' || left(regexp_replace(query, '\s+', ' ', 'g'), 120) from pg_stat_statements where query not ilike '%pg_stat_statements%' order by mean_exec_time desc limit 10" || true
+  consulta "select round(mean_exec_time::numeric, 1) || ' ms | ' || calls || ' chamadas | ' || left(regexp_replace(query, '\s+', ' ', 'g'), 120) from extensions.pg_stat_statements where query not ilike '%pg_stat_statements%' order by mean_exec_time desc limit 10" || true
   resumo '```'
 else
-  resumo "- pg_stat_statements não está ativa; ative em Database > Extensions para listar consultas lentas."
+  resumo "- pg_stat_statements não está ativa; ative em Database > Extensions (ou rode docs/infra-e-plano-gratuito.md, seção 3) para listar consultas lentas."
+fi
+
+resumo ""
+resumo "### Advisors (segurança e desempenho)"
+achados=$(psql "$SUPABASE_DB_URL" --no-psqlrc -v ON_ERROR_STOP=1 -At -f "$(dirname "$0")/advisors.sql")
+if [ -z "$achados" ]; then
+  resumo "- Nenhum achado."
+else
+  resumo '```'
+  resumo "$achados"
+  resumo '```'
+  if grep -q '^ERRO|' <<< "$achados"; then
+    echo "::error::Advisors com ERRO (tabela sem RLS, view sem security_invoker ou função SECURITY DEFINER sem search_path). Veja o resumo do job."
+    falhou=1
+  fi
 fi
 
 exit $falhou

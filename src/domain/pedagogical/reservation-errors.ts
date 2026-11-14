@@ -20,7 +20,11 @@ export const RESERVATION_ERROR_MESSAGES = {
   note_too_long: "A justificativa deve ter no máximo 500 caracteres.",
   decision_required: "Escolha aprovar ou recusar.",
   no_copy_available: "Um dos livros não tem exemplar livre agora. Confira a disponibilidade ou recuse com justificativa.",
-  reservation_not_approved: "Só uma reserva aprovada pode ser devolvida.",
+  reservation_not_approved: "Só uma reserva aprovada pode ser devolvida ou renovada.",
+  renewal_too_early: "A renovação só pode ser pedida na última semana do prazo da reserva.",
+  renewal_already_pending: "Já existe um pedido de renovação aguardando aprovação desta reserva.",
+  renewal_too_long: "O período total da reserva não pode passar de 365 dias.",
+  renewal_of_renewal: "Peça a renovação sobre a reserva original.",
   forbidden: "Você não tem permissão para esta ação.",
   idempotency_key_reused: "Esta ação já foi enviada. Atualize a tela e confira antes de tentar de novo.",
 } as const;

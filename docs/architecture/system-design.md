@@ -105,9 +105,9 @@ Leitura domina a escrita: pesquisa de livros é a rota mais quente. Por isso a b
 ## 5. Observabilidade e operação
 
 - **Backup:** diário, criptografado (`database/backup.md`).
-- **Saúde do Supabase (semanal):** mantém o projeto ativo, mede banco e arquivos (alerta em 80%), conta auditoria antiga, lista consultas lentas (`pg_stat_statements`).
-- **Erros do servidor:** painel da Vercel (Logs). Sentry exigiria conta e chave novas.
-- **Alertas do Supabase (`get_advisors`):** conferir semanalmente no painel (Advisors). Automatizar exigiria um token novo da API de gerenciamento.
+- **Saúde do Supabase (semanal):** mantém o projeto ativo, mede banco e arquivos (alerta em 80%), conta auditoria antiga, lista consultas lentas (`pg_stat_statements`) e roda os advisors por SQL (`scripts/agendadas/advisors.sql`, sem token novo).
+- **Erros do servidor:** log estruturado sem PII em Vercel > Logs (`src/instrumentation.ts`); Sentry fica como evolução (precisa de conta, DSN e pacote). Decisão e limites em `infra-e-plano-gratuito.md`, seção 3.
+- **Alertas:** `verificacao-do-site.yml` (site fora do ar) e `alerta-falha-rotina.yml` (backup, multas, saúde ou verificação falharam) abrem issue e o GitHub avisa por e-mail.
 - **Segurança:** última verificação em 09/11/2026 (RLS em todas as tabelas, anônimo recusado em tabelas e funções, sem segredo no repositório nem no bundle, 0 vulnerabilidades no `npm audit`).
 
 ## 6. Plano de crescimento
@@ -125,7 +125,24 @@ A decisão de custo é do dono do projeto.
 
 ## 7. O que ainda não está provado
 
-- **Prova de carga com os números oficiais** (20 mil livros, 50 usuários): o script existe (`scripts/prova-de-carga.mjs`) e roda só em banco local; falta montar a pilha local com a carga de teste e executar. O resultado entra aqui.
+- **Prova de carga com os números oficiais: rodada em 13/11/2026 e NÃO bateu a meta nas telas autenticadas.** Detalhes abaixo; correção no card 0260.
 - **Limite global por IP:** depende de o dono aplicar a regra do WAF.
-- **Avisos de vencimento (RF-24) por canal externo:** dependem de o dono definir o canal (WhatsApp ou e-mail). O painel já mostra os avisos de prazo.
+- **Avisos de vencimento (RF-24) por canal externo:** o e-mail está feito (tarefa agendada, tabela `loan_email_notices`, provedor trocável; veja `docs/email/README.md`). O WhatsApp depende de o dono definir o canal. O painel já mostra os avisos de prazo.
 - **Lighthouse no CI:** evolução opcional; o orçamento de JavaScript já roda.
+
+### Resultado da prova de carga (card 0235, 13/11/2026)
+
+**Ambiente:** máquina de desenvolvimento (16 CPUs, 15 GB, **compartilhada com outras sessões de trabalho**: carga média de 8 a 11 durante os testes, então os números são pessimistas e variam). Pilha local do FAP com o Supabase CLI (Postgres 17, PostgREST, Auth, Storage, em portas próprias) com as 34 migrations, `supabase/seed.sql` e **20.020 livros** (`scripts/seed-carga.sql`). App em modo de produção (`next build` e `next start`, **um único processo Node**, sem a escala horizontal da Vercel). Um aluno de teste logado (cookie de sessão). 50 usuários simultâneos, 20 s por rota, **sem pausa entre pedidos** (cada usuário dispara o próximo assim que recebe a resposta: bem mais duro que uso real).
+
+| Rota | Pedidos/s | Erros | p50 | p95 | p99 | Meta (p95 < 500 ms, 0 erro) |
+| -- | -- | -- | -- | -- | -- | -- |
+| `/` (pública) | 627 | 0 | 72 ms | **120 ms** | 236 ms | **Bateu** |
+| `/aluno/livros` (listagem, 20 mil livros) | 32 a 39 | 0 | 1.359 a 1.476 ms | **1.597 a 2.253 ms** | 2,4 s | **Não bateu** |
+| `/aluno/livros/<id>` (detalhe) | 73 a 125 | 0 | 373 a 694 ms | **672 a 1.108 ms** | 1,8 s | **Não bateu** (varia com a carga da máquina) |
+| `/aluno/livros?q=...` (busca) | n/a | 10.588 de 10.707 | n/a | n/a | n/a | O limitador de 60 buscas por minuto por IP respondeu 429 (correto). A busca com termo seletivo foi medida no banco: 1,3 ms (índices `pg_trgm`) |
+
+**Gargalo da listagem (EXPLAIN ANALYZE):** o Postgres chegou a ~460% de CPU. A função `search_books` numera **todas** as linhas do acervo (`row_number() over (order by ...)` e filtro por `rn`) e portanto ordena 20 mil linhas a cada página: ~25 ms de Sort dentro de 32 ms de execução (mais ~7 ms de seq scan e joins). A mesma consulta com `ORDER BY title, id LIMIT 12 OFFSET 0` leva **0,18 ms** (usa `idx_books_title`). Um protótipo local, não comitado, com essa troca levou a listagem de p95 2.253 ms para **806 ms** e de 39 para 84 pedidos/s; o que sobra é o limite de um processo Node na máquina compartilhada (o Next usou ~140% de CPU). **Correção: card 0260 (P1).**
+
+**Gargalo do detalhe:** não é o banco (média de 0,7 ms por consulta, 24% de CPU do Postgres); é o processo Node renderizando, e a variação entre rodadas acompanha a carga da máquina. Com pedidos reais (pausa de segundos entre cliques) a vazão exigida é de ~10 pedidos/s para 50 pessoas, muito abaixo dos 73 a 125 medidos, e a Vercel escala as execuções; mesmo assim **não está provado** em produção e prova de carga nunca roda contra produção.
+
+**Limites desta prova:** um só aluno (cookie único; o RLS é por pessoa, mas o custo é o mesmo), um só processo, máquina compartilhada, sem rede entre app e banco. Refazer depois do card 0260, de preferência em máquina ociosa.

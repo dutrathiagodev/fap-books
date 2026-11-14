@@ -2,9 +2,9 @@ import { describe, expect, it } from "vitest";
 import { isActive, navItemsFor } from "./nav-items";
 
 describe("navItemsFor", () => {
-  it("aluno tem 4 itens, começando por Buscar livros (sem Início)", () => {
+  it("aluno tem 5 itens, começando por Minha área", () => {
     const labels = navItemsFor("student").map((i) => i.label);
-    expect(labels).toEqual(["Buscar livros", "Meus empréstimos", "Minhas reservas", "Multas"]);
+    expect(labels).toEqual(["Minha área", "Buscar livros", "Meus empréstimos", "Minhas reservas", "Multas"]);
   });
 
   it("professor tem os itens do aluno mais Reserva pedagógica", () => {
@@ -21,7 +21,13 @@ describe("navItemsFor", () => {
   });
 
   it("aluno tem a pesquisa; professor, a pesquisa e a reserva pedagógica; a funcionária, as telas já entregues", () => {
-    expect(navItemsFor("student").filter((i) => i.href).map((i) => i.href)).toEqual(["/aluno/livros"]);
+    expect(navItemsFor("student").filter((i) => i.href).map((i) => i.href)).toEqual([
+      "/aluno",
+      "/aluno/livros",
+      "/aluno/emprestimos",
+      "/aluno/reservas",
+      "/aluno/multas",
+    ]);
     expect(navItemsFor("teacher").filter((i) => i.href).map((i) => i.href)).toEqual([
       "/professor/livros",
       "/professor/reserva-pedagogica",
@@ -34,6 +40,7 @@ describe("navItemsFor", () => {
       "/funcionario/reservas-pedagogicas",
       "/funcionario/multas",
       "/funcionario/historico",
+      "/funcionario/relatorios",
     ]);
   });
 

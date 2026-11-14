@@ -1,9 +1,10 @@
-import { BookOpen } from "lucide-react";
+"use client";
+
 import { availableCopies, bookSituation } from "@/domain/books/book-rules";
 import type { BookActionResult, BookListItem } from "@/types/book";
 import { BookCover } from "./BookCover";
 import { BookRowActions } from "./BookRowActions";
-import { DataTable, type DataTableColumn } from "./DataTable";
+import { RowIcon, RowIconSprite } from "./RowIcon";
 import { SituationBadge } from "./SituationBadge";
 
 interface BooksTableProps {
@@ -12,83 +13,93 @@ interface BooksTableProps {
   onInactivate: (bookId: string) => Promise<BookActionResult>;
 }
 
-// Tabela do acervo da bibliotecária (Figma, card 0113): título, autor, categoria, código, disponibilidade e ações.
-// Usa a tabela do design system; no celular ela vira cartões.
-export function BooksTable({ books, onDelete, onInactivate }: BooksTableProps) {
-  const columns: DataTableColumn<BookListItem>[] = [
-    {
-      key: "title",
-      header: "Título e edição",
-      cell: (book) => (
-        <div className="flex items-center gap-3">
-          <BookCover
-            url={book.coverUrl}
-            width={32}
-            height={44}
-            className="h-11 w-8 shrink-0 rounded-sm object-cover"
-            fallback={
-              <span aria-hidden className="flex h-11 w-8 shrink-0 items-center justify-center rounded-sm bg-selected text-brand-ink">
-                <BookOpen size={16} />
-              </span>
-            }
-          />
-          <div className="min-w-0">
-            <span className="font-medium">{book.title}</span>
-            {(book.edition || book.publisher) && (
-              <span className="block text-xs text-ink-muted">{[book.edition, book.publisher].filter(Boolean).join(" · ")}</span>
-            )}
-          </div>
-        </div>
-      ),
-    },
-    { key: "author", header: "Autor(es)", cell: (book) => book.author },
-    {
-      key: "category",
-      header: "Categoria",
-      cell: (book) =>
-        book.category ? (
-          <span className="inline-block whitespace-nowrap rounded-full bg-selected px-2.5 py-1 text-xs font-medium text-brand-ink">{book.category}</span>
-        ) : (
-          "—"
-        ),
-    },
-    { key: "code", header: "Código", cell: (book) => <span className="text-ink-muted">{book.code}</span> },
-    { key: "copies", header: "Disp.", cell: (book) => `${availableCopies(book.quantity, book.openLoans)} / ${book.quantity}` },
-    { key: "situation", header: "Status", cell: (book) => <SituationBadge situation={bookSituation(book)} /> },
-    {
-      key: "actions",
-      header: "Ações",
-      cell: (book) => <BookRowActions book={book} onDelete={onDelete} onInactivate={onInactivate} />,
-    },
-  ];
+const HEADERS = ["Título e edição", "Autor(es)", "Categoria", "Código", "Disp.", "Status", "Ações"];
 
-  // Celular (Figma 0113 mobile): capa, status, título, autor, código com disponibilidade e as ações.
-  const card = (book: BookListItem) => (
-    <div className="flex items-start gap-3">
-      <BookCover
-        url={book.coverUrl}
-        width={56}
-        height={80}
-        className="h-20 w-14 shrink-0 rounded-sm object-cover"
-        fallback={
-          <span aria-hidden className="flex h-20 w-14 shrink-0 items-center justify-center rounded-sm bg-selected text-brand-ink">
-            <BookOpen size={20} />
-          </span>
-        }
-      />
-      <div className="min-w-0 flex-1">
-        <SituationBadge situation={bookSituation(book)} />
-        <p className="mt-1 font-medium text-ink">{book.title}</p>
-        <p className="text-xs text-ink-muted">{book.author}</p>
-        <p className="text-xs text-ink-muted">
-          Cód. {book.code} · {availableCopies(book.quantity, book.openLoans)} / {book.quantity} disp.
-        </p>
-        <div className="mt-2">
-          <BookRowActions book={book} onDelete={onDelete} onInactivate={onInactivate} />
-        </div>
-      </div>
+// Tabela do acervo da bibliotecária (Figma, card 0113): título, autor, categoria, código, disponibilidade e ações.
+// Card 0239: uma só marcação para os dois tamanhos. A mesma <table> vira tabela a partir de xl (1280 px: com o menu lateral
+// ela precisa de ~890 px e só cabe aí) e, abaixo disso, cada linha vira um cartão (em 2 colunas de 768 a 1279 px) (Figma 0113 mobile: capa, status, título, autor, código com disponibilidade e ações) só por CSS. Antes
+// eram duas marcações, uma escondida por CSS, e o HTML passava de 150 KB. Sem JavaScript para escolher a visão, não há
+// salto de layout nem diferença entre servidor e navegador. É componente de cliente para a marcação ir uma vez só na
+// página: como componente de servidor, ela iria também no payload do React e o HTML quase dobraria.
+export function BooksTable({ books, onDelete, onInactivate }: BooksTableProps) {
+  return (
+    <div className="xl:overflow-hidden xl:rounded-lg xl:border xl:border-line xl:bg-surface">
+      <RowIconSprite />
+      <table className="block w-full text-left text-sm xl:table">
+        <thead className="hidden bg-subtle text-ink xl:table-header-group">
+          <tr>
+            {HEADERS.map((header) => (
+              <th key={header} scope="col" className="px-4 py-3 text-xs font-semibold uppercase tracking-wide text-ink-muted">
+                {header}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody className="grid gap-3 md:grid-cols-2 xl:table-row-group xl:[&_td]:px-4 xl:[&_td]:py-4">
+          {books.map((book) => {
+            const free = availableCopies(book.quantity, book.openLoans);
+            return (
+              <tr
+                key={book.id}
+                className="book-row"
+              >
+                <td className="contents xl:table-cell">
+                  <div className="contents xl:flex xl:items-center xl:gap-3">
+                    <BookCover
+                      url={book.coverUrl}
+                      width={56}
+                      height={80}
+                      className="col-start-1 row-span-5 row-start-1 h-20 w-14 shrink-0 rounded-sm object-cover xl:h-11 xl:w-8"
+                      fallback={
+                        <span
+                          aria-hidden
+                          className="col-start-1 row-span-5 row-start-1 flex h-20 w-14 shrink-0 items-center justify-center rounded-sm bg-selected text-brand-ink xl:h-11 xl:w-8"
+                        >
+                          <RowIcon name="book" size={18} />
+                        </span>
+                      }
+                    />
+                    <div className="col-start-2 row-start-2 min-w-0 mt-1 xl:mt-0">
+                      <span className="font-medium text-ink">{book.title}</span>
+                      {(book.edition || book.publisher) && (
+                        <span className="block text-xs text-ink-muted">{[book.edition, book.publisher].filter(Boolean).join(" · ")}</span>
+                      )}
+                    </div>
+                  </div>
+                </td>
+                <td className="col-start-2 row-start-3 text-xs text-ink-muted xl:text-sm xl:text-ink">{book.author}</td>
+                <td className="hidden xl:table-cell">
+                  {book.category ? (
+                    <span className="inline-block whitespace-nowrap rounded-full bg-selected px-2.5 py-1 text-xs font-medium text-brand-ink">{book.category}</span>
+                  ) : (
+                    "—"
+                  )}
+                </td>
+                <td className="col-start-2 row-start-4 text-xs text-ink-muted">
+                  <span className="xl:hidden">Cód. </span>
+                  {book.code}
+                  <span className="xl:hidden">
+                    {` · ${free} / ${book.quantity} disp.`}
+                  </span>
+                </td>
+                <td className="hidden xl:table-cell">
+                  {`${free} / ${book.quantity}`}
+                </td>
+                <td className="col-start-2 row-start-1">
+                  <SituationBadge situation={bookSituation(book)} />
+                </td>
+                <td className="col-start-2 row-start-5 mt-2 xl:mt-0">
+                  <BookRowActions
+                    book={{ id: book.id, title: book.title, status: book.status, hasHistory: book.hasHistory }}
+                    onDelete={onDelete}
+                    onInactivate={onInactivate}
+                  />
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
     </div>
   );
-
-  return <DataTable columns={columns} rows={books} rowKey={(book) => book.id} emptyLabel="Nenhum livro encontrado." renderCard={card} />;
 }

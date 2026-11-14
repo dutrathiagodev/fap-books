@@ -62,7 +62,7 @@ function PayButton({ fine, onPay, disabled }: { fine: FineView; onPay: (fine: Fi
       disabled={disabled}
       aria-label={`Dar baixa na multa de ${fine.userName}, ${fine.amountLabel}`}
       onClick={() => onPay(fine)}
-      className="h-9 cursor-pointer rounded-md bg-brand px-4 text-sm font-medium whitespace-nowrap text-on-brand hover:bg-brand-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus disabled:cursor-not-allowed disabled:opacity-60"
+      className="h-11 cursor-pointer md:h-9 rounded-md bg-brand px-4 text-sm font-medium whitespace-nowrap text-on-brand hover:bg-brand-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus disabled:cursor-not-allowed disabled:opacity-60"
     >
       Dar baixa
     </button>

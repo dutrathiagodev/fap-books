@@ -182,7 +182,7 @@ async function HistoricoContent({ searchParams }: { searchParams: SearchParams }
           leadingIcon={Search}
           className="min-w-60 flex-1"
         />
-        <button type="submit" className="h-10 cursor-pointer rounded-md bg-brand px-5 text-sm font-medium text-on-brand hover:bg-brand-hover">
+        <button type="submit" className="h-11 cursor-pointer rounded-md md:h-10 bg-brand px-5 text-sm font-medium text-on-brand hover:bg-brand-hover">
           Buscar
         </button>
       </form>

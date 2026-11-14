@@ -4,6 +4,7 @@ import { describe, expect, it, vi } from "vitest";
 import type { PickableBook, ReservationView } from "../types/pedagogical-reservation";
 import { BookMultiPicker } from "./BookMultiPicker";
 import { RejectReservationModal } from "./RejectReservationModal";
+import { RenewalRequest } from "./RenewalRequest";
 import { ReservationCard } from "./ReservationCard";
 import { ReservationForm } from "./ReservationForm";
 import { ReservationKindBadge, ReservationOriginBadge, ReservationStatusBadge } from "./ReservationBadges";
@@ -20,8 +21,10 @@ const view: ReservationView = {
   status: "pending",
   inPerson: false,
   renewal: false,
+  renewalOf: null,
   startOn: "10/11/2026",
   endOn: "10/12/2026",
+  endDate: "2026-12-10",
   days: 30,
   requestedOn: "08/11/2026",
   purpose: "Redes I",
@@ -141,5 +144,34 @@ describe("RejectReservationModal", () => {
   it("mostra o erro do servidor dentro do modal", () => {
     const html = renderToStaticMarkup(createElement(RejectReservationModal, { reservation: view, error: "Esta solicitação já foi decidida. Atualize a tela.", onConfirm: vi.fn(), onClose: vi.fn() }));
     expect(html).toContain("já foi decidida");
+  });
+});
+
+describe("renovação da reserva pedagógica (card 0055)", () => {
+  const renewal: ReservationView = { ...view, id: "r2", status: "pending", renewal: true, renewalOf: "r1", books: view.books };
+
+  it("o cartão da renovação leva a etiqueta e o título mostra que é renovação", () => {
+    const html = renderToStaticMarkup(createElement(ReservationCard, { reservation: renewal }));
+    expect(html).toContain("Renovação: Metodologia Científica");
+    expect(html).toContain("Aguardando aprovação");
+  });
+
+  it("renovação aprovada diz até quando o professor fica com os livros", () => {
+    const html = renderToStaticMarkup(createElement(ReservationCard, { reservation: { ...renewal, status: "approved", decidedOn: "09/12/2026" } }));
+    expect(html).toContain("Renovação aprovada em 09/12/2026");
+    expect(html).toContain("10/12/2026");
+  });
+
+  it("mostra o aviso de quando a renovação abre e o botão que o pai entrega", () => {
+    const html = renderToStaticMarkup(
+      createElement(ReservationCard, { reservation: { ...view, status: "approved" }, renewalNote: "Você poderá pedir a renovação a partir de 03/12/2026." }),
+    );
+    expect(html).toContain("a partir de 03/12/2026");
+  });
+
+  it("RenewalRequest começa só com o botão Renovar reserva (o formulário abre no clique)", () => {
+    const html = renderToStaticMarkup(createElement(RenewalRequest, { reservationId: "r1", endOn: "10/12/2026", maxDays: 30, onRequest: vi.fn() }));
+    expect(html).toContain("Renovar reserva");
+    expect(html).not.toContain("Dias a mais");
   });
 });

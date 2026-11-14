@@ -1,4 +1,5 @@
 import { ACERVO_PATH, ROLE_HOME } from "../access/access-rules";
+import { STUDENT_FINES_PATH, STUDENT_HOME_PATH, STUDENT_LOANS_PATH, STUDENT_RESERVATIONS_PATH } from "../student/student-rules";
 
 export const PANEL_PATH = "/funcionario/painel";
 const USERS_PATH = "/funcionario/usuarios";
@@ -7,6 +8,7 @@ const TEACHER_PEDAGOGICAL_PATH = "/professor/reserva-pedagogica";
 const LOANS_PATH = "/funcionario/emprestimos";
 const FINES_PATH = "/funcionario/multas";
 const HISTORY_PATH = "/funcionario/historico";
+const REPORTS_PATH = "/funcionario/relatorios";
 import type { UserRole } from "@/types/profile";
 
 export type NavKey =
@@ -44,7 +46,17 @@ export function navItemsFor(role: UserRole): NavItem[] {
       { key: "pedagogical", label: "Reservas pedagógicas", href: PEDAGOGICAL_PATH, group: "Operação" },
       { key: "fines", label: "Multas", href: FINES_PATH, group: "Gestão" },
       { key: "history", label: "Histórico", href: HISTORY_PATH, group: "Gestão" },
-      { key: "reports", label: "Relatórios", group: "Gestão" },
+      { key: "reports", label: "Relatórios", href: REPORTS_PATH, group: "Gestão" },
+    ];
+  }
+
+  if (role === "student") {
+    return [
+      { key: "home", label: "Minha área", href: STUDENT_HOME_PATH },
+      { key: "books", label: "Buscar livros", href: `${home}/livros` },
+      { key: "loans", label: "Meus empréstimos", href: STUDENT_LOANS_PATH },
+      { key: "reservations", label: "Minhas reservas", href: STUDENT_RESERVATIONS_PATH },
+      { key: "fines", label: "Multas", href: STUDENT_FINES_PATH },
     ];
   }
 

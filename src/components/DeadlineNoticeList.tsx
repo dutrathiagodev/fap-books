@@ -35,7 +35,7 @@ function NoticeRow({ notice }: { notice: DeadlineNoticeView }) {
             target="_blank"
             rel="noopener noreferrer"
             aria-label={`Avisar ${notice.userName} por WhatsApp (abre em uma nova aba)`}
-            className="inline-flex h-8 items-center gap-1.5 rounded-md bg-btn-soft px-2.5 text-sm font-medium text-brand-ink transition-colors hover:bg-btn-soft-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus dark:text-navy-200"
+            className="inline-flex h-11 items-center md:h-8 gap-1.5 rounded-md bg-btn-soft px-2.5 text-sm font-medium text-brand-ink transition-colors hover:bg-btn-soft-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus dark:text-navy-200"
           >
             <MessageCircle aria-hidden className="size-4" />
             Avisar no WhatsApp
@@ -45,7 +45,7 @@ function NoticeRow({ notice }: { notice: DeadlineNoticeView }) {
         )}
         <Link
           href={loanHref(notice.code)}
-          className="text-sm font-medium text-link hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
+          className="inline-flex min-h-11 items-center text-sm font-medium text-link hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus md:min-h-0"
         >
           Ver empréstimo
         </Link>

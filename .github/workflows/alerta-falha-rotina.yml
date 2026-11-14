@@ -1,0 +1,36 @@
+name: Alerta de falha de rotina
+
+# Quando uma rotina agendada termina com falha, abre (ou atualiza) uma issue com o link da execução. A issue notifica
+# quem acompanha o repositório por e-mail, além do aviso que o próprio GitHub já manda. Sem segredo novo: usa o token
+# automático do workflow. Só dispara para as rotinas listadas abaixo; erro de CI de PR não entra aqui.
+# O gatilho workflow_run só funciona a partir do arquivo na branch padrão (main). Veja docs/infra-e-plano-gratuito.md.
+on:
+  workflow_run:
+    workflows: ['Backup do banco', 'Multas por atraso', 'Saúde do Supabase', 'Verificação do site', 'Avisos de vencimento por e-mail']
+    types: [completed]
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  avisar:
+    if: github.event.workflow_run.conclusion == 'failure'
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Abrir ou atualizar a issue
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+          ROTINA: ${{ github.event.workflow_run.name }}
+          LINK: ${{ github.event.workflow_run.html_url }}
+        run: |
+          titulo="Falha na rotina: ${ROTINA}"
+          corpo="A rotina **${ROTINA}** falhou. Veja a execução: ${LINK}"
+          aberta=$(gh issue list --state open --search "\"$titulo\" in:title" --json number,title --jq "map(select(.title == \"$titulo\")) | .[0].number // empty")
+          if [ -n "$aberta" ]; then
+            gh issue comment "$aberta" --body "$corpo"
+          else
+            gh issue create --title "$titulo" --body "$corpo Feche esta issue quando o problema for resolvido; se a rotina falhar de novo depois, uma nova issue é aberta."
+          fi

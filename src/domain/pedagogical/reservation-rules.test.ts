@@ -11,6 +11,7 @@ import {
   isIsoDate,
   MAX_BOOKS,
   parseDecisionNote,
+  MAX_DAYS_RANGE_MESSAGE,
   parseMaxDaysInput,
   parseQueueFilters,
   parseReservationInput,
@@ -138,6 +139,11 @@ describe("limite de dias configurável (card 0218)", () => {
 
   it.each(["", "0", "366", "-5", "3.5", "abc", "10 dias", "1e2", null, undefined, 0, 400])("recusa o limite %s", (raw) => {
     expect(parseMaxDaysInput(raw).ok).toBe(false);
+  });
+
+  it.each(["366", "400", "1000", "0", "abc", ""])("o limite %s mostra a frase própria em português, a mesma da tela e do servidor", (raw) => {
+    expect(parseMaxDaysInput(raw)).toEqual({ ok: false, message: "Informe de 1 a 365 dias." });
+    expect(MAX_DAYS_RANGE_MESSAGE).toBe("Informe de 1 a 365 dias.");
   });
 });
 

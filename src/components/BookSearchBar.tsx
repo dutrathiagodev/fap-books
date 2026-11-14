@@ -70,7 +70,7 @@ export function BookSearchBar({ basePath, query, category, availability, sort, c
           {sort !== "relevance" && <input type="hidden" name="ordem" value={sort} />}
           <button
             type="submit"
-            className={`h-10 shrink-0 cursor-pointer rounded-md bg-brand px-5 text-sm font-medium text-on-brand hover:bg-brand-hover ${FOCUS}`}
+            className={`h-11 shrink-0 cursor-pointer md:h-10 rounded-md bg-brand px-5 text-sm font-medium text-on-brand hover:bg-brand-hover ${FOCUS}`}
           >
             Buscar
           </button>
@@ -131,7 +131,7 @@ export function BookSearchBar({ basePath, query, category, availability, sort, c
               </p>
             )}
             <details className="relative">
-              <summary className={`flex h-8 cursor-pointer list-none items-center gap-2 rounded-md border border-line-strong px-3 text-xs ${FOCUS}`}>
+              <summary className={`flex h-11 cursor-pointer list-none md:h-8 items-center gap-2 rounded-md border border-line-strong px-3 text-xs ${FOCUS}`}>
                 <span className="sr-only">Ordenar por: </span>
                 {SORT_OPTIONS.find((option) => option.value === sort)?.label}
                 <ChevronDown size={14} aria-hidden />

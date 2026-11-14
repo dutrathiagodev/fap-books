@@ -9,15 +9,16 @@ import {
   Bookmark,
   ChartColumn,
   ChevronDown,
+  ChevronsLeft,
+  ChevronsRight,
   GraduationCap,
   History,
   Home,
   Library,
   LayoutDashboard,
   LogOut,
+  Mail,
   Menu,
-  PanelLeftClose,
-  PanelLeftOpen,
   Receipt,
   Search,
   Users,
@@ -29,6 +30,7 @@ import { ACERVO_PATH, ROLE_LABELS } from "@/domain/access/access-rules";
 import { PANEL_PATH } from "@/domain/navigation/nav-items";
 import { isActive, navItemsFor, type NavItem } from "@/domain/navigation/nav-items";
 import type { Profile, UserRole } from "@/types/profile";
+import { noticePreferencesPath } from "@/domain/notices/loan-notice";
 import { HelpAssistant } from "./HelpAssistant";
 import { Logo } from "./Logo";
 
@@ -118,6 +120,7 @@ function MenuList({
             <Link
               href={item.href}
               aria-current={active ? "page" : undefined}
+              title={wide ? undefined : item.label}
               onClick={onNavigate}
               className={`${ITEM_BASE} hover:bg-navy-800/70 ${active ? "bg-navy-800" : ""}`}
             >
@@ -164,7 +167,7 @@ function SidebarUser({ profile, wide }: { profile: Profile; wide: boolean }) {
           type="submit"
           aria-label="Sair"
           title="Sair"
-          className="flex size-9 cursor-pointer items-center justify-center rounded-md text-white hover:bg-navy-800 focus-visible:outline-2 focus-visible:outline-white"
+          className="flex size-11 cursor-pointer items-center justify-center rounded-md text-white hover:bg-navy-800 md:size-9 focus-visible:outline-2 focus-visible:outline-white"
         >
           <LogOut size={18} aria-hidden />
         </button>
@@ -173,17 +176,19 @@ function SidebarUser({ profile, wide }: { profile: Profile; wide: boolean }) {
   );
 }
 
-// Botão de recolher/abrir o menu: fica no topo do próprio menu, ao lado da logo (Figma, menu lateral).
+// Botão de recolher/abrir o menu: fica no topo do próprio menu, ao lado da logo (Figma, menu lateral). A seta dupla
+// aponta para onde o menu vai (« recolhe, » expande) e a dica aparece ao passar o mouse (card 0256).
 function SidebarToggle({ collapsed, onClick }: { collapsed: boolean; onClick: () => void }) {
   return (
     <button
       type="button"
       aria-label={collapsed ? "Expandir menu" : "Recolher menu"}
+      title={collapsed ? "Expandir menu" : "Recolher menu"}
       aria-expanded={!collapsed}
       onClick={onClick}
       className="flex size-9 shrink-0 cursor-pointer items-center justify-center rounded-md border border-navy-200/50 text-white hover:bg-navy-800 focus-visible:outline-2 focus-visible:outline-white"
     >
-      {collapsed ? <PanelLeftOpen size={18} aria-hidden /> : <PanelLeftClose size={18} aria-hidden />}
+      {collapsed ? <ChevronsRight size={18} aria-hidden /> : <ChevronsLeft size={18} aria-hidden />}
     </button>
   );
 }
@@ -272,6 +277,15 @@ function UserMenu({ profile }: { profile: Profile }) {
           role="menu"
           className="absolute right-0 top-full z-30 mt-2 w-48 rounded-lg border border-line bg-surface p-1 shadow-md"
         >
+          <Link
+            href={noticePreferencesPath(profile.role)}
+            role="menuitem"
+            onClick={() => setOpen(false)}
+            className="flex w-full cursor-pointer items-center gap-3 rounded-md px-3 py-2 text-sm hover:bg-subtle focus-visible:outline-2 focus-visible:outline-focus"
+          >
+            <Mail size={16} aria-hidden />
+            Avisos por e-mail
+          </Link>
           <form action={logout}>
             <button
               type="submit"
@@ -289,15 +303,14 @@ function UserMenu({ profile }: { profile: Profile }) {
 }
 
 // Menu horizontal do aluno (Figma, card 0108, visual editorial): no lugar do menu lateral, só no computador. O início
-// fica de fora (a logo leva a ele) e os rótulos são os do frame.
-const TOP_NAV_LABELS: Partial<Record<NavItem["key"], string>> = { books: "Acervo", reservations: "Reservas" };
+// fica de fora (a logo leva a ele) e os rótulos são os do frame. Abaixo de 1024 px (tablet e celular) o aluno usa a gaveta:
+// com cinco itens, o menu horizontal não cabe ao lado da logo e do menu do usuário.
+const TOP_NAV_LABELS: Partial<Record<NavItem["key"], string>> = { books: "Acervo", loans: "Empréstimos", reservations: "Reservas" };
 
 function TopNav({ items, role, pathname }: { items: NavItem[]; role: UserRole; pathname: string }) {
   return (
-    <nav aria-label="Menu principal" className="ml-6 hidden items-center gap-1 md:flex">
-      {items
-        .filter((item) => item.key !== "home")
-        .map((item) => {
+    <nav aria-label="Menu principal" className="ml-6 hidden items-center gap-1 lg:flex">
+      {items.map((item) => {
           const Icon = iconFor(item, role);
           const label = TOP_NAV_LABELS[item.key] ?? item.label;
           const content = (
@@ -325,7 +338,7 @@ function TopNav({ items, role, pathname }: { items: NavItem[]; role: UserRole; p
               {content}
             </Link>
           );
-        })}
+      })}
     </nav>
   );
 }
@@ -339,6 +352,8 @@ export function AppShell({ profile, noticeCount = 0, children }: AppShellProps) 
   const items = navItemsFor(profile.role);
   // O aluno usa o menu horizontal no computador (Figma, card 0108); professor e funcionário, o lateral.
   const topNav = profile.role === "student";
+  // Onde a gaveta e o botão que a abre somem: no md (768 px) para o menu lateral; só no lg (1024 px) para o menu horizontal do aluno.
+  const hideDrawerFrom = topNav ? "lg:hidden" : "md:hidden";
 
   // A gaveta fecha com Escape.
   useEffect(() => {
@@ -379,7 +394,7 @@ export function AppShell({ profile, noticeCount = 0, children }: AppShellProps) 
 
       {/* Menu em gaveta (celular) */}
       {drawer && (
-        <div className="fixed inset-0 z-40 md:hidden">
+        <div className={`fixed inset-0 z-40 ${hideDrawerFrom}`}>
           <button
             type="button"
             aria-label="Fechar menu"
@@ -393,7 +408,7 @@ export function AppShell({ profile, noticeCount = 0, children }: AppShellProps) 
                 type="button"
                 aria-label="Fechar menu"
                 onClick={() => setDrawer(false)}
-                className="cursor-pointer rounded-md p-2 text-white hover:bg-navy-800 focus-visible:outline-2 focus-visible:outline-white"
+                className="flex size-11 cursor-pointer items-center justify-center rounded-md text-white hover:bg-navy-800 focus-visible:outline-2 focus-visible:outline-white"
               >
                 <X size={20} aria-hidden />
               </button>
@@ -419,7 +434,7 @@ export function AppShell({ profile, noticeCount = 0, children }: AppShellProps) 
             type="button"
             aria-label="Abrir menu"
             onClick={() => setDrawer(true)}
-            className="cursor-pointer rounded-md p-2 hover:bg-subtle focus-visible:outline-2 focus-visible:outline-focus md:hidden"
+            className={`flex size-11 cursor-pointer items-center justify-center rounded-md hover:bg-subtle focus-visible:outline-2 focus-visible:outline-focus ${hideDrawerFrom}`}
           >
             <Menu size={20} aria-hidden />
           </button>

@@ -1,0 +1,43 @@
+name: Verificação do site
+
+# A cada 6 horas e quando alguém clicar em "Run workflow". Abre as páginas públicas do site em produção e falha se
+# alguma não responder 200 com o conteúdo esperado. Falhar dispara o aviso por e-mail do GitHub e a issue automática
+# do workflow "Alerta de falha de rotina" [FAP - 0252]. Não usa segredo nem token: só lê páginas públicas.
+# Custo zero: repositório público tem minutos de Actions sem limite. O agendamento só roda a partir da main.
+on:
+  schedule:
+    - cron: '15 */6 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: verificacao-do-site
+  cancel-in-progress: false
+
+jobs:
+  site:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Conferir as páginas públicas
+        env:
+          SITE: https://fap-books.vercel.app
+        run: |
+          falhou=0
+          for caminho in / /login; do
+            ok=0
+            for tentativa in 1 2 3; do
+              codigo=$(curl -s -o /tmp/pagina.html -w '%{http_code}' --max-time 20 "$SITE$caminho" || echo 000)
+              if [ "$codigo" = "200" ] && grep -qi 'FAP' /tmp/pagina.html; then ok=1; break; fi
+              sleep 10
+            done
+            if [ "$ok" = "1" ]; then
+              echo "OK  $caminho"
+            else
+              echo "::error::$caminho respondeu $codigo (ou veio sem o conteúdo esperado) depois de 3 tentativas"
+              falhou=1
+            fi
+          done
+          exit $falhou

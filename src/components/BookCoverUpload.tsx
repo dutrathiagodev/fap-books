@@ -15,7 +15,7 @@ export interface BookCoverUploadProps {
 }
 
 const BUTTON =
-  "h-9 cursor-pointer items-center justify-center rounded-md border border-line bg-surface px-3 text-sm font-medium text-ink hover:bg-subtle focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus disabled:cursor-not-allowed disabled:opacity-50";
+  "h-11 cursor-pointer md:h-9 items-center justify-center rounded-md border border-line bg-surface px-3 text-sm font-medium text-ink hover:bg-subtle focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus disabled:cursor-not-allowed disabled:opacity-50";
 
 function readImage(file: File): Promise<{ width: number; height: number; url: string }> {
   return new Promise((resolve, reject) => {

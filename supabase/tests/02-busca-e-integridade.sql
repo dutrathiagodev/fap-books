@@ -188,8 +188,13 @@ begin
 
   ---------------------------------------------------------------- RESERVA
   -- c1 tem 1 exemplar e está com a Bia. Ana reserva; Caio (com multa) reserva também.
-  perform pg_temp.as_user(ANA);
+  perform pg_temp.as_user(BIA);
   perform pg_temp.say('reserva de livro com exemplar livre é recusada', pg_temp.err(format('select public.reserve_book(%L)', v3)) = 'book_available');
+  perform pg_temp.as_user(ANA);
+  perform pg_temp.say('no limite de 3 livros a pessoa NÃO entra na fila', pg_temp.err(format('select public.reserve_book(%L)', c1)) = 'loan_limit_reached');
+  perform pg_temp.as_user(DORA);
+  perform public.return_loan((select id from public.loans where user_id = ANA::uuid and book_id = c5 and returned_at is null));
+  perform pg_temp.as_user(ANA);
   select * into v_res from public.reserve_book(c1);
   perform pg_temp.say('aluno reserva livro sem exemplar livre', v_res.status = 'waiting' and v_res.user_id = ANA::uuid);
   perform pg_temp.say('reserva repetida é recusada', pg_temp.err(format('select public.reserve_book(%L)', c1)) = 'already_reserved');
@@ -203,6 +208,7 @@ begin
   perform pg_temp.say('exemplar guardado não vai para outra pessoa', pg_temp.err(format('select public.create_loan(%L, %L)', c1, BIA)) = 'copy_reserved_for_others');
   perform pg_temp.say('nem direto na tabela',
     pg_temp.err(format('insert into public.loans(book_id,user_id,due_at) values (%L, %L, now()+interval ''7 days'')', c1, BIA)) = 'copy_reserved_for_others');
+  perform public.create_loan(c5, ANA::uuid);  -- depois de reservar, Ana pega outro livro e volta ao limite de 3
   perform pg_temp.say('a dona da reserva também respeita o limite (Ana já tem 3)', pg_temp.err(format('select public.create_loan(%L, %L)', c1, ANA)) = 'loan_limit_reached');
   perform public.return_loan((select id from public.loans where user_id = ANA::uuid and book_id = c5 and returned_at is null));
   perform public.create_loan(c1, ANA::uuid);

@@ -2,7 +2,7 @@ import { connection } from "next/server";
 import { createSupabaseServerClient } from "@/lib/supabase/server-client";
 import { escapeLike, initialsOf, LOOKUP_MAX_RESULTS } from "@/domain/loans/loan-lookup-rules";
 import { isFinalReservationError, reservationErrorCode, reservationErrorMessage } from "@/domain/pedagogical/reservation-errors";
-import { addDays, formatIsoDate, todayInBrasilia, type ReservationValues } from "@/domain/pedagogical/reservation-rules";
+import { addDays, formatIsoDate, MAX_BOOKS, todayInBrasilia, type ReservationValues } from "@/domain/pedagogical/reservation-rules";
 import { toReservationView, type ReservationRow } from "@/domain/pedagogical/reservation-views";
 import type {
   BookAvailability,
@@ -32,6 +32,32 @@ const RESERVATION_COLUMNS =
   "teacher:profiles!pedagogical_reservations_teacher_id_fkey(full_name), " +
   "decider:profiles!pedagogical_reservations_decided_by_fkey(full_name), " +
   "pedagogical_reservation_books(books(id, title, code))";
+
+// A renovação não tem livros próprios: os da reserva original (renewal_of). A tabela aponta para ela mesma, e o embed
+// automático do PostgREST nesse caso falha (PGRST200 com o nome da constraint) ou devolve o lado errado (com a coluna): por isso
+// os livros das originais vêm de uma segunda consulta, simples, e são ligados às renovações aqui.
+async function attachOriginalBooks(supabase: Client, rows: ReservationRow[]): Promise<ReservationRow[]> {
+  const originalIds = [...new Set(rows.map((row) => row.renewal_of).filter((id): id is string => id !== null))];
+  if (originalIds.length === 0) return rows;
+  const { data, error } = await supabase
+    .from("pedagogical_reservation_books")
+    .select("reservation_id, books(id, title, code)")
+    .in("reservation_id", originalIds)
+    .limit(originalIds.length * MAX_BOOKS);
+  if (error) throw new Error("Não foi possível consultar os livros da reserva original.");
+  const byOriginal = new Map<string, ReservationRow["pedagogical_reservation_books"]>();
+  for (const item of data as unknown as Array<{ reservation_id: string; books: ReservationRow["pedagogical_reservation_books"][number]["books"] }>) {
+    const list = byOriginal.get(item.reservation_id) ?? [];
+    list.push({ books: item.books });
+    byOriginal.set(item.reservation_id, list);
+  }
+  return rows.map((row) =>
+    row.renewal_of ? { ...row, original: { pedagogical_reservation_books: byOriginal.get(row.renewal_of) ?? [] } } : row,
+  );
+}
+
+// Exportada só para o teste que impede a volta do embed da reserva original (ver acima).
+export const RESERVATION_COLUMNS_FOR_TEST = RESERVATION_COLUMNS;
 
 // ---- Buscas dos formulários ----
 
@@ -120,7 +146,7 @@ export async function listMyReservations(teacherId: string): Promise<Reservation
     .order("created_at", { ascending: false })
     .limit(MY_RESERVATIONS_LIMIT);
   if (error) throw new Error("Não foi possível consultar as suas reservas.");
-  return (data as unknown as ReservationRow[]).map(toReservationView);
+  return (await attachOriginalBooks(supabase, data as unknown as ReservationRow[])).map(toReservationView);
 }
 
 async function countByStatus(supabase: Client, status: QueueFilter): Promise<number> {
@@ -158,7 +184,8 @@ export async function listQueue(filters: QueueFilters): Promise<QueueList> {
     .order("created_at", { ascending: filters.filter === "pending" })
     .range((page - 1) * PAGE_SIZE, page * PAGE_SIZE - 1);
   if (error) throw new Error("Não foi possível consultar a fila.");
-  return { ...empty, reservations: (data as unknown as ReservationRow[]).map(toReservationView) };
+  const rows = await attachOriginalBooks(supabase, data as unknown as ReservationRow[]);
+  return { ...empty, reservations: rows.map(toReservationView) };
 }
 
 // Uma solicitação pelo id (painel de detalhe). Nulo se não existe (o RLS esconde as dos outros).
@@ -166,7 +193,7 @@ export async function getReservation(id: string): Promise<ReservationView | null
   const supabase = await createSupabaseServerClient();
   const { data, error } = await supabase.from("pedagogical_reservations").select(RESERVATION_COLUMNS).eq("id", id).limit(1);
   if (error) throw new Error("Não foi possível consultar a solicitação.");
-  const row = (data as unknown as ReservationRow[])[0];
+  const [row] = await attachOriginalBooks(supabase, data as unknown as ReservationRow[]);
   return row ? toReservationView(row) : null;
 }
 
@@ -174,6 +201,8 @@ export async function getReservation(id: string): Promise<ReservationView | null
 // (quantidade - empréstimos em aberto - reservas do aluno prontas - guardados por OUTRAS reservas pedagógicas aprovadas).
 // Só a funcionária lê empréstimos e reservas dos outros (RLS). Sem nome de pessoa: só contagens e a data de volta.
 export async function getAvailability(reservation: ReservationView): Promise<BookAvailability[]> {
+  // Renovação não precisa de exemplar livre: os exemplares já estão guardados na reserva original.
+  if (reservation.renewal) return [];
   const supabase = await createSupabaseServerClient();
   const ids = reservation.books.map((book) => book.id);
   if (ids.length === 0) return [];
@@ -281,5 +310,15 @@ export async function returnReservation(reservationId: string, idempotencyKey: s
   return toResult(
     "return_pedagogical_reservation",
     await supabase.rpc("return_pedagogical_reservation", { p_reservation_id: reservationId, p_idempotency_key: idempotencyKey }),
+  );
+}
+
+// Pedido de renovação (só o professor dono da reserva aprovada): mais dias, com nova aprovação da funcionária. O banco confere
+// dono, janela (última semana), limite de dias, uma pendente por reserva e o teto de 365 dias.
+export async function requestRenewal(reservationId: string, days: number, idempotencyKey: string): Promise<ReservationActionResult> {
+  const supabase = await createSupabaseServerClient();
+  return toResult(
+    "request_pedagogical_renewal",
+    await supabase.rpc("request_pedagogical_renewal", { p_reservation_id: reservationId, p_days: days, p_idempotency_key: idempotencyKey }),
   );
 }

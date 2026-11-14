@@ -29,7 +29,7 @@ Só dado **igual para todo mundo**. A migration `20261108130000_public_book_cate
 
 ### Imagens de capa
 
-`BookCover` usa `<img>` simples (as capas vêm do Storage, que serve com cache longo). Agora leva `loading="lazy"` e `decoding="async"`: a capa fora da tela só baixa quando a pessoa rola até ela. Não foi usado `next/image` de propósito: o otimizador da Vercel tem cota própria no plano gratuito, e a capa já chega pequena (limite de 2 MB no envio). Se um dia as capas pesarem, a alternativa é a transformação de imagem do Supabase Storage (recurso pago).
+`BookCover` usa `<img>` simples (as capas vêm do Storage, que serve com cache longo). Agora leva `loading="lazy"` e `decoding="async"`: a capa fora da tela só baixa quando a pessoa rola até ela. Não foi usado `next/image` de propósito: o otimizador da Vercel tem cota própria no plano gratuito, e a capa já chega pequena (limite de 2 MB no envio). Se um dia as capas pesarem, a alternativa é a transformação de imagem do Supabase Storage (recurso pago). As capas da primeira tela (detalhe do livro e as 4 primeiras da pesquisa) levam `priority` (`loading="eager"` e `fetchPriority="high"`), para o LCP não esperar; as demais seguem preguiçosas. O tamanho certo vem de `width`/`height` e das classes por tela (32×44 na tabela, 56×80 no cartão do celular). Card 0253.
 
 ### First Load JS e streaming
 
@@ -81,13 +81,16 @@ Decisão proposta: guardar **24 meses**. A tabela é imutável para o app (sem `
 
 ## 3. Tarefas agendadas
 
-Todas usam o segredo que **já existe** (`SUPABASE_DB_URL`, o mesmo do backup). Nenhum segredo novo. O GitHub só dispara agendamentos a partir da `main`, e pausa os agendamentos de repositório sem atividade por 60 dias.
+As tarefas de banco usam o segredo que **já existe** (`SUPABASE_DB_URL`, o mesmo do backup); só o aviso de e-mail usa um segredo novo (`CRON_SECRET`). O GitHub só dispara agendamentos a partir da `main`, e pausa os agendamentos de repositório sem atividade por 60 dias.
 
 | Workflow | Quando | O que faz | Idempotente? |
 | -- | -- | -- | -- |
 | `backup-banco.yml` | Todo dia 03:00 | Backup criptografado (já existia; ver `database/backup.md`) | Sim |
 | `multas-atrasos.yml` | Todo dia 03:30 | `scripts/agendadas/multas-por-atraso.sql`: multa de R$ 1,00 por dia de atraso (RF-22) | Sim |
-| `saude-supabase.yml` | Segunda 06:00 | Mantém o projeto ativo, mede banco e arquivos, conta auditoria antiga, lista consultas lentas | Sim (só lê; apagar é manual) |
+| `saude-supabase.yml` | Segunda 06:00 | Mantém o projeto ativo, mede banco e arquivos, conta auditoria antiga, lista consultas lentas e roda os advisors por SQL | Sim (só lê; apagar é manual) |
+| `avisos-vencimento.yml` | Todo dia 08:00 (Brasília) | `POST /api/cron/avisos-vencimento`: e-mail de prazo (RF-24), 50 por execução | Sim |
+| `verificacao-do-site.yml` | A cada 6 h | Abre `/` e `/login` em produção; falha se não vier 200 | Sim |
+| `alerta-falha-rotina.yml` | Quando uma das quatro rotinas acima falha | Abre ou atualiza uma issue com o link da execução | Sim (não duplica issue aberta) |
 
 ### Multa por atraso
 
@@ -98,15 +101,44 @@ Todas usam o segredo que **já existe** (`SUPABASE_DB_URL`, o mesmo do backup). 
 - Testado num Postgres 17 descartável com as migrations do projeto: criou, não duplicou na segunda rodada, atualizou só a multa não paga e respeitou a paga.
 - A multa **nunca é calculada na leitura**. A tela deve só ler `fines`. Quando o registro de devolução (card 0132) for feito, ele também pode gravar a multa na hora; o job apenas corrige o que faltar.
 
-### Avisos de vencimento (RF-24): ainda não feito
+### Avisos de vencimento por e-mail (RF-24)
 
-Não existe canal de envio (WhatsApp, e-mail) nem tabela de avisos no painel. Quando o dono definir o canal e a tabela, o aviso vira outra etapa do mesmo tipo de tarefa (consulta os empréstimos que vencem em até 2 dias ou já venceram e ainda não receberam aviso).
+`avisos-vencimento.yml` (todo dia 08:00, horário de Brasília, e por "Run workflow") chama a rota protegida `POST /api/cron/avisos-vencimento`, que envia um e-mail por empréstimo e situação (a vencer em até 2 dias, vence hoje, atrasado). Idempotente (chave única em `loan_email_notices`), em lote de no máximo 50 por execução, com até 3 tentativas por aviso. **Segredo novo:** `CRON_SECRET` (GitHub e Vercel, o mesmo valor); a senha do provedor de e-mail (Gmail com senha de app, Brevo ou Resend, todos grátis) fica só na Vercel. Sem provedor configurado a tarefa só simula. Detalhes, preferência de não receber (LGPD) e o que o dono configura: `docs/email/README.md`. O aviso por WhatsApp (card 0065) continua em aberto.
 
-### Observabilidade
+### Observabilidade (card 0252)
 
-- Consultas lentas: o relatório semanal lê `pg_stat_statements` (ative em Database > Extensions se o workflow avisar que está desligada). **O repositório é público e o resumo do job também**: o texto das consultas vem normalizado (sem valores), mas não use isso para dado sensível.
-- Alertas do Supabase (`get_advisors`: índices que faltam, RLS): rodar no painel (Advisors) ou pelo assistente a cada semana. Fazer isso por workflow exigiria um token novo da API de gerenciamento, por isso ficou de fora.
-- Log de erros: o painel da Vercel (Logs) guarda os erros do servidor. Sentry exigiria conta e chave novas.
+**Erros do app: decisão.** Comparei três opções no plano gratuito:
+
+| Opção | Custo / exigência | Veredito |
+| -- | -- | -- |
+| Vercel Log Drains / alertas de Observability | Drains e alertas são recursos de plano pago (confirmar na página de preços da Vercel); o Hobby só guarda os Logs por pouco tempo | Fora |
+| Sentry (plano Developer grátis) | Conta nova, DSN novo (segredo), pacote `@sentry/nextjs` (pesa no JavaScript do navegador, perto do teto do orçamento do CI) e risco de PII nos eventos se mal configurado | Fica como evolução se o piloto crescer |
+| **Log estruturado no próprio app + rotinas do GitHub** | Zero custo, zero dependência, zero segredo | **Escolhida** |
+
+O que foi feito:
+
+- `src/instrumentation.ts` (`onRequestError` do Next) grava **uma linha JSON de nível `error`** por erro do servidor, aparece em **Vercel > Logs** (filtre por *Error* ou por `erro_servidor`). Campos: `digest` (o mesmo código da tela de erro), `tipo`, `rota`, `contexto`, `metodo`, `caminho`. **Sem PII**: nunca vai a mensagem do erro, a query string, cabeçalhos ou cookies (`src/lib/error-log.ts`, testado).
+- **Alerta de site fora do ar:** `verificacao-do-site.yml` (a cada 6 h) abre `/` e `/login` em produção e falha se não vier 200. Falhou, o GitHub manda e-mail e a issue automática abre.
+- **Alerta de rotina quebrada:** `alerta-falha-rotina.yml` abre (ou comenta numa) issue "Falha na rotina: ..." quando **backup, multas, saúde, verificação do site ou avisos de vencimento** terminam com falha. Usa só o token automático do workflow.
+
+**Passo do dono (uma vez):** em GitHub > Settings > Notifications, deixe ligado o e-mail de *Actions* ("Send notifications for failed workflows only") e o *Watch* do repositório em *All activity* (ou *Custom > Issues*) para a issue chegar por e-mail. O workflow só passa a valer depois de entrar na `main`.
+
+**Limite honesto:** um erro de código que não derruba a página (ex.: falha numa ação que mostra mensagem) fica no Log da Vercel, mas **não dispara e-mail**. Isso só o Sentry (ou um plano pago da Vercel) entrega; hoje a conferência é olhar Vercel > Logs quando alguém reportar problema.
+
+**Consultas lentas (`pg_stat_statements`).** O workflow semanal tenta ligar a extensão (`create extension if not exists pg_stat_statements with schema extensions`; no Supabase ela costuma vir ativa) e lista as 10 mais lentas no resumo do job. Para olhar à mão no SQL Editor (as estatísticas zeram quando o banco reinicia):
+
+```sql
+select round(mean_exec_time::numeric, 1) as media_ms, round(max_exec_time::numeric, 1) as maximo_ms, calls as chamadas,
+       round(total_exec_time::numeric) as total_ms, left(regexp_replace(query, '\s+', ' ', 'g'), 160) as consulta
+from extensions.pg_stat_statements
+where query not ilike '%pg_stat_statements%' and calls >= 5
+order by mean_exec_time desc
+limit 20;
+```
+
+Para investigar uma consulta, copie o texto e rode `explain (analyze, buffers) ...` com valores de teste. **O repositório é público e o resumo do job também**: o texto vem normalizado (sem valores), mas não use isso para dado sensível.
+
+**Advisors do Supabase, toda segunda, sem token novo.** A API oficial dos Advisors exige token de gerenciamento (segredo novo), então `scripts/agendadas/advisors.sql` reproduz as conferências que mais importam **consultando o catálogo do Postgres** com o `SUPABASE_DB_URL` que já existe: tabela sem RLS, view sem `security_invoker`, função `SECURITY DEFINER` sem `search_path` (esses três são **ERRO e derrubam o workflow**) e, como **AVISO** (só listam): RLS sem política, função liberada ao anônimo, chave estrangeira sem índice, índice grande sem uso. Rodado no banco com as 34 migrations, sem ERRO; avisos de hoje: `public_book_categories` liberada ao anônimo (de propósito), `action_keys` sem política (de propósito: só o servidor usa) e 7 chaves de "quem criou/decidiu" sem índice (tabelas pequenas, sem impacto). Fica de fora o que só o painel enxerga (configuração do Auth, como a senha mínima): continue olhando **Advisors** no painel de vez em quando. Para automatizar também isso, o passo do dono seria criar um token de acesso da conta Supabase e guardá-lo como segredo `SUPABASE_ACCESS_TOKEN`; não foi feito para não criar segredo novo.
 
 ## 4. Prova de carga
 
@@ -125,7 +157,9 @@ PROVA_COOKIE='sb-...-auth-token=...' node scripts/prova-de-carga.mjs http://loca
 
 Travas: só aceita `localhost`; outro host exige `PROVA_HOSTS_PERMITIDOS` (decisão do dono); teto de 50 usuários e 60 segundos. Redirecionamento para `/login` conta como erro.
 
-**Ainda não foi rodada nos números oficiais**: a meta depende das funções SQL de busca paginada (card 0225, lista 1). Rodar antes dá o número de partida; rodar depois prova a melhoria.
+**Rodada em 13/11/2026 (card 0235)** com 20 mil livros e 50 usuários: a página pública bateu a meta (p95 120 ms); a listagem do aluno e o detalhe **não** (p95 de 1,6 a 2,3 s e de 0,7 a 1,1 s). Gargalo e números em `docs/architecture/system-design.md`, seção 7; correção no card 0260.
+
+**Montar a pilha local** (sem misturar com outros projetos no Docker): crie uma pasta fora do repositório, rode `supabase init`, no `supabase/config.toml` troque o `project_id` e as portas (ex.: API 55421, banco 55422) para não colidir, ligue `supabase/migrations` ao do projeto e rode `supabase start -x imgproxy,vector,logflare,mailpit,studio,realtime,edge-runtime`. Crie um aluno de teste pela API de administração local, entre com ele e monte o cookie `sb-127-auth-token=base64-...` com a sessão devolvida. A busca por termo (`?q=`) leva 429 do limitador por IP depois de 60 pedidos por minuto, de propósito: meça a busca no banco com `EXPLAIN ANALYZE`.
 
 ## 5. O que falta (decisões e dependências)
 
@@ -133,7 +167,7 @@ Travas: só aceita `localhost`; outro host exige `PROVA_HOSTS_PERMITIDOS` (decis
 | -- | -- |
 | Limite global por IP | **Feito** (regra no WAF, 60 POSTs por minuto por IP). Resta conferir o limite de tentativas do Supabase Auth no painel |
 | Apagar auditoria antiga | Dono rodar o workflow à mão com `apagar_auditoria = sim` (a partir de 2028 haverá o que apagar) |
-| Avisos de vencimento (RF-24) | Dono definir canal e tabela de avisos |
-| Prova de carga com números oficiais | Funções de busca paginada |
+| Prova de carga com números oficiais | **Rodada** (13/11/2026): não bateu na listagem; correção no card 0260 e nova rodada depois |
+| Avisos de vencimento por e-mail (RF-24) | Dono: conta Gmail da biblioteca com senha de app (ou Brevo) e os segredos (`docs/email/README.md`), sem custo; WhatsApp segue em aberto |
 | `docs/architecture/system-design.md` (diagrama, estimativas, ADRs, plano de crescimento) | **Escrito em 09/11/2026**; a seção 7 dele lista o que ainda não está provado |
 | Lighthouse no CI | Evolução opcional |
