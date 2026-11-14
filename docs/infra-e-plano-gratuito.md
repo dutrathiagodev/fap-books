@@ -157,7 +157,9 @@ PROVA_COOKIE='sb-...-auth-token=...' node scripts/prova-de-carga.mjs http://loca
 
 Travas: só aceita `localhost`; outro host exige `PROVA_HOSTS_PERMITIDOS` (decisão do dono); teto de 50 usuários e 60 segundos. Redirecionamento para `/login` conta como erro.
 
-**Rodada em 13/11/2026 (card 0235)** com 20 mil livros e 50 usuários: a página pública bateu a meta (p95 120 ms); a listagem do aluno e o detalhe **não** (p95 de 1,6 a 2,3 s e de 0,7 a 1,1 s). Gargalo e números em `docs/architecture/system-design.md`, seção 7; correção no card 0260.
+**Rodada em 13/11/2026 (card 0235)** com 20 mil livros e 50 usuários: a página pública bateu a meta (p95 120 ms); a listagem do aluno e o detalhe **não** (p95 de 1,6 a 2,3 s e de 0,7 a 1,1 s). Gargalo e números em `docs/architecture/system-design.md`, seção 7.
+
+**Depois do card 0260 (13/11/2026):** a `search_books` agora pagina com `LIMIT/OFFSET` no banco (de 35 para 3 ms por página) e a listagem do aluno foi de p95 ~2.000 ms para 630 a 720 ms (vazão de 44 para 85 a 92 pedidos/s), com zero erro. **Ainda não bate 500 ms**: o limite passou a ser o processo Node (um só, ~145% de CPU). Tabelas antes/depois e o que falta na seção 7 do `system-design.md`. Para ter empréstimos e reservas realistas na pilha local, além do `seed-carga.sql`, crie alguns alunos pela API de administração e insira ~800 empréstimos abertos e ~100 reservas nos livros `CARGA-`.
 
 **Montar a pilha local** (sem misturar com outros projetos no Docker): crie uma pasta fora do repositório, rode `supabase init`, no `supabase/config.toml` troque o `project_id` e as portas (ex.: API 55421, banco 55422) para não colidir, ligue `supabase/migrations` ao do projeto e rode `supabase start -x imgproxy,vector,logflare,mailpit,studio,realtime,edge-runtime`. Crie um aluno de teste pela API de administração local, entre com ele e monte o cookie `sb-127-auth-token=base64-...` com a sessão devolvida. A busca por termo (`?q=`) leva 429 do limitador por IP depois de 60 pedidos por minuto, de propósito: meça a busca no banco com `EXPLAIN ANALYZE`.
 
