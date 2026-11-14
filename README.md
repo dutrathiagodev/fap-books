@@ -36,7 +36,7 @@ O produto reúne, em um só lugar, uma área de consulta ao acervo (para alunos 
 
 ## Estado atual
 
-O projeto está em **MVP em desenvolvimento** (versão `0.9.2`). O que já funciona:
+O projeto está na **versão `1.0.0`**, a primeira completa para uso da biblioteca. O que já funciona:
 
 | | Área | O que já existe |
 | -- | -- | -- |
