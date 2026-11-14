@@ -66,7 +66,7 @@ Decidido em 26/10: livro **com histórico** (empréstimo ou reserva) não é exc
 
 ## Backup
 
-O plano gratuito do Supabase não faz backup automático. Uma rotina diária no GitHub Actions exporta os dados, criptografa e guarda por 30 dias. Como configurar, baixar e restaurar: [`backup.md`](backup.md).
+O plano gratuito do Supabase não faz backup automático. Uma rotina diária no GitHub Actions exporta os dados, criptografa e guarda por 30 dias. Como configurar, baixar e restaurar: [seção Backup do banco](../infra-e-plano-gratuito.md#6-backup-do-banco).
 
 ## Como testar as migrations sem tocar no banco real
 

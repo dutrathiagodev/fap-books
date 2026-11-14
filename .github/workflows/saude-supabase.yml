@@ -34,7 +34,7 @@ jobs:
         env:
           SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
         run: |
-          [ -n "$SUPABASE_DB_URL" ] || { echo "::error::Falta o segredo SUPABASE_DB_URL (veja docs/database/backup.md)"; exit 1; }
+          [ -n "$SUPABASE_DB_URL" ] || { echo "::error::Falta o segredo SUPABASE_DB_URL (veja docs/infra-e-plano-gratuito.md, seção Backup do banco)"; exit 1; }
 
       - name: Medir, manter ativo e listar consultas lentas
         env:
