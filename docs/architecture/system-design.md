@@ -125,7 +125,7 @@ A decisão de custo é do dono do projeto.
 
 ## 7. O que ainda não está provado
 
-- **Prova de carga com os números oficiais: rodada em 13/11/2026 e NÃO bateu a meta nas telas autenticadas.** Detalhes abaixo; correção no card 0260.
+- **Prova de carga com os números oficiais: rodada em 13/11/2026; a listagem melhorou 3x com o card 0260 mas ainda NÃO bate p95 < 500 ms** (o gargalo agora é o processo Node, não o banco). Detalhes abaixo.
 - **Limite global por IP:** depende de o dono aplicar a regra do WAF.
 - **Avisos de vencimento (RF-24) por canal externo:** o e-mail está feito (tarefa agendada, tabela `loan_email_notices`, provedor trocável; veja `docs/email/README.md`). O WhatsApp depende de o dono definir o canal. O painel já mostra os avisos de prazo.
 - **Lighthouse no CI:** evolução opcional; o orçamento de JavaScript já roda.
@@ -141,8 +141,41 @@ A decisão de custo é do dono do projeto.
 | `/aluno/livros/<id>` (detalhe) | 73 a 125 | 0 | 373 a 694 ms | **672 a 1.108 ms** | 1,8 s | **Não bateu** (varia com a carga da máquina) |
 | `/aluno/livros?q=...` (busca) | n/a | 10.588 de 10.707 | n/a | n/a | n/a | O limitador de 60 buscas por minuto por IP respondeu 429 (correto). A busca com termo seletivo foi medida no banco: 1,3 ms (índices `pg_trgm`) |
 
-**Gargalo da listagem (EXPLAIN ANALYZE):** o Postgres chegou a ~460% de CPU. A função `search_books` numera **todas** as linhas do acervo (`row_number() over (order by ...)` e filtro por `rn`) e portanto ordena 20 mil linhas a cada página: ~25 ms de Sort dentro de 32 ms de execução (mais ~7 ms de seq scan e joins). A mesma consulta com `ORDER BY title, id LIMIT 12 OFFSET 0` leva **0,18 ms** (usa `idx_books_title`). Um protótipo local, não comitado, com essa troca levou a listagem de p95 2.253 ms para **806 ms** e de 39 para 84 pedidos/s; o que sobra é o limite de um processo Node na máquina compartilhada (o Next usou ~140% de CPU). **Correção: card 0260 (P1).**
+**Gargalo da listagem (EXPLAIN ANALYZE):** o Postgres chegou a ~460% de CPU. A função `search_books` numera **todas** as linhas do acervo (`row_number() over (order by ...)` e filtro por `rn`) e portanto ordena 20 mil linhas a cada página: ~25 ms de Sort dentro de 32 ms de execução (mais ~7 ms de seq scan e joins). A mesma consulta com `ORDER BY title, id LIMIT 12 OFFSET 0` leva **0,18 ms** (usa `idx_books_title`). Um protótipo local, não comitado, com essa troca levou a listagem de p95 2.253 ms para **806 ms** e de 39 para 84 pedidos/s; o que sobra é o limite de um processo Node na máquina compartilhada (o Next usou ~140% de CPU). **Correção: card 0260 (P1), resultado na seção "Depois do card 0260" abaixo.**
 
 **Gargalo do detalhe:** não é o banco (média de 0,7 ms por consulta, 24% de CPU do Postgres); é o processo Node renderizando, e a variação entre rodadas acompanha a carga da máquina. Com pedidos reais (pausa de segundos entre cliques) a vazão exigida é de ~10 pedidos/s para 50 pessoas, muito abaixo dos 73 a 125 medidos, e a Vercel escala as execuções; mesmo assim **não está provado** em produção e prova de carga nunca roda contra produção.
 
 **Limites desta prova:** um só aluno (cookie único; o RLS é por pessoa, mas o custo é o mesmo), um só processo, máquina compartilhada, sem rede entre app e banco. Refazer depois do card 0260, de preferência em máquina ociosa.
+
+### Depois do card 0260 (13/11/2026)
+
+**Correção:** a migration `20261113700000_search_books_paginacao_no_banco.sql` troca o `row_number()` sobre o acervo por `ORDER BY ... LIMIT ... OFFSET` na própria consulta (a ordem por título e por autor usa índices novos de `books`; ISBN e "tem histórico" só das linhas da página). Mesmo contrato: mesmas colunas, ordens, `total_count`, página além do fim devolve a última. Conferido contra a função antiga em 8.640 combinações de filtro, ordem e página: **0 divergências**. A função usa `plan_cache_mode = force_custom_plan` (sem isso, depois de 5 chamadas o plpgsql reaproveita um plano genérico que volta a ordenar tudo). Também entrou o índice parcial das novidades (`status = 'active' and cover_url is not null`, por `created_at desc`), que evita ler o acervo todo na home e na pesquisa do aluno.
+
+**Banco (mínimo de 7 execuções, 20.020 livros, 763 empréstimos abertos, 111 reservas):**
+
+| Consulta | Antes | Depois |
+| -- | -- | -- |
+| `search_books` p1, sem filtro | 35 ms | 3 ms |
+| por título / por autor, p1 | 34 / 44 ms | 3 / 3 ms |
+| categoria, p1 | 17 ms | 2 ms |
+| situação "disponível" / "reservado" | 48 / 21 ms | 16 / 8 ms |
+| "disponíveis primeiro", p1 | 51 ms | 15 ms |
+| página 500 (offset de 6 mil) | 35 ms | 22 ms |
+| termo seletivo ("livro de carga 0042") | 12 ms | 3 ms |
+| termo que acha tudo ("carga"), relevância | 263 ms | 150 ms |
+| termo que acha 10% ("autor 7") | 77 ms | 42 ms |
+| funcionária, todos os status, título, p1 | 36 ms | 2 ms |
+| `book_situation_counts` sem filtro | 10 a 12 ms | 6 ms |
+| `book_availability_for_books` (detalhe) | 2 ms | 0,3 ms |
+
+Dos 3 ms de `search_books` p1, cerca de 2 a 3 ms são a contagem exata (`total_count`, ~20 mil linhas em índice): foi mantida exata para não mudar a paginação das telas. Por pedido real da listagem, o banco gasta ~7,6 ms no total (antes ~37 ms): `search_books` 5 ms, novidades 1,9 ms (agora ~0 com o índice) e disponibilidade 0,5 ms.
+
+**Aplicação (mesmo ambiente: pilha local, `next start` em um processo, 50 usuários, 20 s, sem pausa; máquina compartilhada):**
+
+| Rota | Antes | Depois | Meta |
+| -- | -- | -- | -- |
+| `/aluno/livros` | 44 pedidos/s, p95 **1.996 ms** | 85 a 92 pedidos/s, p95 **627 a 721 ms** | **Não bateu** |
+| `/aluno/livros/<id>` | 128 pedidos/s, p95 454 ms | 115 a 128 pedidos/s, p95 532 a 568 ms | Varia entre 450 e 570 ms (ruído da máquina; o banco gasta ~1 ms) |
+| `/` | 897 pedidos/s, p95 74 ms | 835 pedidos/s, p95 74 a 80 ms | Bateu |
+
+**O que falta (próximo gargalo):** a listagem passou de 2 s para ~0,65 s e dobrou a vazão, mas não chegou a 500 ms. O Postgres está a ~0,8 CPU para 100 pedidos/s; o **processo Node chega a ~145% de CPU** (cerca de 15 ms de CPU por pedido, página de ~100 KB com 12 cards, proxy e perfil consultados a cada pedido). Com 50 usuários sem pausa e um só processo, p95 < 500 ms exigiria ~110 pedidos/s. Esse limite é do ambiente de teste (um processo; a Vercel escala as execuções) e do custo de renderização por pedido. Está registrado no card 0265 para medir o custo de renderização (perfil do Node) e, se preciso, reduzir consultas por pedido. A prova ainda não foi feita em ambiente de produção real e nunca roda contra produção.
