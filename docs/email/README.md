@@ -11,7 +11,20 @@ Como a pessoa nova entra no sistema: a funcionária cadastra o usuário (`/funci
    limite por IP (10 envios / 10 min, `definePasswordLimiter`) → valida a senha (mínimo 8 caracteres, máximo 72 bytes, as duas iguais) → `verifyOtp({ token_hash, type: 'invite' })` → confere que o perfil está **ativo** → `updateUser({ password })` → redireciona para a primeira tela do perfil (`ROLE_LANDING`).
 5. Usa o cliente do servidor com cookies (`createSupabaseServerClient`), não a chave secreta.
 
-A mesma página serve a **redefinição de senha** (FAP-0265): `type=recovery` está em `SUPPORTED_LINK_TYPES` (`src/domain/auth/invite-token.ts`), o formulário troca os textos ("Redefina sua senha", "Redefinir senha e entrar") e a Server Action confere o token com o mesmo tipo (`verifyOtp({ token_hash, type: 'recovery' })`). O e-mail é `docs/email/recuperar-senha.html` (link `{{ .SiteURL }}/definir-senha?token_hash={{ .TokenHash }}&type=recovery`). Ainda **não existe** a tela "Esqueci minha senha" no login: por enquanto a recuperação é disparada pelo painel do Supabase (Authentication > Users > Send password recovery) e pede design antes de código.
+A mesma página serve a **redefinição de senha** (FAP-0265): `type=recovery` está em `SUPPORTED_LINK_TYPES` (`src/domain/auth/invite-token.ts`), o formulário troca os textos ("Redefina sua senha", "Redefinir senha e entrar") e a Server Action confere o token com o mesmo tipo (`verifyOtp({ token_hash, type: 'recovery' })`). O e-mail é `docs/email/recuperar-senha.html` (link `{{ .SiteURL }}/definir-senha?token_hash={{ .TokenHash }}&type=recovery`). A tela **"Esqueci minha senha"** (FAP-0266) é o que dispara esse e-mail pela própria pessoa. Ver a seção seguinte.
+
+## Esqueci minha senha (FAP-0266)
+
+Link "Esqueci minha senha" no login (`/login`, junto ao campo de senha) leva a `/esqueci-senha` (aberta só a quem não está logado). A pessoa informa o e-mail e a Server Action `requestPasswordReset` (`src/app/actions/forgot-password.ts`) faz:
+
+1. valida o formato do e-mail (`src/domain/auth/recovery-email.ts`; minúsculas, até 254 caracteres);
+2. limite **por IP** (5 pedidos / 10 min, `forgotPasswordIpLimiter`) e **por e-mail** (3 / hora, `forgotPasswordEmailLimiter`), os dois em `src/lib/request-limits.ts`, antes de falar com o Supabase. As chaves valem para qualquer e-mail digitado, então o aviso "Muitas tentativas... Aguarde N minutos" não revela se a conta existe. O limite é por instância do servidor (ver `src/lib/rate-limit.ts`); a segunda camada é o próprio limite de envios do Supabase;
+3. `supabase.auth.resetPasswordForEmail(email, { redirectTo: <site>/definir-senha })`. O caminho do link **não depende** do `redirectTo`: quem monta o endereço é o modelo "Reset password" (`{{ .SiteURL }}/definir-senha?token_hash={{ .TokenHash }}&type=recovery`);
+4. responde **sempre igual** (`sent`: "Se o e-mail informado tiver cadastro, enviamos o link...") para e-mail com conta, sem conta, inativo ou barrado pelo Supabase (cota de envios, pedido repetido em menos de 60 s). Só erro de rede ou 5xx vira "Não foi possível enviar agora". A resposta leva no mínimo 1,5 s (`src/lib/minimum-duration.ts`) para que enviar (conta existe) e não enviar (não existe) não se diferenciem pelo tempo.
+
+Perfil **inativo**: não dá para saber pelo e-mail sem consultar o banco (e isso revelaria a conta), então o link pode ser enviado; ao enviar a senha nova, `definePasswordFromInvite` recusa ("Seu acesso está desativado"), encerra a sessão e não define nada. Nada de e-mail, token ou senha vai para o log (só o código do erro).
+
+Como testar: em `/login` clique em "Esqueci minha senha", informe um e-mail cadastrado, abra o e-mail (`type=recovery`), defina a nova senha e entre. Com um e-mail desconhecido a tela mostra a mesma confirmação. O limite de envios do SMTP do Supabase é baixo por hora: poucos testes reais.
 
 ## O que a pessoa vê
 
@@ -69,7 +82,7 @@ Variáveis `NEXT_PUBLIC_` entram na build: mudou na Vercel, faça um novo deploy
 3. Abra o link duas vezes **sem enviar**: continua valendo (o GET não gasta o token).
 4. Defina a senha: você cai na primeira tela do perfil. Abrir o mesmo link de novo mostra "Este link não vale mais".
 
-Testes automáticos: `src/domain/auth/*.test.ts`, `src/lib/site-url.test.ts`, `src/app/actions/define-password.test.ts` (Supabase simulado).
+Testes automáticos: `src/domain/auth/*.test.ts`, `src/lib/site-url.test.ts`, `src/lib/minimum-duration.test.ts`, `src/app/actions/define-password.test.ts` e `forgot-password.test.ts` (Supabase simulado).
 
 
 ---

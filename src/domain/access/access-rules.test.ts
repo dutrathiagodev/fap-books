@@ -16,6 +16,11 @@ describe("decideRoute", () => {
     expect(decideRoute("/", null)).toEqual({ action: "allow" });
   });
 
+  it("deixa quem não está logado abrir o /esqueci-senha e leva quem já entrou para a própria área (FAP-0266)", () => {
+    expect(decideRoute("/esqueci-senha", null)).toEqual({ action: "allow" });
+    expect(decideRoute("/esqueci-senha", "teacher")).toEqual({ action: "redirect", to: "/professor/livros" });
+  });
+
   it("deixa quem não está logado abrir o /login", () => {
     expect(decideRoute("/login", null)).toEqual({ action: "allow" });
   });

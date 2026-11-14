@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { ReactNode } from "react";
 import { BookOpen } from "lucide-react";
 
@@ -44,12 +44,20 @@ export function BookCover({
   priority = false,
 }: BookCoverProps) {
   const [failedUrl, setFailedUrl] = useState<string | null>(null);
+  const imgRef = useRef<HTMLImageElement>(null);
+  // A página chega do servidor com o <img> pronto: se a imagem falhar antes de o React "acordar" (hidratar), o evento
+  // onError já passou. Ao montar, confere se ela terminou de carregar sem imagem e, nesse caso, troca pelo espaço reservado.
+  useEffect(() => {
+    const img = imgRef.current;
+    if (img && url && img.complete && img.naturalWidth === 0) setFailedUrl(url);
+  }, [url]);
   if (!url || failedUrl === url) {
     return <>{fallback ?? (fallbackIconSize ? <BookOpen aria-hidden size={fallbackIconSize} className="text-brand" /> : null)}</>;
   }
   return (
     // eslint-disable-next-line @next/next/no-img-element
     <img
+      ref={imgRef}
       src={url}
       alt={alt}
       width={width}

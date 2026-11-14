@@ -91,6 +91,8 @@ export function BookSearchPage({ role, basePath, searchParams, editorial = false
               />
             ) : (
               <>
+                {/* Sem o título "Todo o acervo" (visual não editorial), os livros seriam h3 logo depois do h1: o h2 só para leitor de tela mantém a ordem dos títulos. */}
+                {!editorial && <h2 className="sr-only">Resultados da busca</h2>}
                 <ul
                   className={
                     editorial

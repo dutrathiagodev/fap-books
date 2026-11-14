@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import { PRIVATE_AREA_HEADERS, PRIVATE_AREA_SOURCES } from "./src/config/areas-privadas";
 
 // Cabeçalhos de segurança em todas as rotas. O HSTS já vem da Vercel.
 // A política de conteúdo abaixo é a parte que não depende de nonce: impede o site de ser embutido em outro
@@ -24,6 +25,8 @@ const nextConfig: NextConfig = {
   async headers() {
     return [
       { source: "/:path*", headers: cabecalhosDeSeguranca },
+      // Áreas de quem está logado: sem cache do navegador, para o Voltar depois de Sair não reexibir a tela (FAP-0261).
+      ...PRIVATE_AREA_SOURCES.map((source) => ({ source, headers: PRIVATE_AREA_HEADERS })),
       // Definir a senha pelo convite (FAP-0087): o endereço carrega um token de uso único. Nada de cache, e o
       // endereço não vai para outros sites no Referer.
       {
