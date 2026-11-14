@@ -15,6 +15,19 @@ import { Button } from "./Button";
 import { InviteLinkProblem } from "./InviteLinkProblem";
 import { TextField } from "./TextField";
 
+const FORM_COPY: Record<InviteLink["type"], { title: string; description: string; submit: string }> = {
+  invite: {
+    title: "Defina sua senha",
+    description: "Falta só isto para acessar a biblioteca. Você vai entrar logo em seguida.",
+    submit: "Definir senha e entrar",
+  },
+  recovery: {
+    title: "Redefina sua senha",
+    description: "Escolha uma nova senha para a sua conta. Você vai entrar logo em seguida.",
+    submit: "Redefinir senha e entrar",
+  },
+};
+
 function ShowHideButton({ shown, onToggle, label }: { shown: boolean; onToggle: () => void; label: string }) {
   return (
     <button
@@ -40,7 +53,7 @@ function Rule({ done, children }: { done: boolean; children: string }) {
   );
 }
 
-// Formulário "Defina sua senha" do convite. O token vai em campos escondidos e só é gasto no envio (Server Action).
+// Formulário "Defina sua senha" (convite) ou "Redefina sua senha" (esqueci a senha, FAP-0265). O token vai em campos escondidos e só é gasto no envio (Server Action).
 // A conferência aqui é só conforto (feedback na hora); o servidor confere tudo de novo.
 export function DefinePasswordForm({ link }: { link: InviteLink }) {
   const [state, formAction, pending] = useActionState(definePasswordFromInvite, INITIAL_DEFINE_PASSWORD_STATE);
@@ -54,6 +67,7 @@ export function DefinePasswordForm({ link }: { link: InviteLink }) {
   if (state.status === "inactive") return <InviteLinkProblem kind="inactive" />;
   if (state.status === "failed_after_use") return <InviteLinkProblem kind="used" />;
 
+  const copy = FORM_COPY[link.type];
   const live = validatePassword(password, confirmation);
   // O que o servidor devolveu vale até a pessoa mexer nos campos de novo; depois vale a conferência ao vivo.
   const check = state.status === "invalid_fields" ? state.check : live;
@@ -72,8 +86,8 @@ export function DefinePasswordForm({ link }: { link: InviteLink }) {
   return (
     <>
       <div className="flex flex-col gap-1 text-center md:text-left">
-        <h1 className="text-h3 md:text-h2">Defina sua senha</h1>
-        <p className="text-sm text-ink-muted">Falta só isto para acessar a biblioteca. Você vai entrar logo em seguida.</p>
+        <h1 className="text-h3 md:text-h2">{copy.title}</h1>
+        <p className="text-sm text-ink-muted">{copy.description}</p>
       </div>
       <form action={formAction} className="flex w-full flex-col gap-4" noValidate>
         <input type="hidden" name="token_hash" value={link.tokenHash} />
@@ -117,7 +131,7 @@ export function DefinePasswordForm({ link }: { link: InviteLink }) {
         </p>
         <Button
           type="submit"
-          text={pending ? "Salvando..." : "Definir senha e entrar"}
+          text={pending ? "Salvando..." : copy.submit}
           icon={pending ? undefined : ChevronRight}
           loading={pending}
         />

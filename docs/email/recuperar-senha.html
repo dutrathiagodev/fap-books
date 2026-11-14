@@ -1,0 +1,35 @@
+<!-- E-mail de redefinição de senha do FAP Books (Supabase Auth > Emails > Reset password), FAP-0265.
+     Assunto: Redefinir sua senha na biblioteca da FAP
+     Variáveis do Supabase usadas: {{ .SiteURL }} e {{ .TokenHash }}. O caminho /definir-senha fica escrito aqui de propósito: o "Send password recovery" do painel não manda destino, e {{ .RedirectTo }} viraria só a Site URL. O token só é gasto quando a pessoa envia a nova senha (veja docs/email/README.md). Tudo com estilo em linha (e-mail não lê CSS externo). -->
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#eef3fa;padding:32px 12px;font-family:Arial,Helvetica,sans-serif;">
+  <tr>
+    <td align="center">
+      <table role="presentation" width="560" cellpadding="0" cellspacing="0" style="max-width:560px;width:100%;background:#ffffff;border-radius:12px;overflow:hidden;border:1px solid #d6e3f5;">
+        <tr>
+          <td style="background:#032B5E;padding:28px 32px;text-align:center;">
+            <img src="https://fap-books.vercel.app/logo-modo-escuro.png" width="120" alt="FAP Books" style="display:block;margin:0 auto 14px;border:0;outline:none;height:auto;">
+            <div style="font-size:13px;color:#d6e3f5;">Biblioteca da Faculdade Adventista do Paraná</div>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:32px;color:#1a2433;font-size:16px;line-height:1.6;">
+            <h1 style="margin:0 0 16px;font-size:22px;color:#032B5E;">Redefinir sua senha</h1>
+            <p style="margin:0 0 16px;">Recebemos um pedido para trocar a senha da sua conta no FAP Books. Escolha uma nova senha pelo botão abaixo.</p>
+            <p style="margin:0 0 28px;">Depois de salvar, você já entra no sistema com a senha nova.</p>
+            <p style="margin:0 0 28px;text-align:center;">
+              <a href="{{ .SiteURL }}/definir-senha?token_hash={{ .TokenHash }}&type=recovery" style="display:inline-block;background:#032B5E;color:#ffffff;text-decoration:none;font-weight:bold;padding:14px 28px;border-radius:8px;">Redefinir minha senha</a>
+            </p>
+            <p style="margin:0 0 8px;font-size:14px;color:#4a5568;">Se o botão não abrir, copie e cole este endereço no navegador:</p>
+            <p style="margin:0 0 24px;font-size:13px;word-break:break-all;"><a href="{{ .SiteURL }}/definir-senha?token_hash={{ .TokenHash }}&type=recovery" style="color:#0D3B6E;">{{ .SiteURL }}/definir-senha?token_hash={{ .TokenHash }}&type=recovery</a></p>
+            <p style="margin:0;font-size:14px;color:#4a5568;">O link vale por tempo limitado e só pode ser usado uma vez. Se você não pediu a troca, ignore este e-mail: a sua senha continua a mesma.</p>
+          </td>
+        </tr>
+        <tr>
+          <td style="background:#f5f8fc;padding:16px 32px;font-size:12px;color:#6b7280;">
+            Seus dados são usados pela biblioteca e guardados por até 5 anos. Dúvidas? Procure a biblioteca da FAP.
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
