@@ -1,4 +1,4 @@
-# Roteiro de QA em produção (v0.8.6)
+# Roteiro de QA em produção (v0.9.0)
 
 Para o Thiago testar `https://fap-books.vercel.app` com calma, na ordem. Cada item tem o resultado esperado. Marque `[x]` o que passou e anote o que falhou (card, tela e o que apareceu).
 

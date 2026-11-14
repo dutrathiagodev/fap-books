@@ -36,7 +36,7 @@ O produto reúne, em um só lugar, uma área de consulta ao acervo (para alunos 
 
 ## Estado atual
 
-O projeto está em **MVP em desenvolvimento** (versão `0.8.6`). O que já funciona:
+O projeto está em **MVP em desenvolvimento** (versão `0.9.0`). O que já funciona:
 
 | | Área | O que já existe |
 | -- | -- | -- |
@@ -51,10 +51,14 @@ O projeto está em **MVP em desenvolvimento** (versão `0.8.6`). O que já funci
 | 👥 | **Usuários** | Listagem com busca e filtros, edição e inativação/reativação; cadastro de aluno, professor e funcionário por convite de e-mail (com a logo da FAP): a pessoa define a própria senha em `/definir-senha` |
 | 🗂️ | **Painel da bibliotecária** | Indicadores do dia (emprestados, atrasos, prazos, disponíveis, multas e reservas pendentes), pendências e atalhos, com avisos de prazo e o botão "Avisar no WhatsApp" (mensagem pronta, sem custo) |
 | 💬 | **Assistente de ajuda** | Balão para aluno e professor que responde o básico (horário, prazo, multa, renovação, contato) por regras, sem IA, e leva ao WhatsApp da biblioteca quando não sabe |
-| 🎓 | **Reserva pedagógica** | Professor solicita livros para a aula (até 30 dias, limite que a funcionária pode alterar); a funcionária registra no balcão, aprova ou recusa com justificativa, acompanha a fila e a devolução |
+| 🎓 | **Reserva pedagógica** | Professor solicita livros para a aula (até 30 dias, limite que a funcionária pode alterar) e pede renovação perto do fim; a funcionária registra no balcão, aprova ou recusa com justificativa, acompanha a fila e a devolução |
+| 🙋 | **Área do aluno** | Minha área com resumo, prazos a vencer ou atrasados, lista de empréstimos com renovação, reservas e multas (pagamento só presencial) |
+| 🔖 | **Fila de espera** | Aluno ou professor reserva o livro sem exemplar livre; a devolução promove o primeiro da fila (2 dias para retirar) e a funcionária acompanha, avisa por WhatsApp ou expira |
+| 📈 | **Relatórios** | Atraso, acervo e reservas pedagógicas, com filtros, paginação e exportação em CSV e PDF |
+| ✉️ | **Aviso por e-mail** | Aviso automático de vencimento, uma vez por situação, com opção de não receber, usando provedor de e-mail gratuito (`docs/email/README.md`) |
 | 🎨 | **Design system** | Tokens, tema e componentes base (botão, campo, tabela, modal) usados pelas telas |
 
-Em andamento (tudo no quadro do Trello): área do aluno (meus empréstimos, renovação, reservas e multas), relatórios, aviso de vencimento automático por e-mail, prova de carga e observabilidade.
+Em andamento (tudo no quadro do Trello): correção do gargalo da busca com 20 mil livros, QA em celular e leitor de tela, e Figma igual ao site.
 
 ## Módulos
 
