@@ -1,6 +1,14 @@
 @import "tailwindcss";
 
 /*
+  Variante `mouse:`: vale só em tela larga (768 px ou mais) COM mouse.
+  Alvos de toque têm 44 px por padrão (h-11, size-11, min-h-11); para o
+  desktop com mouse encolher use `mouse:h-9`, e não `md:h-9`. Assim o tablet
+  em toque (pointer: coarse) mantém os 44 px. (FAP-0269)
+*/
+@custom-variant mouse (@media (min-width: 48rem) and (pointer: fine));
+
+/*
   Tokens do design system do FAP Books.
   Fonte da verdade: Figma (coleções Color, Spacing e Radius).
   Os mesmos valores estão no Figma (página "Desing System").

@@ -24,7 +24,7 @@ export function BookDetailView({
 }) {
   return (
     <div className="flex flex-col gap-8">
-      <Link href={backHref} className="inline-flex items-center gap-2 text-sm text-link hover:underline">
+      <Link href={backHref} className="inline-flex min-h-11 items-center gap-2 text-sm text-link hover:underline mouse:min-h-0">
         <ArrowLeft size={16} aria-hidden />
         Voltar para o acervo
       </Link>

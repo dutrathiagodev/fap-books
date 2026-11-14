@@ -337,6 +337,7 @@ Esta é uma **regra do projeto**: todo código que entra (de qualquer pessoa da 
 - **Comentário curto explicando o porquê**, não o que a linha faz. Sem código morto nem comentado.
 - **Reuse antes de criar**: use `Button`, `Logo`, `PageHeader` e os tokens do design system (`globals.css`) em vez de repetir classes.
 - **Acessível por padrão**: rótulos, foco visível, `alt` útil (ou vazio em imagem decorativa), contraste do design system.
+- **Alvo de toque de 44 px**: todo botão, link, campo e aba nasce com 44 px (`h-11`, `size-11` ou `min-h-11`). O tamanho menor do desktop entra só com a variante `mouse:` (`mouse:h-9`), que vale em 768 px ou mais **com mouse** (`pointer: fine`, definida em `globals.css`). Nunca encolha por `md:`: o tablet usa toque. O teste `alvo-de-toque.test.ts` confere.
 
 ### 2. Segurança
 

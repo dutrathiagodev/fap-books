@@ -44,7 +44,7 @@ export function SituationLine({ book, tinted = false }: { book: BookSearchItem; 
 }
 
 const DETAIL_LINK =
-  "inline-flex h-11 shrink-0 md:h-8 items-center rounded-full border border-line-strong px-3 text-xs font-medium text-ink hover:bg-subtle focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus";
+  "inline-flex h-11 shrink-0 mouse:h-8 items-center rounded-full border border-line-strong px-3 text-xs font-medium text-ink hover:bg-subtle focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus";
 
 // Cartão do "Todo o acervo" (Figma, card 0108, visual editorial): capa sobre painel claro, categoria, título, autor,
 // situação e o botão. O frame traz "Reservar", "Avisar-me" e "Fila de espera"; enquanto a reserva não existe, o botão
