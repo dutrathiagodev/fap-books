@@ -168,7 +168,7 @@ function SidebarUser({ profile, wide }: { profile: Profile; wide: boolean }) {
           type="submit"
           aria-label="Sair"
           title="Sair"
-          className="flex size-11 cursor-pointer items-center justify-center rounded-md text-white hover:bg-navy-800 md:size-9 focus-visible:outline-2 focus-visible:outline-white"
+          className="flex size-11 cursor-pointer items-center justify-center rounded-md text-white hover:bg-navy-800 mouse:size-9 focus-visible:outline-2 focus-visible:outline-white"
         >
           <LogOut size={18} aria-hidden />
         </button>
@@ -187,7 +187,7 @@ function SidebarToggle({ collapsed, onClick }: { collapsed: boolean; onClick: ()
       title={collapsed ? "Expandir menu" : "Recolher menu"}
       aria-expanded={!collapsed}
       onClick={onClick}
-      className="flex size-9 shrink-0 cursor-pointer items-center justify-center rounded-md border border-navy-200/50 text-white hover:bg-navy-800 focus-visible:outline-2 focus-visible:outline-white"
+      className="flex size-11 shrink-0 cursor-pointer items-center justify-center rounded-md mouse:size-9 border border-navy-200/50 text-white hover:bg-navy-800 focus-visible:outline-2 focus-visible:outline-white"
     >
       {collapsed ? <ChevronsRight size={18} aria-hidden /> : <ChevronsLeft size={18} aria-hidden />}
     </button>
@@ -206,7 +206,7 @@ function TopSearch() {
           name="q"
           maxLength={100}
           placeholder="Buscar livros por título, autor ou ISBN"
-          className="h-10 w-full rounded-md border border-line bg-subtle pl-9 pr-3 text-sm text-ink placeholder:text-ink-muted focus-visible:outline-2 focus-visible:outline-focus"
+          className="h-11 w-full rounded-md mouse:h-10 border border-line bg-subtle pl-9 pr-3 text-sm text-ink placeholder:text-ink-muted focus-visible:outline-2 focus-visible:outline-focus"
         />
       </label>
     </form>
@@ -282,7 +282,7 @@ function UserMenu({ profile }: { profile: Profile }) {
             href={noticePreferencesPath(profile.role)}
             role="menuitem"
             onClick={() => setOpen(false)}
-            className="flex w-full cursor-pointer items-center gap-3 rounded-md px-3 py-2 text-sm hover:bg-subtle focus-visible:outline-2 focus-visible:outline-focus"
+            className="flex min-h-11 w-full cursor-pointer items-center gap-3 rounded-md px-3 py-2 text-sm mouse:min-h-0 hover:bg-subtle focus-visible:outline-2 focus-visible:outline-focus"
           >
             <Mail size={16} aria-hidden />
             Avisos por e-mail
@@ -291,7 +291,7 @@ function UserMenu({ profile }: { profile: Profile }) {
             <button
               type="submit"
               role="menuitem"
-              className="flex w-full cursor-pointer items-center gap-3 rounded-md px-3 py-2 text-sm hover:bg-subtle focus-visible:outline-2 focus-visible:outline-focus"
+              className="flex min-h-11 w-full cursor-pointer items-center gap-3 rounded-md px-3 py-2 text-sm mouse:min-h-0 hover:bg-subtle focus-visible:outline-2 focus-visible:outline-focus"
             >
               <LogOut size={16} aria-hidden />
               Sair
@@ -320,7 +320,7 @@ function TopNav({ items, role, pathname }: { items: NavItem[]; role: UserRole; p
               {label}
             </>
           );
-          const base = "flex h-10 items-center gap-2 rounded-md px-3 text-sm font-medium outline-offset-2 focus-visible:outline-2 focus-visible:outline-focus";
+          const base = "flex h-11 mouse:h-10 items-center gap-2 rounded-md px-3 text-sm font-medium outline-offset-2 focus-visible:outline-2 focus-visible:outline-focus";
           if (!item.href) {
             return (
               <span key={item.key} aria-disabled="true" title="Em breve" className={`${base} cursor-not-allowed text-ink-muted opacity-60`}>
