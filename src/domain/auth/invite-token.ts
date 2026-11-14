@@ -1,8 +1,10 @@
-// Validação do link do convite (/definir-senha?token_hash=...&type=invite) antes de falar com o Supabase.
+// Validação do link do convite ou da redefinição de senha (/definir-senha?token_hash=...&type=invite|recovery) antes de
+// falar com o Supabase.
 // Só o formato é conferido aqui; quem diz se o token vale (expirado, já usado) é o Supabase, no envio do formulário.
 
-// Tipos de link aceitos nesta página. "recovery" (esqueci a senha) já é reconhecido, mas ainda não tem fluxo pronto.
-export const SUPPORTED_LINK_TYPES = ["invite"] as const;
+// Tipos de link aceitos nesta página: "invite" (primeiro acesso) e "recovery" (redefinir a senha, FAP-0265). Os dois
+// seguem o mesmo caminho: o token só é gasto no envio do formulário e a pessoa já entra com a senha nova.
+export const SUPPORTED_LINK_TYPES = ["invite", "recovery"] as const;
 export type SupportedLinkType = (typeof SUPPORTED_LINK_TYPES)[number];
 
 // O token_hash do Supabase é um texto hexadecimal/base64url curto (hoje 64 caracteres). A faixa é larga de propósito

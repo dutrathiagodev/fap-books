@@ -11,17 +11,17 @@ Como a pessoa nova entra no sistema: a funcionária cadastra o usuário (`/funci
    limite por IP (10 envios / 10 min, `definePasswordLimiter`) → valida a senha (mínimo 8 caracteres, máximo 72 bytes, as duas iguais) → `verifyOtp({ token_hash, type: 'invite' })` → confere que o perfil está **ativo** → `updateUser({ password })` → redireciona para a primeira tela do perfil (`ROLE_LANDING`).
 5. Usa o cliente do servidor com cookies (`createSupabaseServerClient`), não a chave secreta.
 
-Só `type=invite` é aceito hoje. `recovery` ("esqueci a senha") entra depois: basta incluí-lo em `SUPPORTED_LINK_TYPES` (`src/domain/auth/invite-token.ts`), criar o modelo de e-mail e trocar os textos da tela.
+A mesma página serve a **redefinição de senha** (FAP-0265): `type=recovery` está em `SUPPORTED_LINK_TYPES` (`src/domain/auth/invite-token.ts`), o formulário troca os textos ("Redefina sua senha", "Redefinir senha e entrar") e a Server Action confere o token com o mesmo tipo (`verifyOtp({ token_hash, type: 'recovery' })`). O e-mail é `docs/email/recuperar-senha.html` (link `{{ .SiteURL }}/definir-senha?token_hash={{ .TokenHash }}&type=recovery`). Ainda **não existe** a tela "Esqueci minha senha" no login: por enquanto a recuperação é disparada pelo painel do Supabase (Authentication > Users > Send password recovery) e pede design antes de código.
 
 ## O que a pessoa vê
 
 | Situação | Resposta |
 | -- | -- |
-| Link sem `token_hash`/`type` válidos, expirado ou já usado | "Este link não vale mais" + pedir novo convite à biblioteca (o Supabase não diferencia expirado de usado) |
+| Link sem `token_hash`/`type` válidos, expirado ou já usado | "Este link não vale mais" + pedir novo link à biblioteca (o Supabase não diferencia expirado de usado) |
 | Senha curta, longa demais, só espaços ou confirmação diferente | Mensagem no campo; nada é gasto |
 | Perfil inativo | "Seu acesso está desativado"; a sessão aberta pelo link é encerrada e a senha não é definida |
 | Erro do Supabase ao conferir o link (5xx/rede) | "Não foi possível salvar agora", o link continua valendo |
-| Link gasto, mas a senha não foi salva | "Peça um novo convite" (sessão encerrada) |
+| Link gasto, mas a senha não foi salva | "Peça um novo link" (sessão encerrada) |
 | Muitas tentativas | Aviso de espera (429 lógico) |
 
 Segurança: nada de token, e-mail ou senha vai para o log (só o código do erro); a página responde com `Cache-Control: private, no-store` e `Referrer-Policy: no-referrer` (`next.config.ts`) e `noindex`.
@@ -44,6 +44,13 @@ Projeto `fap-books` (São Paulo).
 - **Message body**: o conteúdo inteiro de `docs/email/convite.html`.
 
 Atenção: o botão e o link usam `{{ .RedirectTo }}?token_hash={{ .TokenHash }}&type=invite`. Sem a Redirect URL liberada, `{{ .RedirectTo }}` vira a Site URL e o link quebra.
+
+### 2b. Authentication > Emails > Reset password
+
+- **Subject**: `Redefinir sua senha na biblioteca da FAP`
+- **Message body**: o conteúdo inteiro de `docs/email/recuperar-senha.html`.
+
+Aqui o link usa `{{ .SiteURL }}` (e não `{{ .RedirectTo }}`) porque o "Send password recovery" do painel não manda destino. Sem este modelo, o Supabase usa o padrão em inglês, que leva o link para a página inicial do site.
 
 ### 3. Variáveis de ambiente
 

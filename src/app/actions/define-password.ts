@@ -12,7 +12,7 @@ import { definePasswordLimiter } from "@/lib/request-limits";
 import { createSupabaseServerClient } from "@/lib/supabase/server-client";
 import type { UserRole } from "@/types/profile";
 
-// Define a senha a partir do link do convite. Só aqui, no ENVIO do formulário, o token é gasto (verifyOtp): abrir o
+// Define a senha a partir do link do convite (invite) ou da redefinição (recovery). Só aqui, no ENVIO do formulário, o token é gasto (verifyOtp): abrir o
 // link (GET) não consome nada, porque antivírus e leitores de e-mail pré-abrem os links e inutilizariam o convite.
 // Nada de token, e-mail ou senha vai para o log; só o código do erro do Supabase.
 export async function definePasswordFromInvite(
@@ -41,7 +41,7 @@ export async function definePasswordFromInvite(
     const code = verified.error?.code;
     // Erro de rede ou do Supabase (5xx) não é culpa do link: o token continua valendo, a pessoa pode tentar de novo.
     const serverSide = (verified.error?.status ?? 0) >= 500 || verified.error?.name === "AuthRetryableFetchError";
-    console.error("Falha ao conferir o link do convite:", code ?? "sem código");
+    console.error("Falha ao conferir o link de senha:", code ?? "sem código");
     return serverSide ? { status: "failed" } : { status: "link_invalid" };
   }
 

@@ -58,9 +58,15 @@ describe("definePasswordFromInvite", () => {
     await expect(definePasswordFromInvite(idle, form(valid))).rejects.toThrow(`REDIRECT:${to}`);
   });
 
+  it("redefinir a senha (type=recovery): confere o token com o mesmo tipo, salva a senha e entra", async () => {
+    await expect(definePasswordFromInvite(idle, form({ ...valid, type: "recovery" }))).rejects.toThrow("REDIRECT:/aluno/livros");
+    expect(verifyOtp).toHaveBeenCalledWith({ token_hash: HASH, type: "recovery" });
+    expect(updateUser).toHaveBeenCalledWith({ password: SECRET });
+  });
+
   it("link malformado ou de outro tipo: nem fala com o Supabase", async () => {
     expect(await definePasswordFromInvite(idle, form({ ...valid, token_hash: "curto" }))).toEqual({ status: "link_invalid" });
-    expect(await definePasswordFromInvite(idle, form({ ...valid, type: "recovery" }))).toEqual({ status: "link_invalid" });
+    expect(await definePasswordFromInvite(idle, form({ ...valid, type: "magiclink" }))).toEqual({ status: "link_invalid" });
     expect(await definePasswordFromInvite(idle, form({ ...valid, token_hash: undefined }))).toEqual({ status: "link_invalid" });
     expect(verifyOtp).not.toHaveBeenCalled();
   });

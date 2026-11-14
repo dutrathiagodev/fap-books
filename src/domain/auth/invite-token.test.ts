@@ -12,10 +12,14 @@ describe("parseInviteLink", () => {
     expect(parseInviteLink("Ab1-_" + "x".repeat(20), "invite")).not.toBeNull();
   });
 
-  it("só aceita type=invite por enquanto (recovery ainda não tem fluxo)", () => {
-    expect(parseInviteLink(HASH, "recovery")).toBeNull();
+  it("aceita type=recovery (redefinir a senha)", () => {
+    expect(parseInviteLink(HASH, "recovery")).toEqual({ tokenHash: HASH, type: "recovery" });
+  });
+
+  it("recusa os outros tipos do Supabase (signup, magiclink, email_change...)", () => {
     expect(parseInviteLink(HASH, "signup")).toBeNull();
     expect(parseInviteLink(HASH, "magiclink")).toBeNull();
+    expect(parseInviteLink(HASH, "email_change")).toBeNull();
     expect(parseInviteLink(HASH, "")).toBeNull();
   });
 

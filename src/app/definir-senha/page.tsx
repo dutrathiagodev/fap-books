@@ -11,7 +11,7 @@ import { parseInviteLink } from "@/domain/auth/invite-token";
 // O endereço leva um token de uso único: fora dos buscadores. Os cabeçalhos de "não guardar em cache" e de não enviar
 // o endereço a outros sites (Referrer-Policy) vêm do next.config.ts.
 export const metadata: Metadata = {
-  title: "Defina sua senha | FAP Books",
+  title: "Sua senha | FAP Books",
   robots: { index: false, follow: false },
 };
 
@@ -24,6 +24,22 @@ async function InviteContent({ searchParams }: { searchParams: SearchParams }) {
   const link = parseInviteLink(params.token_hash, params.type);
   if (!link) return <InviteLinkProblem kind="invalid" />;
   return <DefinePasswordForm link={link} />;
+}
+
+// Texto do painel azul: convite (primeiro acesso) ou redefinição de senha. Lê o tipo do link, por isso fica no Suspense.
+async function AsideMessage({ searchParams }: { searchParams: SearchParams }) {
+  const params = await searchParams;
+  const recovery = parseInviteLink(params.token_hash, params.type)?.type === "recovery";
+  return (
+    <>
+      <h2 className="text-h1-brand">{recovery ? "Escolha uma nova senha" : "Seu acesso à biblioteca está pronto"}</h2>
+      <p className="text-base text-navy-200">
+        {recovery
+          ? "Redefina a sua senha para voltar a consultar o acervo e acompanhar seus empréstimos."
+          : "Crie a sua senha para consultar o acervo e acompanhar seus empréstimos."}
+      </p>
+    </>
+  );
 }
 
 // Mesmo padrão visual do login (/login): painel navy com foto e o formulário ao lado.
@@ -56,8 +72,9 @@ export default function DefinirSenhaPage({ searchParams }: { searchParams: Searc
             <ShieldCheck size={14} strokeWidth={1.5} aria-hidden />
             Portal de acesso seguro
           </span>
-          <h2 className="text-h1-brand">Seu acesso à biblioteca está pronto</h2>
-          <p className="text-base text-navy-200">Crie a sua senha para consultar o acervo e acompanhar seus empréstimos.</p>
+          <Suspense fallback={null}>
+            <AsideMessage searchParams={searchParams} />
+          </Suspense>
         </div>
         <span aria-hidden className="hidden md:block" />
       </aside>
