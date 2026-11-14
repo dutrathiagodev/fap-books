@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { ReactNode } from "react";
 
 interface BookCoverProps {
@@ -30,10 +30,18 @@ interface BookCoverProps {
 // quebrada [FAP - 0248]. Guarda o endereço que falhou: se o livro ganhar outra capa, a nova é tentada.
 export function BookCover({ url, alt = "", className, width, height, fallback, priority = false }: BookCoverProps) {
   const [failedUrl, setFailedUrl] = useState<string | null>(null);
+  const imgRef = useRef<HTMLImageElement>(null);
+  // A página chega do servidor com o <img> pronto: se a imagem falhar antes de o React "acordar" (hidratar), o evento
+  // onError já passou. Ao montar, confere se ela terminou de carregar sem imagem e, nesse caso, troca pelo espaço reservado.
+  useEffect(() => {
+    const img = imgRef.current;
+    if (img && url && img.complete && img.naturalWidth === 0) setFailedUrl(url);
+  }, [url]);
   if (!url || failedUrl === url) return <>{fallback}</>;
   return (
     // eslint-disable-next-line @next/next/no-img-element
     <img
+      ref={imgRef}
       src={url}
       alt={alt}
       width={width}

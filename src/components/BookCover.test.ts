@@ -55,4 +55,16 @@ describe("BookCover", () => {
     render("https://x.test/nova.png");
     expect(host.querySelector("img")?.getAttribute("src")).toBe("https://x.test/nova.png");
   });
+  it("imagem que já falhou antes de a página hidratar também troca pelo espaço reservado (FAP-0248)", () => {
+    const proto = HTMLImageElement.prototype;
+    const complete = Object.getOwnPropertyDescriptor(proto, "complete");
+    Object.defineProperty(proto, "complete", { configurable: true, get: () => true });
+    try {
+      render("https://x.test/quebrada-antes.png");
+    } finally {
+      if (complete) Object.defineProperty(proto, "complete", complete);
+    }
+    expect(host.querySelector("img")).toBeNull();
+    expect(host.querySelector('[data-testid="sem-capa"]')).not.toBeNull();
+  });
 });

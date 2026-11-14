@@ -27,7 +27,7 @@ const QUICK_IDS = ["horario", "prazo", "limite", "renovacao", "multa", "contato"
 const QUICK = SUGGESTIONS.filter((entry) => QUICK_IDS.includes(entry.id));
 
 const CHAT_LINK =
-  "inline-flex h-9 items-center gap-1.5 rounded-md bg-brand px-3 text-sm font-medium text-on-brand transition-colors hover:bg-brand-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus";
+  "inline-flex h-11 items-center gap-1.5 rounded-md bg-brand px-3 md:h-9 text-sm font-medium text-on-brand transition-colors hover:bg-brand-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus";
 
 // Assistente de ajuda (balão no canto da tela): responde o básico por regras, sem IA, sem API e sem custo (src/domain/help).
 // O que ele não souber vira um link para o WhatsApp da biblioteca. Nada é guardado nem enviado a servidor: a conversa some ao fechar a página.
@@ -93,7 +93,7 @@ export function HelpAssistant() {
                 toggleRef.current?.focus();
               }}
               aria-label="Fechar ajuda"
-              className="-mr-1 grid size-8 shrink-0 cursor-pointer place-items-center rounded-md hover:bg-white/15 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+              className="-mr-1 grid size-11 shrink-0 md:size-8 cursor-pointer place-items-center rounded-md hover:bg-white/15 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
             >
               <X aria-hidden className="size-4" />
             </button>
@@ -131,7 +131,7 @@ export function HelpAssistant() {
                 key={entry.id}
                 type="button"
                 onClick={() => ask(entry.suggestion)}
-                className="cursor-pointer rounded-full border border-line px-2.5 py-1 text-xs text-ink hover:bg-btn-soft focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
+                className="inline-flex min-h-11 cursor-pointer items-center rounded-full border border-line px-2.5 py-1 text-xs md:min-h-0 text-ink hover:bg-btn-soft focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
               >
                 {entry.suggestion}
               </button>
@@ -160,7 +160,7 @@ export function HelpAssistant() {
               type="submit"
               disabled={draft.trim() === ""}
               aria-label="Enviar pergunta"
-              className="grid size-10 shrink-0 cursor-pointer place-items-center rounded-md bg-brand text-on-brand hover:bg-brand-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus disabled:cursor-not-allowed disabled:opacity-50"
+              className="grid size-11 shrink-0 cursor-pointer place-items-center rounded-md bg-brand md:size-10 text-on-brand hover:bg-brand-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus disabled:cursor-not-allowed disabled:opacity-50"
             >
               <Send aria-hidden className="size-4" />
             </button>
