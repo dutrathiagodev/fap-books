@@ -33,6 +33,7 @@ import type { Profile, UserRole } from "@/types/profile";
 import { noticePreferencesPath } from "@/domain/notices/loan-notice";
 import { HelpAssistant } from "./HelpAssistant";
 import { Logo } from "./Logo";
+import { ReloadOnBackForward } from "./ReloadOnBackForward";
 
 interface AppShellProps {
   profile: Profile;
@@ -457,6 +458,7 @@ export function AppShell({ profile, noticeCount = 0, children }: AppShellProps) 
           <div className="mx-auto w-full max-w-[1280px]">{children}</div>
         </main>
       </div>
+      <ReloadOnBackForward />
       {/* Aluno e professor tiram dúvidas por aqui; a bibliotecária opera o balcão e não precisa do assistente. */}
       {profile.role !== "librarian" && <HelpAssistant />}
     </div>

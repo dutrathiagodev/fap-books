@@ -77,3 +77,22 @@ describe("HelpAssistant: as quatro perguntas do card 0248", () => {
     expect(decodeURIComponent(link.href)).toContain("posso trazer meu cachorro?");
   });
 });
+
+describe("HelpAssistant: alvo de toque no celular (44 px)", () => {
+  // O jsdom não calcula layout; conferimos a classe que dá 44 px abaixo do breakpoint md (11 = 2,75 rem).
+  const mobile44 = /(^|\s)(h-11|size-11|min-h-11)(\s|$)/;
+
+  it("fechar, sugestões, enviar e WhatsApp têm 44 px no celular", () => {
+    open();
+    const alvos = [
+      host.querySelector('button[aria-label="Fechar ajuda"]'),
+      host.querySelector('button[aria-label="Enviar pergunta"]'),
+      ...host.querySelectorAll('[role="dialog"] button:not([aria-label])'),
+    ] as HTMLElement[];
+    expect(alvos.length).toBeGreaterThan(2);
+    for (const alvo of alvos) expect(alvo.className, alvo.textContent ?? alvo.ariaLabel ?? "").toMatch(mobile44);
+
+    ask("posso trazer meu cachorro?");
+    expect((host.querySelector('[role="log"] a') as HTMLAnchorElement).className).toMatch(mobile44);
+  });
+});
