@@ -20,6 +20,9 @@ export const ROLE_LABELS: Record<UserRole, string> = { student: "Aluno", teacher
 
 export const LOGIN_PATH = "/login";
 
+// Pedir o link de redefinição de senha (FAP-0266). Como o /login, só abre para quem não está logado.
+export const FORGOT_PASSWORD_PATH = "/esqueci-senha";
+
 // Listagem do acervo da bibliotecária: base dos endereços de novo/editar, filtros e revalidação.
 export const ACERVO_PATH = "/funcionario/acervo";
 

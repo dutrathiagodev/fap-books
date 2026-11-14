@@ -1,11 +1,9 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import { Suspense } from "react";
-import { ShieldCheck } from "lucide-react";
+import { AuthAside } from "@/components/AuthAside";
 import { DefinePasswordForm } from "@/components/DefinePasswordForm";
 import { InviteLinkProblem } from "@/components/InviteLinkProblem";
 import { LoadingState } from "@/components/LoadingState";
-import { Logo } from "@/components/Logo";
 import { parseInviteLink } from "@/domain/auth/invite-token";
 
 // O endereço leva um token de uso único: fora dos buscadores. Os cabeçalhos de "não guardar em cache" e de não enviar
@@ -46,38 +44,11 @@ async function AsideMessage({ searchParams }: { searchParams: SearchParams }) {
 export default function DefinirSenhaPage({ searchParams }: { searchParams: SearchParams }) {
   return (
     <main className="flex flex-1 flex-col md:grid md:grid-cols-[5fr_7fr]">
-      <aside className="relative isolate flex flex-col items-center gap-2 overflow-hidden rounded-b-[28px] bg-linear-to-b from-navy-800 to-side px-6 pb-10 pt-12 text-center text-white md:items-start md:justify-between md:rounded-none md:px-12 md:py-12 md:text-left">
-        <Image
-          src="/fotos/login-celular-topo.jpg"
-          alt=""
-          fill
-          priority
-          sizes="100vw"
-          className="-z-10 object-cover opacity-50 md:hidden"
-        />
-        <Image
-          src="/fotos/login-biblioteca.jpg"
-          alt=""
-          fill
-          priority
-          sizes="(min-width: 768px) 42vw, 0px"
-          className="-z-10 hidden object-cover opacity-20 md:block"
-        />
-        <div className="flex flex-col items-center gap-2 md:items-start">
-          <Logo width={150} tone="white" />
-          <p className="text-sm text-navy-200">Biblioteca da Faculdade Adventista do Paraná</p>
-        </div>
-        <div className="hidden max-w-md flex-col gap-4 md:flex">
-          <span className="inline-flex w-fit items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs font-medium uppercase tracking-wide text-navy-200">
-            <ShieldCheck size={14} strokeWidth={1.5} aria-hidden />
-            Portal de acesso seguro
-          </span>
-          <Suspense fallback={null}>
-            <AsideMessage searchParams={searchParams} />
-          </Suspense>
-        </div>
-        <span aria-hidden className="hidden md:block" />
-      </aside>
+      <AuthAside>
+        <Suspense fallback={null}>
+          <AsideMessage searchParams={searchParams} />
+        </Suspense>
+      </AuthAside>
       <section className="flex flex-1 items-center justify-center bg-page px-6 py-10 md:px-12">
         <div className="flex w-full max-w-sm flex-col gap-6">
           <Suspense fallback={<LoadingState />}>
