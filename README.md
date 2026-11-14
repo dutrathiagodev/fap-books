@@ -36,13 +36,13 @@ O produto reúne, em um só lugar, uma área de consulta ao acervo (para alunos 
 
 ## Estado atual
 
-O projeto está em **MVP em desenvolvimento** (versão `0.9.1`). O que já funciona:
+O projeto está em **MVP em desenvolvimento** (versão `0.9.2`). O que já funciona:
 
 | | Área | O que já existe |
 | -- | -- | -- |
 | 🏠 | **Página inicial** | Landing pública com apresentação, perfis, recursos, acervo e contato |
-| 🔐 | **Login e perfis** | Entrada com Supabase Auth e área própria para aluno, professor e funcionário, com permissões por perfil (RLS em toda tabela) |
-| 🔎 | **Pesquisa de livros** | Busca por título, autor, ISBN ou assunto, com filtros de categoria e disponibilidade, para aluno e professor |
+| 🔐 | **Login e perfis** | Entrada com Supabase Auth e área própria para aluno, professor e funcionário, com permissões por perfil (RLS em toda tabela). "Esqueci minha senha" no login: o link do e-mail abre a tela para escolher a nova senha. Depois de Sair, o botão Voltar do navegador não reexibe a tela |
+| 🔎 | **Pesquisa de livros** | Busca por título, autor, ISBN ou assunto, com filtros de categoria e disponibilidade, para aluno e professor; paginada no próprio banco, com 20 mil livros a listagem fica em p95 ~450 ms com 50 usuários simultâneos |
 | 📚 | **Acervo da bibliotecária** | Listagem com busca e filtros, detalhe do livro, exclusão (com confirmação pelo nome) e inativação de livro com histórico, e importação de livros por planilha `.csv` ou `.xlsx` (com modelo para baixar e erros por linha) |
 | 📝 | **Cadastro e edição de livro** | Formulário com validações, gravação segura no banco, upload de capa e aba de importação por planilha |
 | 🔄 | **Balcão** | Registro de empréstimo em 5 passos, devolução (com multa de R$ 1,00 por dia de atraso) e renovação até 3 vezes, pelas funções do banco, com limite de 3 livros (4 para formandos) e proteção contra clique duplo |
@@ -56,9 +56,9 @@ O projeto está em **MVP em desenvolvimento** (versão `0.9.1`). O que já funci
 | 🔖 | **Fila de espera** | Aluno ou professor reserva o livro sem exemplar livre; a devolução promove o primeiro da fila (2 dias para retirar) e a funcionária acompanha, avisa por WhatsApp ou expira |
 | 📈 | **Relatórios** | Atraso, acervo e reservas pedagógicas, com filtros, paginação e exportação em CSV e PDF |
 | ✉️ | **Aviso por e-mail** | Aviso automático de vencimento, uma vez por situação, com opção de não receber, usando provedor de e-mail gratuito (`docs/email/README.md`) |
-| 🎨 | **Design system** | Tokens, tema e componentes base (botão, campo, tabela, modal) usados pelas telas |
+| 🎨 | **Design system** | Tokens, tema e componentes base (botão, campo, tabela, modal) usados pelas telas; alvo de toque de 44 px no celular e no tablet em toque |
 
-Em andamento (tudo no quadro do Trello): correção do gargalo da busca com 20 mil livros, QA em celular e leitor de tela, e Figma igual ao site.
+Em andamento (tudo no quadro do Trello): QA da equipe sobre os cards em *Awaiting QA*, QA manual em aparelho real (celular, tablet, leitor de tela) e a troca do e-mail do Gmail por um domínio próprio da faculdade (SPF/DKIM), que depende da TI da FAP.
 
 ## Módulos
 

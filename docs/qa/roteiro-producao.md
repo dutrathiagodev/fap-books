@@ -1,4 +1,4 @@
-# Roteiro de QA em produção (v0.9.1)
+# Roteiro de QA em produção (v0.9.2)
 
 Para o Thiago testar `https://fap-books.vercel.app` com calma, na ordem. Cada item tem o resultado esperado. Marque `[x]` o que passou e anote o que falhou (card, tela e o que apareceu).
 
@@ -12,17 +12,18 @@ Para o Thiago testar `https://fap-books.vercel.app` com calma, na ordem. Cada it
 | Professor | `professor@fapbooks.test` | `/professor/livros` |
 | Aluno | `aluno@fapbooks.test` | `/aluno/livros` |
 
-**Estado inicial do banco** (conferido em 09/11/2026): aluno de teste com **3 empréstimos abertos** (A Hora da Estrela vence em 09/11; Clean Code e Dom Casmurro atrasados), **2 multas em aberto** (R$ 37,00 e R$ 27,00, criadas pela tarefa diária; total R$ 64,00), 0 reservas pedagógicas, limite da reserva pedagógica em 30 dias, 4 perfis (as 3 contas de teste e o Thiago). O banco é único e não tem dado real: pode testar à vontade, mas deixe como na seção 8.
+**Estado inicial do banco** (conferido em 14/11/2026): limpo. **0 empréstimos abertos** (7 no histórico, todos devolvidos), **0 multas em aberto**, 2 reservas de fila e 6 reservas pedagógicas antigas, **20 livros ativos**, limite da reserva pedagógica em 30 dias e 4 perfis (as 3 contas de teste e o Thiago). O banco é único e não tem dado real: pode testar à vontade, mas deixe como na seção 8. Os testes de aviso de prazo, atraso e multa precisam de um empréstimo com prazo curto: crie o empréstimo no Balcão e peça ao dono para antecipar o prazo (seção 8, "Preparar prazo de teste").
 
 **Dicas:** use uma janela anônima por perfil (os cookies não se misturam); para tema claro/escuro e celular, abra as ferramentas do navegador (F12) e emule a largura 375 e 768; não há botão de tema, o app segue o sistema.
 
-**Para testar escrita sem sujar as contas de teste**, cadastre um usuário só para isso (seção 3.3) com `skytek7reg+qa1@gmail.com` (cai na caixa do `skytek7reg@gmail.com`).
+**Para testar escrita sem sujar as contas de teste**, cadastre um usuário só para isso (seção 3.3) com `thiagodutrasap+qa1@gmail.com` (cai na caixa do `thiagodutrasap@gmail.com`).
 
 ## 1. Visitante (sem login)
 
 - [ ] `/` abre a landing com contato, FAQ e newsletter; sem rolagem lateral em 375 e 768.
 - [ ] `/login` abre; entrar com senha errada mostra erro em português e não revela se o e-mail existe.
 - [ ] `/funcionario/painel`, `/aluno/livros`, `/professor/livros` sem login mandam para `/login`.
+- [ ] **Esqueci minha senha (card 0266):** no `/login` há o link "Esqueci minha senha" que abre `/esqueci-senha`. Digite o e-mail de uma conta de teste: aparece sempre a mesma confirmação neutra ("se o e-mail existir, enviamos o link"), também com um e-mail que não existe. O e-mail "Redefinir sua senha na biblioteca da FAP" chega com a logo; o botão abre "Redefina sua senha"; salvar a senha leva à primeira tela do perfil. O mesmo link não funciona uma segunda vez. E-mail inválido mostra erro no campo; repetir o pedido muitas vezes mostra o aviso de espera.
 - [ ] `/privacidade`, `/termos` e `/acessibilidade` abrem.
 - [ ] Rota que não existe (ex.: `/xyz`) mostra a página 404 com o título da aba "Página não encontrada".
 - [ ] Link direto de área protegida sem login (ex.: `/funcionario/acervo?q=dom`) leva a `/login?next=...` e, depois de entrar, volta para o endereço pedido.
@@ -46,7 +47,7 @@ Para o Thiago testar `https://fap-books.vercel.app` com calma, na ordem. Cada it
 
 ### 3.1 Painel e avisos (cards 0097, 0094, 0158, 0234)
 
-- [ ] `/funcionario/painel` mostra os 4 números (emprestados, atrasados, disponíveis, multas) e eles batem com a seção 0 (3 emprestados, 2 atrasados, multas em aberto R$ 64,00). A busca do topo ("Buscar livros por título, autor ou ISBN") só aparece no Painel e leva ao acervo filtrado.
+- [ ] `/funcionario/painel` mostra os 4 números (emprestados, atrasados, disponíveis, multas) e eles batem com a seção 0 (0 emprestados, 0 atrasados, multas R$ 0,00; "Disponíveis" é a soma dos exemplares dos livros ativos) e depois do primeiro empréstimo do Balcão. A busca do topo ("Buscar livros por título, autor ou ISBN") só aparece no Painel e leva ao acervo filtrada.
 - [ ] Faixa de aviso ("... vence em até 2 dias e 2 estão atrasados") e a lista "Pendências de hoje".
 - [ ] "Ver avisos de prazo" abre `/funcionario/painel/avisos`, agrupado em Vence hoje e Atrasado; os chips filtram.
 - [ ] **Botão "Avisar no WhatsApp":** o aluno de teste não tem telefone, então aparece "Sem telefone cadastrado". Edite o aluno de teste em Usuários e ponha um telefone seu (só números com DDD) para ver o botão; ele abre o WhatsApp com a mensagem pronta (vence hoje, ou atrasado com dias e multa). Depois **apague o telefone** (seção 8).
@@ -60,7 +61,7 @@ Para o Thiago testar `https://fap-books.vercel.app` com calma, na ordem. Cada it
 ### 3.3 Cadastro e convite por e-mail (cards 0087, 0029 a 0031)
 
 - [ ] `/funcionario/usuarios/novo`: os 3 perfis mostram os campos certos (aluno com matrícula e curso; funcionária com cargo).
-- [ ] Cadastre um aluno com `skytek7reg+qa1@gmail.com`. Aparece "Usuário cadastrado. O convite foi enviado por e-mail."
+- [ ] Cadastre um aluno com `thiagodutrasap+qa1@gmail.com`. Aparece "Usuário cadastrado. O convite foi enviado por e-mail."
 - [ ] O e-mail chega com a logo do FAP Books e o botão "Definir minha senha" (veja também o spam).
 - [ ] O link abre `/definir-senha`; defina uma senha (mínimo 8) e entre: cai em `/aluno/livros`. O mesmo link não funciona uma segunda vez.
 
@@ -130,6 +131,8 @@ Use dois usuários novos sem multa (seção 3.3) e um livro com 1 exemplar. Empr
 
 - [ ] Tema claro e escuro legíveis (contraste, bordas, selos).
 - [ ] Celular 375 e tablet 768: sem rolagem lateral, botões alcançáveis, menu em hambúrguer no celular.
+- [ ] **Alvo de toque de 44 px (card 0269):** no celular e no tablet em toque, todo botão, link, aba e campo tem pelo menos 44 px; no computador com mouse o tamanho é o menor de sempre.
+- [ ] **Sair e voltar (card 0261):** depois de Sair, o botão Voltar do navegador leva ao login e não mostra a tela de quem saiu (teste nos 3 perfis).
 - [ ] Teclado: Tab percorre na ordem, o foco aparece, Esc fecha modais e o assistente.
 - [ ] Console do navegador (F12) sem erro vermelho do app.
 - [ ] Título da aba certo em cada tela.
@@ -143,29 +146,31 @@ Use dois usuários novos sem multa (seção 3.3) e um livro com 1 exemplar. Empr
 
 ## 7. Itens que você precisa saber que estão abertos (não são falha do QA)
 
-- Área do aluno: a renovação e as multas estão prontas; a reserva de livro indisponível (fila de espera) é de outro card, por isso "Minhas reservas" aparece vazia.
-- Aviso automático por e-mail: card 0236. Prova de carga: card 0235. Observabilidade com alerta: card 0252.
-- QA que ainda não foi feito (inativar livro, "Sair e voltar", Lighthouse, celular 375/768, teclado e leitor de tela, capas, newsletter real e as perguntas do balão): card 0248.
-- Conferência com o Figma das telas restantes: card 0249; extras do site ainda sem desenho: card 0251. O painel geral do Histórico (indicadores e exportar CSV) virou a tela Relatórios (seção 3.6.1).
-
-### 7.1 QA automatizado do card 0248 (13/11/2026, site local com 20 mil livros) e o que sobra para o dono
-
-**Feito e verde:** Lighthouse mobile em `/`, `/login`, `/aluno/livros` e detalhe (pelo `npx lighthouse`, sem instalar no projeto; instável e lento para o CI): acessibilidade 100, boas práticas 100, SEO 100, desempenho 82 (`/`, LCP 4,9 s) e 92 a 93 nas demais. Testes de componente em jsdom: foco entra no modal, Tab e Shift+Tab ficam presos, Esc fecha, foco volta ao botão (`Modal.test.ts`); balão de ajuda com Esc e as perguntas de horário, renovar, multa e "cachorro" (abre o WhatsApp) (`HelpAssistant.teclado.test.ts`); capa quebrada agora cai no espaço reservado (`BookCover`). Navegador: inativar livro com histórico mostra "Este livro tem histórico", a linha vira Inativo em ~0,3 s e o excluir fica desabilitado.
-
-**Achados (para decidir):**
-1. **"Sair e voltar":** depois de Sair, o botão Voltar do navegador reexibiu a tela da funcionária (restaurada do cache do navegador; o servidor já redireciona ao login ao recarregar). Correção sugerida: `Cache-Control: no-store` em `/aluno`, `/professor` e `/funcionario` no `next.config.ts` (as páginas dinâmicas já saem com no-store; verificar por que o Voltar ainda restaura). Abrir card P1.
-2. O modal de inativar livro não fecha com Esc (o `destructive` vale também para inativar, que é reversível). Decidir se Esc deve fechar nesse caso.
-
-**Fica para o dono (aparelho real):** celular 375 e tablet 768 (sem rolagem lateral, toque de 44 px, teclado não cobre o botão); leitor de tela nos menus, modais e tabelas; newsletter com e-mail real; balão de ajuda logado como aluno e como professor.
+- **Domínio próprio para o e-mail (card 0259):** o e-mail funciona de graça pelo Gmail da biblioteca (aviso de prazo, convite e redefinição de senha); falta só o domínio verificado (SPF/DKIM), que depende da TI da FAP.
+- **QA manual que só aparelho real faz (card 0248):** celular e tablet físicos (toque, teclado virtual), leitor de tela nos menus, modais e tabelas, e newsletter com e-mail real. O resto do 0248 foi automatizado em 14/11 (Lighthouse com acessibilidade 98 a 100 e boas práticas e SEO 100, teclado, capas, balão de ajuda, Sair e voltar, alvo de toque).
+- **Listagem do aluno (cards 0260 e 0267):** a busca pagina no banco e o servidor gasta menos CPU por pedido; com 50 usuários simultâneos e 20 mil livros, o p95 ficou em ~450 ms (meta 500 ms), medido com um único processo Node; a Vercel escala horizontalmente.
 
 ## 8. Como deixar o banco limpo no fim
 
 Peça ao Claude ("limpa o banco de teste") ou rode no Supabase (SQL Editor), nesta ordem:
 
 1. Apagar o usuário de teste criado na seção 3.3 (Authentication, Users) e os empréstimos dele.
-2. Apagar os livros `QA-` e as reservas pedagógicas de teste.
-3. Voltar o telefone do aluno de teste para vazio.
-4. Se algum dos dois livros atrasados do aluno de teste foi devolvido (gera multa real), o estado original é: **Dom Casmurro** e **Clean Code** abertos, A Hora da Estrela aberto, 2 multas em aberto (R$ 37,00 do Clean Code e R$ 27,00 do Dom Casmurro; se alguma foi paga no teste, reabra com `update fines set paid_at = null, paid_by = null where amount_cents = <valor>`).
+2. Apagar os livros `QA-` e as reservas pedagógicas e de fila de teste.
+3. Voltar o telefone do aluno de teste para vazio e o e-mail dos perfis de teste para o original (`aluno@`, `professor@`, `funcionario@fapbooks.test`).
+4. Devolver os empréstimos de teste que ficaram abertos e apagar as multas criadas por eles (`delete from public.fines where loan_id = '<id>'`).
 5. Voltar o limite da reserva pedagógica para 30 dias (pela própria tela).
 
-Estado esperado ao terminar: 3 empréstimos abertos (todos do aluno de teste), 2 multas em aberto, 0 reservas pedagógicas, limite em 30 dias, 4 perfis.
+Estado esperado ao terminar: 0 empréstimos abertos, 0 multas em aberto, limite em 30 dias, 4 perfis e 20 livros ativos.
+
+### Preparar prazo de teste (só o dono)
+
+Para ver a faixa de avisos, o atraso e a multa, crie um empréstimo no Balcão e antecipe o prazo no SQL Editor (o app não deixa escolher prazo no passado):
+
+```sql
+-- vence hoje (avisos "vence hoje")
+update public.loans set due_at = now() where id = '<id do empréstimo>';
+-- atrasado 3 dias (a multa de R$ 1,00 por dia nasce na tarefa diária das 04:00)
+update public.loans set due_at = now() - interval '3 days' where id = '<id do empréstimo>';
+```
+
+Para testar o e-mail de vencimento sem escrever para um endereço de teste inexistente, use um aluno com e-mail seu (`thiagodutrasap+aluno1@gmail.com`) e rode o workflow "Avisos de vencimento por e-mail" no GitHub (Actions): espera-se `sent:1` na primeira vez e `sent:0` na segunda.
