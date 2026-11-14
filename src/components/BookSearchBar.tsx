@@ -36,10 +36,10 @@ const SORT_OPTIONS: Array<{ value: BookSort; label: string }> = [
 ];
 
 const FOCUS = "outline-offset-2 focus-visible:outline-2 focus-visible:outline-focus";
-const CHIP = `inline-flex h-10 items-center rounded-full border px-3 text-xs sm:h-8 ${FOCUS}`;
+const CHIP = `inline-flex h-11 items-center rounded-full border px-3 text-xs mouse:h-8 ${FOCUS}`;
 const CHIP_OFF = "border-line-strong bg-surface text-ink hover:bg-subtle";
 const CHIP_ON = "border-brand bg-selected font-medium text-brand-ink";
-const SEGMENT = `inline-flex h-10 items-center border-r border-line-strong px-3 text-xs last:border-r-0 sm:h-8 ${FOCUS}`;
+const SEGMENT = `inline-flex h-11 items-center border-r border-line-strong px-3 text-xs last:border-r-0 mouse:h-8 ${FOCUS}`;
 const LABEL = "w-20 shrink-0 text-xs font-medium uppercase tracking-wide text-ink-muted";
 
 // Barra de busca da pesquisa de livros (Figma, card 0108): campo com botão Buscar, chips de CATEGORIA e controle
@@ -70,7 +70,7 @@ export function BookSearchBar({ basePath, query, category, availability, sort, c
           {sort !== "relevance" && <input type="hidden" name="ordem" value={sort} />}
           <button
             type="submit"
-            className={`h-11 shrink-0 cursor-pointer md:h-10 rounded-md bg-brand px-5 text-sm font-medium text-on-brand hover:bg-brand-hover ${FOCUS}`}
+            className={`h-11 shrink-0 cursor-pointer mouse:h-10 rounded-md bg-brand px-5 text-sm font-medium text-on-brand hover:bg-brand-hover ${FOCUS}`}
           >
             Buscar
           </button>
@@ -131,7 +131,7 @@ export function BookSearchBar({ basePath, query, category, availability, sort, c
               </p>
             )}
             <details className="relative">
-              <summary className={`flex h-11 cursor-pointer list-none md:h-8 items-center gap-2 rounded-md border border-line-strong px-3 text-xs ${FOCUS}`}>
+              <summary className={`flex h-11 cursor-pointer list-none mouse:h-8 items-center gap-2 rounded-md border border-line-strong px-3 text-xs ${FOCUS}`}>
                 <span className="sr-only">Ordenar por: </span>
                 {SORT_OPTIONS.find((option) => option.value === sort)?.label}
                 <ChevronDown size={14} aria-hidden />
@@ -142,7 +142,7 @@ export function BookSearchBar({ basePath, query, category, availability, sort, c
                     <Link
                       href={bookSearchHref(basePath, { query, category, availability, sort: option.value })}
                       aria-current={option.value === sort ? "true" : undefined}
-                      className={`block rounded px-3 py-2 text-xs hover:bg-subtle ${FOCUS} ${option.value === sort ? "font-medium text-brand" : ""}`}
+                      className={`flex min-h-11 items-center rounded px-3 py-2 text-xs mouse:min-h-0 hover:bg-subtle ${FOCUS} ${option.value === sort ? "font-medium text-brand" : ""}`}
                     >
                       {option.label}
                     </Link>

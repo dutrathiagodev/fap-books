@@ -36,13 +36,13 @@ O produto reúne, em um só lugar, uma área de consulta ao acervo (para alunos 
 
 ## Estado atual
 
-O projeto está em **MVP em desenvolvimento** (versão `0.9.1`). O que já funciona:
+O projeto está em **MVP em desenvolvimento** (versão `0.9.2`). O que já funciona:
 
 | | Área | O que já existe |
 | -- | -- | -- |
 | 🏠 | **Página inicial** | Landing pública com apresentação, perfis, recursos, acervo e contato |
-| 🔐 | **Login e perfis** | Entrada com Supabase Auth e área própria para aluno, professor e funcionário, com permissões por perfil (RLS em toda tabela) |
-| 🔎 | **Pesquisa de livros** | Busca por título, autor, ISBN ou assunto, com filtros de categoria e disponibilidade, para aluno e professor |
+| 🔐 | **Login e perfis** | Entrada com Supabase Auth e área própria para aluno, professor e funcionário, com permissões por perfil (RLS em toda tabela). "Esqueci minha senha" no login: o link do e-mail abre a tela para escolher a nova senha. Depois de Sair, o botão Voltar do navegador não reexibe a tela |
+| 🔎 | **Pesquisa de livros** | Busca por título, autor, ISBN ou assunto, com filtros de categoria e disponibilidade, para aluno e professor; paginada no próprio banco, com 20 mil livros a listagem fica em p95 ~450 ms com 50 usuários simultâneos |
 | 📚 | **Acervo da bibliotecária** | Listagem com busca e filtros, detalhe do livro, exclusão (com confirmação pelo nome) e inativação de livro com histórico, e importação de livros por planilha `.csv` ou `.xlsx` (com modelo para baixar e erros por linha) |
 | 📝 | **Cadastro e edição de livro** | Formulário com validações, gravação segura no banco, upload de capa e aba de importação por planilha |
 | 🔄 | **Balcão** | Registro de empréstimo em 5 passos, devolução (com multa de R$ 1,00 por dia de atraso) e renovação até 3 vezes, pelas funções do banco, com limite de 3 livros (4 para formandos) e proteção contra clique duplo |
@@ -56,9 +56,9 @@ O projeto está em **MVP em desenvolvimento** (versão `0.9.1`). O que já funci
 | 🔖 | **Fila de espera** | Aluno ou professor reserva o livro sem exemplar livre; a devolução promove o primeiro da fila (2 dias para retirar) e a funcionária acompanha, avisa por WhatsApp ou expira |
 | 📈 | **Relatórios** | Atraso, acervo e reservas pedagógicas, com filtros, paginação e exportação em CSV e PDF |
 | ✉️ | **Aviso por e-mail** | Aviso automático de vencimento, uma vez por situação, com opção de não receber, usando provedor de e-mail gratuito (`docs/email/README.md`) |
-| 🎨 | **Design system** | Tokens, tema e componentes base (botão, campo, tabela, modal) usados pelas telas |
+| 🎨 | **Design system** | Tokens, tema e componentes base (botão, campo, tabela, modal) usados pelas telas; alvo de toque de 44 px no celular e no tablet em toque |
 
-Em andamento (tudo no quadro do Trello): correção do gargalo da busca com 20 mil livros, QA em celular e leitor de tela, e Figma igual ao site.
+Em andamento (tudo no quadro do Trello): QA da equipe sobre os cards em *Awaiting QA*, QA manual em aparelho real (celular, tablet, leitor de tela) e a troca do e-mail do Gmail por um domínio próprio da faculdade (SPF/DKIM), que depende da TI da FAP.
 
 ## Módulos
 
@@ -151,13 +151,12 @@ As automações rodam a cada 10 minutos e precisam dos secrets `TRELLO_KEY` e `T
 | | Documento | Conteúdo |
 | -- | -- | -- |
 | 🚀 | [`docs/onboarding.md`](docs/onboarding.md) | **Configuração de ambiente:** o que instalar e como rodar o projeto no seu notebook |
-| 🧭 | [`docs/architecture/system-design.md`](docs/architecture/system-design.md) | System design: componentes, dados, carga esperada, decisões e plano de crescimento |
 | ✅ | [`docs/qa/roteiro-producao.md`](docs/qa/roteiro-producao.md) | Roteiro de QA em produção, por perfil, com o resultado esperado e como deixar o banco limpo |
-| 🏛️ | [`docs/arquitetura.md`](docs/arquitetura.md) | Onde fica cada coisa no código, regras de dependência, como criar uma feature, regras do Supabase/RLS e as regras de negócio (multas, limite da reserva pedagógica, importação) |
+| 🏛️ | [`docs/arquitetura.md`](docs/arquitetura.md) | **Arquitetura:** onde fica cada coisa no código, regras de dependência, como criar uma feature, Supabase/RLS e regras de negócio; o **system design** (componentes, carga, decisões e plano de crescimento) e a **regra de qualidade** (código limpo e seguro, checklist de todo PR) |
 | 📄 | [`docs/prd.md`](docs/prd.md) | **PRD: documento base do projeto.** É a ideia central, e pode mudar com o tempo; as mudanças ficam registradas no histórico dele |
-| ✅ | [`docs/qualidade-de-software.md`](docs/qualidade-de-software.md) | **Regra de qualidade:** código limpo, fácil de entender e seguro, com o checklist de todo PR |
-| 🗄️ | [`docs/database/`](docs/database) | Modelo de dados, LGPD e backup do banco |
-| 🗂️ | [`docs/README.md`](docs/README.md) | Índice de toda a documentação |
+| 🗄️ | [`docs/database/`](docs/database) | Modelo de dados e LGPD (o backup do banco está em `docs/infra-e-plano-gratuito.md`) |
+| ⚙️ | [`docs/infra-e-plano-gratuito.md`](docs/infra-e-plano-gratuito.md) | Cache, limites do plano gratuito, tarefas agendadas, prova de carga e backup do banco |
+| ✉️ | [`docs/email/`](docs/email) | E-mails do sistema: convite, redefinir senha e aviso de prazo, e a configuração no Supabase |
 
 O desenho das telas é feito no [Figma](https://www.figma.com/design/xOr6nlx1EqLMYmSJLh4sHI/FAP-BOOKS---Gestao-para-Biblioteca?node-id=2292-11299), página **🖥️ UI web**. Cores, fontes, cantos e ícones estão na página **Desing System** do Figma e nos tokens de `src/app/globals.css`.
 

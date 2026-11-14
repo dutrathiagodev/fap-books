@@ -1,7 +1,7 @@
 name: Backup do banco
 
 # Todo dia às 03:00 (horário de Brasília) e também quando alguém clicar em "Run workflow".
-# O banco é exportado, criptografado e guardado como artefato por 30 dias. Veja docs/database/backup.md.
+# O banco é exportado, criptografado e guardado como artefato por 30 dias. Veja docs/infra-e-plano-gratuito.md, seção Backup do banco.
 # O agendamento só roda a partir da branch padrão (main).
 on:
   schedule:
@@ -28,8 +28,8 @@ jobs:
           BACKUP_PASSPHRASE: ${{ secrets.BACKUP_PASSPHRASE }}
         run: |
           faltando=0
-          [ -n "$SUPABASE_DB_URL" ] || { echo "::error::Falta o segredo SUPABASE_DB_URL (veja docs/database/backup.md)"; faltando=1; }
-          [ -n "$BACKUP_PASSPHRASE" ] || { echo "::error::Falta o segredo BACKUP_PASSPHRASE (veja docs/database/backup.md)"; faltando=1; }
+          [ -n "$SUPABASE_DB_URL" ] || { echo "::error::Falta o segredo SUPABASE_DB_URL (veja docs/infra-e-plano-gratuito.md, seção Backup do banco)"; faltando=1; }
+          [ -n "$BACKUP_PASSPHRASE" ] || { echo "::error::Falta o segredo BACKUP_PASSPHRASE (veja docs/infra-e-plano-gratuito.md, seção Backup do banco)"; faltando=1; }
           exit $faltando
 
       - name: Instalar o cliente do PostgreSQL 17

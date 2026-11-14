@@ -1,9 +1,10 @@
 "use client";
 
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ChevronRight, Eye, EyeOff, Mail } from "lucide-react";
-import { safeNextPath } from "@/domain/access/access-rules";
+import { FORGOT_PASSWORD_PATH, safeNextPath } from "@/domain/access/access-rules";
 import { createSupabaseBrowserClient } from "@/lib/supabase/browser-client";
 import { Button } from "./Button";
 import { TextField } from "./TextField";
@@ -68,25 +69,30 @@ export function LoginForm() {
         requiredMark={false}
         leadingIcon={Mail}
       />
-      <TextField
-        id="password"
-        label="Senha"
-        type={showPassword ? "text" : "password"}
-        autoComplete="current-password"
-        required
-        requiredMark={false}
-        trailing={
-          <button
-            type="button"
-            onClick={() => setShowPassword((v) => !v)}
-            aria-label={showPassword ? "Ocultar senha" : "Mostrar senha"}
-            aria-pressed={showPassword}
-            className="flex size-11 cursor-pointer md:size-8 items-center justify-center rounded-md text-ink-muted hover:text-ink focus-visible:outline-2 focus-visible:outline-focus"
-          >
-            {showPassword ? <EyeOff size={18} strokeWidth={1.5} aria-hidden /> : <Eye size={18} strokeWidth={1.5} aria-hidden />}
-          </button>
-        }
-      />
+      <div className="flex flex-col gap-2">
+        <TextField
+          id="password"
+          label="Senha"
+          type={showPassword ? "text" : "password"}
+          autoComplete="current-password"
+          required
+          requiredMark={false}
+          trailing={
+            <button
+              type="button"
+              onClick={() => setShowPassword((v) => !v)}
+              aria-label={showPassword ? "Ocultar senha" : "Mostrar senha"}
+              aria-pressed={showPassword}
+              className="flex size-11 cursor-pointer mouse:size-8 items-center justify-center rounded-md text-ink-muted hover:text-ink focus-visible:outline-2 focus-visible:outline-focus"
+            >
+              {showPassword ? <EyeOff size={18} strokeWidth={1.5} aria-hidden /> : <Eye size={18} strokeWidth={1.5} aria-hidden />}
+            </button>
+          }
+        />
+        <Link href={FORGOT_PASSWORD_PATH} className="self-end text-sm font-medium text-link underline">
+          Esqueci minha senha
+        </Link>
+      </div>
       <Button type="submit" text={loading ? "Entrando..." : "Entrar no sistema"} icon={loading ? undefined : ChevronRight} disabled={loading || !hydrated} />
       <p role="alert" className="min-h-5 text-sm text-danger">
         {message}

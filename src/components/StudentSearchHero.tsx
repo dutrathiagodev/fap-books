@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { BookOpen, Search } from "lucide-react";
+import { Search } from "lucide-react";
 import type { BookAvailabilityFilter, BookSearchItem } from "@/types/book";
 import type { BookSort } from "@/domain/books/book-rules";
 import { BookCover } from "./BookCover";
@@ -72,7 +72,7 @@ export function StudentSearchHero({ basePath, query, category, availability, sor
             url={featured.coverUrl}
             alt={`Capa de ${featured.title}`}
             className="h-72 w-full rounded-md object-cover shadow-md transition-transform group-hover:-translate-y-1"
-            fallback={<BookOpen aria-hidden size={56} className="text-brand" />}
+            fallbackIconSize={56}
           />
           <span>
             <span className="block font-heading text-base font-bold leading-snug">{featured.title}</span>

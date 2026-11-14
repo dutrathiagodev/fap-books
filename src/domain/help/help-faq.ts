@@ -109,7 +109,7 @@ export const FAQ: FaqEntry[] = [
     suggestion: "Esqueci a senha / não recebi o convite",
     keywords: ["senha", "esqueci", "entrar", "login", "convite", "acesso", "acessar", "cadastro", "cadastrar", "conta"],
     answer: () =>
-      "O acesso é feito por convite enviado ao seu e-mail: você define a senha pelo link. Se esqueceu a senha ou o convite não chegou (olhe também o spam), fale com a biblioteca para receber um novo.",
+      "O primeiro acesso é feito pelo convite enviado ao seu e-mail: você define a senha pelo link. Se esqueceu a senha, use “Esqueci minha senha” na tela de entrada: você recebe um link por e-mail para criar uma nova. Se o e-mail não chegar (olhe também o spam) ou o convite não chegou, fale com a biblioteca para receber um novo.",
   },
   {
     id: "privacidade",

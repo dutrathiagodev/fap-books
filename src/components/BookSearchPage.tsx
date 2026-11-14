@@ -39,12 +39,14 @@ export function BookSearchPage({ role, basePath, searchParams, editorial = false
         const filters = parseBookFilters(params);
         const availability = parseAvailabilityFilter(params);
         const sort = parseBookSort(params);
-        const { books, total, page, pageSize, categories } = await searchBooks(filters, availability, sort);
+        // Destaque e novidades só no visual editorial. As novidades somem quando há busca, filtro ou outra página.
+        // As duas leituras não dependem uma da outra: vão juntas.
+        const [{ books, total, page, pageSize, categories }, arrivals] = await Promise.all([
+          searchBooks(filters, availability, sort),
+          editorial ? listNewArrivals(5) : [],
+        ]);
         const pages = Math.max(1, Math.ceil(total / pageSize));
         const first = (page - 1) * pageSize + 1;
-
-        // Destaque e novidades só no visual editorial. As novidades somem quando há busca, filtro ou outra página.
-        const arrivals = editorial ? await listNewArrivals(5) : [];
         const featured = arrivals[0] ?? null;
         const isStart = !filters.query && !filters.category && availability === "all" && page === 1;
 
@@ -89,6 +91,8 @@ export function BookSearchPage({ role, basePath, searchParams, editorial = false
               />
             ) : (
               <>
+                {/* Sem o título "Todo o acervo" (visual não editorial), os livros seriam h3 logo depois do h1: o h2 só para leitor de tela mantém a ordem dos títulos. */}
+                {!editorial && <h2 className="sr-only">Resultados da busca</h2>}
                 <ul
                   className={
                     editorial

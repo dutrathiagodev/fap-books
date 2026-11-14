@@ -33,6 +33,7 @@ import type { Profile, UserRole } from "@/types/profile";
 import { noticePreferencesPath } from "@/domain/notices/loan-notice";
 import { HelpAssistant } from "./HelpAssistant";
 import { Logo } from "./Logo";
+import { ReloadOnBackForward } from "./ReloadOnBackForward";
 
 interface AppShellProps {
   profile: Profile;
@@ -167,7 +168,7 @@ function SidebarUser({ profile, wide }: { profile: Profile; wide: boolean }) {
           type="submit"
           aria-label="Sair"
           title="Sair"
-          className="flex size-11 cursor-pointer items-center justify-center rounded-md text-white hover:bg-navy-800 md:size-9 focus-visible:outline-2 focus-visible:outline-white"
+          className="flex size-11 cursor-pointer items-center justify-center rounded-md text-white hover:bg-navy-800 mouse:size-9 focus-visible:outline-2 focus-visible:outline-white"
         >
           <LogOut size={18} aria-hidden />
         </button>
@@ -186,28 +187,37 @@ function SidebarToggle({ collapsed, onClick }: { collapsed: boolean; onClick: ()
       title={collapsed ? "Expandir menu" : "Recolher menu"}
       aria-expanded={!collapsed}
       onClick={onClick}
-      className="flex size-9 shrink-0 cursor-pointer items-center justify-center rounded-md border border-navy-200/50 text-white hover:bg-navy-800 focus-visible:outline-2 focus-visible:outline-white"
+      className="flex size-11 shrink-0 cursor-pointer items-center justify-center rounded-md mouse:size-9 border border-navy-200/50 text-white hover:bg-navy-800 focus-visible:outline-2 focus-visible:outline-white"
     >
       {collapsed ? <ChevronsRight size={18} aria-hidden /> : <ChevronsLeft size={18} aria-hidden />}
     </button>
   );
 }
 
-// Busca no topo da funcionária (Figma): leva à listagem do acervo já filtrada. Só no computador; no celular, a busca fica na própria tela do acervo.
+// Busca no topo da funcionária (Figma, card 0270): pílula centralizada no estilo do YouTube, com o campo à esquerda e o botão de lupa separado na ponta direita. Leva à listagem do acervo já filtrada; Enter ou o botão enviam o mesmo formulário GET. Só no computador; no celular, a busca fica na própria tela do acervo.
+// O anel de foco fica na pílula inteira (campo focado) ou dentro do botão (botão focado), sempre visível e sem cortar nos cantos arredondados.
 function TopSearch() {
   return (
-    <form action={ACERVO_PATH} role="search" className="hidden max-w-xl flex-1 md:block">
-      <label className="relative block">
-        <span className="sr-only">Buscar livros por título, autor ou ISBN</span>
-        <Search size={16} aria-hidden className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-ink-muted" />
-        <input
-          type="search"
-          name="q"
-          maxLength={100}
-          placeholder="Buscar livros por título, autor ou ISBN"
-          className="h-10 w-full rounded-md border border-line bg-subtle pl-9 pr-3 text-sm text-ink placeholder:text-ink-muted focus-visible:outline-2 focus-visible:outline-focus"
-        />
-      </label>
+    <form action={ACERVO_PATH} role="search" className="mx-auto hidden h-12 w-full max-w-[640px] flex-1 md:flex">
+      <div className="flex h-full w-full overflow-hidden rounded-full border border-line-strong bg-surface has-[input:focus-visible]:outline-2 has-[input:focus-visible]:outline-focus">
+        <label className="min-w-0 flex-1">
+          <span className="sr-only">Buscar livros por título, autor ou ISBN</span>
+          <input
+            type="search"
+            name="q"
+            maxLength={100}
+            placeholder="Buscar livros por título, autor ou ISBN"
+            className="h-full w-full bg-transparent pl-5 pr-3 text-sm text-ink outline-none placeholder:text-ink-muted"
+          />
+        </label>
+        <button
+          type="submit"
+          aria-label="Buscar"
+          className="flex h-full w-16 shrink-0 cursor-pointer items-center justify-center border-l border-line-strong bg-subtle text-ink hover:bg-selected active:bg-line focus-visible:-outline-offset-2 focus-visible:outline-2 focus-visible:outline-focus"
+        >
+          <Search size={20} aria-hidden />
+        </button>
+      </div>
     </form>
   );
 }
@@ -281,7 +291,7 @@ function UserMenu({ profile }: { profile: Profile }) {
             href={noticePreferencesPath(profile.role)}
             role="menuitem"
             onClick={() => setOpen(false)}
-            className="flex w-full cursor-pointer items-center gap-3 rounded-md px-3 py-2 text-sm hover:bg-subtle focus-visible:outline-2 focus-visible:outline-focus"
+            className="flex min-h-11 w-full cursor-pointer items-center gap-3 rounded-md px-3 py-2 text-sm mouse:min-h-0 hover:bg-subtle focus-visible:outline-2 focus-visible:outline-focus"
           >
             <Mail size={16} aria-hidden />
             Avisos por e-mail
@@ -290,7 +300,7 @@ function UserMenu({ profile }: { profile: Profile }) {
             <button
               type="submit"
               role="menuitem"
-              className="flex w-full cursor-pointer items-center gap-3 rounded-md px-3 py-2 text-sm hover:bg-subtle focus-visible:outline-2 focus-visible:outline-focus"
+              className="flex min-h-11 w-full cursor-pointer items-center gap-3 rounded-md px-3 py-2 text-sm mouse:min-h-0 hover:bg-subtle focus-visible:outline-2 focus-visible:outline-focus"
             >
               <LogOut size={16} aria-hidden />
               Sair
@@ -319,7 +329,7 @@ function TopNav({ items, role, pathname }: { items: NavItem[]; role: UserRole; p
               {label}
             </>
           );
-          const base = "flex h-10 items-center gap-2 rounded-md px-3 text-sm font-medium outline-offset-2 focus-visible:outline-2 focus-visible:outline-focus";
+          const base = "flex h-11 mouse:h-10 items-center gap-2 rounded-md px-3 text-sm font-medium outline-offset-2 focus-visible:outline-2 focus-visible:outline-focus";
           if (!item.href) {
             return (
               <span key={item.key} aria-disabled="true" title="Em breve" className={`${base} cursor-not-allowed text-ink-muted opacity-60`}>
@@ -457,6 +467,7 @@ export function AppShell({ profile, noticeCount = 0, children }: AppShellProps) 
           <div className="mx-auto w-full max-w-[1280px]">{children}</div>
         </main>
       </div>
+      <ReloadOnBackForward />
       {/* Aluno e professor tiram dúvidas por aqui; a bibliotecária opera o balcão e não precisa do assistente. */}
       {profile.role !== "librarian" && <HelpAssistant />}
     </div>

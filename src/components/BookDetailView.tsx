@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
-import { ArrowLeft, BookOpen } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { catalogRows, formatBrazilDate } from "@/domain/books/book-rules";
 import { plural } from "@/domain/format";
 import type { BookDetail } from "@/types/book";
@@ -24,7 +24,7 @@ export function BookDetailView({
 }) {
   return (
     <div className="flex flex-col gap-8">
-      <Link href={backHref} className="inline-flex items-center gap-2 text-sm text-link hover:underline">
+      <Link href={backHref} className="inline-flex min-h-11 items-center gap-2 text-sm text-link hover:underline mouse:min-h-0">
         <ArrowLeft size={16} aria-hidden />
         Voltar para o acervo
       </Link>
@@ -36,7 +36,7 @@ export function BookDetailView({
             url={book.coverUrl}
             alt={`Capa de ${book.title}`}
             className="h-72 w-auto rounded-md shadow-md md:h-80"
-            fallback={<BookOpen aria-hidden size={56} className="text-brand" />}
+            fallbackIconSize={56}
           />
         </div>
 

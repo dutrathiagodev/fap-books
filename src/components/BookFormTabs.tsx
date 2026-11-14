@@ -18,7 +18,7 @@ export function BookFormTabs({ active }: { active: BookFormTab }) {
           key={key}
           href={href}
           aria-current={key === active ? "page" : undefined}
-          className={`-mb-px border-b-2 pb-3 text-sm font-medium focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus ${key === active ? "border-brand text-brand" : "border-transparent text-ink-muted hover:text-ink"}`}
+          className={`-mb-px inline-flex min-h-11 items-end border-b-2 pb-3 text-sm font-medium mouse:min-h-0 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus ${key === active ? "border-brand text-brand" : "border-transparent text-ink-muted hover:text-ink"}`}
         >
           {label}
         </Link>
