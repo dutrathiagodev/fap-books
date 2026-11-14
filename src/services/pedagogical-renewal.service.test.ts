@@ -8,7 +8,7 @@ vi.mock("next/server", () => ({ connection: async () => {} }));
 vi.mock("@/lib/supabase/server-client", () => ({ createSupabaseServerClient: async () => ({ rpc }) }));
 vi.mock("./audit.service", () => ({ recordAudit: vi.fn() }));
 
-const { requestRenewal, getAvailability } = await import("./pedagogical-reservations.service");
+const { requestRenewal, getAvailability, RESERVATION_COLUMNS_FOR_TEST } = await import("./pedagogical-reservations.service");
 
 const RES = "b0000000-0000-4000-8000-000000000001";
 const KEY = "c0000000-0000-4000-8000-000000000002";
@@ -54,5 +54,15 @@ describe("getAvailability de uma renovação", () => {
     const view = { id: "r2", renewal: true, books: [{ id: "b1", title: "Livro", code: "L-1" }] };
     await expect(getAvailability(view as never)).resolves.toEqual([]);
     expect(rpc).not.toHaveBeenCalled();
+  });
+});
+
+// A tabela aponta para ela mesma (renewal_of): o embed automático do PostgREST falha (PGRST200 com o nome da constraint) ou
+// devolve o lado errado (com o nome da coluna) e a renovação ficava sem livro (achado no QA de 13/11). Os livros da reserva
+// original vêm de uma segunda consulta; o select principal não pode voltar a embutir a si mesmo.
+describe("select da reserva pedagógica", () => {
+  it("não embute a própria tabela para buscar a reserva original", () => {
+    expect(RESERVATION_COLUMNS_FOR_TEST).not.toContain("original:");
+    expect(RESERVATION_COLUMNS_FOR_TEST).not.toContain("pedagogical_reservations!");
   });
 });
