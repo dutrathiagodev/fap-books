@@ -194,21 +194,30 @@ function SidebarToggle({ collapsed, onClick }: { collapsed: boolean; onClick: ()
   );
 }
 
-// Busca no topo da funcionária (Figma): leva à listagem do acervo já filtrada. Só no computador; no celular, a busca fica na própria tela do acervo.
+// Busca no topo da funcionária (Figma, card 0270): pílula centralizada no estilo do YouTube, com o campo à esquerda e o botão de lupa separado na ponta direita. Leva à listagem do acervo já filtrada; Enter ou o botão enviam o mesmo formulário GET. Só no computador; no celular, a busca fica na própria tela do acervo.
+// O anel de foco fica na pílula inteira (campo focado) ou dentro do botão (botão focado), sempre visível e sem cortar nos cantos arredondados.
 function TopSearch() {
   return (
-    <form action={ACERVO_PATH} role="search" className="hidden max-w-xl flex-1 md:block">
-      <label className="relative block">
-        <span className="sr-only">Buscar livros por título, autor ou ISBN</span>
-        <Search size={16} aria-hidden className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-ink-muted" />
-        <input
-          type="search"
-          name="q"
-          maxLength={100}
-          placeholder="Buscar livros por título, autor ou ISBN"
-          className="h-10 w-full rounded-md border border-line bg-subtle pl-9 pr-3 text-sm text-ink placeholder:text-ink-muted focus-visible:outline-2 focus-visible:outline-focus"
-        />
-      </label>
+    <form action={ACERVO_PATH} role="search" className="mx-auto hidden h-12 w-full max-w-[640px] flex-1 md:flex">
+      <div className="flex h-full w-full overflow-hidden rounded-full border border-line-strong bg-surface has-[input:focus-visible]:outline-2 has-[input:focus-visible]:outline-focus">
+        <label className="min-w-0 flex-1">
+          <span className="sr-only">Buscar livros por título, autor ou ISBN</span>
+          <input
+            type="search"
+            name="q"
+            maxLength={100}
+            placeholder="Buscar livros por título, autor ou ISBN"
+            className="h-full w-full bg-transparent pl-5 pr-3 text-sm text-ink outline-none placeholder:text-ink-muted"
+          />
+        </label>
+        <button
+          type="submit"
+          aria-label="Buscar"
+          className="flex h-full w-16 shrink-0 cursor-pointer items-center justify-center border-l border-line-strong bg-subtle text-ink hover:bg-selected active:bg-line focus-visible:-outline-offset-2 focus-visible:outline-2 focus-visible:outline-focus"
+        >
+          <Search size={20} aria-hidden />
+        </button>
+      </div>
     </form>
   );
 }
