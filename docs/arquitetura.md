@@ -57,6 +57,7 @@ Regras do código das telas:
 
 - O login é o Supabase Auth. Existem 3 perfis em `profiles.role`: `student`, `teacher` e `librarian`.
 - Duas barreiras no site: o `proxy.ts` leva quem não entrou ao `/login` e deixa cada perfil na própria área; cada página chama `requireRole` de novo.
+  Para poupar uma consulta por pedido, o proxy guarda o papel por 10 s na memória (`src/lib/role-cache.ts`) e só o usa para rotear; `requireRole` nunca usa essa guarda, então conta desativada ou com papel trocado é barrada pela página na hora (FAP-0267).
 - A terceira barreira é o banco (RLS, abaixo). Permissão nunca vale só na tela.
 - Só variáveis `NEXT_PUBLIC_*` vão ao navegador. A chave `service_role` ignora o RLS: só em código de servidor, nunca no Git.
 

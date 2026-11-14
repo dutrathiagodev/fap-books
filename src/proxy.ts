@@ -4,6 +4,7 @@ import { hasSupabaseEnv } from "@/lib/supabase/env";
 import { decideRoute } from "@/domain/access/access-rules";
 import { getClientIp, tooManyRequestsMessage } from "@/lib/rate-limit";
 import { searchLimiter } from "@/lib/request-limits";
+import { proxyRoleCache } from "@/lib/role-cache";
 import type { UserRole } from "@/types/profile";
 
 // Proxy (no Next.js 16 é o antigo "middleware"): roda antes de cada página.
@@ -56,15 +57,20 @@ export async function proxy(request: NextRequest) {
   const userId = claims?.claims.sub;
 
   // Sem perfil ativo, a pessoa é tratada como não logada.
+  // O papel pode vir da guarda curta (src/lib/role-cache.ts): serve só para rotear; a página confere de novo.
   let role: UserRole | null = null;
   if (userId) {
-    const { data: profile } = await supabase
-      .from("profiles")
-      .select("role")
-      .eq("id", userId)
-      .eq("active", true)
-      .maybeSingle();
-    role = (profile?.role as UserRole | undefined) ?? null;
+    role = proxyRoleCache.get(userId);
+    if (!role) {
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("role")
+        .eq("id", userId)
+        .eq("active", true)
+        .maybeSingle();
+      role = (profile?.role as UserRole | undefined) ?? null;
+      if (role) proxyRoleCache.set(userId, role);
+    }
   }
 
   const decision = decideRoute(request.nextUrl.pathname, role, request.nextUrl.search);

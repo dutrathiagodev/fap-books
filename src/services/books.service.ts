@@ -132,11 +132,21 @@ async function loadShelf(supabase: ServerClient, bookIds: string[]) {
   return supabase.rpc("book_availability_for_books", { p_book_ids: bookIds });
 }
 
+// Linha da função new_arrivals (migration 20261114100000): o livro e a disponibilidade dele numa chamada só.
+type NewArrivalRow = SearchBookRow & Omit<ShelfRow, "book_id">;
+
 // Livros ativos mais recentes (Figma, card 0108: destaque e "Novidades no acervo" da pesquisa do aluno).
 // Só entram livros com capa, que é o que o desenho mostra; sem capa o espaço ficaria vazio.
+// Uma ida ao banco (função new_arrivals) em vez de duas: cada ida custa CPU do Node [FAP-0267]. Se a função ainda não
+// existe no banco (migration não aplicada), cai para o caminho antigo, que devolve o mesmo resultado.
 export async function listNewArrivals(limit: number): Promise<BookSearchItem[]> {
   await connection();
   const supabase = await createSupabaseServerClient();
+
+  const arrivals = await supabase.rpc("new_arrivals", { p_limit: limit });
+  if (!arrivals.error) {
+    return (arrivals.data as NewArrivalRow[]).map((row) => toSearchItem(row, shelfByBook([{ ...row, book_id: row.id }])));
+  }
 
   const books = await supabase
     .from("books")

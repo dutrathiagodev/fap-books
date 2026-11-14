@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
-import { ArrowLeft, BookOpen } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { catalogRows, formatBrazilDate } from "@/domain/books/book-rules";
 import { plural } from "@/domain/format";
 import type { BookDetail } from "@/types/book";
@@ -36,7 +36,7 @@ export function BookDetailView({
             url={book.coverUrl}
             alt={`Capa de ${book.title}`}
             className="h-72 w-auto rounded-md shadow-md md:h-80"
-            fallback={<BookOpen aria-hidden size={56} className="text-brand" />}
+            fallbackIconSize={56}
           />
         </div>
 

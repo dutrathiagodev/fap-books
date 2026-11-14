@@ -125,7 +125,7 @@ A decisão de custo é do dono do projeto.
 
 ## 7. O que ainda não está provado
 
-- **Prova de carga com os números oficiais: rodada em 13/11/2026; a listagem melhorou 3x com o card 0260 mas ainda NÃO bate p95 < 500 ms** (o gargalo agora é o processo Node, não o banco). Detalhes abaixo.
+- **Prova de carga com os números oficiais: a listagem do aluno bate a meta (p95 < 500 ms, zero erro, 50 usuários) com 20 mil livros** depois dos cards 0260 (banco) e 0267 (custo do Node). Medido em modo de produção, **um único processo Node** em máquina compartilhada, sem a escala horizontal da Vercel; nunca contra produção. Detalhes abaixo.
 - **Limite global por IP:** depende de o dono aplicar a regra do WAF.
 - **Avisos de vencimento (RF-24) por canal externo:** o e-mail está feito (tarefa agendada, tabela `loan_email_notices`, provedor trocável; veja `docs/email/README.md`). O WhatsApp depende de o dono definir o canal. O painel já mostra os avisos de prazo.
 - **Lighthouse no CI:** evolução opcional; o orçamento de JavaScript já roda.
@@ -179,3 +179,29 @@ Dos 3 ms de `search_books` p1, cerca de 2 a 3 ms são a contagem exata (`total_c
 | `/` | 897 pedidos/s, p95 74 ms | 835 pedidos/s, p95 74 a 80 ms | Bateu |
 
 **O que falta (próximo gargalo):** a listagem passou de 2 s para ~0,65 s e dobrou a vazão, mas não chegou a 500 ms. O Postgres está a ~0,8 CPU para 100 pedidos/s; o **processo Node chega a ~145% de CPU** (cerca de 15 ms de CPU por pedido, página de ~100 KB com 12 cards, proxy e perfil consultados a cada pedido). Com 50 usuários sem pausa e um só processo, p95 < 500 ms exigiria ~110 pedidos/s. Esse limite é do ambiente de teste (um processo; a Vercel escala as execuções) e do custo de renderização por pedido. Está registrado no card 0265 para medir o custo de renderização (perfil do Node) e, se preciso, reduzir consultas por pedido. A prova ainda não foi feita em ambiente de produção real e nunca roda contra produção.
+
+### Depois do card 0267: custo do Node por pedido (14/11/2026)
+
+**Medido primeiro.** `node --cpu-prof` no app em produção (`next start`) com a pilha local e `scripts/prova-de-carga.mjs` na listagem: o processo Node saturava (~110% de CPU, uma thread) e o Postgres ficava em ~60% de um núcleo; o banco **não** era mais o limite. Por pedido: ~10 ms de CPU, dos quais ~35% no runtime do Next/React (a maior parte serializando e relendo o payload RSC, que a página repete dentro do HTML), ~7% em coleta de lixo, ~6% no cliente HTTP (`undici`) das idas ao banco e o resto na própria página. Sondas de rotas mínimas na mesma máquina (50 usuários) mostraram onde a listagem gastava: proxy + Next sozinhos 325 pedidos/s (~3 ms), com o perfil na página 260/s, com o `AppShell` 230/s e a página da listagem 100/s: **o conteúdo da página (consultas e payload), não o casco, era o grosso do custo.**
+
+**Mudanças (mesmas listas, ordens, filtros e paginação; nada de dado de usuário em cache compartilhado):**
+
+| Mudança | O que reduz |
+| -- | -- |
+| `new_arrivals()` (migration `20261114100000`): novidades e a disponibilidade delas numa chamada, sem cache (a situação segue sendo a de agora). Sem a função no banco, o app usa o caminho antigo | 2 idas ao banco por pedido viram 1 |
+| Pesquisa e novidades lidas em paralelo (`Promise.all`) | Latência (as duas esperas se sobrepõem) |
+| `createSupabaseServerClient` com `cache()` do React: um cliente por requisição, em vez de um por consulta | Montagem repetida do cliente e leitura dos cookies; vale só dentro de uma requisição, nada é compartilhado entre pessoas |
+| Papel do usuário no `proxy.ts` guardado por 10 s na memória (`src/lib/role-cache.ts`, no máximo 1.000 entradas) | 1 ida ao banco por pedido. Serve só para rotear: toda página confere o perfil de novo sem cache (`requireRole`), então conta desativada ou com papel trocado é barrada pela página na hora; o proxy só pode errar o destino de um redirecionamento por até 10 s |
+| `BookCover` com `fallbackIconSize`: o ícone de livro sem capa deixa de ir como elemento em cada capa | ~600 bytes de payload RSC por capa (~10 KB por página) |
+
+**Resultado (listagem `/aluno/livros`, 20.020 livros, 7 com capa, 50 usuários simultâneos, 20 s sem pausa, um processo Node, máquina compartilhada com carga média de 2 a 4):**
+
+| | Pedidos/s | Erros | p50 | p95 | p99 | Meta |
+| -- | -- | -- | -- | -- | -- | -- |
+| Antes (develop, após o 0260), 3 rodadas | 95 a 102 | 0 | 493 a 516 ms | **558 a 633 ms** | 585 a 914 ms | Não bateu |
+| Depois, rodada logo após subir o servidor (JIT frio) | 115 | 0 | 426 ms | 516 ms | 821 ms | Quase |
+| Depois, 4 rodadas seguintes | 125 a 128 | 0 | 392 a 405 ms | **451 a 454 ms** | 481 a 495 ms | **Bateu** |
+
+A sequência medida, acumulando: só o cliente por requisição 96 a 105 pedidos/s; mais `new_arrivals`, papel no proxy e `Promise.all` 110 a 120/s; mais o ícone da capa 115 a 123/s e p95 de 467 a 525 ms. **Honestidade sobre o resultado:** a primeira rodada depois de subir o processo fica perto do limite (516 ms) porque o V8 ainda está otimizando; a meta vale em regime. A vazão de 125 pedidos/s é para 50 pessoas **sem pausa**; com cliques reais (segundos entre pedidos) a exigência é de ~10 pedidos/s, e a Vercel escala as execuções, então há folga grande em produção (ainda não provada lá).
+
+**O que ainda custaria CPU (e não foi feito, por mudar comportamento ou precisar de decisão):** o payload RSC repete o HTML da página (~50 KB cada, em grande parte classes Tailwind e ~60 `Link` do Next); reduzir isso pede simplificar a marcação ou tirar `Link` dos cartões (perde a navegação sem recarregar). Cache compartilhado das novidades exigiria aceitar situação defasada ou um acesso anônimo novo no banco. Dois `getClaims` por pedido (proxy e página) verificam o JWT duas vezes (~0,4 ms cada); compartilhar o resultado entre proxy e página enfraqueceria a segunda barreira.

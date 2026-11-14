@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { BookOpen } from "lucide-react";
 import type { BookSearchItem } from "@/types/book";
 import { BookCover } from "./BookCover";
 import { SituationLine } from "./BookCatalogCard";
@@ -23,7 +22,7 @@ export function NewArrivals({ books, basePath }: { books: BookSearchItem[]; base
                 url={book.coverUrl}
                 alt={`Capa de ${book.title}`}
                 className="h-24 w-16 shrink-0 rounded-md object-cover shadow-md"
-                fallback={<BookOpen aria-hidden size={24} className="text-brand" />}
+                fallbackIconSize={24}
               />
               <span className="flex min-w-0 flex-col gap-1">
                 <span className="font-heading text-sm font-bold leading-snug">{book.title}</span>
