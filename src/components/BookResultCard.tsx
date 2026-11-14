@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { BookOpen } from "lucide-react";
 import { formatBrazilDate } from "@/domain/books/book-rules";
 import { plural } from "@/domain/format";
 import type { BookSearchItem } from "@/types/book";
@@ -16,7 +15,7 @@ export function BookResultCard({ book, basePath, priority = false }: { book: Boo
           priority={priority}
           url={book.coverUrl}
           className="h-36 w-auto rounded-md shadow-md"
-          fallback={<BookOpen aria-hidden size={40} className="text-brand" />}
+          fallbackIconSize={40}
         />
         {book.category && (
           <span className="absolute left-2 top-2 rounded-full bg-surface px-2.5 py-0.5 text-xs font-medium text-brand">
