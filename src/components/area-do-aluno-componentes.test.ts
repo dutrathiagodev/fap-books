@@ -71,6 +71,22 @@ describe("reservas e multas", () => {
     expect(html).toContain("Na fila");
   });
 
+  it("reserva na fila ou pronta tem o botão Cancelar reserva; encerrada não", () => {
+    const row = (id: string, status: "waiting" | "ready" | "fulfilled" | "cancelled") =>
+      toMyReservationView({ id, status, created_at: "2026-11-09T15:00:00Z", books: { title: `Livro ${id}`, code: "T-1" } });
+    const onCancel = vi.fn();
+    const html = render(createElement(StudentReservationList, { reservations: [row("a", "waiting"), row("b", "ready"), row("c", "fulfilled"), row("d", "cancelled")], onCancel }));
+    expect(html.match(/>Cancelar reserva</g)).toHaveLength(2);
+    expect(html).toContain('aria-label="Cancelar reserva de Livro a"');
+    expect(html).not.toContain("Cancelar reserva de Livro c");
+    expect(html).not.toContain("Cancelar reserva de Livro d");
+  });
+
+  it("sem a ação de cancelar, a lista não mostra o botão", () => {
+    const reservation = toMyReservationView({ id: "r1", status: "waiting", created_at: "2026-11-09T15:00:00Z", books: { title: "Clean Code", code: "T-1" } });
+    expect(render(createElement(StudentReservationList, { reservations: [reservation] }))).not.toContain("Cancelar reserva");
+  });
+
   it("multa em aberto traz o aviso de pagamento presencial com o contato da biblioteca", () => {
     const fine = toMyFineView({ id: "f1", days_late: 4, amount_cents: 400, paid_at: null, loans: { due_at: "2026-11-06T15:00:00Z", books: { title: "Clean Code", code: "T-1" } } });
     const html = render(createElement(StudentFineList, { fines: [fine] }));
