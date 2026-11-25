@@ -51,7 +51,7 @@ export function LandingHero() {
           />
         </div>
 
-        <div aria-hidden className="absolute inset-y-0 left-8 right-0 hidden lg:block">
+        <div aria-hidden className="pointer-events-none absolute inset-y-0 left-8 right-0 hidden lg:block">
           <span className="absolute left-[989px] top-[299px] size-[622px] rounded-full bg-navy-700" />
           <span className="absolute left-[942px] top-[506px] h-px w-[385px] origin-left -rotate-[44deg] bg-link/70" />
           <Image
