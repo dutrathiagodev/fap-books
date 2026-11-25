@@ -9,6 +9,7 @@ export type DefinePasswordState =
   | { status: "inactive" } // convite válido, mas o perfil está inativo
   | { status: "rate_limited"; message: string }
   | { status: "failed" } // erro nosso ou do Supabase; a pessoa pode tentar de novo
+  | { status: "password_rejected"; reason: "same_password" | "weak_password" } // o link já valeu, mas o Supabase recusou a senha: a sessão fica aberta e a pessoa escolhe outra
   | { status: "failed_after_use" }; // o link foi gasto, mas a senha não foi salva: precisa de novo convite
 
 export const INITIAL_DEFINE_PASSWORD_STATE: DefinePasswordState = { status: "idle" };
