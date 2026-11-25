@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ChevronRight, Eye, EyeOff, Mail } from "lucide-react";
+import { ChevronRight, Eye, EyeOff, LockKeyhole, Mail } from "lucide-react";
 import { FORGOT_PASSWORD_PATH, safeNextPath } from "@/domain/access/access-rules";
 import { createSupabaseBrowserClient } from "@/lib/supabase/browser-client";
 import { Button } from "./Button";
@@ -75,8 +75,10 @@ export function LoginForm() {
           label="Senha"
           type={showPassword ? "text" : "password"}
           autoComplete="current-password"
+          placeholder="Digite sua senha"
           required
           requiredMark={false}
+          leadingIcon={LockKeyhole}
           trailing={
             <button
               type="button"
