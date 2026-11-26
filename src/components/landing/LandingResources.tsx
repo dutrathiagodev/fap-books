@@ -5,6 +5,14 @@ import { Search } from "lucide-react";
 import { RESOURCE_TABS } from "@/content/landing";
 import { BUTTON_PRIMARY, CONTAINER } from "./styles";
 
+// Miniatura do acervo mostrada no quadro (Figma 0195/0198: quatro capas com título, autor e situação).
+const MOCK_BOOKS = [
+  { title: "Dom Casmurro", author: "Machado de Assis", status: "Disponível", cover: "bg-gradient-to-b from-yellow-400 to-green-700", statusColor: "text-success-700 dark:text-green-300" },
+  { title: "Introdução à Teologia", author: "Wayne Grudem", status: "Emprestado", cover: "bg-gradient-to-b from-navy-700 to-navy-950", statusColor: "text-info-700 dark:text-sky-300" },
+  { title: "Metodologia Científica", author: "Marconi e Lakatos", status: "Reservado", cover: "bg-gradient-to-b from-sky-300 to-sky-600", statusColor: "text-warning-700 dark:text-amber-300" },
+  { title: "O Conflito dos Séculos", author: "Ellen G. White", status: "Disponível", cover: "bg-gradient-to-b from-green-800 to-green-950", statusColor: "text-success-700 dark:text-green-300" },
+];
+
 // Seção "Recursos" (Figma, card 0195: faixa #eff4fa de 640 px, abas de 56 px, quadro de 700×330 e cartão de 720×150).
 // Client component só por causa das abas.
 export function LandingResources() {
@@ -31,7 +39,7 @@ export function LandingResources() {
             </a>
           </div>
 
-          <div className="flex max-w-[720px] flex-col lg:pt-[70px]">
+          <div className="flex min-w-0 max-w-[720px] flex-col lg:pt-[70px]">
             <div role="tablist" aria-label="Recursos do FAP Books" className="flex flex-wrap gap-[14px]">
               {RESOURCE_TABS.map((t) => (
                 <button
@@ -52,14 +60,31 @@ export function LandingResources() {
             </div>
 
             <div aria-hidden className="ml-5 mt-[34px] max-w-[700px] rounded-xl border border-link bg-surface p-5">
-              <div className="flex h-[290px] flex-col gap-3 rounded-lg bg-selected p-4">
+              <div className="flex h-[290px] flex-col gap-3 overflow-hidden rounded-lg bg-selected p-4">
                 <span className="flex items-center gap-2 rounded-md bg-surface px-3 py-2 text-sm text-ink-muted">
                   <Search size={14} strokeWidth={1.5} />
                   Todo o acervo
                 </span>
+                <span className="flex gap-2 overflow-hidden">
+                  {["Todas", "Literatura", "Teologia", "Metodologia", "Computação"].map((chip, i) => (
+                    <span
+                      key={chip}
+                      className={`shrink-0 whitespace-nowrap rounded-full border px-2.5 py-0.5 text-[10px] font-medium ${
+                        i === 0 ? "border-brand bg-brand text-on-brand" : "border-line text-ink-muted"
+                      }`}
+                    >
+                      {chip}
+                    </span>
+                  ))}
+                </span>
                 <span className="grid flex-1 grid-cols-4 gap-3">
-                  {[0, 1, 2, 3].map((i) => (
-                    <span key={i} className="rounded-sm bg-navy-200" />
+                  {MOCK_BOOKS.map((book) => (
+                    <span key={book.title} className="flex min-h-0 flex-col gap-1.5">
+                      <span className={`min-h-0 flex-1 rounded-sm ${book.cover}`} />
+                      <span className="truncate text-[10px] font-bold leading-3 text-ink">{book.title}</span>
+                      <span className="truncate text-[9px] leading-3 text-ink-muted">{book.author}</span>
+                      <span className={`text-[9px] font-medium leading-3 ${book.statusColor}`}>{book.status}</span>
+                    </span>
                   ))}
                 </span>
               </div>
