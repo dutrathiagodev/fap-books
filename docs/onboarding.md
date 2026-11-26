@@ -112,7 +112,7 @@ Os três devem terminar sem erro. É o mesmo que o CI faz em todo Pull Request.
 | Tarefas | Trello: quadro **FAP Books** (cards `[FAP - 0001]`) |
 | Telas | Figma: **FAP BOOKS - Gestão para Biblioteca** |
 | Banco e login | Supabase: projeto `fap-books` (São Paulo) |
-| Documentos | pasta `docs/` (índice em [README.md](README.md)) |
+| Documentos | pasta `docs/` (índice em [README.md](../README.md)) |
 
 ## Como o trabalho flui
 
@@ -121,7 +121,7 @@ Os três devem terminar sem erro. É o mesmo que o CI faz em todo Pull Request.
 - O código vai sempre para a `develop`, por PR. A `main` é protegida e só recebe código por PR feito pelo responsável.
 - Commits começam com `feat:`, `fix:`, `docs:`, `chore:` ou `ci:`.
 - O Trello se move sozinho: In Progress te marca como responsável, abrir o PR leva o card para Awaiting PR, e o merge leva para Awaiting Build. As automações rodam a cada 10 minutos.
-- Design primeiro: tela ou bloco sem frame no Figma é desenhado antes de ser codado ([fluxo de telas](design/fluxo-de-telas.md)).
+- Design primeiro: tela ou bloco sem frame no Figma é desenhado antes de ser codado.
 - Pergunte antes de criar repositório, pasta ou tecnologia nova.
 
 ## Problemas comuns
