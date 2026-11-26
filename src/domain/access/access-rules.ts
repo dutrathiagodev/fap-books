@@ -42,7 +42,10 @@ export const SUPPORT_PATH = "/suporte";
 // Definir a senha pelo link do convite (FAP-0087): a pessoa ainda não tem login, e quem já está logado (por exemplo a
 // funcionária testando o convite no mesmo navegador) também precisa conseguir abrir o link.
 export const DEFINE_PASSWORD_PATH = "/definir-senha";
-const PUBLIC_INFO_PATHS = [PRIVACY_PATH, TERMS_PATH, ACCESSIBILITY_PATH, SUPPORT_PATH, DEFINE_PASSWORD_PATH];
+// Controle de empréstimo de livros (atividade da disciplina): qualquer perfil logado abre; a própria página confere o login
+// (e manda para /login?next=...), porque o proxy só protege as áreas dos perfis.
+export const LOAN_TRACKER_PATH = "/controle-de-emprestimos";
+const PUBLIC_INFO_PATHS = [PRIVACY_PATH, TERMS_PATH, ACCESSIBILITY_PATH, SUPPORT_PATH, DEFINE_PASSWORD_PATH, LOAN_TRACKER_PATH];
 
 export type RouteDecision =
   | { action: "allow" }
@@ -55,7 +58,7 @@ const PROTECTED_AREAS = Object.values(ROLE_HOME);
 export function safeNextPath(raw: string | null | undefined): string | null {
   if (!raw || !raw.startsWith("/") || raw.startsWith("//") || raw.includes("\\")) return null;
   const pathname = raw.split(/[?#]/)[0];
-  return PROTECTED_AREAS.some((area) => isInside(pathname, area)) ? raw : null;
+  return PROTECTED_AREAS.some((area) => isInside(pathname, area)) || isInside(pathname, LOAN_TRACKER_PATH) ? raw : null;
 }
 
 function isInside(pathname: string, area: string) {

@@ -1,7 +1,7 @@
 // Tipos dos relatórios da bibliotecária (Figma, card 0153; RF-27 a RF-29). Datas já formatadas pelo servidor (dd/mm/aaaa).
 
 // Os três relatórios: livros em atraso, acervo por categoria e reservas pedagógicas.
-export type ReportKind = "atraso" | "acervo" | "reservas";
+export type ReportKind = "atraso" | "acervo" | "titulos" | "reservas";
 
 // Situação do relatório de atraso: ainda em atraso, devolvido com atraso ou os dois.
 export type OverdueStatus = "open" | "returned" | "all";
@@ -43,6 +43,19 @@ export interface InventoryRowView {
   inactiveCopies: number;
 }
 
+// Uma linha por título ativo (relatório de acervo por título, card 0072).
+export interface TitleRowView {
+  id: string;
+  title: string;
+  author: string;
+  code: string;
+  category: string;
+  copies: number;
+  available: number;
+  borrowed: number;
+  held: number;
+}
+
 export interface PedagogicalRowView {
   id: string;
   teacherName: string;
@@ -73,6 +86,7 @@ export interface ReportPage<Row> {
 
 export type OverdueReport = ReportPage<OverdueRowView>;
 export type InventoryReport = ReportPage<InventoryRowView>;
+export type TitlesReport = ReportPage<TitleRowView>;
 export type PedagogicalReport = ReportPage<PedagogicalRowView>;
 
 // Tabela pronta para exportar (CSV e PDF): títulos de coluna e linhas de texto.

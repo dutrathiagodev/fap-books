@@ -6,6 +6,7 @@ import { FilterChips } from "./FilterChips";
 import { ReportExportLinks } from "./ReportExportLinks";
 import { ReportIndicators } from "./ReportIndicators";
 import {
+  isSnapshotKind,
   OVERDUE_STATUS_OPTIONS,
   PEDAGOGICAL_STATUS_OPTIONS,
   REPORT_EXPORT_LIMIT,
@@ -23,12 +24,13 @@ import type { ReportFilters, ReportPage } from "@/types/report";
 const NOUNS: Record<ReportFilters["kind"], [string, string]> = {
   atraso: ["empréstimo", "empréstimos"],
   acervo: ["categoria", "categorias"],
+  titulos: ["título", "títulos"],
   reservas: ["reserva", "reservas"],
 };
 
 // Filtros do relatório: período (atraso e reservas) e situação. O acervo é um retrato de hoje e não filtra.
 function ReportFiltersBar({ filters }: { filters: ReportFilters }) {
-  if (filters.kind === "acervo") {
+  if (isSnapshotKind(filters.kind)) {
     return <p className="mb-4 text-sm text-ink-muted">Retrato do acervo de hoje: os números não têm período nem situação.</p>;
   }
   const options = filters.kind === "atraso" ? OVERDUE_STATUS_OPTIONS : PEDAGOGICAL_STATUS_OPTIONS;
@@ -66,14 +68,14 @@ function ReportResult({ filters, report, table }: { filters: ReportFilters; repo
   if (report.rows.length === 0) {
     return (
       <EmptyState
-        title={filters.kind === "atraso" ? "Nenhum empréstimo em atraso" : filters.kind === "acervo" ? "Acervo vazio" : "Nenhuma reserva encontrada"}
+        title={filters.kind === "atraso" ? "Nenhum empréstimo em atraso" : isSnapshotKind(filters.kind) ? "Acervo vazio" : "Nenhuma reserva encontrada"}
         description={
           filtered
             ? "Não há registros com esse filtro. Tente outro período ou situação."
             : filters.kind === "atraso"
               ? "Quando um livro passar do prazo, ele aparece aqui."
-              : filters.kind === "acervo"
-                ? "Cadastre livros no acervo para ver os totais por categoria."
+              : isSnapshotKind(filters.kind)
+                ? "Cadastre livros no acervo para ver os totais."
                 : "Quando um professor pedir uma reserva pedagógica, ela aparece aqui."
         }
         action={filtered ? <TextLink href={reportHref(filters, { from: null, to: null, status: filters.kind === "atraso" ? "open" : "all", page: 1 })}>Limpar filtros</TextLink> : undefined}

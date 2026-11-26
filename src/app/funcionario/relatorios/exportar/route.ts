@@ -1,8 +1,8 @@
 import { getCurrentProfile } from "@/services/profile.service";
-import { inventoryTable, overdueTable, pedagogicalTable, toCsv, toPdf } from "@/domain/reports/report-export";
+import { inventoryTable, overdueTable, pedagogicalTable, titlesTable, toCsv, toPdf } from "@/domain/reports/report-export";
 import { filtersText, parseExportFormat, parseReportFilters, REPORT_EXPORT_LIMIT } from "@/domain/reports/report-rules";
 import { formatFineDate } from "@/domain/fines/fine-rules";
-import { EXPORT_WINDOW, getInventoryReport, getOverdueReport, getPedagogicalReport } from "@/services/reports.service";
+import { EXPORT_WINDOW, getInventoryReport, getOverdueReport, getPedagogicalReport, getTitlesReport } from "@/services/reports.service";
 import type { ExportTable, ReportFilters } from "@/types/report";
 
 // Exportação dos relatórios em CSV ou PDF (Figma, card 0156). Roda no servidor: o navegador só baixa o arquivo, então nenhum
@@ -16,6 +16,10 @@ async function buildTable(filters: ReportFilters): Promise<ExportTable> {
   if (filters.kind === "acervo") {
     const report = await getInventoryReport(EXPORT_WINDOW);
     return inventoryTable(report.rows, subtitle, Math.max(0, report.total - report.rows.length));
+  }
+  if (filters.kind === "titulos") {
+    const report = await getTitlesReport(EXPORT_WINDOW);
+    return titlesTable(report.rows, subtitle, Math.max(0, report.total - report.rows.length));
   }
   if (filters.kind === "reservas") {
     const report = await getPedagogicalReport(filters, EXPORT_WINDOW);

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { columnWidths, csvCell, fitText, inventoryTable, overdueTable, pdfPageCount, pedagogicalTable, toCsv, toPdf } from "./report-export";
+import { columnWidths, csvCell, fitText, inventoryTable, overdueTable, pdfPageCount, pedagogicalTable, titlesTable, toCsv, toPdf } from "./report-export";
 import type { ExportTable, OverdueRowView } from "@/types/report";
 
 const row: OverdueRowView = {
@@ -135,5 +135,21 @@ describe("ajuste de colunas", () => {
     const widths = columnWidths({ ...sample, headers: ["Curta", "Uma coluna bem mais longa que a outra"] }, 770);
     expect(widths.reduce((a, b) => a + b, 0)).toBeCloseTo(770);
     expect(Math.min(...widths)).toBeGreaterThan(50);
+  });
+});
+
+describe("titlesTable (card 0072)", () => {
+  const title = { id: "b1", title: "Clean Code", author: "Robert Martin", code: "T-009", category: "Computação", copies: 3, available: 1, borrowed: 1, held: 1 };
+
+  it("uma linha por título, com estoque e disponível", () => {
+    const table = titlesTable([title], "Retrato do acervo na data da exportação", 0);
+    expect(table.title).toBe("Relatório do acervo por título");
+    expect(table.headers).toEqual(["Título", "Autor", "Tombo", "Categoria", "Exemplares", "Disponíveis", "Emprestados", "Reservados"]);
+    expect(table.rows).toEqual([["Clean Code", "Robert Martin", "T-009", "Computação", "3", "1", "1", "1"]]);
+  });
+
+  it("título que parece fórmula vai com apóstrofo no CSV", () => {
+    const csv = toCsv(titlesTable([{ ...title, title: "=HYPERLINK(1)" }], "x", 0));
+    expect(csv).toContain("'=HYPERLINK(1)");
   });
 });
