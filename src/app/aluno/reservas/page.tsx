@@ -1,5 +1,6 @@
 import { PageHeader } from "@/components";
 import { RolePage } from "@/components/RolePage";
+import { cancelReservationAction } from "@/app/actions/reservations";
 import { StudentReservationList } from "@/components/StudentReservationList";
 import { listMyBookReservations } from "@/services/student.service";
 import type { Metadata } from "next";
@@ -18,7 +19,7 @@ export default function MinhasReservasPage() {
               breadcrumbs={[{ label: "Minha área" }, { label: "Minhas reservas" }]}
               description="Livros que você reservou enquanto estavam sem exemplar livre."
             />
-            <StudentReservationList reservations={reservations} />
+            <StudentReservationList reservations={reservations} onCancel={cancelReservationAction} />
           </>
         );
       }}

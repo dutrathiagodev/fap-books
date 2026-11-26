@@ -18,6 +18,8 @@ export interface ButtonProps {
   // Nos formulários o botão ocupa a linha. No modal ele abraça o texto, como no frame.
   fullWidth?: boolean;
   onClick?: () => void;
+  // Nome acessível quando vários botões repetem o mesmo texto (ex.: "Cancelar reserva" em cada linha).
+  ariaLabel?: string;
 }
 
 const COMMON =
@@ -54,6 +56,7 @@ export function Button({
   size = "large",
   fullWidth = true,
   onClick,
+  ariaLabel,
 }: ButtonProps) {
   const layout = variant === "text" || !fullWidth ? "inline-flex" : "flex w-full";
   const sizing = variant === "text" ? "" : SIZES[size];
@@ -81,7 +84,7 @@ export function Button({
   }
 
   return (
-    <button type={type} disabled={disabled || loading} aria-busy={loading || undefined} onClick={onClick} className={className}>
+    <button type={type} disabled={disabled || loading} aria-label={ariaLabel} aria-busy={loading || undefined} onClick={onClick} className={className}>
       {content}
     </button>
   );
