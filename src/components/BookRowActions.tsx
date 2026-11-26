@@ -62,7 +62,7 @@ export function BookRowActions({ book, onDelete, onInactivate }: BookRowActionsP
   }
 
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex flex-wrap items-center gap-2">
       <Link href={`${ACERVO_PATH}/${book.id}`} title="Ver detalhes" aria-label={`Ver ${book.title}`} className={`${ICON_BUTTON} text-ink-muted hover:bg-subtle`}>
         <RowIcon name="eye" />
       </Link>
