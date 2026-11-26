@@ -35,14 +35,23 @@ export async function definePasswordFromInvite(
 
   const supabase = await createSupabaseServerClient();
 
-  const verified = await supabase.auth.verifyOtp({ token_hash: link.tokenHash, type: link.type });
-  const userId = verified.data.user?.id;
-  if (verified.error || !userId) {
-    const code = verified.error?.code;
-    // Erro de rede ou do Supabase (5xx) não é culpa do link: o token continua valendo, a pessoa pode tentar de novo.
-    const serverSide = (verified.error?.status ?? 0) >= 500 || verified.error?.name === "AuthRetryableFetchError";
-    console.error("Falha ao conferir o link de senha:", code ?? "sem código");
-    return serverSide ? { status: "failed" } : { status: "link_invalid" };
+  // Nova tentativa depois de o Supabase recusar a senha (igual à atual ou fraca): o token já foi gasto, mas a sessão que
+  // ele abriu continua valendo. Sem este caminho a pessoa teria de pedir outro link só por ter digitado a mesma senha.
+  const retrying = formData.get("retry") === "1";
+  let userId: string | undefined;
+  if (retrying) {
+    userId = (await supabase.auth.getUser()).data.user?.id;
+    if (!userId) return { status: "link_invalid" };
+  } else {
+    const verified = await supabase.auth.verifyOtp({ token_hash: link.tokenHash, type: link.type });
+    userId = verified.data.user?.id;
+    if (verified.error || !userId) {
+      const code = verified.error?.code;
+      // Erro de rede ou do Supabase (5xx) não é culpa do link: o token continua valendo, a pessoa pode tentar de novo.
+      const serverSide = (verified.error?.status ?? 0) >= 500 || verified.error?.name === "AuthRetryableFetchError";
+      console.error("Falha ao conferir o link de senha:", code ?? "sem código");
+      return serverSide ? { status: "failed" } : { status: "link_invalid" };
+    }
   }
 
   // Perfil inativo não entra: encerra a sessão que o link abriu e não define a senha.
@@ -64,7 +73,11 @@ export async function definePasswordFromInvite(
 
   const updated = await supabase.auth.updateUser({ password });
   if (updated.error) {
-    console.error("Falha ao salvar a senha do convite:", updated.error.code ?? "sem código");
+    const code = updated.error.code;
+    console.error("Falha ao salvar a senha do convite:", code ?? "sem código");
+    // O erro é da senha escolhida, não do link: mantém a sessão para a pessoa tentar outra senha.
+    if (code === "same_password") return { status: "password_rejected", reason: "same_password" };
+    if (code === "weak_password") return { status: "password_rejected", reason: "weak_password" };
     await supabase.auth.signOut();
     return { status: "failed_after_use" };
   }

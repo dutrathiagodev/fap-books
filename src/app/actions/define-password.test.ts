@@ -2,6 +2,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const verifyOtp = vi.fn();
 const updateUser = vi.fn();
+const getUser = vi.fn();
 const signOut = vi.fn();
 const maybeSingle = vi.fn();
 const redirect = vi.fn((to: string) => {
@@ -14,7 +15,7 @@ vi.mock("next/headers", () => ({ headers: async () => new Headers({ "x-forwarded
 vi.mock("@/lib/request-limits", () => ({ definePasswordLimiter: { check: (key: string) => check(key) } }));
 vi.mock("@/lib/supabase/server-client", () => ({
   createSupabaseServerClient: async () => ({
-    auth: { verifyOtp, updateUser, signOut },
+    auth: { verifyOtp, updateUser, signOut, getUser },
     from: () => ({ select: () => ({ eq: () => ({ eq: () => ({ maybeSingle }) }) }) }),
   }),
 }));
@@ -126,10 +127,32 @@ describe("definePasswordFromInvite", () => {
     expect(signOut).toHaveBeenCalled();
   });
 
-  it("falha ao salvar a senha: encerra a sessão e pede novo convite", async () => {
-    updateUser.mockResolvedValue({ error: { code: "weak_password", message: "Password is known to be weak" } });
+  it("falha inesperada ao salvar a senha: encerra a sessão e pede novo convite", async () => {
+    updateUser.mockResolvedValue({ error: { code: "unexpected_failure", message: "boom" } });
     expect(await definePasswordFromInvite(idle, form(valid))).toEqual({ status: "failed_after_use" });
     expect(signOut).toHaveBeenCalled();
+  });
+
+  it.each(["same_password", "weak_password"])(
+    "senha recusada (%s): não encerra a sessão nem queima o link; pede outra senha",
+    async (code) => {
+      updateUser.mockResolvedValue({ error: { code, message: "x" } });
+      expect(await definePasswordFromInvite(idle, form(valid))).toEqual({ status: "password_rejected", reason: code });
+      expect(signOut).not.toHaveBeenCalled();
+    },
+  );
+
+  it("nova tentativa depois da senha recusada (retry=1): usa a sessão aberta, sem gastar o token de novo", async () => {
+    getUser.mockResolvedValue({ data: { user: { id: "u1" } }, error: null });
+    await expect(definePasswordFromInvite(idle, form({ ...valid, retry: "1" }))).rejects.toThrow("REDIRECT:");
+    expect(verifyOtp).not.toHaveBeenCalled();
+    expect(updateUser).toHaveBeenCalledWith({ password: SECRET });
+  });
+
+  it("retry=1 sem sessão aberta: link inválido", async () => {
+    getUser.mockResolvedValue({ data: { user: null }, error: { code: "session_not_found" } });
+    expect(await definePasswordFromInvite(idle, form({ ...valid, retry: "1" }))).toEqual({ status: "link_invalid" });
+    expect(updateUser).not.toHaveBeenCalled();
   });
 
   it("nunca registra token, senha nem mensagem do erro no log", async () => {

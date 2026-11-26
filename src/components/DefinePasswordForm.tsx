@@ -81,7 +81,11 @@ export function DefinePasswordForm({ link }: { link: InviteLink }) {
       ? state.message
       : state.status === "failed"
         ? "Não foi possível salvar a sua senha agora. Confira a conexão e tente de novo."
-        : "";
+        : state.status === "password_rejected"
+          ? state.reason === "same_password"
+            ? "Essa é a sua senha atual. Escolha uma senha diferente."
+            : "Essa senha é muito comum ou vazou em algum site. Escolha outra."
+          : "";
 
   return (
     <>
@@ -92,6 +96,7 @@ export function DefinePasswordForm({ link }: { link: InviteLink }) {
       <form action={formAction} className="flex w-full flex-col gap-4" noValidate>
         <input type="hidden" name="token_hash" value={link.tokenHash} />
         <input type="hidden" name="type" value={link.type} />
+        {state.status === "password_rejected" && <input type="hidden" name="retry" value="1" />}
         <TextField
           id="password"
           label="Nova senha"
