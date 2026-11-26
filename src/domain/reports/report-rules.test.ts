@@ -10,6 +10,7 @@ import {
   reportExportHref,
   reportHref,
   reportSummary,
+  titlesIndicators,
 } from "./report-rules";
 
 describe("parseReportFilters", () => {
@@ -138,5 +139,26 @@ describe("indicadores", () => {
       ["Recusadas", "1"],
       ["Aguardando", "2"],
     ]);
+  });
+});
+
+describe("acervo por título (card 0072)", () => {
+  it("tipo=titulos é aceito e, como o acervo, ignora período e situação", () => {
+    expect(parseReportFilters({ tipo: "titulos", de: "2026-11-01", situacao: "open" })).toMatchObject({ kind: "titulos", from: null, to: null, status: "all" });
+  });
+
+  it("o endereço leva só o tipo; a exportação acrescenta o formato", () => {
+    const filters = parseReportFilters({ tipo: "titulos", de: "2026-11-01" });
+    expect(reportHref(filters)).toBe("/funcionario/relatorios?tipo=titulos");
+    expect(reportExportHref(filters, "csv")).toBe("/funcionario/relatorios/exportar?tipo=titulos&formato=csv");
+  });
+
+  it("o subtítulo da exportação é o retrato do acervo", () => {
+    expect(filtersText(parseReportFilters({ tipo: "titulos" }))).toBe("Retrato do acervo na data da exportação");
+  });
+
+  it("os indicadores somam o conjunto inteiro, com milhar com ponto", () => {
+    const values = Object.fromEntries(titlesIndicators({ titles: 1200, copies: 3400, borrowed: 10, held: 2, available: 3388 }).map((i) => [i.label, i.value]));
+    expect(values).toMatchObject({ "Títulos ativos": "1.200", Exemplares: "3.400", Disponíveis: "3.388", Emprestados: "10", Reservados: "2" });
   });
 });

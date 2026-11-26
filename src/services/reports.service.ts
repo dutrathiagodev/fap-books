@@ -7,6 +7,7 @@ import {
   pedagogicalIndicators,
   REPORT_EXPORT_LIMIT,
   REPORT_PAGE_SIZE,
+  titlesIndicators,
 } from "@/domain/reports/report-rules";
 import type {
   InventoryReport,
@@ -15,6 +16,7 @@ import type {
   PedagogicalStatus,
   ReportFilters,
   ReportIndicator,
+  TitlesReport,
 } from "@/types/report";
 
 // Linhas pedidas ao banco: uma página da tela (pageSize 10) ou a exportação inteira (até o teto).
@@ -67,6 +69,23 @@ interface InventoryDbRow {
   sum_held: number | string;
   sum_available: number | string;
   sum_inactive_copies: number | string;
+}
+
+interface TitleDbRow {
+  book_id: string;
+  title: string;
+  author: string;
+  book_code: string;
+  category: string;
+  copies: number;
+  borrowed: number | string;
+  held: number | string;
+  available: number | string;
+  total_count: number | string;
+  sum_copies: number | string;
+  sum_borrowed: number | string;
+  sum_held: number | string;
+  sum_available: number | string;
 }
 
 interface PedagogicalDbRow {
@@ -139,6 +158,37 @@ export async function getInventoryReport(window: ReportWindow): Promise<Inventor
     inactiveCopies: Number(first?.sum_inactive_copies ?? 0),
   });
   return toPage(rows, Number(first?.total_count ?? 0), window, indicators);
+}
+
+export async function getTitlesReport(window: ReportWindow): Promise<TitlesReport> {
+  const supabase = await createSupabaseServerClient();
+  const { data, error } = await supabase
+    .rpc("report_inventory_titles", { p_limit: window.limit, p_offset: window.offset })
+    .limit(window.limit);
+  if (error) fail(error);
+
+  const list = (data ?? []) as TitleDbRow[];
+  const first = list[0];
+  const total = Number(first?.total_count ?? 0);
+  const rows = list.map((row) => ({
+    id: row.book_id,
+    title: row.title,
+    author: row.author,
+    code: row.book_code,
+    category: row.category,
+    copies: row.copies,
+    available: Number(row.available),
+    borrowed: Number(row.borrowed),
+    held: Number(row.held),
+  }));
+  const indicators = titlesIndicators({
+    titles: total,
+    copies: Number(first?.sum_copies ?? 0),
+    borrowed: Number(first?.sum_borrowed ?? 0),
+    held: Number(first?.sum_held ?? 0),
+    available: Number(first?.sum_available ?? 0),
+  });
+  return toPage(rows, total, window, indicators);
 }
 
 export async function getPedagogicalReport(filters: ReportFilters, window: ReportWindow): Promise<PedagogicalReport> {
