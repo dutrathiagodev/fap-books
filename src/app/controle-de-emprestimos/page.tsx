@@ -38,13 +38,13 @@ async function ControleContent() {
             Registre os livros emprestados, acompanhe as devoluções e veja o histórico. Só você enxerga estes registros.
           </p>
         </header>
-        {result.ok ? (
-          <LoanRecordsApp initialRecords={result.data} today={today} />
-        ) : (
-          <p role="alert" className="rounded-lg border border-line bg-surface p-4 text-danger-700 dark:text-red-300">
-            Não foi possível carregar os empréstimos agora. Atualize a página.
-          </p>
-        )}
+        {/* Se o Supabase não responder, a tela abre com a cópia do localStorage (aviso dentro do componente). */}
+        <LoanRecordsApp
+          userId={profile.id}
+          initialRecords={result.ok ? result.data : []}
+          today={today}
+          fromCache={!result.ok}
+        />
       </div>
     </main>
   );
