@@ -27,8 +27,16 @@ export async function createUser(
     if (taken.data) return { ok: false, reason: "duplicate_registration" };
   }
 
+  // O convite do Supabase só acusa "email_exists" para conta já confirmada; para conta pendente ele reenvia o convite e
+  // o perfil seria sobrescrito (nome e matrícula). Por isso o e-mail é conferido antes, no perfil (o RLS da
+  // funcionária já deixa ler).
+  const email = normalizeEmail(values.email);
+  const sameEmail = await supabase.from("profiles").select("id").eq("email", email).maybeSingle();
+  if (sameEmail.error) return { ok: false, reason: "error" };
+  if (sameEmail.data) return { ok: false, reason: "duplicate_email" };
+
   const admin = createSupabaseAdminClient();
-  const invited = await admin.auth.admin.inviteUserByEmail(normalizeEmail(values.email), {
+  const invited = await admin.auth.admin.inviteUserByEmail(email, {
     data: { full_name: row.full_name },
     // O e-mail leva a pessoa para /definir-senha (FAP-0087). A origem vem do ambiente e da lista de origens permitidas.
     redirectTo: getInviteRedirectUrl(),
