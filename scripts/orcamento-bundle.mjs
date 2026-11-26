@@ -10,7 +10,8 @@ import { gzipSync } from "node:zlib";
 
 const PASTA = ".next/static";
 // Medido em 08/11/2026: 349 KB na v0.7.0 e 385 KB com as telas da reserva pedagógica (3 rotas novas); 405 KB com o painel, a listagem de usuários e a reserva pedagógica juntos (o total soma todas as rotas, então cada tela nova pesa); teto 440 KB (~8% de folga).
-const TETO_TOTAL_KB = 440;
+// Medido em 26/11/2026: 454 KB com a tela de controle de empréstimos (trabalho da disciplina, rota nova com formulário, filtros e lista); teto 470 KB (~3% de folga).
+const TETO_TOTAL_KB = 470;
 const TETO_MAIOR_ARQUIVO_KB = 95;
 
 function arquivosJs(pasta) {

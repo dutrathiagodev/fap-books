@@ -109,3 +109,16 @@ describe("safeNextPath", () => {
     (value) => expect(safeNextPath(value)).toBeNull(),
   );
 });
+
+describe("controle de empréstimos (atividade da disciplina)", () => {
+  it("qualquer perfil, logado ou não, chega à página (ela mesma manda para o login)", () => {
+    expect(decideRoute("/controle-de-emprestimos", null)).toEqual({ action: "allow" });
+    expect(decideRoute("/controle-de-emprestimos", "student")).toEqual({ action: "allow" });
+    expect(decideRoute("/controle-de-emprestimos", "librarian")).toEqual({ action: "allow" });
+  });
+
+  it("depois do login, volta para a página", () => {
+    expect(safeNextPath("/controle-de-emprestimos")).toBe("/controle-de-emprestimos");
+    expect(safeNextPath("//evil.com")).toBeNull();
+  });
+});
