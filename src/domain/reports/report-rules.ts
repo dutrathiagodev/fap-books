@@ -21,6 +21,7 @@ const MAX_PAGE = 10_000;
 export const REPORT_KINDS: { kind: ReportKind; label: string; description: string }[] = [
   { kind: "atraso", label: "Livros em atraso", description: "Quem está com livro fora do prazo, há quantos dias e a multa estimada." },
   { kind: "acervo", label: "Acervo", description: "Exemplares por categoria: disponíveis, emprestados, reservados e inativos." },
+  { kind: "titulos", label: "Acervo por título", description: "Estoque de cada título: exemplares, disponíveis, emprestados e reservados." },
   { kind: "reservas", label: "Reservas pedagógicas", description: "Pedidos dos professores por situação e período, com os livros de cada um." },
 ];
 
@@ -48,7 +49,12 @@ export const PEDAGOGICAL_STATUS_LABELS: Record<Exclude<PedagogicalStatus, "all">
 };
 
 const KINDS = new Set<string>(REPORT_KINDS.map((item) => item.kind));
-const DEFAULT_STATUS: Record<ReportKind, ReportStatus> = { atraso: "open", acervo: "all", reservas: "all" };
+const DEFAULT_STATUS: Record<ReportKind, ReportStatus> = { atraso: "open", acervo: "all", titulos: "all", reservas: "all" };
+
+// Acervo (por categoria ou por título) é um retrato de hoje: não tem período nem situação.
+export function isSnapshotKind(kind: ReportKind): boolean {
+  return kind === "acervo" || kind === "titulos";
+}
 
 function validStatuses(kind: ReportKind): string[] {
   if (kind === "atraso") return OVERDUE_STATUS_OPTIONS.map((item) => item.value);
@@ -68,7 +74,7 @@ export function parseReportFilters(params: Record<string, string | string[] | un
   const rawStatus = firstOf(params.situacao);
   const status = validStatuses(kind).includes(rawStatus) ? (rawStatus as ReportStatus) : DEFAULT_STATUS[kind];
   const page = Number.parseInt(firstOf(params.pagina), 10);
-  const usesPeriod = kind !== "acervo";
+  const usesPeriod = !isSnapshotKind(kind);
   return {
     kind,
     from: usesPeriod ? parseIsoDate(firstOf(params.de)) : null,
@@ -93,7 +99,7 @@ export function reportHref(filters: ReportFilters, changes: Partial<ReportFilter
   const next = { ...filters, ...changes };
   const search = new URLSearchParams();
   if (next.kind !== "atraso") search.set("tipo", next.kind);
-  if (next.kind !== "acervo") {
+  if (!isSnapshotKind(next.kind)) {
     if (next.from) search.set("de", next.from);
     if (next.to) search.set("ate", next.to);
     if (next.status !== DEFAULT_STATUS[next.kind]) search.set("situacao", next.status);
@@ -127,7 +133,7 @@ export function statusLabel(kind: ReportKind, status: ReportStatus): string {
 
 // Texto dos filtros aplicados, para o subtítulo da exportação: "Situação: Em atraso · Prazo de 01/11/2026 até 13/11/2026".
 export function filtersText(filters: ReportFilters): string {
-  if (filters.kind === "acervo") return "Retrato do acervo na data da exportação";
+  if (isSnapshotKind(filters.kind)) return "Retrato do acervo na data da exportação";
   const { from, to } = effectivePeriod(filters);
   const dateLabel = filters.kind === "atraso" ? "Prazo" : "Pedido";
   const parts = [`Situação: ${statusLabel(filters.kind, filters.status)}`];
@@ -161,6 +167,24 @@ export interface InventoryTotals {
   held: number;
   available: number;
   inactiveCopies: number;
+}
+
+export interface TitleTotals {
+  titles: number;
+  copies: number;
+  borrowed: number;
+  held: number;
+  available: number;
+}
+
+export function titlesIndicators(totals: TitleTotals): ReportIndicator[] {
+  return [
+    { label: "Títulos ativos", value: formatNumber(totals.titles) },
+    { label: "Exemplares", value: formatNumber(totals.copies) },
+    { label: "Disponíveis", value: formatNumber(totals.available) },
+    { label: "Emprestados", value: formatNumber(totals.borrowed) },
+    { label: "Reservados", value: formatNumber(totals.held) },
+  ];
 }
 
 export function inventoryIndicators(totals: InventoryTotals): ReportIndicator[] {

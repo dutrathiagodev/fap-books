@@ -1,6 +1,6 @@
 import { formatReais } from "../fines/fine-rules";
 import { PEDAGOGICAL_STATUS_LABELS } from "./report-rules";
-import type { ExportTable, InventoryRowView, OverdueRowView, PedagogicalRowView } from "@/types/report";
+import type { ExportTable, InventoryRowView, OverdueRowView, PedagogicalRowView, TitleRowView } from "@/types/report";
 
 // ---- Tabelas prontas para exportar (mesmos números da tela, em texto) ----
 
@@ -37,6 +37,25 @@ export function inventoryTable(rows: InventoryRowView[], subtitle: string, omitt
       String(row.held),
       String(row.inactiveTitles),
       String(row.inactiveCopies),
+    ]),
+    omitted,
+  };
+}
+
+export function titlesTable(rows: TitleRowView[], subtitle: string, omitted: number): ExportTable {
+  return {
+    title: "Relatório do acervo por título",
+    subtitle,
+    headers: ["Título", "Autor", "Tombo", "Categoria", "Exemplares", "Disponíveis", "Emprestados", "Reservados"],
+    rows: rows.map((row) => [
+      row.title,
+      row.author,
+      row.code,
+      row.category,
+      String(row.copies),
+      String(row.available),
+      String(row.borrowed),
+      String(row.held),
     ]),
     omitted,
   };

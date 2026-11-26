@@ -3,10 +3,11 @@ import { InventoryReportTable } from "@/components/InventoryReportTable";
 import { LinkTabs } from "@/components/LinkTabs";
 import { OverdueReportTable } from "@/components/OverdueReportTable";
 import { PedagogicalReportTable } from "@/components/PedagogicalReportTable";
+import { TitlesReportTable } from "@/components/TitlesReportTable";
 import { ReportView } from "@/components/ReportView";
 import { RolePage } from "@/components/RolePage";
 import { parseReportFilters, REPORT_KINDS, reportHref } from "@/domain/reports/report-rules";
-import { getInventoryReport, getOverdueReport, getPedagogicalReport, pageWindow } from "@/services/reports.service";
+import { getInventoryReport, getOverdueReport, getPedagogicalReport, getTitlesReport, pageWindow } from "@/services/reports.service";
 import type { ReportFilters } from "@/types/report";
 import type { Metadata } from "next";
 
@@ -19,6 +20,10 @@ async function ReportBody({ filters }: { filters: ReportFilters }) {
   if (filters.kind === "acervo") {
     const report = await getInventoryReport(window);
     return <ReportView filters={filters} report={report} table={<InventoryReportTable rows={report.rows} />} />;
+  }
+  if (filters.kind === "titulos") {
+    const report = await getTitlesReport(window);
+    return <ReportView filters={filters} report={report} table={<TitlesReportTable rows={report.rows} />} />;
   }
   if (filters.kind === "reservas") {
     const report = await getPedagogicalReport(filters, window);
